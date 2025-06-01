@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Game INDapk</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #3a86ff;
+            --secondary: #3f37c9;
+            --text: #2b2d42;
+            --text-light: #8d99ae;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e9ecef;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #4895ef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        /* Dark Theme Variables */
+        .dark-theme {
+            --primary: #4895ef;
+            --primary-light: #4cc9f0;
+            --secondary: #4361ee;
+            --text: #f8f9fa;
+            --text-light: #adb5bd;
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --border: #2d2d2d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: var(--radius) var(--radius) 0 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+        
+        .header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .theme-icon {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            background-color: var(--card-bg);
+            border-bottom: 3px solid var(--primary);
+            flex-wrap: wrap;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 150px;
+            background: transparent;
+            color: var(--text);
+            border: none;
+            padding: 16px 10px;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        /* Content Wrapper */
+        .content-wrapper {
+            background-color: var(--card-bg);
+            border-radius: 0 0 var(--radius) var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 25px;
+            min-height: 400px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Styles */
+        .form-section {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: clamp(1.3rem, 3vw, 1.9rem);
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .form-group input[type="text"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            transition: var(--transition);
+            background-color: var(--bg);
+            color: var(--text);
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .form-group select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .optional-label {
+            color: var(--text-light);
+            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+            font-style: italic;
+            font-weight: normal;
+        }
+
+        .help-text {
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            color: var(--text-light);
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        /* Button Styles */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-small {
+            padding: 10px 18px;
+            font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+            width: auto;
+            margin: 5px;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4cc9f0, #4895ef);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 6px 12px rgba(76, 201, 240, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 12px rgba(247, 37, 133, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f8961e, #f3722c);
+        }
+
+        .refresh-btn {
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 200px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        }
+
+        /* Loading and Message Styles */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            color: var(--text-light);
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 18px;
+            border-radius: var(--radius);
+            margin: 25px 0;
+            font-weight: 500;
+            display: none;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            line-height: 1.5;
+            border-left: 4px solid transparent;
+        }
+
+        .message.success {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: #4cc9f0;
+            border-left-color: #4cc9f0;
+        }
+
+        .message.error {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: #f72585;
+            border-left-color: #f72585;
+        }
+
+        /* List Section Styles */
+        .list-section {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            max-height: 70vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        .data-item {
+            background-color: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-item.completed {
+            border-left-color: #4cc9f0;
+            background-color: rgba(76, 201, 240, 0.05);
+        }
+
+        .data-item h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .data-item p {
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            line-height: 1.5;
+        }
+
+        .data-item .timestamp {
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            color: var(--text-light);
+            font-style: italic;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-stars {
+            color: #f8961e;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            letter-spacing: 2px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 10px;
+        }
+
+        .status-pending {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: #f8961e;
+            border: 1px solid rgba(248, 150, 30, 0.3);
+        }
+
+        .status-pending:hover {
+            background-color: rgba(248, 150, 30, 0.2);
+        }
+
+        .status-selesai {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: #4cc9f0;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            position: relative;
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal h3 {
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            word-break: break-word;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state .icon {
+            font-size: clamp(3rem, 6vw, 5rem);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Custom Scrollbar */
+        .list-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .list-section::-webkit-scrollbar-track {
+            background: var(--bg);
+            border-radius: 10px;
+        }
+
+        .list-section::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+
+        .list-section::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* Donation Section */
+        .donation-section {
+            background-color: var(--bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .donation-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .donation-image {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        .donation-info {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .donation-info p {
+            margin-bottom: 12px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            color: var(--text);
+        }
+
+        .donation-info a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .donation-info a:hover {
+            text-decoration: underline;
+            color: var(--secondary);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .tab-content {
+                padding: 20px 15px;
+            }
+            
+            .form-section,
+            .list-section {
+                padding: 20px;
+            }
+            
+            .tab-button {
+                padding: 14px 8px;
+                min-width: 120px;
+            }
+            
+            .data-item {
+                padding: 18px;
+            }
+            
+            .modal-content {
+                padding: 25px 20px;
+                width: 95%;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-small {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px 10px;
+                border-radius: 8px 8px 0 0;
+            }
+            
+            .tab-content {
+                padding: 15px 10px;
+            }
+            
+            .form-section,
+            .list-section {
+                padding: 15px;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+            
+            .theme-switcher {
+                top: 15px;
+                right: 15px;
+            }
+            
+            .switch {
+                width: 40px;
+                height: 20px;
+            }
+            
+            .slider:before {
+                height: 14px;
+                width: 14px;
+            }
+        }
+
+        /* Accessibility */
+        .btn:focus,
+        .tab-button:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Style untuk tombol kembali */
+.back-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    margin: 20px auto;
+    text-align: center;
+    max-width: 250px;
+    width: 100%;
+}
+
+.back-button i {
+    margin-right: 8px;
+}
+
+.back-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+    opacity: 0.9;
+}
+
+.back-button:active {
+    transform: translateY(0);
+}
+
+/* Jika ingin menambahkan di tab navigation */
+.tab-navigation .back-tab {
+    background: linear-gradient(135deg, #6c757d, #495057);
+}
+
+.tab-navigation .back-tab:hover {
+    background: linear-gradient(135deg, #5a6268, #343a40);
+}
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <div class="theme-switcher">
+                <i class="fas fa-sun theme-icon"></i>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span>
+                </label>
+                <i class="fas fa-moon theme-icon"></i>
+            </div>
+            
+            <h1><i class="fas fa-gamepad"></i> Request Game INDapk</h1>
+            <p>Platform Request Game Terlengkap & Terpercaya</p>
+        </div>
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-button active" onclick="showTab('request')">
+                <i class="fas fa-pen"></i> Request Game
+            </button>
+            <button class="tab-button" onclick="showTab('list')">
+                <i class="fas fa-list"></i> Daftar Request
+            </button>
+        </div>
+
+        <div class="content-wrapper">
+            
+<div style="text-align: center;">
+    <a href="report.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>Report Link
+    </a>
+</div>
+            <!-- Request Game Tab -->
+            <div id="requestTab" class="tab-content active">
+                <div class="form-section">
+                    <h2 class="section-title"><i class="fas fa-pen"></i> Request Game Baru</h2>
+                    
+                    <form id="gameForm">
+                        <div class="form-group">
+                            <label for="nama_pengguna">Nama Pengguna <span class="optional-label">(wajib diisi)</span></label>
+                            <input type="text" id="nama_pengguna" name="nama_pengguna" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nama_game">Nama Game <span class="optional-label">(wajib diisi)</span></label>
+                            <input type="text" id="nama_game" name="nama_game" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="jenis_emulator">Jenis Emulator <span class="optional-label">(wajib diisi)</span></label>
+                            <select id="jenis_emulator" name="jenis_emulator" required>
+                                <option value="">Pilih Emulator</option>
+                                <option value="Switch">Switch</option>
+                                <option value="Wii">Wii</option>
+                                <option value="Gamecube">Gamecube</option>
+                                <option value="PS1">PS1</option>
+                                <option value="PS2">PS2</option>
+                                <option value="PS3">PS3</option>
+                                <option value="PSP">PSP</option>
+                                <option value="PSVita">PSVita</option>
+                                <option value="PC">PC</option>
+                                <option value="Sega Genesis">Sega Genesis</option>
+                                <option value="SNES">SNES</option>
+                                <option value="NES">NES</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="version_game">Version Game <span class="optional-label">(Optional)</span></label>
+                            <input type="text" id="version_game" name="version_game" placeholder="Contoh: v1.2.3, Update 2024">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="link_game">Link Game <span class="optional-label">(Optional)</span></label>
+                            <input type="text" id="link_game" name="link_game" placeholder="https://example.com/game-mod">
+                            <div class="help-text">Jika punya link bahan mod, silahkan masukkan linknya</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rating_web">Rating Web <span class="optional-label">(Optional)</span></label>
+                            <select id="rating_web" name="rating_web">
+                                <option value="">Pilih Rating</option>
+                                <option value="⭐">⭐ Bintang 1</option>
+                                <option value="⭐⭐">⭐⭐ Bintang 2</option>
+                                <option value="⭐⭐⭐">⭐⭐⭐ Bintang 3</option>
+                                <option value="⭐⭐⭐⭐">⭐⭐⭐⭐ Bintang 4</option>
+                                <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ Bintang 5</option>
+                            </select>
+                        </div>
+
+                        <!-- Donation Information Section -->
+                        <div class="donation-section">
+                            <h3 class="donation-title"><i class="fas fa-heart"></i> Info Donasi</h3>
+                            <img src="https://lh7-us.googleusercontent.com/flS_91UpIAS-mlPUsMHjru7qSMC3L6Q_bSOB1x34juZkjzBeMLxL6f_a35jZkccaCXJLDkEeGN0KeCXjcJoDWAFXb6kOuTvli1X6smZTPSEcIae48dKAZZiVpKpISr26UolnwXE1xzD-KWXLnRxkSNbKgmWKR6frj87ooHamaSAuVPbQn1CRZnXm5bRv1Iq2NXrCvpc?key=d4iEEzKyfxJduJJZL3JJmg" 
+                                 alt="Donation" 
+                                 class="donation-image">
+                            <div class="donation-info">
+                                <p><strong><i class="fas fa-hand-holding-heart"></i> Bagi yang ingin berdonasi:</strong></p>
+                                <p><i class="fas fa-link"></i> <strong>Saweria:</strong> <a href="https://saweria.co/indapk" target="_blank">https://saweria.co/indapk</a></p>
+                                <p><i class="fab fa-paypal"></i> <strong>Paypal:</strong> <a href="https://www.paypal.me/indapk" target="_blank">https://www.paypal.me/indapk</a></p>
+                                <p><i class="fas fa-university"></i> <strong>Mandiri:</strong> 1740010499515 (Alfina Febrianty)</p>
+                                <p><i class="fas fa-university"></i> <strong>BNI:</strong> 1211254450 (Alfina Febrianty)</p>
+                                <p><i class="fas fa-wallet"></i> <strong>Gopay:</strong> 082286344446 (AnggaPutraJN)</p>
+                                <p><i class="fas fa-wallet"></i> <strong>Dana:</strong> 082286344446 (A.P JATI NEGARA MA)</p>
+                                <p><i class="fas fa-wallet"></i> <strong>Shopeepay:</strong> 082286344446 (AnggaPutraJN)</p>
+                                <p><i class="fab fa-whatsapp"></i><strong> Join Whatsapp:</strong> <span style="background: #f0fdf4; padding: 8px; border-radius: 6px; display: block; margin-top: 5px; border-left: 3px solid #10b981;"><a href="https://whatsapp.com/channel/0029Vb326pM0lwguAfx6pD3f" target="_blank" style="color: #10b981;">Click To Join Whatsapp</a></span></p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i> Kirim Request Game
+                        </button>
+                    </form>
+
+                    <div class="loading" id="loading">
+                        <p><i class="fas fa-spinner"></i> Mengirim data...</p>
+                    </div>
+
+                    <div class="message" id="message"></div>
+                </div>
+            </div>
+
+            <!-- Daftar Request Game Tab -->
+            <div id="listTab" class="tab-content">
+                <div class="list-section">
+                    <h2 class="section-title"><i class="fas fa-list"></i> Daftar Request Game</h2>
+                    
+                    <button type="button" class="btn refresh-btn" onclick="loadData()">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                    
+                    <div id="dataContainer">
+                        <div class="empty-state">
+                            <div class="icon"><i class="fas fa-gamepad"></i></div>
+                            <p>Memuat data request game...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Link Selesai -->
+    <div id="linkModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-link"></i> Input Data Game Selesai</h3>
+            <div class="form-group" style="margin: 20px 0; text-align: left;">
+                <label for="linkSelesaiInput">Link Game yang Sudah Selesai:</label>
+                <input type="text" id="linkSelesaiInput" placeholder="https://example.com/completed-game" style="width: 100%; margin-top: 8px;">
+            </div>
+            <!-- TAMBAHAN BARU: Input Pesan Owner -->
+            <div class="form-group" style="margin: 20px 0; text-align: left;">
+                <label for="pesanOwnerInput">Pesan Owner <span class="optional-label">(Optional)</span>:</label>
+                <textarea id="pesanOwnerInput" placeholder="Contoh: Game sudah selesai dimod, silahkan download di link di atas" 
+                        style="width: 100%; margin-top: 8px; min-height: 80px; resize: vertical;"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-small btn-danger" onclick="closeLinkModal()">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button class="btn btn-small btn-success" onclick="submitLinkSelesai()">
+                    <i class="fas fa-check"></i> Tandai Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle"><i class="fas fa-question-circle"></i> Konfirmasi Aksi</h3>
+            <p id="modalMessage">Apakah Anda yakin ingin melakukan aksi ini?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-small btn-danger" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button class="btn btn-small btn-success" id="confirmBtn" onclick="confirmAction()">
+                    <i class="fas fa-check"></i> Ya
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        // Theme Switcher Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply saved theme
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeToggle.checked = true;
+        }
+        
+        // Toggle theme
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Existing tab functionality (preserved from original code)
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Deactivate all tab buttons
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            // Show the selected tab content and activate its button
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // If showing list tab, load data
+            if (tabName === 'list') {
+                loadData();
+            }
+        }
+
+document.getElementById('link_game').addEventListener('input', function () {
+    const input = this.value;
+    const helpText = document.getElementById('linkHelp');
+
+    // Pola regex untuk URL dengan http/https
+    const urlPattern = /^(https?:\/\/)[\w\-]+(\.[\w\-]+)+[/#?]?.*$/;
+
+    if (urlPattern.test(input)) {
+        this.setCustomValidity('');
+        helpText.style.color = 'green';
+        helpText.textContent = 'Link valid';
+    } else {
+        this.setCustomValidity('Harap masukkan link dengan format yang benar (contoh: https://example.com)');
+        helpText.style.color = 'red';
+        helpText.textContent = 'Format link tidak valid. Gunakan format: https://example.com';
+    }
+});
+
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRhhj9yw17YeIeClqC1u9o8zp7qCcHSdhKP6gBwJ0CjciOOKF7XhLRenKz0CksebM/exec';
+        let currentAction = null;
+        let currentId = null;
+
+        document.getElementById('gameForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const messageDiv = document.getElementById('message');
+        
+        submitBtn.disabled = true;
+        loading.style.display = 'block';
+        messageDiv.style.display = 'none';
+        
+        const formData = new FormData();
+        formData.append('action', 'create');
+        formData.append('nama_pengguna', document.getElementById('nama_pengguna').value);
+        formData.append('nama_game', document.getElementById('nama_game').value);
+        formData.append('jenis_emulator', document.getElementById('jenis_emulator').value);
+        formData.append('version_game', document.getElementById('version_game').value);
+        formData.append('link_game', document.getElementById('link_game').value);
+        formData.append('rating_web', document.getElementById('rating_web').value);
+        
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response from server:', data); // Debugging
+            loading.style.display = 'none';
+            submitBtn.disabled = false;
+            
+            messageDiv.style.display = 'block';
+            messageDiv.textContent = data.message;
+            
+            if (data.status === 'success') {
+            messageDiv.className = 'message success';
+            document.getElementById('gameForm').reset();
+            loadData();
+            
+            // Debugging: Tampilkan data yang disimpan
+            if (data.savedData) {
+                console.log('Data yang disimpan di sheet:', data.savedData);
+            }
+            } else {
+            messageDiv.className = 'message error';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loading.style.display = 'none';
+            submitBtn.disabled = false;
+            
+            messageDiv.style.display = 'block';
+            messageDiv.className = 'message error';
+            messageDiv.textContent = 'Error: ' + error.message;
+        });
+        });
+
+        function loadData() {
+            const dataContainer = document.getElementById('dataContainer');
+            loading.className = 'loading';
+            loading.innerHTML = '<p><i class="fas fa-spinner"></i> Memuat data...</p>';
+            
+            fetch(SCRIPT_URL + '?action=read')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    displayData(data.data);
+                } else {
+                    dataContainer.innerHTML = '<p style="color: #ef4444;">❌ Gagal memuat data: ' + data.message + '</p>';
+                }
+            })
+            .catch(error => {
+                dataContainer.innerHTML = '<p style="color: #ef4444;">❌ Error: ' + error.message + '</p>';
+            });
+        }
+
+
+
+let tempLinkSelesai = '';
+        function displayData(data) {
+            const dataContainer = document.getElementById('dataContainer');
+            
+            if (!data || data.length === 0) {
+                dataContainer.innerHTML = '<p style="text-align:center; color: #6b7280;">📝 Belum ada request game.</p>';
+                return;
+            }
+            
+            let html = '';
+            data.reverse().forEach(item => {
+                const timestamp = new Date(item.timestamp).toLocaleString('id-ID');
+                const status = item.status_req || 'PENDING';
+                const isCompleted = status === 'SELESAI';
+                const isPending = status === 'PENDING';
+                
+                html += `
+                    <div class="data-item ${isCompleted ? 'completed' : ''}">
+                        <h3>🎮 ${item.nama_game}</h3>
+                        <p><strong>👤 Pengguna:</strong> ${item.nama_pengguna}</p>
+                        <p><strong>🕹️ Emulator:</strong> ${item.jenis_emulator}</p>
+                        ${item.version_game ? `<p><strong>📦 Version:</strong> ${item.version_game}</p>` : ''}
+                        ${item.link_game ? `<p><strong>🔗 Link:</strong> <a href="${item.link_game}" target="_blank" style="color: #3498db;">${item.link_game}</a></p>` : ''}
+                        ${item.rating_web ? `<p><strong>⭐ Rating:</strong> <span class="rating-stars">${item.rating_web}</span></p>` : ''}
+                        <p><strong>📊 Status:</strong> 
+                            <span class="status-badge ${status === 'SELESAI' ? 'status-selesai' : 'status-pending'}" 
+                                onclick="${isPending ? `showLinkModal('${item.nama_game}', ${item.id})` : ''}">
+                                ${status}
+                            </span>
+                        </p>
+                        ${isCompleted && item.link_selesai ? `<p><strong>🔗 Link Game Request:</strong> <a href="${item.link_selesai}" target="_blank" style="color: #10b981;">${item.link_selesai}</a></p>` : ''}
+                        <!-- TAMBAHAN BARU: Tampilkan pesan owner jika ada -->
+                        ${isCompleted && item.pesan_owner ? `<p><strong>💬 Pesan Owner:</strong> <span style="background: #f0fdf4; padding: 8px; border-radius: 6px; display: block; margin-top: 5px; border-left: 3px solid #10b981;">${item.pesan_owner}</span></p>` : ''}
+                        ${isCompleted ? `<p><strong>🛡️ Approved By:</strong> AnggaPutraJN ✅ </p>` : ''}
+                    
+                        <p class="timestamp">${timestamp}</p>
+                        
+                    </div>
+                `;
+            });
+            
+            dataContainer.innerHTML = html;
+        }
+// MODIFIKASI fungsi untuk menampilkan modal input link
+function showLinkModal(gameName, id) {
+    currentId = id;
+    const modal = document.getElementById('linkModal');
+    const input = document.getElementById('linkSelesaiInput');
+    
+    // Reset input
+    input.value = '';
+    
+    // Update judul dengan nama game
+    document.querySelector('#linkModal h3').textContent = `🔗 Link Game "${gameName}" yang Selesai`;
+    
+    modal.style.display = 'block';
+}
+
+function closeLinkModal() {
+    document.getElementById('linkModal').style.display = 'none';
+    document.getElementById('linkSelesaiInput').value = ''; // Reset link input
+    document.getElementById('pesanOwnerInput').value = ''; // TAMBAHAN BARU - Reset pesan input
+    currentId = null;
+}
+
+// MODIFIKASI fungsi untuk submit link selesai
+function submitLinkSelesai() {
+    const linkInput = document.getElementById('linkSelesaiInput');
+    const pesanInput = document.getElementById('pesanOwnerInput'); // TAMBAHAN BARU
+    const link = linkInput.value.trim();
+    const pesan = pesanInput.value.trim(); // TAMBAHAN BARU
+    
+    // Validasi link (opsional - bisa dikomentari jika tidak ingin validasi)
+    if (link && !link.startsWith('http://') && !link.startsWith('https://')) {
+        alert('Masukkan link yang valid (harus dimulai dengan http:// atau https://)');
+        return;
+    }
+    
+    if (!currentId) return;
+    
+    const formData = new FormData();
+    formData.append('action', 'markDone');
+    formData.append('id', currentId);
+    formData.append('link_selesai', link);
+    formData.append('pesan_owner', pesan); // TAMBAHAN BARU
+    
+    // Show loading state
+    const submitBtn = document.querySelector('#linkModal .btn-success');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Memproses...';
+    
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        
+        if (data.status === 'success') {
+            closeLinkModal();
+            loadData(); // Refresh data
+            showMessage('Request berhasil ditandai selesai!', 'success');
+        } else {
+            showMessage('Gagal: ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        showMessage('Terjadi kesalahan: ' + error.message, 'error');
+    });
+}
+
+        function showModal(action, id, gameName) {
+            currentAction = action;
+            currentId = id;
+            
+            const modal = document.getElementById('confirmModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            if (action === 'delete') {
+                title.textContent = '🗑️ Hapus Request';
+                message.textContent = `Apakah Anda yakin ingin menghapus request game "${gameName}"? Aksi ini tidak dapat dibatalkan.`;
+            } else if (action === 'markDone') {
+                title.textContent = '✅ Tandai Selesai';
+                message.textContent = `Apakah Anda yakin ingin menandai request game "${gameName}" sebagai SELESAI?`;
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+            currentAction = null;
+            currentId = null;
+        }
+
+        function confirmAction() {
+            if (!currentAction || !currentId) return;
+            
+            const formData = new FormData();
+            formData.append('action', currentAction);
+            formData.append('id', currentId);
+            
+            // Show loading state
+            const confirmBtn = document.getElementById('confirmBtn');
+            const originalText = confirmBtn.textContent;
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = '⏳ Memproses...';
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => 
+            {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = originalText;
+                console.log('Response dari server:', data); // Tambahkan ini
+                if (data.savedStatus) 
+                console.log('Status yang disimpan:', data.savedStatus);
+                if (data.status === 'success') {
+                    closeModal();
+                    loadData(); // Refresh data
+                    showMessage(data.message, 'success');
+                } else {
+                    showMessage('Gagal: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = originalText;
+                showMessage('Terjadi kesalahan: ' + error.message, 'error');
+            });
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+window.onclick = function(event) {
+    const confirmModal = document.getElementById('confirmModal');
+    const linkModal = document.getElementById('linkModal');
+    
+    if (event.target === confirmModal) {
+        closeModal();
+    }
+    if (event.target === linkModal) {
+        closeLinkModal();
+    }
+}
+</script>
+</body>
+</html>
