@@ -8,8 +8,9 @@
     <style>
         :root {
             --primary: #4361ee;
-            --primary-light: #3a86ff;
-            --secondary: #3f37c9;
+            --primary-light: #4895ef;
+            --primary-dark: #3a0ca3;
+            --secondary: #7209b7;
             --text: #2b2d42;
             --text-light: #8d99ae;
             --bg: #f8f9fa;
@@ -19,22 +20,23 @@
             --danger: #f72585;
             --warning: #f8961e;
             --info: #4895ef;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --radius: 12px;
-            --transition: all 0.3s ease;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+            --transition: all 0.2s ease;
         }
 
         /* Dark Theme Variables */
         .dark-theme {
             --primary: #4895ef;
             --primary-light: #4cc9f0;
-            --secondary: #4361ee;
+            --primary-dark: #4361ee;
+            --secondary: #b5179e;
             --text: #f8f9fa;
             --text-light: #adb5bd;
             --bg: #121212;
             --card-bg: #1e1e1e;
-            --border: #2d2d2d;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --border: #333333;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         * {
@@ -45,7 +47,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             min-height: 100vh;
@@ -54,50 +56,31 @@
         }
 
         .main-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             width: 100%;
         }
 
         /* Header Styles */
         .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            padding: 25px;
+            padding: 2rem;
             text-align: center;
             border-radius: var(--radius) var(--radius) 0 0;
-            box-shadow: var(--shadow);
             position: relative;
-            overflow: hidden;
+            margin-bottom: 1px;
         }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-        }
-        
         .header h1 {
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            margin-bottom: 10px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
         }
 
         .header p {
             opacity: 0.9;
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-size: 1rem;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -105,11 +88,11 @@
         /* Theme Switcher */
         .theme-switcher {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 1rem;
+            right: 1rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
         }
 
         .switch {
@@ -159,16 +142,15 @@
 
         .theme-icon {
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         /* Tab Navigation */
         .tab-navigation {
             display: flex;
             background-color: var(--card-bg);
-            border-bottom: 3px solid var(--primary);
+            border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
-            box-shadow: var(--shadow);
         }
 
         .tab-button {
@@ -177,36 +159,26 @@
             background: transparent;
             color: var(--text);
             border: none;
-            padding: 16px 10px;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            padding: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 0.5rem;
             position: relative;
         }
 
         .tab-button:hover {
-            background-color: rgba(67, 97, 238, 0.1);
+            background-color: rgba(67, 97, 238, 0.05);
             color: var(--primary);
         }
 
         .tab-button.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-        }
-
-        .tab-button.active::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--primary);
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
         }
 
         /* Content Wrapper */
@@ -219,76 +191,62 @@
 
         .tab-content {
             display: none;
-            padding: 25px;
+            padding: 1.5rem;
             min-height: 400px;
         }
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Form Styles */
         .form-section {
             background-color: var(--card-bg);
             border-radius: var(--radius);
-            padding: 25px;
+            padding: 1.5rem;
             max-width: 800px;
             margin: 0 auto;
             width: 100%;
-            border: 1px solid var(--border);
         }
 
         .section-title {
-            font-size: clamp(1.3rem, 3vw, 1.9rem);
+            font-size: 1.5rem;
             color: var(--primary);
-            margin-bottom: 25px;
-            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 12px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 3px;
+            gap: 0.75rem;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 1.25rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
             color: var(--text);
-            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-size: 0.95rem;
         }
 
         .form-group input[type="text"],
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 14px 16px;
+            padding: 0.75rem 1rem;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            font-size: 0.95rem;
             transition: var(--transition);
-            background-color: var(--bg);
+            background-color: var(--card-bg);
             color: var(--text);
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -300,7 +258,7 @@
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
         }
 
         .form-group select {
@@ -314,42 +272,38 @@
 
         .optional-label {
             color: var(--text-light);
-            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
-            font-style: italic;
+            font-size: 0.85rem;
             font-weight: normal;
         }
 
         .help-text {
-            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            font-size: 0.85rem;
             color: var(--text-light);
-            margin-top: 8px;
+            margin-top: 0.5rem;
             line-height: 1.4;
         }
 
         /* Button Styles */
         .btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             color: white;
-            padding: 15px 25px;
+            padding: 0.75rem 1.5rem;
             border: none;
             border-radius: var(--radius);
-            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
             transition: var(--transition);
-            letter-spacing: 0.5px;
-            box-shadow: var(--shadow);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 0.5rem;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
-            opacity: 0.9;
+            background: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
         .btn:active {
@@ -363,51 +317,44 @@
         }
 
         .btn-small {
-            padding: 10px 18px;
-            font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
             width: auto;
-            margin: 5px;
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #4cc9f0, #4895ef);
+            background: #4cc9f0;
         }
 
         .btn-success:hover {
-            box-shadow: 0 6px 12px rgba(76, 201, 240, 0.3);
+            background: #3a86ff;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #f72585, #b5179e);
+            background: #f72585;
         }
 
         .btn-danger:hover {
-            box-shadow: 0 6px 12px rgba(247, 37, 133, 0.3);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #f8961e, #f3722c);
+            background: #b5179e;
         }
 
         .refresh-btn {
-            margin-bottom: 25px;
+            margin-bottom: 1.5rem;
             width: 100%;
             max-width: 200px;
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
         }
 
         /* Loading and Message Styles */
         .loading {
             display: none;
             text-align: center;
-            padding: 25px;
+            padding: 1.5rem;
             color: var(--text-light);
-            font-size: clamp(1rem, 2vw, 1.1rem);
         }
 
         .loading i {
             animation: spin 1s linear infinite;
-            margin-right: 10px;
+            margin-right: 0.5rem;
         }
 
         @keyframes spin {
@@ -416,12 +363,12 @@
         }
 
         .message {
-            padding: 18px;
+            padding: 1rem;
             border-radius: var(--radius);
-            margin: 25px 0;
+            margin: 1rem 0;
             font-weight: 500;
             display: none;
-            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            font-size: 0.95rem;
             line-height: 1.5;
             border-left: 4px solid transparent;
         }
@@ -442,84 +389,77 @@
         .list-section {
             background-color: var(--card-bg);
             border-radius: var(--radius);
-            padding: 25px;
+            padding: 1.5rem;
             max-height: 70vh;
             overflow-y: auto;
-            border: 1px solid var(--border);
         }
 
         .data-item {
             background-color: var(--card-bg);
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
             border-radius: var(--radius);
-            border-left: 4px solid var(--primary);
+            border-left: 3px solid var(--primary);
             box-shadow: var(--shadow);
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
         }
 
         .data-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .data-item.completed {
             border-left-color: #4cc9f0;
-            background-color: rgba(76, 201, 240, 0.05);
         }
 
         .data-item h3 {
             color: var(--primary);
-            margin-bottom: 12px;
-            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
             word-break: break-word;
         }
 
         .data-item p {
             color: var(--text-light);
-            margin-bottom: 8px;
-            font-size: clamp(0.9rem, 2vw, 1rem);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
             line-height: 1.5;
         }
 
         .data-item .timestamp {
-            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            font-size: 0.8rem;
             color: var(--text-light);
-            font-style: italic;
             border-top: 1px solid var(--border);
-            padding-top: 12px;
-            margin-top: 15px;
+            padding-top: 0.75rem;
+            margin-top: 0.75rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
         }
 
         .rating-stars {
             color: #f8961e;
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            letter-spacing: 2px;
+            font-size: 1rem;
         }
 
         .status-badge {
             display: inline-block;
-            padding: 6px 14px;
+            padding: 0.25rem 0.75rem;
             border-radius: 20px;
-            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
-            font-weight: 700;
+            font-size: 0.75rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             cursor: pointer;
             transition: var(--transition);
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
         }
 
         .status-pending {
             background-color: rgba(248, 150, 30, 0.1);
             color: #f8961e;
-            border: 1px solid rgba(248, 150, 30, 0.3);
+            border: 1px solid rgba(248, 150, 30, 0.2);
         }
 
         .status-pending:hover {
@@ -529,14 +469,14 @@
         .status-selesai {
             background-color: rgba(76, 201, 240, 0.1);
             color: #4cc9f0;
-            border: 1px solid rgba(76, 201, 240, 0.3);
+            border: 1px solid rgba(76, 201, 240, 0.2);
         }
 
         .action-buttons {
-            margin-top: 20px;
+            margin-top: 1rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 0.5rem;
         }
 
         /* Modal Styles */
@@ -548,99 +488,91 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.5);
             overflow-y: auto;
             animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background-color: var(--card-bg);
-            margin: 5% auto;
-            padding: 30px;
+            margin: 10% auto;
+            padding: 1.5rem;
             border-radius: var(--radius);
             width: 90%;
             max-width: 500px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             position: relative;
-            animation: slideDown 0.4s ease;
+            animation: slideDown 0.3s ease;
         }
 
         @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
+            from { transform: translateY(-10px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
 
         .modal h3 {
-            margin-bottom: 25px;
+            margin-bottom: 1.5rem;
             color: var(--primary);
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-size: 1.25rem;
             word-break: break-word;
         }
 
         .modal-buttons {
             display: flex;
-            gap: 15px;
+            gap: 0.75rem;
             justify-content: center;
-            margin-top: 25px;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
         }
 
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 50px 20px;
+            padding: 2rem 1rem;
             color: var(--text-light);
         }
 
         .empty-state .icon {
-            font-size: clamp(3rem, 6vw, 5rem);
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 1rem;
             opacity: 0.5;
         }
 
         .empty-state p {
-            font-size: clamp(1rem, 2vw, 1.1rem);
+            font-size: 1rem;
             max-width: 500px;
             margin: 0 auto;
         }
 
         /* Custom Scrollbar */
         .list-section::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
 
         .list-section::-webkit-scrollbar-track {
             background: var(--bg);
-            border-radius: 10px;
         }
 
         .list-section::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 10px;
-        }
-
-        .list-section::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary);
+            background: var(--primary);
+            border-radius: 3px;
         }
 
         /* Donation Section */
         .donation-section {
             background-color: var(--bg);
             border-radius: var(--radius);
-            padding: 25px;
-            margin: 30px 0;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             text-align: center;
             border: 1px solid var(--border);
         }
 
         .donation-title {
-            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-size: 1.1rem;
             color: var(--primary);
-            margin-bottom: 20px;
-            font-weight: 700;
+            margin-bottom: 1rem;
+            font-weight: 600;
         }
 
         .donation-image {
@@ -648,117 +580,119 @@
             width: 100%;
             height: auto;
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin: 0 auto 20px;
+            margin: 0 auto 1rem;
             display: block;
         }
 
         .donation-info {
             background-color: var(--card-bg);
-            padding: 20px;
+            padding: 1rem;
             border-radius: var(--radius);
-            margin-top: 20px;
+            margin-top: 1rem;
             text-align: left;
         }
 
         .donation-info p {
-            margin-bottom: 12px;
-            font-size: clamp(0.9rem, 2vw, 1rem);
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
             color: var(--text);
         }
 
         .donation-info a {
             color: var(--primary);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             transition: var(--transition);
         }
 
         .donation-info a:hover {
             text-decoration: underline;
-            color: var(--secondary);
+        }
+
+        /* Back Button */
+        .back-button {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            margin: 1rem auto;
+            text-align: center;
+            max-width: 250px;
+            width: 100%;
+        }
+
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
         /* Responsive Breakpoints */
         @media (max-width: 768px) {
             body {
-                padding: 15px;
+                padding: 1rem;
             }
             
             .header {
-                padding: 20px 15px;
+                padding: 1.5rem 1rem;
             }
             
             .tab-content {
-                padding: 20px 15px;
+                padding: 1rem;
             }
             
             .form-section,
             .list-section {
-                padding: 20px;
+                padding: 1rem;
             }
             
             .tab-button {
-                padding: 14px 8px;
+                padding: 0.75rem;
                 min-width: 120px;
-            }
-            
-            .data-item {
-                padding: 18px;
+                font-size: 0.85rem;
             }
             
             .modal-content {
-                padding: 25px 20px;
+                padding: 1.25rem;
                 width: 95%;
-            }
-            
-            .modal-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .btn-small {
-                width: 100%;
-                margin: 5px 0;
             }
         }
 
         @media (max-width: 576px) {
-            body {
-                padding: 10px;
+            .header h1 {
+                font-size: 1.5rem;
             }
             
-            .header {
-                padding: 15px 10px;
-                border-radius: 8px 8px 0 0;
-            }
-            
-            .tab-content {
-                padding: 15px 10px;
-            }
-            
-            .form-section,
-            .list-section {
-                padding: 15px;
+            .header p {
+                font-size: 0.9rem;
             }
             
             .section-title {
-                font-size: 1.3rem;
+                font-size: 1.25rem;
             }
             
             .theme-switcher {
-                top: 15px;
-                right: 15px;
+                position: relative;
+                top: auto;
+                right: auto;
+                justify-content: center;
+                margin-bottom: 1rem;
             }
             
-            .switch {
-                width: 40px;
-                height: 20px;
+            .modal-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
             }
             
-            .slider:before {
-                height: 14px;
-                width: 14px;
+            .btn-small {
+                width: 100%;
             }
         }
 
@@ -779,45 +713,22 @@
                 transition: none !important;
             }
         }
-
-        /* Style untuk tombol kembali */
-.back-button {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
-    padding: 12px 20px;
-    border-radius: var(--radius);
-    text-decoration: none;
-    font-weight: 600;
-    transition: var(--transition);
-    box-shadow: var(--shadow);
-    margin: 20px auto;
-    text-align: center;
-    max-width: 250px;
-    width: 100%;
+.link-input-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.back-button i {
-    margin-right: 8px;
+.link-input {
+    flex-grow: 1;
 }
 
-.back-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
-    opacity: 0.9;
+.add-link-btn, .remove-link-btn {
+    flex-shrink: 0;
 }
 
-.back-button:active {
-    transform: translateY(0);
-}
-
-/* Jika ingin menambahkan di tab navigation */
-.tab-navigation .back-tab {
-    background: linear-gradient(135deg, #6c757d, #495057);
-}
-
-.tab-navigation .back-tab:hover {
-    background: linear-gradient(135deg, #5a6268, #343a40);
+.data-item p {
+    margin: 5px 0;
 }
     </style>
 </head>
@@ -834,7 +745,7 @@
             </div>
             
             <h1><i class="fas fa-gamepad"></i> Request Game INDapk</h1>
-            <p>Platform Request Game Terlengkap & Terpercaya</p>
+            <p>Request Game Terpercaya</p>
         </div>
         <!-- Tab Navigation -->
         <div class="tab-navigation">
@@ -963,46 +874,50 @@
         </div>
     </div>
 
-    <!-- Modal Link Selesai -->
-    <div id="linkModal" class="modal">
-        <div class="modal-content">
-            <h3><i class="fas fa-link"></i> Input Data Game Selesai</h3>
-            <div class="form-group" style="margin: 20px 0; text-align: left;">
-                <label for="linkSelesaiInput">Link Game yang Sudah Selesai:</label>
-                <input type="text" id="linkSelesaiInput" placeholder="https://example.com/completed-game" style="width: 100%; margin-top: 8px;">
-            </div>
-            <!-- TAMBAHAN BARU: Input Pesan Owner -->
-            <div class="form-group" style="margin: 20px 0; text-align: left;">
-                <label for="pesanOwnerInput">Pesan Owner <span class="optional-label">(Optional)</span>:</label>
-                <textarea id="pesanOwnerInput" placeholder="Contoh: Game sudah selesai dimod, silahkan download di link di atas" 
-                        style="width: 100%; margin-top: 8px; min-height: 80px; resize: vertical;"></textarea>
-            </div>
-            <div class="modal-buttons">
-                <button class="btn btn-small btn-danger" onclick="closeLinkModal()">
-                    <i class="fas fa-times"></i> Batal
-                </button>
-                <button class="btn btn-small btn-success" onclick="submitLinkSelesai()">
-                    <i class="fas fa-check"></i> Tandai Selesai
-                </button>
+<!-- Modal Link Selesai -->
+<div id="linkModal" class="modal">
+    <div class="modal-content">
+        <h3><i class="fas fa-link"></i> Input Data Game Selesai</h3>
+        <div class="links-container">
+            <div class="form-group link-group" style="margin: 20px 0; text-align: left;">
+                <label>Link Game yang Sudah Selesai:</label>
+                <div class="link-input-container">
+                    <input type="text" class="link-input" placeholder="https://example.com/completed-game" style="width: calc(100% - 40px); margin-top: 8px;">
+                    <button class="btn btn-small btn-success add-link-btn" onclick="addLinkInput()" style="margin-left: 5px; margin-top: 8px; width: 35px;">+</button>
+                </div>
             </div>
         </div>
+        <!-- TAMBAHAN BARU: Input Pesan Owner -->
+        <div class="form-group" style="margin: 20px 0; text-align: left;">
+            <label for="pesanOwnerInput">Pesan Owner <span class="optional-label">(Optional)</span>:</label>
+            <textarea id="pesanOwnerInput" placeholder="Contoh: Game sudah selesai dimod, silahkan download di link di atas" 
+                    style="width: 100%; margin-top: 8px; min-height: 80px; resize: vertical;"></textarea>
+        </div>
+        <div class="modal-buttons">
+            <button class="btn btn-small btn-danger" onclick="closeLinkModal()">
+                <i class="fas fa-times"></i> Batal
+            </button>
+            <button class="btn btn-small btn-success" onclick="submitLinkSelesai()">
+                <i class="fas fa-check"></i> Tandai Selesai
+            </button>
+        </div>
     </div>
+</div>
 
-    <!-- Modal Konfirmasi -->
-    <div id="confirmModal" class="modal">
-        <div class="modal-content">
-            <h3 id="modalTitle"><i class="fas fa-question-circle"></i> Konfirmasi Aksi</h3>
-            <p id="modalMessage">Apakah Anda yakin ingin melakukan aksi ini?</p>
-            <div class="modal-buttons">
-                <button class="btn btn-small btn-danger" onclick="closeModal()">
-                    <i class="fas fa-times"></i> Batal
-                </button>
-                <button class="btn btn-small btn-success" id="confirmBtn" onclick="confirmAction()">
-                    <i class="fas fa-check"></i> Ya
-                </button>
-            </div>
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle"><i class="fas fa-question-circle"></i> Konfirmasi Aksi</h3>
+        <p id="modalMessage">Apakah Anda yakin ingin melakukan aksi ini?</p>
+        <div class="modal-buttons">
+            <button class="btn btn-small btn-danger" onclick="closeModal()">
+                <i class="fas fa-times"></i> Batal
+            </button>
+            <button class="btn btn-small btn-success" id="confirmBtn" onclick="confirmAction()">
+                <i class="fas fa-check"></i> Ya
+            </button>
         </div>
     </div>
+</div>
 
     <script>
 
@@ -1156,55 +1071,101 @@ document.getElementById('link_game').addEventListener('input', function () {
 
 
 let tempLinkSelesai = '';
-        function displayData(data) {
-            const dataContainer = document.getElementById('dataContainer');
+// Update the displayData function to ensure proper event binding
+function displayData(data) {
+    const dataContainer = document.getElementById('dataContainer');
+    
+    if (!data || data.length === 0) {
+        dataContainer.innerHTML = '<p style="text-align:center; color: #6b7280;">📝 Belum ada request game.</p>';
+        return;
+    }
+    
+    let html = '';
+    data.reverse().forEach(item => {
+        const timestamp = new Date(item.timestamp).toLocaleString('id-ID');
+        const status = item.status_req || 'PENDING';
+        const isCompleted = status === 'SELESAI';
+        const isPending = status === 'PENDING';
+        
+        // Split multiple links and filter out empty ones
+        const links = item.link_selesai ? 
+            item.link_selesai.split(',').map(link => link.trim()).filter(link => link) : [];
+        
+        html += `
+            <div class="data-item ${isCompleted ? 'completed' : ''}">
+                <h3>🎮 ${item.nama_game}</h3>
+                <p><strong>👤 Pengguna:</strong> ${item.nama_pengguna}</p>
+                <p><strong>🕹️ Emulator:</strong> ${item.jenis_emulator}</p>
+                ${item.version_game ? `<p><strong>📦 Version:</strong> ${item.version_game}</p>` : ''}
+                ${item.rating_web ? `<p><strong>⭐ Rating:</strong> <span class="rating-stars">${item.rating_web}</span></p>` : ''}
+                <p><strong>📊 Status:</strong> 
+                    <span class="status-badge ${status === 'SELESAI' ? 'status-selesai' : 'status-pending'}">
+                        ${status}
+                    </span>
+                </p>
+                ${isCompleted && links.length > 0 ? 
+                    links.map((link, index) => `
+                        <p><strong>🔗 Link Game${links.length > 1 ? ' ' + (index+1) : ''}:</strong> 
+                        <a href="${link}" target="_blank" style="color: #10b981;">${link}</a></p>
+                    `).join('') : ''}
+                ${isCompleted && item.pesan_owner ? `<p><strong>💬 Pesan Owner:</strong> <span style="background: #f0fdf4; padding: 8px; border-radius: 6px; display: block; margin-top: 5px; border-left: 3px solid #10b981;">${item.pesan_owner}</span></p>` : ''}
+                ${isCompleted ? `<p><strong>🛡️ Approved By:</strong> AnggaPutraJN ✅ </p>` : ''}
             
-            if (!data || data.length === 0) {
-                dataContainer.innerHTML = '<p style="text-align:center; color: #6b7280;">📝 Belum ada request game.</p>';
-                return;
-            }
-            
-            let html = '';
-            data.reverse().forEach(item => {
-                const timestamp = new Date(item.timestamp).toLocaleString('id-ID');
-                const status = item.status_req || 'PENDING';
-                const isCompleted = status === 'SELESAI';
-                const isPending = status === 'PENDING';
+                <p class="timestamp">${timestamp}</p>
                 
-                html += `
-                    <div class="data-item ${isCompleted ? 'completed' : ''}">
-                        <h3>🎮 ${item.nama_game}</h3>
-                        <p><strong>👤 Pengguna:</strong> ${item.nama_pengguna}</p>
-                        <p><strong>🕹️ Emulator:</strong> ${item.jenis_emulator}</p>
-                        ${item.version_game ? `<p><strong>📦 Version:</strong> ${item.version_game}</p>` : ''}
-                        ${item.rating_web ? `<p><strong>⭐ Rating:</strong> <span class="rating-stars">${item.rating_web}</span></p>` : ''}
-                        <p><strong>📊 Status:</strong> 
-                            <span class="status-badge ${status === 'SELESAI' ? 'status-selesai' : 'status-pending'}" 
-                                onclick="${isPending ? `showLinkModal('${item.nama_game}', ${item.id})` : ''}">
-                                ${status}
-                            </span>
-                        </p>
-                        ${isCompleted && item.link_selesai ? `<p><strong>🔗 Link Game Request:</strong> <a href="${item.link_selesai}" target="_blank" style="color: #10b981;">${item.link_selesai}</a></p>` : ''}
-                        <!-- TAMBAHAN BARU: Tampilkan pesan owner jika ada -->
-                        ${isCompleted && item.pesan_owner ? `<p><strong>💬 Pesan Owner:</strong> <span style="background: #f0fdf4; padding: 8px; border-radius: 6px; display: block; margin-top: 5px; border-left: 3px solid #10b981;">${item.pesan_owner}</span></p>` : ''}
-                        ${isCompleted ? `<p><strong>🛡️ Approved By:</strong> AnggaPutraJN ✅ </p>` : ''}
-                    
-                        <p class="timestamp">${timestamp}</p>
-                        
-                    </div>
-                `;
-            });
-            
-            dataContainer.innerHTML = html;
-        }
+            </div>
+        `;
+    });
+    
+    dataContainer.innerHTML = html;
+}
+
+// Function to add new link input field
+function addLinkInput() {
+    const linksContainer = document.querySelector('.links-container');
+    const linkGroup = document.createElement('div');
+    linkGroup.className = 'form-group link-group';
+    linkGroup.style.margin = '20px 0';
+    linkGroup.style.textAlign = 'left';
+    
+    linkGroup.innerHTML = `
+        <div class="link-input-container">
+            <input type="text" class="link-input" placeholder="https://example.com/completed-game" style="width: calc(100% - 40px); margin-top: 8px;">
+            <button class="btn btn-small btn-danger remove-link-btn" onclick="removeLinkInput(this)" style="margin-left: 5px; margin-top: 8px; width: 35px;">-</button>
+        </div>
+    `;
+    
+    linksContainer.appendChild(linkGroup);
+}
+
+// Function to remove link input field
+function removeLinkInput(button) {
+    const linkGroup = button.closest('.link-group');
+    if (document.querySelectorAll('.link-group').length > 1) {
+        linkGroup.remove();
+    } else {
+        // Don't remove the last input, just clear it
+        linkGroup.querySelector('.link-input').value = '';
+    }
+}
+
 // MODIFIKASI fungsi untuk menampilkan modal input link
 function showLinkModal(gameName, id) {
     currentId = id;
     const modal = document.getElementById('linkModal');
-    const input = document.getElementById('linkSelesaiInput');
     
-    // Reset input
-    input.value = '';
+    // Reset all inputs
+    const linksContainer = document.querySelector('.links-container');
+    linksContainer.innerHTML = `
+        <div class="form-group link-group" style="margin: 20px 0; text-align: left;">
+            <label>Link Game yang Sudah Selesai:</label>
+            <div class="link-input-container">
+                <input type="text" class="link-input" placeholder="https://example.com/completed-game" style="width: calc(100% - 40px); margin-top: 8px;">
+                <button class="btn btn-small btn-success add-link-btn" onclick="addLinkInput()" style="margin-left: 5px; margin-top: 8px; width: 35px;">+</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('pesanOwnerInput').value = '';
     
     // Update judul dengan nama game
     document.querySelector('#linkModal h3').textContent = `🔗 Link Game "${gameName}" yang Selesai`;
@@ -1212,24 +1173,48 @@ function showLinkModal(gameName, id) {
     modal.style.display = 'block';
 }
 
+// MODIFIKASI fungsi untuk menutup modal
 function closeLinkModal() {
     document.getElementById('linkModal').style.display = 'none';
-    document.getElementById('linkSelesaiInput').value = ''; // Reset link input
-    document.getElementById('pesanOwnerInput').value = ''; // TAMBAHAN BARU - Reset pesan input
+    // Reset all link inputs
+    const linksContainer = document.querySelector('.links-container');
+    linksContainer.innerHTML = `
+        <div class="form-group link-group" style="margin: 20px 0; text-align: left;">
+            <label>Link Game yang Sudah Selesai:</label>
+            <div class="link-input-container">
+                <input type="text" class="link-input" placeholder="https://example.com/completed-game" style="width: calc(100% - 40px); margin-top: 8px;">
+                <button class="btn btn-small btn-success add-link-btn" onclick="addLinkInput()" style="margin-left: 5px; margin-top: 8px; width: 35px;">+</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('pesanOwnerInput').value = '';
     currentId = null;
 }
 
 // MODIFIKASI fungsi untuk submit link selesai
 function submitLinkSelesai() {
-    const linkInput = document.getElementById('linkSelesaiInput');
-    const pesanInput = document.getElementById('pesanOwnerInput'); // TAMBAHAN BARU
-    const link = linkInput.value.trim();
-    const pesan = pesanInput.value.trim(); // TAMBAHAN BARU
+    const linkInputs = document.querySelectorAll('.link-input');
+    const pesanInput = document.getElementById('pesanOwnerInput');
     
-    // Validasi link (opsional - bisa dikomentari jika tidak ingin validasi)
-    if (link && !link.startsWith('http://') && !link.startsWith('https://')) {
-        alert('Masukkan link yang valid (harus dimulai dengan http:// atau https://)');
+    // Collect all non-empty links
+    const links = Array.from(linkInputs)
+        .map(input => input.value.trim())
+        .filter(link => link !== '');
+    
+    const pesan = pesanInput.value.trim();
+    
+    // Validate at least one link exists
+    if (links.length === 0) {
+        showMessage('Harap masukkan minimal satu link game yang selesai', 'error');
         return;
+    }
+    
+    // Validate each link
+    for (const link of links) {
+        if (link && !link.startsWith('http://') && !link.startsWith('https://')) {
+            showMessage('Masukkan link yang valid (harus dimulai dengan http:// atau https://)', 'error');
+            return;
+        }
     }
     
     if (!currentId) return;
@@ -1237,14 +1222,14 @@ function submitLinkSelesai() {
     const formData = new FormData();
     formData.append('action', 'markDone');
     formData.append('id', currentId);
-    formData.append('link_selesai', link);
-    formData.append('pesan_owner', pesan); // TAMBAHAN BARU
+    formData.append('link_selesai', links.join(', ')); // Join multiple links with comma
+    formData.append('pesan_owner', pesan);
     
     // Show loading state
     const submitBtn = document.querySelector('#linkModal .btn-success');
-    const originalText = submitBtn.textContent;
+    const originalText = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.textContent = '⏳ Memproses...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
     
     fetch(SCRIPT_URL, {
         method: 'POST',
@@ -1253,7 +1238,7 @@ function submitLinkSelesai() {
     .then(response => response.json())
     .then(data => {
         submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
+        submitBtn.innerHTML = originalText;
         
         if (data.status === 'success') {
             closeLinkModal();
@@ -1265,29 +1250,41 @@ function submitLinkSelesai() {
     })
     .catch(error => {
         submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
+        submitBtn.innerHTML = originalText;
         showMessage('Terjadi kesalahan: ' + error.message, 'error');
     });
 }
 
-        function showModal(action, id, gameName) {
-            currentAction = action;
-            currentId = id;
-            
-            const modal = document.getElementById('confirmModal');
-            const title = document.getElementById('modalTitle');
-            const message = document.getElementById('modalMessage');
-            
-            if (action === 'delete') {
-                title.textContent = '🗑️ Hapus Request';
-                message.textContent = `Apakah Anda yakin ingin menghapus request game "${gameName}"? Aksi ini tidak dapat dibatalkan.`;
-            } else if (action === 'markDone') {
-                title.textContent = '✅ Tandai Selesai';
-                message.textContent = `Apakah Anda yakin ingin menandai request game "${gameName}" sebagai SELESAI?`;
-            }
-            
-            modal.style.display = 'block';
+
+// Update the showModal function to be more robust
+function showModal(action, id, gameName) {
+    try {
+        currentAction = action;
+        currentId = id;
+        
+        const modal = document.getElementById('confirmModal');
+        const title = document.getElementById('modalTitle');
+        const message = document.getElementById('modalMessage');
+        
+        if (!modal || !title || !message) {
+            console.error('Modal elements not found');
+            return;
         }
+        
+        if (action === 'delete') {
+            title.textContent = '🗑️ Hapus Request';
+            message.textContent = `Apakah Anda yakin ingin menghapus request game "${gameName}"? Aksi ini tidak dapat dibatalkan.`;
+        } else if (action === 'markDone') {
+            title.textContent = '✅ Tandai Selesai';
+            message.textContent = `Apakah Anda yakin ingin menandai request game "${gameName}" sebagai SELESAI?`;
+        }
+        
+        modal.style.display = 'block';
+    } catch (error) {
+        console.error('Error in showModal:', error);
+    }
+}
+
 
         function closeModal() {
             document.getElementById('confirmModal').style.display = 'none';
