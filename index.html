@@ -1177,7 +1177,6 @@ let tempLinkSelesai = '';
                         <p><strong>👤 Pengguna:</strong> ${item.nama_pengguna}</p>
                         <p><strong>🕹️ Emulator:</strong> ${item.jenis_emulator}</p>
                         ${item.version_game ? `<p><strong>📦 Version:</strong> ${item.version_game}</p>` : ''}
-                        ${item.link_game ? `<p><strong>🔗 Link:</strong> <a href="${item.link_game}" target="_blank" style="color: #3498db;">${item.link_game}</a></p>` : ''}
                         ${item.rating_web ? `<p><strong>⭐ Rating:</strong> <span class="rating-stars">${item.rating_web}</span></p>` : ''}
                         <p><strong>📊 Status:</strong> 
                             <span class="status-badge ${status === 'SELESAI' ? 'status-selesai' : 'status-pending'}" 
