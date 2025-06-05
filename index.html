@@ -621,7 +621,7 @@
             transition: var(--transition);
             margin: 1rem auto;
             text-align: center;
-            max-width: 250px;
+            max-width: 258px;
             width: 100%;
         }
 
@@ -783,6 +783,96 @@
 .dark-theme .filter-btn:not(.active) span {
     color: #cbd5e0;
 }
+
+/* Info Message Styles */
+.info-message {
+    background-color: rgba(72, 149, 239, 0.1);
+    color: var(--primary);
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    border-left: 4px solid var(--primary);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.info-message i {
+    font-size: 1.1rem;
+    margin-top: 0.1rem;
+}
+
+.info-message a {
+    color: var(--primary-dark);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.info-message a:hover {
+    text-decoration: underline;
+}
+
+/* Komunitas Section Styles */
+.komunitas-section {
+    background-color: var(--bg);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+}
+
+.komunitas-title {
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.komunitas-info {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    border-radius: var(--radius);
+}
+
+.komunitas-category {
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.komunitas-link {
+    display: block;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background-color: rgba(16, 185, 129, 0.1);
+    border-radius: var(--radius);
+    border-left: 3px solid #10b981;
+    transition: var(--transition);
+    text-decoration: none;
+    color: #10b981;
+    font-weight: 500;
+}
+
+.komunitas-link:hover {
+    background-color: rgba(16, 185, 129, 0.2);
+    transform: translateX(3px);
+}
+
+.komunitas-link i {
+    margin-right: 0.5rem;
+}
+
+.dark-theme .komunitas-link {
+    background-color: rgba(16, 185, 129, 0.15);
+}
     </style>
 </head>
 <body>
@@ -808,19 +898,33 @@
             <button class="tab-button" onclick="showTab('list')">
                 <i class="fas fa-list"></i> Daftar Request
             </button>
+            <button class="tab-button" onclick="showTab('komunitas')">
+                <i class="fas fa-users"></i> Komunitas
+            </button>
         </div>
 
         <div class="content-wrapper">
-            
-<div style="text-align: center;">
-    <a href="report.html" class="back-button">
-        <i class="fas fa-arrow-left"></i>Report Link
+<div style="text-align: center; display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
+    <a href="https://indapk.com/report.html" class="back-button">
+        <i class="fas fa-flag"></i> Report Link
+    </a>
+    <a href="https://indapk.com" class="back-button">
+        <i class="fas fa-home"></i> Kembali Ke Web Utama
     </a>
 </div>
+ 
             <!-- Request Game Tab -->
             <div id="requestTab" class="tab-content active">
                 <div class="form-section">
                     <h2 class="section-title"><i class="fas fa-pen"></i> Request Game Baru</h2>
+                    
+                    <!-- Info Message -->
+                    <div class="info-message">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>INFO:</strong> Tolong sebelum mengisi request game, silahkan cek dulu gamenya di web, ada atau enggak. Silahkan cek disini: <a href="https://www.indapk.com" target="_blank">https://www.indapk.com</a>
+                        </div>
+                    </div>
                     
                     <form id="gameForm">
                         <div class="form-group">
@@ -890,9 +994,9 @@
                                 <p><i class="fas fa-wallet"></i> <strong>Gopay:</strong> 082286344446 (AnggaPutraJN)</p>
                                 <p><i class="fas fa-wallet"></i> <strong>Dana:</strong> 082286344446 (A.P JATI NEGARA MA)</p>
                                 <p><i class="fas fa-wallet"></i> <strong>Shopeepay:</strong> 082286344446 (AnggaPutraJN)</p>
-                                <p><i class="fab fa-whatsapp"></i><strong> Join Whatsapp:</strong> <span style="background: #f0fdf4; padding: 8px; border-radius: 6px; display: block; margin-top: 5px; border-left: 3px solid #10b981;"><a href="https://whatsapp.com/channel/0029Vb326pM0lwguAfx6pD3f" target="_blank" style="color: #10b981;">Click To Join Whatsapp</a></span></p>
                             </div>
                         </div>
+
 
                         <button type="submit" class="btn" id="submitBtn">
                             <i class="fas fa-paper-plane"></i> Kirim Request Game
@@ -907,22 +1011,30 @@
                 </div>
             </div>
 
-<!-- Daftar Request Game Tab -->
+<!-- Daftar Request Game Tab --><!-- Daftar Request Game Tab -->
 <div id="listTab" class="tab-content">
     <div class="list-section">
         <h2 class="section-title"><i class="fas fa-list"></i> Daftar Request Game</h2>
         
-<div class="filter-buttons">
-    <button class="btn filter-btn active" onclick="filterRequests('all')">
-        <i class="fas fa-list-ul"></i> Semua Request (<span id="count-all">0</span>)
-    </button>
-    <button class="btn filter-btn" onclick="filterRequests('selesai')">
-        <i class="fas fa-check-circle"></i> Selesai (<span id="count-selesai">0</span>)
-    </button>
-    <button class="btn filter-btn" onclick="filterRequests('pending')">
-        <i class="fas fa-clock"></i> Pending (<span id="count-pending">0</span>)
-    </button>
-</div>
+        <!-- Add this search input -->
+        <div style="margin-bottom: 15px;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <input type="text" id="searchInput" placeholder="Cari game atau pengguna..." 
+                       style="width: 100%; padding: 10px; border-radius: var(--radius); border: 1px solid var(--border);">
+            </div>
+        </div>
+        
+        <div class="filter-buttons">
+            <button class="btn filter-btn active" onclick="filterRequests('all')">
+                <i class="fas fa-list-ul"></i> Semua Request (<span id="count-all">0</span>)
+            </button>
+            <button class="btn filter-btn" onclick="filterRequests('selesai')">
+                <i class="fas fa-check-circle"></i> Selesai (<span id="count-selesai">0</span>)
+            </button>
+            <button class="btn filter-btn" onclick="filterRequests('pending')">
+                <i class="fas fa-clock"></i> Pending (<span id="count-pending">0</span>)
+            </button>
+        </div>
         
         <button type="button" class="btn refresh-btn" onclick="loadData()">
             <i class="fas fa-sync-alt"></i> Refresh Data
@@ -936,6 +1048,71 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+<!-- Komunitas Tab -->
+<div id="komunitasTab" class="tab-content">
+    <div class="komunitas-section">
+        <h2 class="section-title"><i class="fas fa-users"></i> Komunitas</h2>
+        
+                        <!-- Komunitas Section -->
+                        <div class="komunitas-section">
+                            <h3 class="komunitas-title"><i class="fas fa-users"></i> Komunitas INDapk</h3>
+                            <div class="komunitas-info">
+                                <p><strong><i class="fas fa-hand-holding-heart"></i> Bagi yang ingin join komunitas INDapk:</strong></p>
+                                
+                                <div class="komunitas-category"><i class="fab fa-whatsapp"></i> Whatsapp</div>
+                                <a href="https://chat.whatsapp.com/EQGL0y5OTwUGYWsbuoJ7pA" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-whatsapp"></i> Join Group Whatsapp
+                                </a>
+                                <a href="https://whatsapp.com/channel/0029Vb326pM0lwguAfx6pD3f" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-whatsapp"></i> Follow Channel Whatsapp
+                                </a>
+                                
+                                <div class="komunitas-category"><i class="fab fa-telegram"></i> Telegram</div>
+                                <a href="https://t.me/indapkgroup" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-telegram"></i> Join Group Telegram
+                                </a>
+                                <a href="https://t.me/iindapk" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-telegram"></i> Follow Channel Telegram
+                                </a>
+                                <a href="https://t.me/INDapkBot" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-telegram"></i> Follow Bot Telegram
+                                </a>
+                                <a href="https://t.me/WebINDapkBot" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-telegram"></i> Follow Bot Telegram v2
+                                </a>
+                                
+                                <div class="komunitas-category"><i class="fab fa-instagram"></i> Instagram</div>
+                                <a href="https://www.instagram.com/indapk" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-instagram"></i> @INDapk
+                                </a>
+                                
+                                <div class="komunitas-category"><i class="fab fa-facebook"></i> Facebook</div>
+                                <a href="https://www.facebook.com/IDNApk" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-facebook"></i> Follow Facebook
+                                </a>
+                                
+                                <div class="komunitas-category"><i class="fab fa-tiktok"></i> Tikok</div>
+                                <a href="https://www.tiktok.com/@indapk" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-tiktok"></i> Follow Tiktok
+                                </a>
+                                
+                                <div class="komunitas-category"><i class="fab fa-youtube"></i> Youtube</div>
+                                <a href="https://www.youtube.com/@INDapk" target="_blank" class="komunitas-link">
+                                    <i class="fab fa-youtube"></i> Subscribe Youtube
+                                </a>
+                            </div>
+                        </div>
+    </div>
+</div>
+
+
 
 <!-- Modal Link Selesai -->
 <div id="linkModal" class="modal">
@@ -1166,10 +1343,40 @@ function loadData() {
 }
 
 
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const dataItems = document.querySelectorAll('.data-item');
+    let visibleCount = 0;
+    
+    dataItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Show empty state if no results
+    const dataContainer = document.getElementById('dataContainer');
+    if (visibleCount === 0 && searchTerm.length > 0) {
+        dataContainer.innerHTML = `
+            <div class="empty-state">
+                <div class="icon"><i class="fas fa-search"></i></div>
+                <p>Tidak ditemukan request yang cocok dengan "${searchTerm}"</p>
+            </div>
+        `;
+    }
+});
+
+
 let tempLinkSelesai = '';
 // Update the displayData function to ensure proper event binding
 function displayData(data) {
     const dataContainer = document.getElementById('dataContainer');
+    document.getElementById('searchInput').value = ''; // Reset search input
     
     if (!data || data.length === 0) {
         let message = '📝 Belum ada request game.';
