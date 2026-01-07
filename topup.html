@@ -1,0 +1,3749 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Top Up System - INDapk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+:root {
+  --primary-color: #4a6fa5;
+  --secondary-color: #166088;
+  --accent-color: #17a2b8;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+
+  --bg-color: #ffffff;
+  --card-bg: #ffffff;
+  --text-color: #343a40;
+  --border-color: #dee2e6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --muted-color: #6c757d;
+
+  --surface-color: #f1f5f9;
+  --surface-hover-color: #e9eef5;
+}
+
+.dark-mode {
+  --primary-color: #5a8fd8;
+  --secondary-color: #2c7bb6;
+  --accent-color: #19b9d4;
+
+  --bg-color: #1a202c;
+  --card-bg: #2d3748;
+  --text-color: #e2e8f0;
+  --border-color: #4a5568;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --muted-color: #a0aec0;
+
+  --surface-color: #1f2937;
+  --surface-hover-color: #111827;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  padding-bottom: 70px;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Navbar */
+.bg-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%) !important;
+}
+
+/* Typography */
+h6 {
+  font-weight: 700;
+}
+
+.text-muted,
+.form-text {
+  color: var(--muted-color) !important;
+}
+
+.form-text {
+  font-size: 0.85rem;
+}
+
+/* Card */
+.card {
+  border-radius: 15px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  box-shadow: 0 5px 15px var(--shadow-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px var(--shadow-color);
+}
+
+.card-header {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: #ffffff;
+  border-radius: 15px 15px 0 0 !important;
+  padding: 15px 20px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 1.05rem;
+}
+
+/* Forms */
+.form-label {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.form-control {
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(74, 111, 165, 0.25);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Fix bg-light in dark mode (Bootstrap helper frequently used) */
+.dark-mode .bg-light {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Buttons */
+.btn,
+select.form-control,
+input.form-control,
+textarea.form-control,
+button {
+  min-height: 44px;
+}
+
+.btn,
+.nav-link {
+  touch-action: manipulation;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-weight: 600;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-weight: 600;
+}
+
+/* Refresh button (rotate icon only) */
+.btn-refresh {
+  transition: all 0.3s ease;
+  border-radius: 25px;
+  font-weight: 600;
+}
+
+.btn-refresh i {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.btn-refresh:hover i {
+  transform: rotate(90deg);
+}
+
+.btn-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* User Info */
+.user-info {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+/* Topup Item */
+.topup-item {
+  border-left: 4px solid var(--primary-color);
+  padding: 15px;
+  margin-bottom: 15px;
+  background: var(--surface-color);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+}
+
+.topup-item:hover {
+  background: var(--surface-hover-color);
+  transform: translateX(3px);
+}
+
+/* Status Badges */
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-approved {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dark-mode .status-pending {
+  background-color: #332701;
+  color: #ffd351;
+  border: 1px solid #665200;
+}
+
+.dark-mode .status-approved {
+  background-color: #0f2e1a;
+  color: #75b798;
+  border: 1px solid #1e4d2f;
+}
+
+.dark-mode .status-rejected {
+  background-color: #3c1519;
+  color: #ea868f;
+  border: 1px solid #842029;
+}
+
+/* Payment Methods (legacy grid card style, still safe if used) */
+.payment-method {
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--card-bg);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.payment-method:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.payment-method.selected {
+  border-color: var(--primary-color);
+  background: rgba(74, 111, 165, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.payment-method i {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+/* Improved Payment Method Selection */
+.method-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.method-option {
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: var(--card-bg);
+}
+
+.method-option:hover {
+  border-color: var(--primary-color);
+  transform: translateX(5px);
+}
+
+.method-option.selected {
+  border-color: var(--primary-color);
+  background: rgba(74, 111, 165, 0.1);
+}
+
+.method-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.method-details {
+  flex-grow: 1;
+}
+
+/* PayPal section */
+.paypal-section {
+  border: 2px solid #003087;
+  border-radius: 10px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(0, 48, 135, 0.1) 0%, rgba(0, 156, 222, 0.1) 100%);
+  margin-bottom: 20px;
+}
+
+.paypal-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.paypal-logo {
+  font-size: 2rem;
+  color: #003087;
+  margin-right: 10px;
+}
+
+.paypal-title {
+  font-weight: 600;
+  color: #003087;
+  font-size: 1.25rem;
+}
+
+.conversion-info {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+  border-left: 4px solid #003087;
+}
+
+.conversion-rate {
+  font-weight: 600;
+  color: #003087;
+}
+
+/* English section */
+.english-section {
+  border-left: 4px solid #003087;
+  padding-left: 15px;
+  margin: 15px 0;
+}
+
+.english-title {
+  font-weight: 600;
+  color: #003087;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* QRIS Image */
+.qris-image-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.qris-image {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border: 2px solid var(--success-color);
+  border-radius: 10px;
+  padding: 10px;
+  background: #ffffff;
+  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+}
+
+.qris-note {
+  font-size: 12px;
+  color: var(--muted-color);
+  margin-top: 10px;
+}
+
+/* Payment instructions appearance */
+.payment-instructions {
+  animation: fadeIn 0.5s ease;
+  margin: 20px 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal */
+.modal-content {
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--border-color);
+}
+
+/* Admin Actions */
+.admin-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-btn {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  min-width: 40px;
+  min-height: 32px;
+}
+
+.approve-btn {
+  background-color: var(--success-color);
+  color: #ffffff;
+}
+
+.reject-btn {
+  background-color: var(--danger-color);
+  color: #ffffff;
+}
+
+.view-btn {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+/* Footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card-bg);
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-color);
+  border-top: 1px solid var(--border-color);
+  z-index: 1000;
+}
+
+/* Loading helpers */
+.loading {
+  display: none;
+}
+
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .payment-method {
+    padding: 12px;
+  }
+
+  .payment-method i {
+    font-size: 2rem;
+  }
+
+  .method-option {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .method-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .qris-image {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 575px) {
+  .user-info .d-flex {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .user-info .btn {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .qris-image {
+    max-width: 200px;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-dark navbar-expand-lg py-3 bg-gradient">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-wallet me-2"></i>
+                <span class="fw-bold">INDapk - Top Up System</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://t.me/INDapkBot" target="_blank">
+                            <i class="fab fa-telegram me-1"></i> Telegram Bot
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container mt-4">
+        <!-- Login/User Info -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="user-info" id="userInfo">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                        <div class="mb-3 mb-md-0">
+                            <h4 class="mb-1" id="userName">Selamat Datang di Top Up INDapk!</h4>
+                            <p class="mb-0" id="userStatus">Silakan login untuk melakukan top up atau mengelola top up sebagai admin.</p>
+                        </div>
+                        <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
+                            <button class="btn btn-outline-primary"  onclick="showLoginModal()" id="loginBtn">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="showPremiumModal()" id="premiumBtn" style="display: none;">
+                              <i class="fas fa-gem me-2"></i>Beli Premium
+                            </button>
+                            <a class="btn btn-outline-info" href="https://indapk.com/requestgame.html" target="_blank" rel="noopener" id="requestGameBtn">
+                              <i class="fas fa-gamepad me-2"></i>Request Game
+                            </a>
+                            <button class="btn btn-primary" onclick="showTopupModal()" id="topupBtn" style="display: none;">
+                              <i class="fas fa-plus-circle me-2"></i>Buat Top Up
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="logout()" id="logoutBtn" style="display: none;">
+                              <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs mb-4" id="topupTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="my-topup-tab" data-bs-toggle="tab" data-bs-target="#my-topup" type="button">
+                    <i class="fas fa-history me-2"></i>Riwayat Top Up Saya
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" onclick="loadPendingTopups()">
+                    <i class="fas fa-clock me-2"></i>Pending Approval
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="all-topup-tab" data-bs-toggle="tab" data-bs-target="#all-topup" type="button" onclick="loadAllTopups()">
+                    <i class="fas fa-list me-2"></i>Semua Top Up
+                </button>
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-outline-secondary btn-sm ms-lg-2 btn-refresh" type="button" onclick="refreshAllData()" title="Refresh semua data">
+                <i class="fas fa-sync-alt me-1"></i> Refresh
+              </button>
+            </li>
+
+            <li class="nav-item">
+             <button class="btn btn-outline-secondary btn-sm ms-lg-2" id="themeBtn" type="button">
+                <i class="fas fa-moon"></i>
+              </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="topupTabContent">
+            <!-- My Topup Tab -->
+            <div class="tab-pane fade show active" id="my-topup" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-history me-2"></i>Riwayat Top Up Saya
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary btn-refresh" onclick="loadMyTopups()">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="myTopupsList">
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-3">Memuat riwayat top up...</p>
+                            </div>
+                        </div>
+                        <div id="noMyTopups" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5>Belum ada top up</h5>
+                            <p class="text-muted">Anda belum melakukan top up</p>
+                            <button class="btn btn-outline-danger" onclick="showTopupModal()">
+                                <i class="fas fa-plus-circle me-2"></i>Buat Top Up Pertama
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Approval Tab -->
+            <div class="tab-pane fade" id="pending" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-clock me-2"></i>Top Up Menunggu Approval
+                                <span class="badge bg-warning ms-2" id="pendingCount">0</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary btn-refresh" onclick="loadPendingTopups()">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="pendingTopupsList">
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-3">Memuat data top up pending...</p>
+                            </div>
+                        </div>
+                        <div id="noPendingTopups" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <h5>Tidak ada top up pending</h5>
+                            <p class="text-muted">Semua top up telah diproses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Topup Tab -->
+            <div class="tab-pane fade" id="all-topup" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-list me-2"></i>Semua Top Up
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary btn-refresh" onclick="loadAllTopups()">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Filter -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" id="searchInput" 
+                                           placeholder="Cari nama user..." onkeyup="filterTopups()">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" id="statusFilter" onchange="filterTopups()">
+                                    <option value="all">Semua Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="allTopupsList">
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-3">Memuat semua data top up...</p>
+                            </div>
+                        </div>
+                        <div id="noAllTopups" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5>Tidak ada data top up</h5>
+                            <p class="text-muted">Belum ada top up yang dilakukan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Premium Modal -->
+<div class="modal fade" id="premiumModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="premiumModalTitle">
+          <i class="fas fa-gem me-2"></i>Beli Premium
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="premiumForm">
+          <div class="mb-3">
+            <div class="small text-muted" id="premiumCurrentInfo">-</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Pilih Paket Premium</label>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="premiumPlan" id="premiumPlan1" value="1" checked>
+              <label class="form-check-label" for="premiumPlan1">
+                1 Bulan — <strong>Rp 50.000</strong>
+              </label>
+            </div>
+
+            <div class="form-check mt-1">
+              <input class="form-check-input" type="radio" name="premiumPlan" id="premiumPlan2" value="2">
+              <label class="form-check-label" for="premiumPlan2">
+                2 Bulan — <strong>Rp 90.000</strong>
+              </label>
+            </div>
+
+            <div class="form-text">
+              Pembayaran menggunakan <strong>Saldo</strong> Anda.
+            </div>
+          </div>
+
+          <div class="alert alert-info" id="premiumSummary">-</div>
+
+          <button type="submit" class="btn btn-primary w-100" id="premiumSubmitBtn">
+            <i class="fas fa-gem me-2"></i>Konfirmasi Beli Premium
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="loginForm">
+          <div class="mb-3">
+            <label class="form-label">ID Telegram</label>
+            <input id="loginTelegramId" type="text" class="form-control" placeholder="Contoh: 123456789" autocomplete="off">
+            <small class="text-muted">Masukkan ID Telegram Anda.</small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Key</label>
+            <input id="loginKey" type="password" class="form-control" placeholder="Contoh: 12345" autocomplete="off">
+            <small class="text-muted">Jika lupa Key, cek di bot Telegram @INDapkBot.</small>
+          </div>
+
+          <button id="btnLoginSubmit" class="btn btn-primary w-100" type="submit">
+            <i class="fas fa-sign-in-alt me-2"></i>Login
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Create Topup Modal -->
+    <div class="modal fade" id="topupModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus-circle me-2"></i>Buat Top Up Baru
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="topupForm">
+                        <!-- Step 1: Pilih Metode Pembayaran -->
+                        <div class="mb-4">
+                            <h6 class="mb-3">1. Pilih Metode Pembayaran</h6>
+                            <div class="method-selection">
+                                <div class="method-option" data-method="dana" onclick="selectPaymentMethod('dana')">
+                                    <div class="method-icon" style="background: linear-gradient(135deg, #00a86b, #00d084); color: white;">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="method-details">
+                                        <h6 class="mb-1">Dana</h6>
+                                        <p class="small text-muted mb-0">Transfer ke nomor Dana: 082286344446</p>
+                                        <p class="small mb-0"><i class="fas fa-check-circle text-success me-1"></i>Instan - Diproses dalam 5 menit</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="method-option" data-method="qris" onclick="selectPaymentMethod('qris')">
+                                    <div class="method-icon" style="background: linear-gradient(135deg, #28a745, #20c997); color: white;">
+                                        <i class="fas fa-qrcode"></i>
+                                    </div>
+                                    <div class="method-details">
+                                        <h6 class="mb-1">QRIS</h6>
+                                        <p class="small text-muted mb-0">Scan QR Code dengan aplikasi bank/e-wallet</p>
+                                        <p class="small mb-0"><i class="fas fa-check-circle text-success me-1"></i>Multi-bank - Support semua bank</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="method-option" data-method="paypal" onclick="selectPaymentMethod('paypal')">
+                                    <div class="method-icon" style="background: linear-gradient(135deg, #003087, #009cde); color: white;">
+                                        <i class="fab fa-paypal"></i>
+                                    </div>
+                                    <div class="method-details">
+                                        <h6 class="mb-1">PayPal</h6>
+                                        <p class="small text-muted mb-0">Pembayaran internasional via PayPal</p>
+                                        <p class="small mb-0"><i class="fas fa-check-circle text-success me-1"></i>Support kartu kredit & PayPal balance</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="paymentMethod" required>
+                        </div>
+                        
+                        <!-- Step 2: Instruksi Pembayaran (akan muncul setelah memilih metode) -->
+                        <div id="paymentInstructions" class="mb-4" style="display: none;">
+                            <h6 class="mb-3">2. Instruksi Pembayaran</h6>
+                            <div id="instructionsContent">
+                                <!-- Instructions will be inserted here by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Jumlah Top Up -->
+                        <div id="amountSection" class="mb-4" style="display: none;">
+                            <div id="amountSectionContent">
+                                <!-- Amount section will be inserted here by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4: Upload Bukti -->
+                        <div class="mb-4" id="proofSection" style="display: none;">
+                            <h6 class="mb-3" id="proofTitle">4. Upload Bukti Pembayaran</h6>
+                            <div class="mb-3">
+                                <label for="proofFile" class="form-label">
+                                    <i class="fas fa-upload me-2"></i><span id="proofLabel">Upload Bukti Pembayaran</span>
+                                </label>
+                                <input type="file" class="form-control" id="proofFile" accept="image/*,.pdf" required>
+                                <div class="form-text" id="proofHint">
+                                    Format: JPG, PNG, atau PDF (maks 10MB). Pastikan bukti pembayaran jelas terbaca.
+                                </div>
+                                <div id="filePreview" class="mt-2" style="display: none;">
+                                    <img id="previewImage" src="" alt="Preview" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <span id="submitTopupText">
+                                    <i class="fas fa-paper-plane me-2"></i>Kirim Top Up
+                                </span>
+                                <span id="submitTopupLoading" class="loading">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>Mengirim...
+                                </span>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topup Detail Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-info-circle me-2"></i>Detail Top Up
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailContent">
+                    <!-- Detail akan diisi oleh JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approve/Reject Modal -->
+    <div class="modal fade" id="actionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="actionTitle">
+                        <i class="fas fa-check-circle me-2"></i>Approve Top Up
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="approveContent" style="display: none;">
+                        <p>Apakah Anda yakin ingin approve top up ini?</p>
+                        <div class="alert alert-success">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Saldo user akan ditambahkan secara otomatis.
+                        </div>
+                        <button class="btn btn-success w-100" onclick="processApprove()">
+                            <i class="fas fa-check me-2"></i>Ya, Approve
+                        </button>
+                    </div>
+                    
+                    <div id="rejectContent" style="display: none;">
+                        <p>Masukkan alasan penolakan:</p>
+                        <textarea class="form-control mb-3" id="rejectReason" rows="3" 
+                                  placeholder="Contoh: 'Bukti pembayaran tidak jelas', 'Jumlah tidak sesuai', dll"></textarea>
+                        <button class="btn btn-danger w-100" onclick="processReject()">
+                            <i class="fas fa-times me-2"></i>Tolak Top Up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <i class="fas fa-robot me-1"></i>Powered by INDapk Bot
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    © 2025 INDapk - Top Up System
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    // Konfigurasi
+    const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
+    const QRIS_IMAGE_URL = "https://www.indapk.com/wp-content/uploads/2025/12/qris.jpg";
+    const PAYPAL_ME_URL = "https://paypal.me/indapk";
+    const EXCHANGE_RATE = 16000; // 1 USD = 16,000 IDR
+    // Premium pricing
+    const PREMIUM_PRICES = { 1: 50000, 2: 90000 };
+
+    
+    // State management
+    let currentUser = null;
+    let currentTopupId = null;
+    let allTopupsData = [];
+    let filteredTopups = [];
+    let currentPaymentMethod = null;
+    let saldoInterval = null;
+let saldoRefreshing = false;
+
+
+
+async function refreshSaldoOnce() {
+  if (!currentUser) return;
+  if (saldoRefreshing) return;
+
+  saldoRefreshing = true;
+  try {
+    await updateUserInfoFromServer();
+  } catch (e) {
+    // ignore
+  } finally {
+    saldoRefreshing = false;
+  }
+}
+
+function startSaldoAutoRefresh() {
+  stopSaldoAutoRefresh();
+  refreshSaldoOnce(); // refresh langsung saat mulai
+  saldoInterval = setInterval(refreshSaldoOnce, 3000);
+}
+
+function stopSaldoAutoRefresh() {
+  if (saldoInterval) {
+    clearInterval(saldoInterval);
+    saldoInterval = null;
+  }
+}
+
+
+    // Admin IDs (sama dengan bot Telegram)
+    const ADMIN_IDS = {
+        "1261844051": "Alfina",
+        "1172835542": "AnggaPutraJN"
+    };
+
+    // Inisialisasi
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('topupTheme');
+  if (savedTheme === 'dark') enableDarkMode();
+
+  setupEventListeners();
+  setupThemeSwitcher();
+  setupFilePreview();
+
+  const savedUser = localStorage.getItem('topupUser');
+  if (!savedUser) {
+    stopSaldoAutoRefresh();
+    currentUser = null;
+    initLoggedOutUI();
+    return;
+  }
+
+  try {
+    currentUser = JSON.parse(savedUser);
+  } catch (e) {
+    stopSaldoAutoRefresh();
+    currentUser = null;
+    localStorage.removeItem('topupUser');
+    initLoggedOutUI();
+    return;
+  }
+
+  updateUserUI();
+  startSaldoAutoRefresh();
+  refreshAllData();
+});
+
+    
+
+    function normalizeTelegramId(v) {
+  return String(v || '').replace(/[^0-9]/g, '').trim();
+}
+
+function normalizeKey(v) {
+  return String(v ?? '').trim(); // jangan hapus karakter
+}
+
+
+
+
+function loadSavedLogin() {
+  try {
+    const saved = localStorage.getItem('topupUser');
+    if (!saved) return;
+
+    const u = JSON.parse(saved);
+    if (!u?.telegram_id) return;
+
+    currentUser = u;
+
+    if (typeof updateUserUI === 'function') updateUserUI();
+    if (typeof autoRefreshUserData === 'function') autoRefreshUserData();
+  } catch (e) {
+    console.error('loadSavedLogin error:', e);
+  }
+}
+
+
+
+//FITUR BELI PREMIUM
+function parseDateFlexible(dateString) {
+  if (!dateString) return null;
+  const clean = String(dateString).trim();
+  if (!clean || clean === '-' || clean === 'Invalid Date') return null;
+
+  // ISO / normal parse
+  let d = new Date(clean);
+  if (!isNaN(d.getTime())) return d;
+
+  // dd/MM/yyyy HH:mm:ss OR dd/MM/yyyy
+  if (clean.includes('/')) {
+    const parts = clean.split(/[/ :]/).filter(Boolean);
+    if (parts.length >= 3) {
+      const [day, month, year] = parts;
+      const hour = parts[3] || '0';
+      const min = parts[4] || '0';
+      const sec = parts[5] || '0';
+      d = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(min), Number(sec));
+      if (!isNaN(d.getTime())) return d;
+    }
+  }
+
+  // yyyy-MM-dd HH:mm:ss OR yyyy-MM-dd
+  if (clean.includes('-')) {
+    const [datePart, timePart] = clean.split(' ');
+    const dp = (datePart || '').split('-');
+    if (dp.length === 3) {
+      const [year, month, day] = dp;
+      const tp = (timePart || '').split(':');
+      const hour = tp[0] || '0';
+      const min = tp[1] || '0';
+      const sec = tp[2] || '0';
+      d = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(min), Number(sec));
+      if (!isNaN(d.getTime())) return d;
+    }
+  }
+
+  return null;
+}
+
+function addMonthsSafe(date, months) {
+  const d = new Date(date);
+  const day = d.getDate();
+  d.setMonth(d.getMonth() + months);
+  // jika overflow (misal 31 + 1 bulan), mundurkan ke akhir bulan
+  if (d.getDate() < day) d.setDate(0);
+  return d;
+}
+
+function getPremiumRemainingText() {
+  if (!currentUser) return '';
+
+  const statusLower = (currentUser.status || '').toString().toLowerCase();
+  if (statusLower !== 'premium') return '';
+
+  const exp = parseDateFlexible(currentUser.premium_expiry);
+  if (!exp || isNaN(exp.getTime())) return 'Durasi premium tidak tersedia';
+
+  const now = new Date();
+  let diff = exp.getTime() - now.getTime();
+
+  if (diff <= 0) return 'Premium sudah berakhir';
+
+  const dayMs = 24 * 60 * 60 * 1000;
+  const hourMs = 60 * 60 * 1000;
+  const minMs = 60 * 1000;
+
+  const days = Math.floor(diff / dayMs);
+  diff -= days * dayMs;
+
+  const hours = Math.floor(diff / hourMs);
+  diff -= hours * hourMs;
+
+  const mins = Math.floor(diff / minMs);
+
+  // Format singkat dan jelas
+  if (days > 0) return `Sisa Premium: ${days} hari ${hours} jam`;
+  if (hours > 0) return `Sisa Premium: ${hours} jam ${mins} menit`;
+  return `Sisa Premium: ${mins} menit`;
+}
+
+
+function getPremiumBaseDate() {
+  const now = new Date();
+  const status = (currentUser?.status || '').toString().toLowerCase();
+  const exp = parseDateFlexible(currentUser?.premium_expiry);
+
+  // Jika Premium masih aktif, extend dari expiry
+  if (status === 'premium' && exp && exp.getTime() > now.getTime()) return exp;
+  return now;
+}
+
+function showPremiumModal() {
+  if (!currentUser) {
+    showLoginModal();
+    return;
+  }
+  if (currentUser.is_admin) {
+    Swal.fire({ icon: 'warning', title: 'Admin', text: 'Fitur Premium hanya untuk user biasa.' });
+    return;
+  }
+
+  // default 1 bulan
+  const r1 = document.getElementById('premiumPlan1');
+  if (r1) r1.checked = true;
+
+  const titleEl = document.getElementById('premiumModalTitle');
+  const statusLower = (currentUser.status || '').toString().toLowerCase();
+  if (titleEl) {
+    titleEl.innerHTML = `<i class="fas fa-gem me-2"></i>${statusLower === 'premium' ? 'Perpanjang Premium' : 'Beli Premium'}`;
+  }
+
+  updatePremiumSummary();
+
+  const modalEl = document.getElementById('premiumModal');
+  const modal = new bootstrap.Modal(modalEl);
+  modal.show();
+}
+
+function updatePremiumSummary() {
+  if (!currentUser) return;
+
+  const months = Number(document.querySelector('input[name="premiumPlan"]:checked')?.value || 1);
+  const price = PREMIUM_PRICES[months] || 0;
+
+  const saldo = Number(currentUser.saldo || 0);
+  const sisa = saldo - price;
+
+  const status = (currentUser.status || 'Reguler').toString();
+  const expStr = currentUser.premium_expiry ? formatSpreadsheetDate(currentUser.premium_expiry) : '-';
+
+  const base = getPremiumBaseDate();
+  const newExp = addMonthsSafe(base, months);
+  const newExpStr = formatSpreadsheetDate(newExp.toISOString());
+
+  const infoEl = document.getElementById('premiumCurrentInfo');
+  if (infoEl) {
+    infoEl.innerHTML = `
+      <div><strong>Status saat ini:</strong> ${escapeHtml(status)} ${status.toLowerCase() === 'premium' ? `(hingga ${escapeHtml(expStr)})` : ''}</div>
+      <div><strong>Saldo saat ini:</strong> Rp ${formatNumber(saldo)}</div>
+    `;
+  }
+
+  const summary = document.getElementById('premiumSummary');
+  const btn = document.getElementById('premiumSubmitBtn');
+
+  if (summary) {
+    summary.classList.remove('alert-info', 'alert-danger', 'alert-warning', 'alert-success');
+
+    if (price <= 0) {
+      summary.classList.add('alert-danger');
+      summary.innerHTML = 'Paket premium tidak valid.';
+    } else if (sisa < 0) {
+      summary.classList.add('alert-danger');
+      summary.innerHTML = `
+        <div><strong>Harga:</strong> Rp ${formatNumber(price)} (${months} bulan)</div>
+        <div><strong>Saldo tidak cukup.</strong> Kurang Rp ${formatNumber(Math.abs(sisa))}</div>
+        <div class="small mt-2">Silakan Top Up saldo terlebih dulu.</div>
+      `;
+    } else {
+      summary.classList.add('alert-info');
+      summary.innerHTML = `
+        <div><strong>Paket:</strong> ${months} bulan</div>
+        <div><strong>Harga:</strong> Rp ${formatNumber(price)}</div>
+        <div><strong>Sisa saldo setelah beli:</strong> Rp ${formatNumber(sisa)}</div>
+        <hr class="my-2">
+        <div><strong>Premium aktif sampai:</strong> ${escapeHtml(newExpStr)}</div>
+        <div class="small text-muted">Jika masih Premium aktif, durasi akan otomatis diperpanjang.</div>
+      `;
+    }
+  }
+
+  if (btn) btn.disabled = !(price > 0 && sisa >= 0);
+}
+
+async function submitPremiumPurchase(e) {
+  e.preventDefault();
+  if (!currentUser) return;
+
+  const months = Number(document.querySelector('input[name="premiumPlan"]:checked')?.value || 1);
+  const price = PREMIUM_PRICES[months] || 0;
+  const saldo = Number(currentUser.saldo || 0);
+
+  if (!price) {
+    Swal.fire({ icon: 'error', title: 'Paket tidak valid', text: 'Pilih paket premium yang benar.' });
+    return;
+  }
+  if (saldo < price) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Saldo tidak cukup',
+      text: `Saldo Anda Rp ${formatNumber(saldo)}. Harga Rp ${formatNumber(price)}.`
+    });
+    return;
+  }
+
+  const confirm = await Swal.fire({
+    icon: 'question',
+    title: 'Konfirmasi Pembelian',
+    html: `
+      <div class="text-start">
+        <p><strong>Paket:</strong> ${months} bulan</p>
+        <p><strong>Harga:</strong> Rp ${formatNumber(price)}</p>
+        <p><strong>Saldo saat ini:</strong> Rp ${formatNumber(saldo)}</p>
+        <p><strong>Sisa saldo:</strong> Rp ${formatNumber(saldo - price)}</p>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Beli',
+    cancelButtonText: 'Batal'
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  const btn = document.getElementById('premiumSubmitBtn');
+  const oldHtml = btn?.innerHTML;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
+  }
+
+  try {
+    const response = await fetch(USER_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        action: 'buyPremium',
+        wa_number: currentUser.telegram_id,
+        months: String(months)
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.status !== 'success') {
+      throw new Error(result.message || 'Gagal membeli premium');
+    }
+
+    // Update user lokal dari response
+    if (result.data) {
+      if (result.data.saldo !== undefined) currentUser.saldo = result.data.saldo;
+      if (result.data.status) currentUser.status = result.data.status;
+      if (result.data.premium_expiry !== undefined) currentUser.premium_expiry = result.data.premium_expiry;
+    } else {
+      await updateUserInfoFromServer();
+    }
+
+    localStorage.setItem('topupUser', JSON.stringify(currentUser));
+    updateUserUI();
+
+    // close modal
+    const modalEl = document.getElementById('premiumModal');
+    const m = bootstrap.Modal.getInstance(modalEl);
+    if (m) m.hide();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Berhasil!',
+      text: 'Premium berhasil diaktifkan / diperpanjang.'
+    });
+
+  } catch (err) {
+    console.error('buy premium error:', err);
+    Swal.fire({ icon: 'error', title: 'Gagal', text: err.message || 'Terjadi kesalahan.' });
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = oldHtml || '<i class="fas fa-gem me-2"></i>Konfirmasi Beli Premium';
+    }
+    updatePremiumSummary();
+  }
+}
+
+
+
+    // Setup event listeners
+function setupEventListeners() {
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) loginForm.addEventListener('submit', handleLogin);
+
+  const topupForm = document.getElementById('topupForm');
+  if (topupForm) topupForm.addEventListener('submit', submitTopup);
+
+  // Premium
+  const premiumForm = document.getElementById('premiumForm');
+  if (premiumForm) premiumForm.addEventListener('submit', submitPremiumPurchase);
+
+  document.querySelectorAll('input[name="premiumPlan"]').forEach(r => {
+    r.addEventListener('change', updatePremiumSummary);
+  });
+}
+
+function getAdminPayload() {
+  if (!currentUser || !currentUser.is_admin) return {};
+  return {
+    admin: currentUser.telegram_id,
+    admin_name: currentUser.admin_name || currentUser.nama_user
+  };
+}
+
+    
+    // Setup theme switcher
+    function setupThemeSwitcher() {
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', toggleDarkMode);
+        updateThemeIcon();
+    }
+    
+    // Toggle dark mode
+    function toggleDarkMode() {
+        if (document.body.classList.contains('dark-mode')) {
+            disableDarkMode();
+        } else {
+            enableDarkMode();
+        }
+    }
+
+function showLoginRequiredMyTopups() {
+    const myTopupsList = document.getElementById('myTopupsList');
+    const noMyTopups = document.getElementById('noMyTopups');
+
+    if (noMyTopups) noMyTopups.style.display = 'none';
+
+    if (myTopupsList) {
+        myTopupsList.innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-user-lock fa-3x text-muted mb-3"></i>
+                <h5>Silakan Login</h5>
+                <p class="text-muted">Login untuk melihat riwayat top up</p>
+                <button class="btn btn-outline-danger" onclick="showLoginModal()">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </button>
+            </div>
+        `;
+    }
+}
+
+
+function initLoggedOutUI() {
+    updateUserUI();
+    clearTopupsList();
+    showLoginRequiredMyTopups();
+}
+
+    // Enable dark mode
+    function enableDarkMode() {
+        document.body.classList.add('dark-mode');
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            navbar.classList.remove('bg-gradient');
+            navbar.classList.add('bg-gradient-dark');
+        }
+        localStorage.setItem('topupTheme', 'dark');
+        updateThemeIcon();
+    }
+    
+    // Disable dark mode
+    function disableDarkMode() {
+        document.body.classList.remove('dark-mode');
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            navbar.classList.remove('bg-gradient-dark');
+            navbar.classList.add('bg-gradient');
+        }
+        localStorage.setItem('topupTheme', 'light');
+        updateThemeIcon();
+    }
+    
+    // Update theme icon
+    function updateThemeIcon() {
+        const themeBtn = document.getElementById('themeBtn');
+        if (themeBtn) {
+            const icon = themeBtn.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.className = 'fas fa-sun';
+                themeBtn.title = "Toggle Light Mode";
+            } else {
+                icon.className = 'fas fa-moon';
+                themeBtn.title = "Toggle Dark Mode";
+            }
+        }
+    }
+    
+    // Select payment method
+    function selectPaymentMethod(method) {
+        currentPaymentMethod = method;
+        
+        // Remove selected class from all
+        document.querySelectorAll('.method-option').forEach(el => {
+            el.classList.remove('selected');
+        });
+        
+        // Add selected class to clicked
+        const selectedElement = document.querySelector(`[data-method="${method}"]`);
+        if (selectedElement) {
+            selectedElement.classList.add('selected');
+        }
+        
+        // Set value
+        document.getElementById('paymentMethod').value = method;
+        
+        // Show payment instructions
+        showPaymentInstructions(method);
+        
+        // Show sections
+        document.getElementById('paymentInstructions').style.display = 'block';
+        document.getElementById('amountSection').style.display = 'block';
+        document.getElementById('proofSection').style.display = 'block';
+        
+        // Update button text based on method
+        if (method === 'paypal') {
+            document.getElementById('submitTopupText').innerHTML = '<i class="fas fa-paper-plane me-2"></i>Send Top Up';
+        } else {
+            document.getElementById('submitTopupText').innerHTML = '<i class="fas fa-paper-plane me-2"></i>Kirim Top Up';
+        }
+        
+        // Scroll to instructions
+        setTimeout(() => {
+            document.getElementById('paymentInstructions').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }, 300);
+    }
+
+    function downloadQrisImage(url, filename = 'QRIS-INDapk.png') {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+
+        img.onload = function () {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            const a = document.createElement('a');
+                    try {
+          a.href = canvas.toDataURL('image/png');
+        } catch (e) {
+          window.open(url, '_blank');
+          return;
+        }
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        };
+
+        img.onerror = function () {
+            // Fallback: kalau server gambar tidak mengizinkan CORS, buka gambarnya di tab baru
+            window.open(url, '_blank');
+        };
+
+        img.src = url;
+    }
+
+    // Show payment instructions
+    function showPaymentInstructions(method) {
+        const instructionsContent = document.getElementById('instructionsContent');
+        const amountSectionContent = document.getElementById('amountSectionContent');
+        
+        switch(method) {
+            case 'dana':
+                instructionsContent.innerHTML = `
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-mobile-alt me-2"></i>Instruksi Pembayaran Dana:</h6>
+                        <ol class="mb-0 mt-2">
+                            <li>Buka aplikasi <strong>Dana</strong> di smartphone Anda</li>
+                            <li>Pilih menu <strong>Kirim</strong> atau <strong>Transfer</strong></li>
+                            <li>Masukkan nomor Dana: <strong class="text-primary">082286344446</strong></li>
+                            <li>Masukkan jumlah sesuai permintaan top up</li>
+                            <li>Konfirmasi dan selesaikan transaksi</li>
+                            <li><strong class="text-warning">Screenshot bukti transfer</strong> dan upload di form ini</li>
+                        </ol>
+                        <div class="mt-3 p-3 bg-light rounded">
+                            <strong><i class="fas fa-info-circle me-2 text-info"></i>Tips:</strong>
+                            <ul class="mb-0 mt-1">
+                                <li>Pastikan nama penerima sesuai</li>
+                                <li>Screenshot harus menampilkan nomor telepon dan jumlah transfer</li>
+                                <li>Jika ada kode referensi, sertakan dalam catatan</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                amountSectionContent.innerHTML = `
+                    <h6 class="mb-3">3. Masukkan Jumlah Top Up</h6>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">
+                            <i class="fas fa-money-bill-wave me-2"></i>Jumlah Top Up (Rp)
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="number" class="form-control" id="amount" required
+                                   placeholder="Contoh: 50000" min="5000" step="1000">
+                            <span class="input-group-text">,00</span>
+                        </div>
+                        <div class="form-text">Minimum top up: Rp 5.000</div>
+                        
+                        <!-- Quick Amount Buttons -->
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(5000)">Rp 5.000</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(10000)">Rp 10.000</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(20000)">Rp 20.000</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(50000)">Rp 50.000</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(100000)">Rp 100.000</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="proofNote" class="form-label">
+                            <i class="fas fa-sticky-note me-2"></i>Catatan untuk Bukti Pembayaran (Optional)
+                        </label>
+                        <textarea class="form-control" id="proofNote" rows="2"
+                                  placeholder="Contoh: 'Transfer via Dana a/n [Nama Pengirim]', 'Ref: 123456', dll"></textarea>
+                    </div>
+                `;
+                
+                // Update proof section for Dana
+                document.getElementById('proofTitle').innerHTML = '4. Upload Bukti Pembayaran';
+                document.getElementById('proofLabel').innerHTML = 'Upload Bukti Transfer Dana';
+                document.getElementById('proofHint').innerHTML = 'Format: JPG, PNG, atau PDF (maks 10MB). Pastikan bukti transfer jelas terbaca.';
+                break;
+                
+            case 'qris':
+                instructionsContent.innerHTML = `
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-qrcode me-2"></i>Instruksi Pembayaran QRIS:</h6>
+
+                        <div class="qris-image-container text-center">
+                            <img id="qrisImage"
+                                 src="${QRIS_IMAGE_URL}" 
+                                 alt="QRIS INDapk" 
+                                 class="qris-image"
+                                 onerror="this.src='https://via.placeholder.com/300x300/28a745/ffffff?text=QRIS+INDapk'">
+
+                            <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+                                <a class="btn btn-success btn-sm"
+                                   href="${QRIS_IMAGE_URL}"
+                                   download="QRIS-INDapk.png"
+                                   target="_blank"
+                                   rel="noopener">
+                                    <i class="fas fa-download me-2"></i>Download QRIS
+                                </a>
+
+                                <button type="button"
+                                        class="btn btn-outline-success btn-sm"
+                                        onclick="downloadQrisImage(document.getElementById('qrisImage').src, 'QRIS-INDapk.png')">
+                                    <i class="fas fa-file-image me-2"></i>Download (Force)
+                                </button>
+                            </div>
+
+                            <p class="qris-note mt-2">Scan QR Code di atas dengan aplikasi bank/e-wallet Anda</p>
+                        </div>
+
+                        <ol class="mb-0 mt-2">
+                            <li>Buka aplikasi <strong>Bank/OVO/GoPay/Dana</strong> di smartphone</li>
+                            <li>Pilih menu <strong>Scan QRIS</strong></li>
+                            <li>Scan QR Code di atas atau gunakan gambar dari galeri</li>
+                            <li>Masukkan jumlah sesuai permintaan top up</li>
+                            <li>Konfirmasi dan selesaikan pembayaran</li>
+                            <li><strong class="text-warning">Screenshot bukti pembayaran</strong> dan upload di form ini</li>
+                        </ol>
+
+                        <div class="mt-3 p-3 bg-light rounded">
+                            <strong><i class="fas fa-info-circle me-2 text-info"></i>Tips:</strong>
+                            <ul class="mb-0 mt-1">
+                                <li>QRIS bisa digunakan dari semua bank yang support QRIS</li>
+                                <li>Pastikan screenshot menampilkan nominal dan status berhasil</li>
+                                <li>Jika gagal scan, download gambar QRIS dan upload ke aplikasi</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            
+                amountSectionContent.innerHTML = `
+                    <h6 class="mb-3">3. Masukkan Jumlah Top Up</h6>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">
+                            <i class="fas fa-money-bill-wave me-2"></i>Jumlah Top Up (Rp)
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="number" class="form-control" id="amount" required
+                                   placeholder="Contoh: 50000" min="5000" step="1000">
+                            <span class="input-group-text">,00</span>
+                        </div>
+                        <div class="form-text">Minimum top up: Rp 5.000</div>
+                        
+                        <!-- Quick Amount Buttons -->
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(5000)">Rp 5.000</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(10000)">Rp 10.000</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(20000)">Rp 20.000</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(50000)">Rp 50.000</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setAmount(100000)">Rp 100.000</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="proofNote" class="form-label">
+                            <i class="fas fa-sticky-note me-2"></i>Catatan untuk Bukti Pembayaran (Optional)
+                        </label>
+                        <textarea class="form-control" id="proofNote" rows="2"
+                                  placeholder="Contoh: 'Transfer via QRIS a/n [Nama Pengirim]', 'Ref: 123456', dll"></textarea>
+                    </div>
+                `;
+                
+                // Update proof section for QRIS
+                document.getElementById('proofTitle').innerHTML = '4. Upload Bukti Pembayaran';
+                document.getElementById('proofLabel').innerHTML = 'Upload Bukti Pembayaran QRIS';
+                document.getElementById('proofHint').innerHTML = 'Format: JPG, PNG, atau PDF (maks 10MB). Pastikan bukti pembayaran QRIS jelas terbaca.';
+                break;
+                
+            case 'paypal':
+                instructionsContent.innerHTML = `
+                    <div class="alert alert-info">
+                        <h6><i class="fab fa-paypal me-2"></i>Instruksi Pembayaran PayPal:</h6>
+                        <div class="text-center my-3">
+                            <a href="${PAYPAL_ME_URL}" target="_blank" class="btn btn-primary btn-lg">
+                                <i class="fab fa-paypal me-2"></i>Pay via PayPal.Me
+                            </a>
+                            <p class="small mt-2">or visit: <strong>${PAYPAL_ME_URL}</strong></p>
+                        </div>
+                        <div class="conversion-info">
+                            <h6 class="conversion-rate"><i class="fas fa-exchange-alt me-2"></i>Exchange Rate: $1 = Rp ${formatNumber(EXCHANGE_RATE)}</h6>
+                            <p class="mb-0 small">Payment will be automatically converted to Indonesian Rupiah (IDR)</p>
+                        </div>
+                        <ol class="mb-0 mt-2">
+                            <li>Click the button above or visit <strong>${PAYPAL_ME_URL}</strong></li>
+                            <li>Login to your PayPal account</li>
+                            <li>Enter the amount in <strong>USD</strong></li>
+                            <li>Select payment method (PayPal balance or credit card)</li>
+                            <li>Confirm and complete the payment</li>
+                            <li><strong class="text-warning">Screenshot the payment proof</strong> and upload it here</li>
+                        </ol>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded">
+                                    <strong><i class="fas fa-calculator me-2 text-info"></i>Conversion Examples:</strong>
+                                    <ul class="mb-0 mt-1">
+                                        <li>$0.63 ≈ Rp 10,000</li>
+                                        <li>$1.25 ≈ Rp 20,000</li>
+                                        <li>$3.13 ≈ Rp 50,000</li>
+                                        <li>$6.25 ≈ Rp 100,000</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded">
+                                    <strong><i class="fas fa-info-circle me-2 text-info"></i>Notes:</strong>
+                                    <ul class="mb-0 mt-1">
+                                        <li>Automatic conversion to IDR</li>
+                                        <li>Supports international credit cards</li>
+                                        <li>PayPal fees are covered by the buyer</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                amountSectionContent.innerHTML = `
+                    <div class="english-section">
+                        <h6 class="english-title"><i class="fas fa-dollar-sign me-2"></i>3. Enter Top Up Amount</h6>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">
+                                <i class="fas fa-money-bill-wave me-2"></i>Top Up Amount ($)
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="amount" required
+                                       placeholder="Example: 3.13" min="0.63" step="0.01">
+                                <span class="input-group-text">USD</span>
+                            </div>
+                            <div class="form-text">Minimum top up: $0.63 (≈ Rp 10,000)</div>
+                            
+                            <!-- Quick Amount Buttons in USD -->
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPaypalAmount(0.63)">$0.63</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPaypalAmount(1.25)">$1.25</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPaypalAmount(3.13)">$3.13</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPaypalAmount(6.25)">$6.25</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setPaypalAmount(12.50)">$12.50</button>
+                            </div>
+                            
+                            <!-- Conversion Display -->
+                            <div id="conversionDisplay" class="mt-3 p-3 bg-light rounded" style="display: none;">
+                                <strong><i class="fas fa-exchange-alt me-2 text-primary"></i>Conversion:</strong>
+                                <p class="mb-0 mt-1" id="conversionText"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="proofNote" class="form-label">
+                                <i class="fas fa-sticky-note me-2"></i>Note for Payment Proof (Optional)
+                            </label>
+                            <textarea class="form-control" id="proofNote" rows="2"
+                                      placeholder="Example: 'PayPal payment from [Your Name]', 'Transaction ID: ...', etc"></textarea>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listener for USD amount input
+                setTimeout(() => {
+                    const amountInput = document.getElementById('amount');
+                    if (amountInput) {
+                        amountInput.addEventListener('input', updatePaypalConversion);
+                    }
+                }, 100);
+                
+                // Update proof section for PayPal
+                document.getElementById('proofTitle').innerHTML = '4. Upload Payment Proof';
+                document.getElementById('proofLabel').innerHTML = 'Upload PayPal Payment Proof';
+                document.getElementById('proofHint').innerHTML = 'Format: JPG, PNG, or PDF (max 10MB). Make sure the payment proof is clearly readable.';
+                break;
+        }
+    }
+
+    // Update PayPal conversion display
+    function updatePaypalConversion() {
+        const amountInput = document.getElementById('amount');
+        const conversionDisplay = document.getElementById('conversionDisplay');
+        const conversionText = document.getElementById('conversionText');
+        
+        if (amountInput && amountInput.value) {
+            const usdAmount = parseFloat(amountInput.value);
+            if (!isNaN(usdAmount) && usdAmount > 0) {
+                const idrAmount = Math.round(usdAmount * EXCHANGE_RATE);
+                conversionText.innerHTML = `$${usdAmount.toFixed(2)} = Rp ${formatNumber(idrAmount)}`;
+                conversionDisplay.style.display = 'block';
+            } else {
+                conversionDisplay.style.display = 'none';
+            }
+        } else {
+            conversionDisplay.style.display = 'none';
+        }
+    }
+    
+    // Set quick amount for Dana/QRIS
+    function setAmount(amount) {
+        document.getElementById('amount').value = amount;
+    }
+    
+    // Set quick amount for PayPal
+    function setPaypalAmount(amount) {
+        document.getElementById('amount').value = amount;
+        updatePaypalConversion();
+    }
+    
+    // Setup file preview
+    function setupFilePreview() {
+        const fileInput = document.getElementById('proofFile');
+        const preview = document.getElementById('filePreview');
+        const previewImage = document.getElementById('previewImage');
+        
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        preview.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.style.display = 'none';
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Format File',
+                        text: 'Hanya file gambar yang bisa dipreview. File PDF tetap bisa diupload.'
+                    });
+                }
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+    }
+    
+    // Show login modal
+function showLoginModal() {
+  const modalEl = document.getElementById('loginModal');
+  const modal = new bootstrap.Modal(modalEl);
+  modal.show();
+
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) loginForm.reset();
+}
+
+    // Handle login
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function normalizeTelegramId(v) {
+  return String(v || '').replace(/[^0-9]/g, '').trim();
+}
+
+function normalizeKey(v) {
+  return String(v ?? '').trim();
+}
+
+async function handleLogin(e) {
+  if (e) e.preventDefault();
+
+  const btn = document.getElementById('btnLoginSubmit');
+
+  try {
+    const telegramId = normalizeTelegramId(document.getElementById('loginTelegramId')?.value);
+    const inputKey = normalizeKey(document.getElementById('loginKey')?.value);
+
+    if (!telegramId) {
+      Swal.fire({ icon: 'warning', title: 'ID Telegram kosong', text: 'Masukkan ID Telegram Anda.' });
+      return;
+    }
+    if (!inputKey) {
+      Swal.fire({ icon: 'warning', title: 'Key kosong', text: 'Masukkan Key Anda.' });
+      return;
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = 'Memproses...';
+    }
+
+    const res = await fetch(USER_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        action: 'loginUser',
+        wa_number: telegramId,
+        key: inputKey
+      })
+    });
+
+    const result = await res.json();
+
+    if (result.status !== 'success' || !result.data) {
+      Swal.fire({ icon: 'error', title: 'Login gagal', text: result.message || 'Key atau ID salah.' });
+      return;
+    }
+
+    // Simpan user tanpa key
+    currentUser = {
+      telegram_id: telegramId,
+      user_id: result.data.user_id,
+      nama_user: result.data.nama_user,
+      saldo: result.data.saldo,
+      status: result.data.status,
+      premium_expiry: result.data.premium_expiry || null,
+      is_admin: !!result.data.is_admin,
+      admin_name: result.data.admin_name || null,
+      platform: getPlatformInfo()
+    };
+
+    localStorage.setItem('topupUser', JSON.stringify(currentUser));
+
+    const modalEl = document.getElementById('loginModal');
+    if (modalEl) {
+      const m = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      m.hide();
+    }
+
+    updateUserUI();
+    startSaldoAutoRefresh();
+    refreshAllData();
+
+    Swal.fire({ icon: 'success', title: 'Login berhasil', text: 'Selamat datang.' });
+
+  } catch (err) {
+    console.error('Login error:', err);
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan saat login.' });
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Login';
+    }
+  }
+}
+
+
+    
+    // Helper function untuk fetch dengan retry
+    async function fetchWithRetry(url, options, maxRetries = 3) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), options.timeout || 10000);
+                
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return response;
+            } catch (error) {
+                console.log(`Attempt ${i + 1} failed:`, error.message);
+                
+                if (i === maxRetries - 1) {
+                    throw error;
+                }
+                
+                // Tunggu sebelum retry
+                await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+            }
+        }
+    }
+
+    // Fungsi untuk refresh semua data
+async function refreshAllData() {
+  if (!currentUser) return;
+
+  const refreshBtn = document.querySelector('[onclick="refreshAllData()"]');
+  let originalHTML = null;
+
+  if (refreshBtn) {
+    originalHTML = refreshBtn.innerHTML;
+    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Loading...';
+    refreshBtn.disabled = true;
+  }
+
+  try {
+    updateUserInfoFromServer().catch(() => {});
+    const tasks = [];
+
+    if (currentUser.is_admin) {
+      tasks.push(loadPendingTopups());
+      tasks.push(loadAllTopups());
+    }
+    tasks.push(loadMyTopups());
+
+    await Promise.all(tasks);
+
+    showToast('success', 'Data berhasil diperbarui');
+  } catch (e) {
+    showToast('error', 'Gagal memperbarui data');
+  } finally {
+    if (refreshBtn) {
+      refreshBtn.innerHTML = originalHTML;
+      refreshBtn.disabled = false;
+    }
+  }
+}
+
+
+    // Fungsi untuk update user info dari server
+    async function updateUserInfoFromServer() {
+        if (!currentUser) return;
+        
+        try {
+            const response = await fetchWithRetry(USER_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'action': 'getUser',
+                    'wa_number': currentUser.telegram_id
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                // Update currentUser dengan data terbaru
+                currentUser.nama_user = result.data.nama_user;
+                currentUser.saldo = result.data.saldo;
+                currentUser.status = result.data.status;
+                currentUser.premium_expiry = result.data.premium_expiry ?? currentUser.premium_expiry ?? null;
+
+                
+                // Update localStorage
+                localStorage.setItem('topupUser', JSON.stringify(currentUser));
+                
+                // Update UI
+                updateUserUI();
+                
+                console.log('✅ User info updated');
+            }
+        } catch (error) {
+            console.error('Error updating user info:', error);
+        }
+    }
+
+    // Fungsi untuk force refresh halaman
+    function forceRefreshPage() {
+        Swal.fire({
+            title: 'Refresh Halaman?',
+            text: 'Semua data akan dimuat ulang dari server.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Refresh',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Clear cache dan reload
+                localStorage.removeItem('topupUser');
+                window.location.reload(true);
+            }
+        });
+    }
+    
+    // Update user UI
+function updateUserUI() {
+  const userName   = document.getElementById('userName');
+  const userStatus = document.getElementById('userStatus');
+
+  const loginBtn  = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const topupBtn  = document.getElementById('topupBtn');
+
+  // ✅ tombol premium
+  const premiumBtn = document.getElementById('premiumBtn');
+
+  // tab admin
+  const pendingTab  = document.getElementById('pending-tab');
+  const allTopupTab = document.getElementById('all-topup-tab');
+
+  // Helper aman (biar ga error kalau elemennya null)
+  const setDisplay = (el, value) => { if (el) el.style.display = value; };
+
+  if (currentUser) {
+    // ==== USER LOGIN ====
+    const saldo = Number(currentUser.saldo || 0);
+
+    if (currentUser.is_admin) {
+      // ==== ADMIN ====
+      if (userName) {
+        userName.innerHTML =
+          `<i class="fas fa-crown me-2 text-warning"></i><span class="text-warning">ADMIN - </span>${currentUser.nama_user}`;
+      }
+
+      if (userStatus) {
+        userStatus.innerHTML = `
+          <span class="badge bg-warning me-2">MODE ADMIN</span>
+          Saldo: <strong>Rp ${formatNumber(saldo)}</strong>
+        `;
+      }
+
+      // show tab admin
+      setDisplay(pendingTab, 'block');
+      setDisplay(allTopupTab, 'block');
+
+      // tombol
+      setDisplay(loginBtn, 'none');
+      setDisplay(logoutBtn, 'block');
+      setDisplay(topupBtn, 'block');
+
+      // ✅ admin tidak boleh lihat tombol premium
+      setDisplay(premiumBtn, 'none');
+
+    } else {
+      // ==== USER BIASA ====
+      const statusLower = (currentUser.status || 'Reguler').toString().toLowerCase();
+      const isPremium = statusLower === 'premium';
+
+      // expiry text
+      let expiryText = '';
+      let premiumDurationText = '';
+      if (isPremium && currentUser.premium_expiry) {
+        const remain = getPremiumRemainingText();
+        expiryText = ` <small class="text-muted">(hingga: ${formatSpreadsheetDate(currentUser.premium_expiry)})</small>`;
+        premiumDurationText = remain ? ` <small class="text-muted">(${escapeHtml(remain)})</small>` : '';
+      }
+
+      if (userName) {
+        userName.innerHTML = `<i class="fas fa-user-check me-2"></i>${currentUser.nama_user}`;
+      }
+
+      if (userStatus) {
+        userStatus.innerHTML = `
+          ID: ${currentUser.telegram_id} |
+          Saldo: <strong>Rp ${formatNumber(saldo)}</strong>
+          <br>
+          Status: <span class="badge ${isPremium ? 'bg-warning text-dark' : 'bg-secondary'}">${isPremium ? 'Premium' : 'Reguler'}</span>${expiryText}
+         ${isPremium ? premiumDurationText : ''}
+
+        `;
+      }
+
+      // hide tab admin
+      setDisplay(pendingTab, 'none');
+      setDisplay(allTopupTab, 'none');
+
+      // tombol
+      setDisplay(loginBtn, 'none');
+      setDisplay(logoutBtn, 'block');
+      setDisplay(topupBtn, 'block');
+
+      // ✅ tombol premium tampil untuk user biasa
+      if (premiumBtn) {
+        premiumBtn.style.display = 'block';
+        premiumBtn.innerHTML = isPremium
+          ? '<i class="fas fa-gem me-2"></i>Perpanjang Premium'
+          : '<i class="fas fa-gem me-2"></i>Beli Premium';
+      }
+    }
+
+  } else {
+    // ==== BELUM LOGIN ====
+    if (userName) userName.textContent = 'Selamat Datang di Top Up INDapk!';
+    if (userStatus) userStatus.textContent = 'Silakan login untuk melakukan top up atau mengelola top up sebagai admin.';
+
+    setDisplay(loginBtn, 'block');
+    setDisplay(logoutBtn, 'none');
+    setDisplay(topupBtn, 'none');
+
+    // ✅ tombol premium disembunyikan kalau belum login
+    setDisplay(premiumBtn, 'none');
+
+    // hide tab admin
+    setDisplay(pendingTab, 'none');
+    setDisplay(allTopupTab, 'none');
+  }
+}
+
+    
+    // Logout
+    function logout() {
+        Swal.fire({
+            title: 'Logout?',
+            text: 'Apakah Anda yakin ingin logout?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Logout',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                stopSaldoAutoRefresh();
+                currentUser = null;
+                localStorage.removeItem('topupUser');
+                updateUserUI();
+                clearTopupsList();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Logout',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }
+    
+    // Show topup modal
+    function showTopupModal() {
+        if (!currentUser) {
+            showLoginModal();
+            return;
+        }
+        
+        const modal = new bootstrap.Modal(document.getElementById('topupModal'));
+        modal.show();
+        
+        // Reset form
+        document.getElementById('topupForm').reset();
+        document.getElementById('filePreview').style.display = 'none';
+        document.getElementById('paymentMethod').value = '';
+        document.getElementById('paymentInstructions').style.display = 'none';
+        document.getElementById('amountSection').style.display = 'none';
+        document.getElementById('proofSection').style.display = 'none';
+        document.querySelectorAll('.method-option').forEach(m => m.classList.remove('selected'));
+        
+        // Reset current payment method
+        currentPaymentMethod = null;
+        
+        // Reset button text
+        document.getElementById('submitTopupText').innerHTML = '<i class="fas fa-paper-plane me-2"></i>Kirim Top Up';
+        
+        // Reset loading
+        document.getElementById('submitTopupText').style.display = 'inline-block';
+        document.getElementById('submitTopupLoading').style.display = 'none';
+    }
+    
+
+    function getPlatformInfo() {
+        const userAgent = navigator.userAgent;
+        let platform = 'Web Browser';
+        
+        // Detect browser
+        if (userAgent.includes('Chrome')) {
+            platform = 'Chrome';
+        } else if (userAgent.includes('Firefox')) {
+            platform = 'Firefox';
+        } else if (userAgent.includes('Safari')) {
+            platform = 'Safari';
+        } else if (userAgent.includes('Edge')) {
+            platform = 'Edge';
+        }
+        
+        // Detect device
+        if (/Android/i.test(userAgent)) {
+            platform += ' (Android)';
+        } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+            platform += ' (iOS)';
+        } else if (/Windows/i.test(userAgent)) {
+            platform += ' (Windows)';
+        } else if (/Macintosh/i.test(userAgent)) {
+            platform += ' (Mac)';
+        } else if (/Linux/i.test(userAgent)) {
+            platform += ' (Linux)';
+        }
+        
+        return platform;
+    }
+
+    // Submit topup
+    async function submitTopup(e) {
+        e.preventDefault();
+        
+        if (!currentUser) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Perlu Login',
+                text: 'Silakan login terlebih dahulu.'
+            });
+            return;
+        }
+        
+        // Validasi
+        const paymentMethod =
+          (currentPaymentMethod || document.getElementById('paymentMethod').value || '')
+            .toString()
+            .trim()
+            .toLowerCase();
+
+        const topupBy = 'WEB';
+        const platform = getPlatformInfo();
+
+        const amount = document.getElementById('amount').value;
+        const proofFile = document.getElementById('proofFile').files[0];
+        const proofNote = document.getElementById('proofNote').value;
+        
+        if (!paymentMethod) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Pilih Metode',
+                text: 'Silakan pilih metode pembayaran.'
+            });
+            return;
+        }
+        
+        // Validasi jumlah berdasarkan metode
+        let amountRp = 0;
+        let amountUsd = 0;
+        
+        if (paymentMethod === 'paypal') {
+            // Validasi untuk PayPal (USD)
+            if (!amount || parseFloat(amount) < 0.63) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Jumlah Tidak Valid',
+                    text: 'Minimum top up adalah $0.63 (≈ Rp 10,000).'
+                });
+                return;
+            }
+            
+            amountUsd = parseFloat(amount);
+            amountRp = Math.round(amountUsd * EXCHANGE_RATE);
+            
+        } else {
+            // Validasi untuk Dana/QRIS (IDR)
+            if (!amount || parseInt(amount) < 5000) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Jumlah Tidak Valid',
+                    text: 'Minimum top up adalah Rp 5.000.'
+                });
+                return;
+            }
+            
+            amountRp = parseInt(amount);
+        }
+        
+        if (!proofFile) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Bukti Pembayaran',
+                text: 'Silakan upload bukti pembayaran.'
+            });
+            return;
+        }
+        
+        // Validasi ukuran file (10MB)
+        if (proofFile.size > 10 * 1024 * 1024) {
+            Swal.fire({
+                icon: 'error',
+                title: 'File Terlalu Besar',
+                text: 'Ukuran maksimal file adalah 10MB.'
+            });
+            return;
+        }
+        
+        // Tampilkan loading
+        document.getElementById('submitTopupText').style.display = 'none';
+        document.getElementById('submitTopupLoading').style.display = 'inline-block';
+        
+        try {
+            // Konversi file ke base64
+            const base64File = await fileToBase64(proofFile);
+            
+            // Siapkan data sesuai format API
+            const topupData = {
+                action: 'createTopup',
+                wa_number: currentUser.telegram_id,
+                nama_user: currentUser.nama_user,
+                jumlah: amountRp,
+                method: paymentMethod,
+                proof_note: proofNote || '',
+                topup_by: 'WEB',
+                platform: getPlatformInfo(),
+                bukti_payment: JSON.stringify({
+                    file_data: base64File.split(',')[1],
+                    file_name: proofFile.name,
+                    mime_type: proofFile.type,
+                    file_size: proofFile.size,
+                    user_info: {
+                        user_id: currentUser.telegram_id,
+                        nama_user: currentUser.nama_user
+                    }
+                })
+            };
+            
+            // Tambahkan amount_usd jika PayPal
+            if (paymentMethod === 'paypal') {
+                topupData.amount_usd = amountUsd.toFixed(2);
+            }
+            
+            console.log('Mengirim data topup:', {
+                ...topupData,
+                bukti_payment: 'BASE64_DATA...'
+            });
+            
+            // Kirim ke API
+            const response = await fetch(USER_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(topupData)
+            });
+            
+            const result = await response.json();
+            console.log('Response topup:', result);
+            
+            if (result.status === 'success') {
+                // Tutup modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('topupModal'));
+                modal.hide();
+                
+                // Tampilkan pesan sukses dengan detail
+                let successMessage = '';
+                let paymentInfo = '';
+                
+                if (paymentMethod === 'dana') {
+                    paymentInfo = 'Transfer ke Dana: 082286344446';
+                    successMessage = `
+                        <div class="text-start">
+                            <p><strong>ID Topup:</strong> ${result.data.topup_id}</p>
+                            <p><strong>Jumlah:</strong> Rp ${formatNumber(amountRp)}</p>
+                            <p><strong>Metode:</strong> Dana</p>
+                            <p><strong>Status:</strong> Pending Approval</p>
+                            <p class="text-info mt-3">
+                                <i class="fas fa-info-circle"></i> 
+                                ${paymentInfo}
+                            </p>
+                            <p class="text-warning mt-2">
+                                <i class="fas fa-clock"></i> 
+                                Top up Anda akan diproses oleh admin dalam 1×24 jam.
+                            </p>
+                        </div>
+                    `;
+                } else if (paymentMethod === 'qris') {
+                    paymentInfo = 'Scan QRIS dengan aplikasi bank/e-wallet';
+                    successMessage = `
+                        <div class="text-start">
+                            <p><strong>ID Topup:</strong> ${result.data.topup_id}</p>
+                            <p><strong>Jumlah:</strong> Rp ${formatNumber(amountRp)}</p>
+                            <p><strong>Metode:</strong> QRIS</p>
+                            <p><strong>Status:</strong> Pending Approval</p>
+                            <p class="text-info mt-3">
+                                <i class="fas fa-info-circle"></i> 
+                                ${paymentInfo}
+                            </p>
+                            <p class="text-warning mt-2">
+                                <i class="fas fa-clock"></i> 
+                                Top up Anda akan diproses oleh admin dalam 1×24 jam.
+                            </p>
+                        </div>
+                    `;
+                } else if (paymentMethod === 'paypal') {
+                    paymentInfo = `Pay via: ${PAYPAL_ME_URL}`;
+                    successMessage = `
+                        <div class="text-start">
+                            <p><strong>Topup ID:</strong> ${result.data.topup_id}</p>
+                            <p><strong>Amount:</strong> $${amountUsd.toFixed(2)} (≈ Rp ${formatNumber(amountRp)})</p>
+                            <p><strong>Method:</strong> PayPal</p>
+                            <p><strong>Status:</strong> Pending Approval</p>
+                            <p class="text-info mt-3">
+                                <i class="fas fa-info-circle"></i> 
+                                ${paymentInfo}
+                            </p>
+                            <p class="text-warning mt-2">
+                                <i class="fas fa-clock"></i> 
+                                Your top up will be processed by admin within 24 hours.
+                            </p>
+                        </div>
+                    `;
+                }
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: paymentMethod === 'paypal' ? 'Top Up Successfully Sent!' : 'Top Up Berhasil Dikirim!',
+                    html: successMessage,
+                    confirmButtonText: 'OK'
+                });
+                
+                // Refresh data topup saya
+                loadMyTopups();
+                
+            } else {
+                throw new Error(result.message || 'Gagal membuat top up');
+            }
+            
+        } catch (error) {
+            console.error('Topup error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: paymentMethod === 'paypal' ? 'Failed to Send Top Up' : 'Gagal Mengirim Top Up',
+                text: error.message || 'Terjadi kesalahan. Silakan coba lagi.'
+            });
+        } finally {
+            // Sembunyikan loading
+            document.getElementById('submitTopupText').style.display = 'inline-block';
+            document.getElementById('submitTopupLoading').style.display = 'none';
+        }
+    }
+    
+    // Load my topups
+async function loadMyTopups() {
+    // Kalau belum login, jangan load data dan jangan panggil API
+    if (!currentUser) {
+        showLoginRequiredMyTopups();
+        return;
+    }
+
+    const myTopupsList = document.getElementById('myTopupsList');
+    const noMyTopups = document.getElementById('noMyTopups');
+
+    myTopupsList.innerHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Memuat riwayat top up...</p>
+        </div>
+    `;
+    if (noMyTopups) noMyTopups.style.display = 'none';
+
+    try {
+        const response = await fetch(USER_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'getUserTopupHistory',
+                wa_number: currentUser.telegram_id
+            })
+        });
+
+        const result = await response.json();
+        console.log('My topups response:', result);
+
+        if (result.status === 'success' || result.status === 'empty') {
+            const topups = result.data || [];
+
+            if (topups.length === 0) {
+                myTopupsList.innerHTML = '';
+                if (noMyTopups) noMyTopups.style.display = 'block';
+                return;
+            }
+
+            topups.forEach(topup => {
+                if (!topup.nama_user) topup.nama_user = currentUser.nama_user;
+            });
+
+            topups.sort((a, b) => new Date(b.tanggal_request || b.timestamp) - new Date(a.tanggal_request || a.timestamp));
+
+            let html = '';
+            topups.forEach(topup => {
+                html += generateTopupItem(topup, false);
+            });
+
+            myTopupsList.innerHTML = html;
+            if (noMyTopups) noMyTopups.style.display = 'none';
+            return;
+        }
+
+        throw new Error(result.message || 'Gagal memuat data');
+    } catch (error) {
+        console.error('Load my topups error:', error);
+        myTopupsList.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Gagal memuat data: ${error.message}
+            </div>
+        `;
+    }
+}
+
+    
+    // Load pending topups (admin only)
+async function loadPendingTopups() {
+  if (!currentUser || !currentUser.is_admin) return;
+
+  const pendingTopupsList = document.getElementById('pendingTopupsList');
+  const noPendingTopups = document.getElementById('noPendingTopups');
+  const pendingCount = document.getElementById('pendingCount');
+
+  pendingTopupsList.innerHTML = `
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Memuat data top up pending...</p>
+    </div>
+  `;
+  noPendingTopups.style.display = 'none';
+
+  try {
+    const response = await fetch(USER_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        action: 'getAllTopups',
+        status: 'pending',
+        ...getAdminPayload()
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.status === 'success') {
+      const topups = result.data || [];
+      const pendingTopups = topups.filter(t => (t.status || '').toLowerCase() === 'pending');
+
+      pendingCount.textContent = pendingTopups.length;
+
+      if (pendingTopups.length === 0) {
+        pendingTopupsList.innerHTML = '';
+        noPendingTopups.style.display = 'block';
+        return;
+      }
+
+      pendingTopups.sort(
+        (a, b) => new Date(a.tanggal_request || a.timestamp) - new Date(b.tanggal_request || b.timestamp)
+      );
+
+      let html = '';
+      pendingTopups.forEach(topup => {
+        if (!topup.nama_user) topup.nama_user = 'User Tidak Dikenal';
+        html += generateTopupItem(topup, true);
+      });
+
+      pendingTopupsList.innerHTML = html;
+      noPendingTopups.style.display = 'none';
+    } else {
+      throw new Error(result.message || 'Gagal memuat data');
+    }
+  } catch (error) {
+    console.error('Load pending topups error:', error);
+    pendingTopupsList.innerHTML = `
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Gagal memuat data: ${error.message}
+      </div>
+    `;
+  }
+}
+
+    
+    // Load all topups (admin only)
+    async function loadAllTopups() {
+        if (!currentUser || !currentUser.is_admin) return;
+        
+        const allTopupsList = document.getElementById('allTopupsList');
+        const noAllTopups = document.getElementById('noAllTopups');
+        
+        allTopupsList.innerHTML = `
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3">Memuat semua data top up...</p>
+            </div>
+        `;
+        noAllTopups.style.display = 'none';
+        
+        try {
+            const response = await fetch(USER_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                    body: new URLSearchParams({
+                      action: 'getAllTopups',
+                      ...getAdminPayload()
+                    })
+            });
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                allTopupsData = result.data || [];
+                filteredTopups = [...allTopupsData];
+                
+                // Pastikan semua topup memiliki nama_user
+                filteredTopups.forEach(topup => {
+                    if (!topup.nama_user) {
+                        topup.nama_user = 'User Tidak Dikenal';
+                    }
+                });
+                
+                if (filteredTopups.length === 0) {
+                    allTopupsList.innerHTML = '';
+                    noAllTopups.style.display = 'block';
+                    return;
+                }
+                
+                // Sort by date (newest first)
+                filteredTopups.sort((a, b) => new Date(b.tanggal_request || b.timestamp) - new Date(a.tanggal_request || a.timestamp));
+                
+                updateAllTopupsList();
+                noAllTopups.style.display = 'none';
+                
+            } else {
+                throw new Error(result.message || 'Gagal memuat data');
+            }
+            
+        } catch (error) {
+            console.error('Load all topups error:', error);
+            allTopupsList.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Gagal memuat data: ${error.message}
+                </div>
+            `;
+        }
+    }
+    
+    // Generate topup item HTML
+    function generateTopupItem(topup, showAdminActions = false) {
+        // Format tanggal dengan benar
+        const requestDate = formatSpreadsheetDate(topup.tanggal_request || topup.timestamp);
+        
+        // Format tanggal approve jika ada
+        let approveDate = '-';
+        if (topup.tanggal_approve) {
+            approveDate = formatSpreadsheetDate(topup.tanggal_approve);
+        }
+        
+        // Status badge
+        let statusBadge = '';
+        let statusText = (topup.status || '').toString().toLowerCase();
+        
+        if (statusText.includes('pending')) {
+            statusBadge = '<span class="status-pending">⏳ Pending</span>';
+        } else if (statusText.includes('approved')) {
+            statusBadge = '<span class="status-approved">✅ Approved</span>';
+        } else if (statusText.includes('rejected')) {
+            statusBadge = '<span class="status-rejected">❌ Rejected</span>';
+        } else {
+            statusBadge = `<span class="badge bg-secondary">${topup.status || 'Unknown'}</span>`;
+        }
+        
+        // Payment method icon
+        let methodIcon = '';
+        let methodText = 'Unknown';
+        
+        if (topup.method) {
+            methodText = topup.method.toUpperCase();
+        } else if (topup.payment_method) {
+            methodText = topup.payment_method.toUpperCase();
+        }
+        
+        if (methodText.includes('DANA')) {
+            methodIcon = '<i class="fas fa-mobile-alt text-primary"></i>';
+            methodText = 'Dana';
+        } else if (methodText.includes('QRIS')) {
+            methodIcon = '<i class="fas fa-qrcode text-success"></i>';
+            methodText = 'QRIS';
+        } else if (methodText.includes('PAYPAL')) {
+            methodIcon = '<i class="fab fa-paypal text-info"></i>';
+            methodText = 'PayPal';
+        } else {
+            methodIcon = '<i class="fas fa-wallet text-secondary"></i>';
+        }
+        
+        // Format amount display
+        let amountDisplay = '';
+        if (methodText === 'PayPal' && topup.amount_usd) {
+            amountDisplay = `$${parseFloat(topup.amount_usd).toFixed(2)} (≈ Rp ${formatNumber(topup.jumlah)})`;
+        } else {
+            amountDisplay = `Rp ${formatNumber(topup.jumlah)}`;
+        }
+        
+        // User name display
+        const userName = topup.nama_user || 'User Tidak Dikenal';
+        
+        // Admin info jika ada
+        let adminInfo = '';
+        if (topup.admin_approve) {
+            adminInfo = `
+                <p class="mb-1 text-muted small">
+                    <i class="fas fa-user-check me-1"></i>Oleh: ${topup.admin_approve}
+                    ${approveDate !== '-' ? `<br><i class="fas fa-clock me-1"></i>${approveDate}` : ''}
+                </p>
+            `;
+        }
+        
+        // Reason jika rejected
+        let reasonInfo = '';
+        if (statusText.includes('rejected') && topup.reason) {
+            reasonInfo = `
+                <p class="mb-1 text-danger small">
+                    <i class="fas fa-times-circle me-1"></i>${topup.reason}
+                </p>
+            `;
+        } else if (statusText.includes('rejected') && topup.status && topup.status.includes(':')) {
+            // Ekstrak alasan dari status jika ada
+            const reason = topup.status.split(':').slice(1).join(':').trim();
+            if (reason) {
+                reasonInfo = `
+                    <p class="mb-1 text-danger small">
+                        <i class="fas fa-times-circle me-1"></i>${reason}
+                    </p>
+                `;
+            }
+        }
+        
+        // Bukti payment link jika ada
+        let buktiLink = '';
+        const buktiPayment = topup.bukti_payment || '';
+        if (buktiPayment && (buktiPayment.includes('http') || buktiPayment.includes('drive.google.com'))) {
+            buktiLink = `
+                <p class="mb-1 text-muted small">
+                    <i class="fas fa-paperclip me-1"></i>
+                    <a href="${buktiPayment}" target="_blank" class="text-decoration-none">Lihat Bukti</a>
+                </p>
+            `;
+        }
+        
+        // Platform/source badge
+        let sourceBadge = '';
+        if (topup.topup_by === 'TELEGRAM') {
+            sourceBadge = '<span class="badge bg-primary me-1" title="Via Telegram Bot"><i class="fab fa-telegram me-1"></i>Telegram</span>';
+        } else if (topup.topup_by === 'WEB') {
+            sourceBadge = '<span class="badge bg-info me-1" title="Via Web"><i class="fas fa-globe me-1"></i>Web</span>';
+        } else if (topup.topup_by) {
+            sourceBadge = `<span class="badge bg-secondary me-1">${topup.topup_by}</span>`;
+        }
+        
+        return `
+            <div class="topup-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center mb-2">
+                            <h6 class="mb-0 me-2">${amountDisplay}</h6>
+                            ${statusBadge}
+                            ${sourceBadge}
+                        </div>
+                        <p class="mb-1 text-muted small">
+                            <i class="fas fa-user me-1"></i>${userName}
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-hashtag me-1"></i>${topup.topup_id || 'N/A'}
+                        </p>
+                        <p class="mb-2 text-muted small">
+                            <i class="fas fa-clock me-1"></i>${requestDate}
+                            <span class="mx-2">•</span>
+                            ${methodIcon} ${methodText}
+                        </p>
+                        
+                        ${buktiLink}
+                        ${adminInfo}
+                        ${reasonInfo}
+                        
+                        ${topup.proof_note ? `
+                            <p class="mb-0 text-muted small">
+                                <i class="fas fa-sticky-note me-1"></i>${topup.proof_note}
+                            </p>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="d-flex flex-column gap-1 ms-2">
+                        <button class="btn btn-sm btn-outline-primary" onclick="showTopupDetail('${topup.topup_id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        ${showAdminActions && statusText.includes('pending') ? `
+                            <button class="btn btn-sm btn-outline-success" onclick="showApproveModal('${topup.topup_id}')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="showRejectModal('${topup.topup_id}')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Update all topups list
+    function updateAllTopupsList() {
+        const allTopupsList = document.getElementById('allTopupsList');
+        
+        if (filteredTopups.length === 0) {
+            allTopupsList.innerHTML = '';
+            document.getElementById('noAllTopups').style.display = 'block';
+            return;
+        }
+        
+        let html = '';
+        filteredTopups.forEach(topup => {
+            html += generateTopupItem(topup, currentUser && currentUser.is_admin);
+        });
+        
+        allTopupsList.innerHTML = html;
+        document.getElementById('noAllTopups').style.display = 'none';
+    }
+    
+    // Filter topups
+    function filterTopups() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const statusFilter = document.getElementById('statusFilter').value;
+        
+        filteredTopups = allTopupsData.filter(topup => {
+            // Search filter
+            const searchMatch = !searchTerm || 
+                (topup.nama_user && topup.nama_user.toLowerCase().includes(searchTerm)) ||
+                (topup.topup_id && topup.topup_id.toLowerCase().includes(searchTerm)) ||
+                (topup.wa_number && topup.wa_number.includes(searchTerm));
+            
+            // Status filter
+            const statusMatch = statusFilter === 'all' || 
+                (topup.status && topup.status.toLowerCase() === statusFilter.toLowerCase());
+            
+            return searchMatch && statusMatch;
+        });
+        
+        // Sort by date (newest first)
+        filteredTopups.sort((a, b) => new Date(b.tanggal_request || b.timestamp) - new Date(a.tanggal_request || a.timestamp));
+        
+        updateAllTopupsList();
+    }
+    
+    // Clear topups list
+    function clearTopupsList() {
+        document.getElementById('myTopupsList').innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-user-lock fa-3x text-muted mb-3"></i>
+                <h5>Silakan Login</h5>
+                <p class="text-muted">Login untuk melihat riwayat top up</p>
+            </div>
+        `;
+        document.getElementById('pendingTopupsList').innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-user-lock fa-3x text-muted mb-3"></i>
+                <h5>Silakan Login</h5>
+                <p class="text-muted">Login sebagai admin untuk melihat top up pending</p>
+            </div>
+        `;
+        document.getElementById('allTopupsList').innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-user-lock fa-3x text-muted mb-3"></i>
+                <h5>Silakan Login</h5>
+                <p class="text-muted">Login sebagai admin untuk melihat semua top up</p>
+            </div>
+        `;
+        document.getElementById('pendingCount').textContent = '0';
+    }
+    
+// Fungsi untuk format tanggal dari spreadsheet - DIPERBAIKI UNTUK ISO FORMAT
+function formatSpreadsheetDate(dateString) {
+  if (!dateString || dateString.trim() === '' || dateString === '-' || dateString === 'Invalid Date') {
+    return '-';
+  }
+  
+  console.log('Formatting date:', dateString);
+  
+  try {
+    let date;
+    const cleanString = String(dateString).trim();
+    
+    // 1. Format ISO: "2025-12-31T07:03:31.000Z"
+    if (cleanString.includes('T') && cleanString.includes('Z')) {
+      date = new Date(cleanString);
+      console.log('Parsed as ISO format:', date);
+    }
+    // 2. Format: "31/12/2025 12:06:00" (dd/MM/yyyy HH:mm:ss)
+    else if (cleanString.includes('/') && cleanString.includes(':')) {
+      const parts = cleanString.split(/[/ :]/);
+      if (parts.length >= 6) {
+        const [day, month, year, hour, minute, second] = parts;
+        date = new Date(year, month - 1, day, hour, minute, second);
+        console.log('Parsed as dd/MM/yyyy HH:mm:ss:', date);
+      } else if (parts.length >= 3) {
+        const [day, month, year] = parts;
+        date = new Date(year, month - 1, day, 0, 0, 0);
+        console.log('Parsed as dd/MM/yyyy:', date);
+      }
+    }
+    // 3. Format: "2025-12-31 12:06:00" (yyyy-MM-dd HH:mm:ss)
+    else if (cleanString.includes('-') && cleanString.includes(':')) {
+      const datePart = cleanString.split(' ')[0];
+      const timePart = cleanString.split(' ')[1] || '00:00:00';
+      const [year, month, day] = datePart.split('-');
+      const [hour, minute, second] = timePart.split(':');
+      
+      date = new Date(year, month - 1, day, hour || 0, minute || 0, second || 0);
+      console.log('Parsed as yyyy-MM-dd HH:mm:ss:', date);
+    }
+    // 4. Format: "2025-12-31" (yyyy-MM-dd)
+    else if (cleanString.includes('-') && cleanString.length === 10 && cleanString.indexOf('-') === 4) {
+      const [year, month, day] = cleanString.split('-');
+      date = new Date(year, month - 1, day);
+      console.log('Parsed as yyyy-MM-dd:', date);
+    }
+    // 5. Try standard Date parsing
+    else {
+      date = new Date(cleanString);
+      console.log('Parsed as Date object:', date);
+    }
+    
+    // Validasi date
+    if (!date || isNaN(date.getTime())) {
+      console.warn('Invalid date after parsing:', cleanString);
+      return cleanString.length > 20 ? cleanString.substring(0, 20) + '...' : cleanString;
+    }
+    
+    // Format ke bahasa Indonesia yang benar
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.getMonth() + 1;
+    const yearFull = date.getFullYear();
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+    const second = date.getSeconds().toString().padStart(2, '0');
+    
+    const monthNames = {
+      1: 'Januari', 2: 'Februari', 3: 'Maret', 4: 'April',
+      5: 'Mei', 6: 'Juni', 7: 'Juli', 8: 'Agustus',
+      9: 'September', 10: 'Oktober', 11: 'November', 12: 'Desember'
+    };
+    
+    const monthName = monthNames[month] || month;
+    
+    // Cek apakah ada waktu (bukan 00:00:00)
+    const hasTime = hour !== '00' || minute !== '00' || second !== '00';
+    
+    if (hasTime) {
+      return `${day} ${monthName} ${yearFull}, ${hour}:${minute}`;
+    } else {
+      return `${day} ${monthName} ${yearFull}`;
+    }
+    
+  } catch (error) {
+    console.error('Error in formatSpreadsheetDate:', error, 'for date:', dateString);
+    // Coba format sederhana
+    try {
+      const date = new Date(dateString);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+    } catch (e) {
+      // Jika masih error, return string asli yang dipotong
+      return dateString.length > 20 ? dateString.substring(0, 20) + '...' : dateString;
+    }
+  }
+}
+
+// Fungsi format tanggal yang lebih sederhana (fallback)
+function formatDateSimple(dateString) {
+  if (!dateString) return '-';
+  
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    
+    return date.toLocaleDateString('id-ID', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch (e) {
+    return dateString;
+  }
+}
+
+// Fungsi format tanggal untuk approval (opsional)
+function formatApprovalDate(dateString) {
+  const formatted = formatSpreadsheetDate(dateString);
+  if (formatted === '-') return '-';
+  
+  // Format khusus: "31 Des 2025, 12.06"
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return formatted;
+    
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+    
+    const monthShort = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 
+                       'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][month];
+    
+    return `${day} ${monthShort} ${year}, ${hour}.${minute}`;
+  } catch (e) {
+    return formatted;
+  }
+}
+
+// Fungsi untuk format waktu relative (x menit/jam yang lalu)
+    // Fungsi untuk mendapatkan waktu relatif
+    function getTimeAgo(timestamp) {
+        const now = new Date();
+        const past = new Date(timestamp);
+        const diffMs = now - past;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+        
+        if (diffMins < 1) return 'Baru saja';
+        if (diffMins < 60) return `${diffMins} menit yang lalu`;
+        if (diffHours < 24) return `${diffHours} jam yang lalu`;
+        if (diffDays < 7) return `${diffDays} hari yang lalu`;
+        
+        return past.toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+    }
+
+
+
+
+
+// Normalize phone number (similar to GS version)
+function normalizeNumber(number) {
+  return String(number).replace(/[^0-9]/g, '').trim();
+}
+
+// File to base64 conversion
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+
+    // Show topup detail
+   // Show topup detail (AMAN: user biasa tidak pernah memanggil getAllTopups)
+async function showTopupDetail(topupId) {
+  try {
+    if (!topupId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'ID Top Up tidak valid'
+      });
+      return;
+    }
+
+    // Helper: render modal HTML
+    function renderDetail(topup) {
+      const userName = topup.nama_user || 'User Tidak Dikenal';
+
+      const requestDateStr = formatSpreadsheetDate(topup.tanggal_request || topup.timestamp);
+      const approveDateStr = formatSpreadsheetDate(topup.tanggal_approve);
+
+      // Status badge
+      const st = (topup.status || '').toString().toLowerCase();
+      let statusHtml = '';
+      if (st.includes('pending')) {
+        statusHtml = '<span class="badge bg-warning">⏳ Pending</span>';
+      } else if (st.includes('approved')) {
+        statusHtml = '<span class="badge bg-success">✅ Approved</span>';
+      } else if (st.includes('rejected')) {
+        statusHtml = '<span class="badge bg-danger">❌ Rejected</span>';
+      } else {
+        statusHtml = `<span class="badge bg-secondary">${topup.status || 'Unknown'}</span>`;
+      }
+
+      // Amount display (PayPal)
+      const methodLower = (topup.method || topup.payment_method || '').toString().toLowerCase();
+      let amountDisplay = `Rp ${formatNumber(topup.jumlah)}`;
+      if (methodLower.includes('paypal') && topup.amount_usd) {
+        const usd = parseFloat(topup.amount_usd);
+        amountDisplay = `$${Number.isFinite(usd) ? usd.toFixed(2) : topup.amount_usd} (≈ Rp ${formatNumber(topup.jumlah)})`;
+      }
+
+      // Bukti link
+      const buktiPayment = (topup.bukti_payment || '').toString();
+      const hasProofLink = buktiPayment && (buktiPayment.includes('http') || buktiPayment.includes('drive.google.com'));
+
+      // Metode tampil
+      const methodText = (topup.method || topup.payment_method || '-').toString().toUpperCase();
+
+      // Reason: bisa dari field reason atau dari status "rejected: alasan"
+      let reasonText = (topup.reason || '').toString().trim();
+      if (!reasonText && st.includes('rejected') && (topup.status || '').toString().includes(':')) {
+        reasonText = (topup.status || '').toString().split(':').slice(1).join(':').trim();
+      }
+
+      // Source badge
+      let sourceInfo = '';
+      if (topup.topup_by) {
+        sourceInfo = `<div class="form-control bg-light">${topup.topup_by}</div>`;
+      } else {
+        sourceInfo = `<div class="form-control bg-light">-</div>`;
+      }
+
+      const detailHtml = `
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label text-muted">ID Top Up</label>
+              <div class="form-control bg-light">${topup.topup_id || '-'}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label text-muted">Status</label>
+              <div>${statusHtml}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label text-muted">User</label>
+              <div class="form-control bg-light">
+                <strong>${userName}</strong>
+                ${topup.wa_number ? `<br><small>ID: ${topup.wa_number}</small>` : ''}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label text-muted">Jumlah</label>
+              <div class="form-control bg-light">
+                <strong>${amountDisplay}</strong>
+                ${methodLower.includes('paypal') ? '<br><small>(Pembayaran via PayPal)</small>' : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label text-muted">Metode Pembayaran</label>
+              <div class="form-control bg-light">
+                ${methodText}
+                ${methodLower.includes('dana') ? '<br><small>082286344446</small>' : ''}
+                ${methodLower.includes('paypal') ? `<br><small>${PAYPAL_ME_URL}</small>` : ''}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label text-muted">Waktu Request</label>
+              <div class="form-control bg-light">${requestDateStr}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label text-muted">Sumber</label>
+              ${sourceInfo}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label text-muted">Platform</label>
+              <div class="form-control bg-light">${topup.platform || '-'}</div>
+            </div>
+          </div>
+        </div>
+
+        ${hasProofLink ? `
+          <div class="mb-3">
+            <label class="form-label text-muted">Bukti Pembayaran</label>
+            <div class="form-control bg-light">
+              <a href="${buktiPayment}" target="_blank" rel="noopener" class="btn btn-sm btn-primary">
+                <i class="fas fa-external-link-alt me-1"></i>Lihat Bukti Pembayaran
+              </a>
+            </div>
+          </div>
+        ` : ''}
+
+        ${topup.admin_approve ? `
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">Admin</label>
+                <div class="form-control bg-light">${topup.admin_approve}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">Waktu Approval</label>
+                <div class="form-control bg-light">${approveDateStr}</div>
+              </div>
+            </div>
+          </div>
+        ` : ''}
+
+        ${reasonText ? `
+          <div class="mb-3">
+            <label class="form-label text-muted">Alasan Penolakan</label>
+            <div class="form-control bg-light">${reasonText}</div>
+          </div>
+        ` : ''}
+
+        ${topup.proof_note ? `
+          <div class="mb-3">
+            <label class="form-label text-muted">Catatan User</label>
+            <div class="form-control bg-light">${topup.proof_note}</div>
+          </div>
+        ` : ''}
+      `;
+
+      document.getElementById('detailContent').innerHTML = detailHtml;
+      const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+      modal.show();
+    }
+
+    // =========================
+    // 1) CARI DATA DARI CACHE
+    // =========================
+    let topup = null;
+
+    // Admin: coba ambil dari allTopupsData dulu
+    if (currentUser?.is_admin && Array.isArray(allTopupsData) && allTopupsData.length > 0) {
+      topup = allTopupsData.find(t => t?.topup_id === topupId) || null;
+    }
+
+    // User biasa: coba ambil dari DOM list (opsional, kalau kamu simpan cache sendiri)
+    // (Tidak wajib, kalau tidak ada cache maka lanjut ke fetch)
+
+    // =========================
+    // 2) FETCH YANG AMAN
+    // =========================
+    if (!topup) {
+      if (currentUser?.is_admin) {
+        // Admin boleh getAllTopups
+        const res = await fetch(USER_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            action: 'getAllTopups',
+            ...getAdminPayload()
+          })
+        });
+
+        const r = await res.json();
+        if (r.status === 'success') {
+          const data = Array.isArray(r.data) ? r.data : [];
+          topup = data.find(t => t?.topup_id === topupId) || null;
+
+          // Optional: update cache admin
+          allTopupsData = data;
+        }
+      } else {
+        // User biasa hanya boleh ambil riwayatnya sendiri
+        if (!currentUser?.telegram_id) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Perlu Login',
+            text: 'Silakan login terlebih dahulu.'
+          });
+          return;
+        }
+
+        const res = await fetch(USER_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            action: 'getUserTopupHistory',
+            wa_number: currentUser.telegram_id
+          })
+        });
+
+        const r = await res.json();
+        if (r.status === 'success' || r.status === 'empty') {
+          const data = Array.isArray(r.data) ? r.data : [];
+          topup = data.find(t => t?.topup_id === topupId) || null;
+        }
+      }
+    }
+
+    // =========================
+    // 3) VALIDASI HASIL
+    // =========================
+    if (!topup) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Top Up Tidak Ditemukan',
+        text: 'Data top up tidak ditemukan atau Anda tidak punya akses.'
+      });
+      return;
+    }
+
+    // =========================
+    // 4) RENDER
+    // =========================
+    renderDetail(topup);
+
+  } catch (error) {
+    console.error('Show detail error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Gagal memuat detail top up'
+    });
+  }
+}
+
+    
+    // Show approve modal
+    function showApproveModal(topupId) {
+        if (!currentUser || !currentUser.is_admin) return;
+        
+        currentTopupId = topupId;
+        document.getElementById('actionTitle').innerHTML = '<i class="fas fa-check-circle me-2"></i>Approve Top Up';
+        document.getElementById('approveContent').style.display = 'block';
+        document.getElementById('rejectContent').style.display = 'none';
+        
+        const modal = new bootstrap.Modal(document.getElementById('actionModal'));
+        modal.show();
+    }
+    
+    // Show reject modal
+    function showRejectModal(topupId) {
+        if (!currentUser || !currentUser.is_admin) return;
+        
+        currentTopupId = topupId;
+        document.getElementById('actionTitle').innerHTML = '<i class="fas fa-times-circle me-2"></i>Tolak Top Up';
+        document.getElementById('approveContent').style.display = 'none';
+        document.getElementById('rejectContent').style.display = 'block';
+        document.getElementById('rejectReason').value = '';
+        
+        const modal = new bootstrap.Modal(document.getElementById('actionModal'));
+        modal.show();
+    }
+    
+// Process approve
+async function processApprove() {
+    if (!currentTopupId) return;
+    
+    try {
+        const response = await fetch(USER_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'action': 'approveTopup',
+                'topup_id': currentTopupId,
+                'admin': currentUser.telegram_id,
+                'admin_name': currentUser.admin_name || currentUser.nama_user
+            })
+        });
+        
+        const result = await response.json();
+        console.log('Approve response:', result);
+        
+        if (result.status === 'success') {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
+            modal.hide();
+            
+            // Show success
+            Swal.fire({
+                icon: 'success',
+                title: 'Top Up Approved!',
+                text: 'Top up berhasil diapprove dan saldo user telah ditambahkan.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+            
+            // Refresh semua data
+            loadPendingTopups();
+            loadAllTopups();
+            
+        } else {
+            throw new Error(result.message || 'Gagal approve top up');
+        }
+        
+    } catch (error) {
+        console.error('Approve error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal Approve',
+            text: error.message || 'Terjadi kesalahan'
+        });
+    }
+}
+
+// Process reject
+async function processReject() {
+    if (!currentTopupId) return;
+    
+    const reason = document.getElementById('rejectReason').value.trim();
+    if (!reason) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Alasan Diperlukan',
+            text: 'Silakan masukkan alasan penolakan.'
+        });
+        return;
+    }
+    
+    try {
+        const response = await fetch(USER_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'action': 'rejectTopup',
+                'topup_id': currentTopupId,
+                'admin': currentUser.telegram_id,
+                'admin_name': currentUser.admin_name || currentUser.nama_user,
+                'reason': reason
+            })
+        });
+        
+        const result = await response.json();
+        console.log('Reject response:', result);
+        
+        if (result.status === 'success') {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
+            modal.hide();
+            
+            // Show success
+            Swal.fire({
+                icon: 'success',
+                title: 'Top Up Ditolak!',
+                text: 'Top up berhasil ditolak.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+            
+            // Refresh semua data
+            loadPendingTopups();
+            loadAllTopups();
+            
+            
+        } else {
+            throw new Error(result.message || 'Gagal reject top up');
+        }
+        
+    } catch (error) {
+        console.error('Reject error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal Reject',
+            text: error.message || 'Terjadi kesalahan'
+        });
+    }
+}
+
+
+
+  // Toast helper (SweetAlert2)
+  const _toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    }
+  });
+
+function showToast(type, message) {
+  if (typeof Swal === 'undefined') {
+    alert(message);
+    return;
+  }
+  const icon =
+    type === 'success' ? 'success' :
+    type === 'error'   ? 'error'   :
+    type === 'warning' ? 'warning' : 'info';
+
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon,
+    title: message,
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true
+  });
+}
+
+    // Format number with thousand separator
+function formatNumber(num) {
+  const n = Number(num);
+  if (!Number.isFinite(n)) return '0';
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+    
+    // Format date
+    function formatDate(dateString) {
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            return dateString;
+        }
+    }
+
+</script>
+</body>
+</html>

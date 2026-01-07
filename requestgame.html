@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <title>Request Game - INDapk</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary-color: #4a6fa5;
+      --secondary-color: #166088;
+      --accent-color: #17a2b8;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --bg-color: #ffffff;
+      --card-bg: #ffffff;
+      --text-color: #343a40;
+      --border-color: #dee2e6;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .dark-mode {
+      --primary-color: #5a8fd8;
+      --secondary-color: #2c7bb6;
+      --accent-color: #19b9d4;
+      --light-color: #2d3748;
+      --dark-color: #f8f9fa;
+      --bg-color: #1a202c;
+      --card-bg: #2d3748;
+      --text-color: #e2e8f0;
+      --border-color: #4a5568;
+      --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      overflow-x: hidden;
+      height: 100%;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.3s ease, color 0.3s ease;
+
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0;
+    }
+
+    .container-page {
+      flex: 1 0 auto;
+    }
+
+    .bg-gradient {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    .bg-gradient-dark {
+      background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%) !important;
+    }
+
+    .container {
+      max-width: 1200px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .card {
+      border-radius: 15px;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      box-shadow: 0 5px 15px var(--shadow-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px var(--shadow-color);
+    }
+
+    .card-header {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      border-radius: 15px 15px 0 0 !important;
+      padding: 14px 16px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border: none;
+      border-radius: 25px;
+      padding: 10px 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px var(--shadow-color);
+    }
+
+    .btn-secondary {
+      background: var(--accent-color);
+      border: none;
+      border-radius: 25px;
+      padding: 10px 25px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Navbar */
+    .navbar {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    .navbar-brand {
+      font-size: 1.1rem;
+    }
+
+    .navbar-brand span {
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+    }
+
+    /* Navbar icons */
+    .btn-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+
+    .btn-icon:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .dark-mode .btn-icon {
+      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .language-menu {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: 0 12px 30px var(--shadow-color);
+      min-width: 170px;
+    }
+
+    .language-menu .dropdown-item {
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text-color);
+    }
+
+    .language-menu .dropdown-item.active,
+    .language-menu .dropdown-item:active {
+      background: var(--primary-color);
+      color: #fff;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+      border-bottom: 2px solid var(--border-color);
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      scroll-snap-type: x mandatory;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-tabs .nav-item {
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      color: var(--text-color);
+      font-weight: 500;
+      padding: 10px 15px;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      border-radius: 25px;
+      margin: 0 2px;
+      background-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .nav-tabs .nav-link.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    /* Form */
+    .form-control {
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      padding: 12px 15px;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      line-height: 1.25;
+      min-height: 44px;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(74, 111, 165, 0.25);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .form-label {
+      color: var(--text-color);
+    }
+
+    .form-text {
+      color: var(--text-color);
+      opacity: 0.8;
+    }
+
+    .input-group-text {
+      border-radius: 10px 0 0 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .input-group .form-control {
+      border-radius: 0 10px 10px 0;
+    }
+
+    /* User Info */
+    .user-info {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Request Item */
+    .request-item {
+      border-left: 4px solid var(--primary-color);
+      padding: 12px;
+      margin-bottom: 12px;
+      background: var(--card-bg);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      word-break: break-word;
+      border: 1px solid var(--border-color);
+    }
+
+    .request-item:hover {
+      background: var(--card-bg);
+      transform: none;
+    }
+
+    .request-item h6 {
+      font-size: 0.95rem;
+      line-height: 1.2;
+    }
+
+    /* Modal */
+    .modal-content {
+      border-radius: 15px;
+      overflow: hidden;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .modal-header,
+    .modal-footer {
+      border-color: var(--border-color);
+    }
+
+    /* Footer */
+    .footer {
+      position: static;
+      background: var(--card-bg);
+      padding: 12px 15px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-color);
+      border-top: 1px solid var(--border-color);
+      z-index: 1000;
+      margin-top: 20px;
+    }
+
+    /* Loading and alert */
+    .loading {
+      display: none;
+    }
+
+    .alert {
+      border-radius: 10px;
+      border: none;
+      background-color: var(--light-color);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .alert-info {
+      background-color: rgba(23, 162, 184, 0.2);
+      border-color: var(--accent-color);
+    }
+
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+      min-width: 44px;
+      min-height: 44px;
+      background-color: var(--primary-color);
+      color: white;
+      touch-action: manipulation;
+    }
+
+    .action-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Status badges */
+    .status-badge {
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .status-pending {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .status-done {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status-rejected {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .dark-mode .status-pending {
+      background-color: #332701;
+      color: #ffd351;
+      border: 1px solid #665200;
+    }
+
+    .dark-mode .status-done {
+      background-color: #0f2e1a;
+      color: #75b798;
+      border: 1px solid #1e4d2f;
+    }
+
+    .dark-mode .status-rejected {
+      background-color: #3c1519;
+      color: #ea868f;
+      border: 1px solid #842029;
+    }
+
+    /* Touch friendly */
+    select.form-control,
+    input.form-control,
+    textarea.form-control,
+    button {
+      min-height: 44px;
+    }
+
+    /* Icon warna untuk sumber request */
+    .text-telegram {
+      color: #0088cc;
+    }
+
+    .text-web {
+      color: #28a745;
+    }
+
+    /* Badge untuk sumber request */
+    .source-badge {
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .source-telegram {
+      background-color: rgba(0, 136, 204, 0.1);
+      color: #0088cc;
+      border: 1px solid rgba(0, 136, 204, 0.3);
+    }
+
+    .source-web {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+      border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+
+    .dark-mode .source-telegram {
+      background-color: rgba(0, 136, 204, 0.2);
+      color: #4db8ff;
+      border: 1px solid rgba(0, 136, 204, 0.4);
+    }
+
+    .dark-mode .source-web {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #6fdc8f;
+      border: 1px solid rgba(40, 167, 69, 0.4);
+    }
+
+    /* Desktop */
+    @media (min-width: 992px) {
+      html {
+        font-size: 17px;
+      }
+
+      .container {
+        padding-left: 25px;
+        padding-right: 25px;
+      }
+
+      .card {
+        margin-bottom: 25px;
+      }
+
+      .nav-tabs {
+        flex-wrap: wrap;
+        overflow: visible;
+      }
+
+      .nav-tabs .nav-link {
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+
+      .card-body {
+        padding: 18px;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 575px) {
+      .navbar-brand span {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .user-info {
+        padding: 14px;
+      }
+
+      .user-info .d-flex {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .user-info .btn {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+
+      .nav-tabs .nav-link {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        width: 100%;
+        margin-bottom: 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+
+      .card:hover {
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-dark navbar-expand-lg py-3 bg-gradient">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <i class="fas fa-gamepad me-2"></i>
+        <span class="fw-bold" data-i18n="navTitle">INDapk - Request Game</span>
+      </a>
+
+      <!-- Right icons always visible -->
+      <div class="d-flex align-items-center gap-2 ms-auto order-lg-3">
+        <div class="dropdown">
+          <button class="btn btn-icon" id="languageBtn" type="button" aria-expanded="false" aria-haspopup="true" title="Change Language">
+            <i class="fas fa-globe"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end language-menu" id="languageOptions" role="menu" aria-label="Language menu">
+            <button class="dropdown-item language-option active" data-lang="id" type="button">🇮🇩 Indonesia</button>
+            <button class="dropdown-item language-option" data-lang="en" type="button">🇺🇸 English</button>
+          </div>
+        </div>
+
+        <button class="btn btn-icon" id="themeBtn" type="button" title="Toggle Dark/Light Mode">
+          <i class="fas fa-moon"></i>
+        </button>
+
+        <button class="navbar-toggler ms-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse order-lg-2" id="navbarNav">
+        <ul class="navbar-nav ms-lg-auto me-lg-2 mt-3 mt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="https://t.me/INDapkBot" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-telegram me-1"></i>
+              <span data-i18n="telegramBot">Telegram Bot</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-page">
+    <!-- Main Container -->
+    <div class="container mt-4 mt-md-4 mt-lg-4">
+      <!-- Login/User Info -->
+      <div class="row mb-3 mb-md-4">
+        <div class="col-12">
+          <div class="user-info" id="userInfo">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+              <div class="mb-3 mb-md-0">
+                <h4 class="mb-1" id="userName" data-i18n="welcome">Selamat Datang di Request Game INDapk!</h4>
+                <p class="mb-0" id="userStatus" data-i18n="loginPrompt">Silakan login atau gunakan mode anonymous untuk mulai request game.</p>
+              </div>
+              <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto" id="userActions">
+                <!-- Tombol akan diisi oleh JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <ul class="nav nav-tabs mb-3 mb-md-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="request-tab" data-bs-toggle="tab" data-bs-target="#request" type="button">
+            <i class="fas fa-plus-circle me-2"></i><span data-i18n="newRequest">Request Baru</span>
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" onclick="loadRequests()">
+            <i class="fas fa-list me-2"></i><span data-i18n="listRequest">List Request</span>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content" id="myTabContent">
+        <!-- Request Form Tab -->
+        <div class="tab-pane fade show active" id="request" role="tabpanel">
+          <div class="card">
+            <div class="card-header">
+              <i class="fas fa-gamepad me-2"></i><span data-i18n="formTitle">Form Request Game</span>
+            </div>
+            <div class="card-body">
+              <form id="requestForm">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label for="gameName" class="form-label">
+                      <i class="fas fa-heading me-2"></i><span data-i18n="gameName">Nama Game</span> <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="gameName" required data-i18n-placeholder="gameNamePlaceholder" placeholder="Contoh: The Legend of Zelda: Breath of the Wild" />
+                    <div class="form-text" data-i18n="gameNameHint">Masukkan nama game yang ingin direquest (2-100 karakter)</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="platform" class="form-label">
+                      <i class="fas fa-laptop me-2"></i><span data-i18n="platform">Platform/Emulator</span> <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-control" id="platform" required>
+                      <option value="" data-i18n="selectPlatform">Pilih Platform...</option>
+                      <option value="Android">📱 Android</option>
+                      <option value="PC">💻 PC</option>
+                      <option value="Switch">🎮 Nintendo Switch</option>
+                      <option value="PS2">🎮 PS2</option>
+                      <option value="PS Vita">🎮 PS Vita</option>
+                      <option value="PSP">🎮 PSP</option>
+                      <option value="Wii">🎮 Wii</option>
+                      <option value="Gamecube">🎮 Gamecube</option>
+                      <option value="3DS">🎮 3DS</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="version" class="form-label">
+                      <i class="fas fa-code-branch me-2"></i><span data-i18n="version">Versi Game (Optional)</span>
+                    </label>
+                    <input type="text" class="form-control" id="version" data-i18n-placeholder="versionPlaceholder" placeholder="Contoh: v1.0.0, Remastered, GOTY Edition" />
+                  </div>
+
+                  <div class="col-12">
+                    <label for="referenceLink" class="form-label">
+                      <i class="fas fa-link me-2"></i><span data-i18n="referenceLink">Link Referensi Bahan (Optional)</span>
+                    </label>
+                    <input type="url" class="form-control" id="referenceLink" data-i18n-placeholder="referenceLinkPlaceholder" placeholder="https://drive.google.com/... atau https://youtube.com/..." />
+                    <div class="form-text" data-i18n="referenceLinkHint">Link Google Drive, YouTube, atau sumber referensi lainnya</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="adminMessage" class="form-label">
+                      <i class="fas fa-comment-alt me-2"></i><span data-i18n="adminMessage">Pesan untuk Admin (Optional)</span>
+                    </label>
+                    <textarea class="form-control" id="adminMessage" rows="3" data-i18n-placeholder="adminMessagePlaceholder" placeholder="Contoh: 'Minta versi bahasa Indonesia', 'Cari yang ukuran kecil', dll"></textarea>
+                  </div>
+
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+                      <span id="submitText">
+                        <i class="fas fa-paper-plane me-2"></i><span data-i18n="sendRequest">Kirim Request</span>
+                      </span>
+                      <span id="loadingText" class="loading">
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        <span data-i18n="sending">Mengirim...</span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Information Card -->
+          <div class="card">
+            <div class="card-header">
+              <i class="fas fa-info-circle me-2"></i><span data-i18n="importantInfo">Informasi Penting</span>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-info m-0">
+                <h6><i class="fas fa-lightbulb me-2"></i><span data-i18n="tipsTitle">Tips Request Game:</span></h6>
+                <ul class="mb-0">
+                  <li data-i18n="tip1">Make sure the game is not already in the Request List</li>
+                  <li data-i18n="tip2">Provide clear information about the requested game</li>
+                  <li data-i18n="tip3">Reference links help admins find the game faster</li>
+                  <li data-i18n="tip4">Requests will be processed within 1-3 business days</li>
+                  <li data-i18n="tip5">You will receive a Telegram notification when the request is completed</li>
+
+                  <li>
+                    Join WhatsApp Group:
+                    <a href="https://chat.whatsapp.com/EQGL0y5OTwUGYWsbuoJ7pA" target="_blank" rel="noopener noreferrer">
+                      https://chat.whatsapp.com/EQGL0y5OTwUGYWsbuoJ7pA
+                    </a>
+                  </li>
+                  <li>
+                    Join Telegram Group:
+                    <a href="https://t.me/indapkgroup" target="_blank" rel="noopener noreferrer">
+                      https://t.me/indapkgroup
+                    </a>
+                  </li>
+                  <li>
+                    Join Telegram Channel:
+                    <a href="https://t.me/iindapk" target="_blank" rel="noopener noreferrer">
+                      https://t.me/iindapk
+                    </a>
+                  </li>
+                  <li>
+                    Join Telegram Bot:
+                    <a href="https://t.me/INDapkBot" target="_blank" rel="noopener noreferrer">
+                      https://t.me/INDapkBot
+                    </a>
+                  </li>
+                  <li>
+                    Follow on TikTok:
+                    <a href="https://www.tiktok.com/@indapk" target="_blank" rel="noopener noreferrer">
+                      @INDapk
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- List Request Tab -->
+        <div class="tab-pane fade" id="list" role="tabpanel">
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                <div class="mb-2 mb-md-0">
+                  <i class="fas fa-list me-2"></i><span data-i18n="requestList">Daftar Request</span>
+                  <span class="badge bg-secondary ms-2" id="requestCount">0</span>
+                </div>
+                <div>
+                  <button class="btn btn-sm btn-primary" onclick="loadRequests()">
+                    <i class="fas fa-sync-alt me-1"></i><span data-i18n="refresh">Refresh</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <!-- Filter -->
+              <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Cari nama game..." onkeyup="filterRequests()" />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <select class="form-control" id="statusFilter" onchange="filterRequests()">
+                    <option value="all" data-i18n="allStatus">Semua Status</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="DONE">Selesai</option>
+                    <option value="REJECTED">Ditolak</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Request List -->
+              <div id="requestsList">
+                <div class="text-center py-5">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="mt-3" data-i18n="loadingRequests">Memuat data request...</p>
+                </div>
+              </div>
+
+              <!-- No Results -->
+              <div id="noResults" class="text-center py-5" style="display: none;">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <h5 data-i18n="noRequests">Tidak ada request ditemukan</h5>
+                <p class="text-muted" data-i18n="noRequestsText">Belum ada request game yang dibuat</p>
+              </div>
+
+              <!-- Pagination -->
+              <nav id="pagination" class="mt-3" style="display: none;">
+                <ul class="pagination justify-content-center flex-wrap">
+                  <li class="page-item disabled" id="prevPage">
+                    <a class="page-link" href="#" onclick="changePage(-1)" aria-label="Previous">
+                      <span aria-hidden="true" data-i18n="prev">Prev</span>
+                    </a>
+                  </li>
+                  <li class="page-item" id="pageInfo">
+                    <span class="page-link">Page 1 of 1</span>
+                  </li>
+                  <li class="page-item disabled" id="nextPage">
+                    <a class="page-link" href="#" onclick="changePage(1)" aria-label="Next">
+                      <span aria-hidden="true" data-i18n="next">Next</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end tab content -->
+    </div>
+    <!-- end container -->
+  </div>
+  <!-- end container-page -->
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fas fa-sign-in-alt me-2"></i><span data-i18n="loginTelegram">Login dengan Telegram</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info mb-3">
+            <i class="fas fa-info-circle me-2"></i>
+            <span data-i18n="loginRequirements">Untuk login, Anda memerlukan:</span>
+            <ul class="mb-0 mt-2">
+              <li data-i18n="reqTelegramId">ID Telegram Anda</li>
+              <li data-i18n="reqKey">KEY dari profile bot, ketik command /profile di bot telegram indapk</li>
+            </ul>
+          </div>
+
+          <form id="loginForm">
+            <div class="mb-3">
+              <label for="telegramId" class="form-label">
+                <i class="fab fa-telegram me-2"></i><span data-i18n="telegramId">ID Telegram</span>
+              </label>
+              <input type="number" class="form-control" id="telegramId" required data-i18n-placeholder="telegramIdPlaceholder" placeholder="Contoh: 123456789" inputmode="numeric" />
+              <div class="form-text" data-i18n="telegramIdHint">ID Telegram Anda (bukan username)</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="userKey" class="form-label">
+                <i class="fas fa-key me-2"></i><span data-i18n="userKey">KEY User</span>
+              </label>
+              <input type="text" class="form-control" id="userKey" required data-i18n-placeholder="userKeyPlaceholder" placeholder="Masukkan 5-digit KEY Anda" />
+              <div class="form-text" data-i18n="userKeyHint">Dapatkan KEY dari /profile di bot Telegram</div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">
+                <span id="loginSubmitText">
+                  <i class="fas fa-sign-in-alt me-2"></i><span data-i18n="login">Login</span>
+                </span>
+                <span id="loginLoading" class="loading">
+                  <span class="spinner-border spinner-border-sm me-2"></span><span data-i18n="verifying">Verifikasi...</span>
+                </span>
+              </button>
+
+              <button type="button" class="btn btn-secondary" onclick="setAnonymousMode()" data-bs-dismiss="modal">
+                <i class="fas fa-user-secret me-2"></i><span data-i18n="continueAnonymous">Lanjut sebagai Anonymous</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Detail Modal -->
+  <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fas fa-info-circle me-2"></i><span data-i18n="requestDetail">Detail Request</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="detailContent"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="close">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+          <i class="fas fa-robot me-1"></i><span data-i18n="poweredBy">Powered by INDapk Bot</span>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          © 2025 INDapk - <span data-i18n="footerText">Request Game System</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    // Konfigurasi
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzc1WBpa0gaNx2o9kZQxVZ-FvBpEBl68fduUZyB0Nwmn3M24MstLDwAkHPBXXupvpMi/exec";
+    const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
+
+    // State management
+    let currentUser = null;
+    let requestsData = [];
+    let filteredRequests = [];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // Language management
+    let currentLang = "id";
+    const translations = {
+      id: {
+        // Navigation
+        navTitle: "INDapk - Request Game",
+        telegramBot: "Telegram Bot",
+
+        // User Info
+        welcome: "Selamat Datang di Request Game INDapk!",
+        loginPrompt: "Silakan login atau gunakan mode anonymous untuk mulai request game.",
+        login: "Login",
+        anonymous: "Anonymous",
+        logout: "Logout",
+
+        // Tabs
+        newRequest: "Request Baru",
+        listRequest: "List Request",
+
+        // Form
+        formTitle: "Form Request Game",
+        gameName: "Nama Game",
+        gameNamePlaceholder: "Contoh: The Legend of Zelda: Breath of the Wild",
+        gameNameHint: "Masukkan nama game yang ingin direquest (2-100 karakter)",
+        platform: "Platform/Emulator",
+        selectPlatform: "Pilih Platform...",
+        version: "Versi Game (Optional)",
+        versionPlaceholder: "Contoh: v1.0.0, Remastered, GOTY Edition",
+        referenceLink: "Link Referensi Bahan (Optional)",
+        referenceLinkPlaceholder: "https://drive.google.com/... atau https://youtube.com/...",
+        referenceLinkHint: "Link Google Drive, YouTube, atau sumber referensi lainnya",
+        adminMessage: "Pesan untuk Admin (Optional)",
+        adminMessagePlaceholder: "Contoh: 'Minta versi bahasa Indonesia', 'Cari yang ukuran kecil', dll",
+        sendRequest: "Kirim Request",
+        sending: "Mengirim...",
+
+        // Information Card
+        importantInfo: "Informasi Penting",
+        tipsTitle: "Tips Request Game:",
+        tip1: "Pastikan game belum tersedia di bot /listreq",
+        tip2: "Berikan informasi yang jelas tentang game yang direquest",
+        tip3: "Link referensi membantu admin menemukan game lebih cepat",
+        tip4: "Request akan diproses dalam 1-3 hari kerja",
+        tip5: "Anda akan mendapat notifikasi di Telegram ketika request selesai",
+
+        // List Request
+        requestList: "Daftar Request",
+        refresh: "Refresh",
+        searchPlaceholder: "Cari nama game...",
+        allStatus: "Semua Status",
+        loadingRequests: "Memuat data request...",
+        noRequests: "Tidak ada request ditemukan",
+        noRequestsText: "Belum ada request game yang dibuat",
+        prev: "Prev",
+        next: "Next",
+
+        // Login Modal
+        loginTelegram: "Login dengan Telegram",
+        loginRequirements: "Untuk login, Anda memerlukan:",
+        reqTelegramId: "ID Telegram Anda",
+        reqKey: "KEY dari profile bot, ketik command /profile di bot telegram indapk",
+        telegramId: "ID Telegram",
+        telegramIdPlaceholder: "Contoh: 123456789",
+        telegramIdHint: "ID Telegram Anda (bukan username)",
+        userKey: "KEY User",
+        userKeyPlaceholder: "Masukkan 5-digit KEY Anda",
+        userKeyHint: "Dapatkan KEY dari /profile di bot Telegram",
+        verifying: "Verifikasi...",
+        continueAnonymous: "Lanjut sebagai Anonymous",
+
+        // Request Detail Modal
+        requestDetail: "Detail Request",
+        close: "Tutup",
+
+        // Footer
+        poweredBy: "Powered by INDapk Bot",
+        footerText: "Request Game System",
+
+        // Status
+        pending: "Pending",
+        done: "Selesai",
+        rejected: "Ditolak",
+
+        // Other
+        copy: "Salin",
+        view: "Lihat",
+        loading: "Memuat..."
+      },
+      en: {
+        // Navigation
+        navTitle: "INDapk - Game Request",
+        telegramBot: "Telegram Bot",
+
+        // User Info
+        welcome: "Welcome to INDapk Game Request!",
+        loginPrompt: "Please login or use anonymous mode to start requesting games.",
+        login: "Login",
+        anonymous: "Anonymous",
+        logout: "Logout",
+
+        // Tabs
+        newRequest: "New Request",
+        listRequest: "Request List",
+
+        // Form
+        formTitle: "Game Request Form",
+        gameName: "Game Name",
+        gameNamePlaceholder: "Example: The Legend of Zelda: Breath of the Wild",
+        gameNameHint: "Enter the game name you want to request (2-100 characters)",
+        platform: "Platform/Emulator",
+        selectPlatform: "Select Platform...",
+        version: "Game Version (Optional)",
+        versionPlaceholder: "Example: v1.0.0, Remastered, GOTY Edition",
+        referenceLink: "Reference Link (Optional)",
+        referenceLinkPlaceholder: "https://drive.google.com/... or https://youtube.com/...",
+        referenceLinkHint: "Google Drive, YouTube, or other reference sources",
+        adminMessage: "Message for Admin (Optional)",
+        adminMessagePlaceholder: "Example: 'Indonesian version please', 'Looking for small size', etc",
+        sendRequest: "Send Request",
+        sending: "Sending...",
+
+        // Information Card
+        importantInfo: "Important Information",
+        tipsTitle: "Game Request Tips:",
+        tip1: "Make sure the game is not available in the List Request",
+        tip2: "Provide clear information about the requested game",
+        tip3: "Reference links help admin find games faster",
+        tip4: "Requests will be processed within 1-3 working days",
+        tip5: "You will receive notification on Telegram when request is completed",
+
+        // List Request
+        requestList: "Request List",
+        refresh: "Refresh",
+        searchPlaceholder: "Search game name...",
+        allStatus: "All Status",
+        loadingRequests: "Loading request data...",
+        noRequests: "No requests found",
+        noRequestsText: "No game requests have been made yet",
+        prev: "Prev",
+        next: "Next",
+
+        // Login Modal
+        loginTelegram: "Login with Telegram",
+        loginRequirements: "To login, you need:",
+        reqTelegramId: "Your Telegram ID",
+        reqKey: "KEY from bot profile, type command /profile in indapk telegram bot",
+        telegramId: "Telegram ID",
+        telegramIdPlaceholder: "Example: 123456789",
+        telegramIdHint: "Your Telegram ID (not username)",
+        userKey: "User KEY",
+        userKeyPlaceholder: "Enter your 5-digit KEY",
+        userKeyHint: "Get KEY from /profile in Telegram bot",
+        verifying: "Verifying...",
+        continueAnonymous: "Continue as Anonymous",
+
+        // Request Detail Modal
+        requestDetail: "Request Detail",
+        close: "Close",
+
+        // Footer
+        poweredBy: "Powered by INDapk Bot",
+        footerText: "Game Request System",
+
+        // Status
+        pending: "Pending",
+        done: "Done",
+        rejected: "Rejected",
+
+        // Other
+        copy: "Copy",
+        view: "View",
+        loading: "Loading..."
+      }
+    };
+
+    // Fungsi untuk inisialisasi
+    document.addEventListener("DOMContentLoaded", function () {
+      const savedLang = localStorage.getItem("requestGameLang");
+      if (savedLang && translations[savedLang]) currentLang = savedLang;
+
+      const savedTheme = localStorage.getItem("requestGameTheme");
+      if (savedTheme === "dark") enableDarkMode();
+
+      const savedUser = localStorage.getItem("requestGameUser");
+      if (savedUser) currentUser = JSON.parse(savedUser);
+
+      setupLanguageSwitcher();
+      setupThemeSwitcher();
+      setupSearchInput();
+
+      updateTranslations();
+      updateUserUI();
+      updateUserButtons(); // Tambah fungsi ini
+      updateLanguageOptions();
+
+      document.getElementById("requestForm").addEventListener("submit", submitRequest);
+      document.getElementById("loginForm").addEventListener("submit", handleLogin);
+
+      // Load requests untuk semua pengunjung
+      loadRequests();
+    });
+
+    // FUNGSI BARU: Update tombol berdasarkan status login
+    function updateUserButtons() {
+      const userActions = document.getElementById("userActions");
+      
+      if (!currentUser) {
+        // Jika belum login: Tampilkan Login dan Anonymous
+        userActions.innerHTML = `
+          <button class="btn btn-primary" onclick="showLoginModal()" id="loginBtn">
+            <i class="fas fa-sign-in-alt me-2"></i><span data-i18n="login">Login</span>
+          </button>
+          <button class="btn btn-secondary" onclick="setAnonymousMode()" id="anonymousBtn">
+            <i class="fas fa-user-secret me-2"></i><span data-i18n="anonymous">Anonymous</span>
+          </button>
+        `;
+      } else {
+        // Jika sudah login (user/admin/anonymous): Hanya tampilkan Logout
+        userActions.innerHTML = `
+          <button class="btn btn-danger" onclick="logout()" id="logoutBtn">
+            <i class="fas fa-sign-out-alt me-2"></i><span data-i18n="logout">Logout</span>
+          </button>
+        `;
+      }
+    }
+
+    // UPDATED: language dropdown versi navbar
+    function setupLanguageSwitcher() {
+      const languageBtn = document.getElementById("languageBtn");
+      const languageOptions = document.getElementById("languageOptions");
+
+      function closeMenu() {
+        languageOptions.classList.remove("show");
+        languageBtn.setAttribute("aria-expanded", "false");
+      }
+
+      languageBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const isOpen = languageOptions.classList.toggle("show");
+        languageBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!languageBtn.contains(e.target) && !languageOptions.contains(e.target)) {
+          closeMenu();
+        }
+      });
+
+      languageOptions.addEventListener("click", function (e) {
+        const btn = e.target.closest(".language-option");
+        if (!btn) return;
+
+        const lang = btn.getAttribute("data-lang");
+        if (lang && translations[lang]) {
+          currentLang = lang;
+          localStorage.setItem("requestGameLang", lang);
+          updateTranslations();
+          updateUserUI();
+          updateUserButtons(); // Update tombol juga
+          updateLanguageOptions();
+          closeMenu();
+        }
+      });
+    }
+
+    // Fungsi untuk update language options UI
+    function updateLanguageOptions() {
+      const options = document.querySelectorAll(".language-option");
+      options.forEach((option) => {
+        const lang = option.getAttribute("data-lang");
+        if (lang === currentLang) {
+          option.classList.add("active");
+        } else {
+          option.classList.remove("active");
+        }
+      });
+    }
+
+    // Fungsi untuk setup theme switcher
+    function setupThemeSwitcher() {
+      const themeBtn = document.getElementById("themeBtn");
+      themeBtn.addEventListener("click", toggleDarkMode);
+
+      // Update icon based on current theme
+      updateThemeIcon();
+    }
+
+    // Fungsi untuk toggle dark mode
+    function toggleDarkMode() {
+      if (document.body.classList.contains("dark-mode")) {
+        disableDarkMode();
+      } else {
+        enableDarkMode();
+      }
+    }
+
+    // Fungsi untuk enable dark mode
+    function enableDarkMode() {
+      document.body.classList.add("dark-mode");
+      const navbar = document.querySelector(".navbar");
+      if (navbar) {
+        navbar.classList.remove("bg-gradient");
+        navbar.classList.add("bg-gradient-dark");
+      }
+      localStorage.setItem("requestGameTheme", "dark");
+      updateThemeIcon();
+    }
+
+    // Fungsi untuk disable dark mode
+    function disableDarkMode() {
+      document.body.classList.remove("dark-mode");
+      const navbar = document.querySelector(".navbar");
+      if (navbar) {
+        navbar.classList.remove("bg-gradient-dark");
+        navbar.classList.add("bg-gradient");
+      }
+      localStorage.setItem("requestGameTheme", "light");
+      updateThemeIcon();
+    }
+
+    // Fungsi untuk update theme icon
+    function updateThemeIcon() {
+      const themeBtn = document.getElementById("themeBtn");
+      if (themeBtn) {
+        const icon = themeBtn.querySelector("i");
+        if (document.body.classList.contains("dark-mode")) {
+          icon.className = "fas fa-sun";
+          themeBtn.title = "Toggle Light Mode";
+        } else {
+          icon.className = "fas fa-moon";
+          themeBtn.title = "Toggle Dark Mode";
+        }
+      }
+    }
+
+    // Fungsi untuk update semua terjemahan
+    function updateTranslations() {
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        // Skip untuk elemen tertentu yang sudah dihandle oleh fungsi lain
+        if (currentUser && (element.id === "userName" || element.id === "userStatus")) return;
+
+        const key = element.getAttribute("data-i18n");
+        if (translations[currentLang][key]) element.textContent = translations[currentLang][key];
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+        const key = element.getAttribute("data-i18n-placeholder");
+        if (translations[currentLang][key]) element.setAttribute("placeholder", translations[currentLang][key]);
+      });
+
+      const statusFilter = document.getElementById("statusFilter");
+      if (statusFilter) statusFilter.options[0].text = translations[currentLang]["allStatus"];
+
+      document.title = translations[currentLang]["navTitle"];
+    }
+
+    // Fungsi untuk menampilkan modal login
+    function showLoginModal() {
+      const modal = new bootstrap.Modal(document.getElementById("loginModal"));
+      modal.show();
+
+      // Reset form login
+      document.getElementById("loginForm").reset();
+
+      // Pastikan loading text tersembunyi
+      document.getElementById("loginSubmitText").style.display = "inline-block";
+      document.getElementById("loginLoading").style.display = "none";
+    }
+
+    // Fungsi untuk handle login
+    async function handleLogin(e) {
+      e.preventDefault();
+
+      const telegramId = document.getElementById("telegramId").value;
+      const userKey = document.getElementById("userKey").value;
+
+      if (!telegramId) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: currentLang === "id" ? "Harap isi ID Telegram" : "Please fill Telegram ID"
+        });
+        return;
+      }
+
+      // Tampilkan loading
+      document.getElementById("loginSubmitText").style.display = "none";
+      document.getElementById("loginLoading").style.display = "inline-block";
+
+      try {
+        // 1. Cek user di USER_API_URL
+        console.log("Checking user with Telegram ID:", telegramId);
+        const userResponse = await fetch(USER_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            action: "getUser",
+            wa_number: telegramId
+          })
+        });
+
+        const userData = await userResponse.json();
+        console.log("User API response:", userData);
+
+        // 2. Proses berdasarkan respons
+        if (userData.status === "success") {
+          const user = userData.data;
+
+          // Debug log
+          console.log("User data received:", user);
+          console.log("User key value:", user.key);
+          console.log("User key type:", typeof user.key);
+
+          // 3. Cek apakah user sudah punya KEY (dengan safe check)
+          const hasKey = user.key && user.key.toString().trim() !== "";
+          console.log("Has key?", hasKey);
+
+          if (!hasKey) {
+            // User belum punya key - buatkan key baru secara otomatis
+            console.log("User belum punya key, membuat key baru...");
+
+            // Buat key untuk user
+            const keyResponse = await fetch(USER_API_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({
+                action: "addKey",
+                wa_number: telegramId
+              })
+            });
+
+            const keyData = await keyResponse.json();
+            console.log("Key creation response:", keyData);
+
+            if (keyData.status === "success") {
+              // Login dengan key baru
+              currentUser = {
+                telegram_id: telegramId,
+                nama_user: user.nama_user,
+                key: keyData.data.key,
+                is_anonymous: false
+              };
+
+              // Simpan di localStorage
+              localStorage.setItem("requestGameUser", JSON.stringify(currentUser));
+
+              // Update UI
+              updateUserUI();
+              updateUserButtons(); // Update tombol
+
+              // Tutup modal
+              const modal = bootstrap.Modal.getInstance(document.getElementById("loginModal"));
+              modal.hide();
+
+              // Reset form
+              document.getElementById("loginForm").reset();
+
+              // Tampilkan pesan sukses dengan info key baru
+              Swal.fire({
+                icon: "success",
+                title: currentLang === "id" ? "Key Baru Dibuat!" : "New Key Created!",
+                html: `
+                  <div class="text-start">
+                    <p>${currentLang === "id" ? "Login berhasil! Key baru telah dibuat untuk Anda:" : "Login successful! New key has been created for you:"}</p>
+                    <p><strong>KEY: ${keyData.data.key}</strong></p>
+                    <p class="text-danger">⚠️ ${currentLang === "id" ? "SIMPAN KEY INI! Anda akan butuh untuk login berikutnya." : "SAVE THIS KEY! You will need it for next login."}</p>
+                  </div>
+                `,
+                confirmButtonText: "OK"
+              });
+
+              // Load requests
+              loadRequests();
+            } else {
+              throw new Error(keyData.message || (currentLang === "id" ? "Gagal membuat key" : "Failed to create key"));
+            }
+          } else {
+            // User sudah punya key - verifikasi key yang diinput
+            const userKeyValue = user.key.toString().trim();
+            const inputKeyValue = userKey.toString().trim();
+
+            console.log("User key:", userKeyValue);
+            console.log("Input key:", inputKeyValue);
+
+            // Jika user mengosongkan field key, biarkan login (untuk kemudahan)
+            if (!userKey || userKey === "") {
+              Swal.fire({
+                icon: "warning",
+                title: currentLang === "id" ? "Perhatian" : "Attention",
+                html: `
+                  <div class="text-start">
+                    <p>${currentLang === "id" ? "Anda sudah memiliki KEY:" : "You already have KEY:"} <strong>${userKeyValue}</strong></p>
+                    <p>${currentLang === "id" ? "Simpan KEY ini untuk login berikutnya." : "Save this KEY for next login."}</p>
+                  </div>
+                `,
+                confirmButtonText: currentLang === "id" ? "Lanjutkan Login" : "Continue Login"
+              }).then(() => {
+                completeLogin(telegramId, user.nama_user, userKeyValue);
+              });
+            } else if (inputKeyValue !== userKeyValue) {
+              Swal.fire({
+                icon: "error",
+                title: currentLang === "id" ? "KEY Salah" : "Wrong KEY",
+                html: `
+                  <div class="text-start">
+                    <p>${currentLang === "id" ? "KEY yang Anda masukkan tidak sesuai." : "The KEY you entered is incorrect."}</p>
+                    <p class="small">${currentLang === "id" ? "Tips: Gunakan command /profile di bot Telegram INDapk untuk melihat KEY Anda" : "Tip: Use /profile command in INDapk Telegram bot to see your KEY"}</p>
+                  </div>
+                `
+              });
+              return;
+            } else {
+              completeLogin(telegramId, user.nama_user, userKeyValue);
+            }
+          }
+        } else if (userData.status === "error" && userData.message === "User tidak ditemukan") {
+          Swal.fire({
+            icon: "warning",
+            title: currentLang === "id" ? "User Tidak Ditemukan" : "User Not Found",
+            html: `
+              <div class="text-start">
+                <p>${currentLang === "id" ? "ID Telegram" : "Telegram ID"} <strong>${telegramId}</strong> ${currentLang === "id" ? "tidak terdaftar di sistem." : "is not registered in the system."}</p>
+                <p class="mt-3">📱 <strong>${currentLang === "id" ? "Cara Registrasi:" : "Registration Guide:"}</strong></p>
+                <ol>
+                  <li>${currentLang === "id" ? "Buka bot Telegram" : "Open Telegram bot"} <a href="https://t.me/INDapkBot" target="_blank">@INDapkBot</a></li>
+                  <li>${currentLang === "id" ? "Kirim perintah" : "Send command"} <code>/start</code></li>
+                  <li>${currentLang === "id" ? "Ikuti proses registrasi" : "Follow the registration process"}</li>
+                  <li>${currentLang === "id" ? "Setelah registrasi, coba login kembali" : "After registration, try to login again"}</li>
+                </ol>
+              </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: currentLang === "id" ? "Buka Bot Telegram" : "Open Telegram Bot",
+            cancelButtonText: currentLang === "id" ? "Tutup" : "Close"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.open("https://t.me/INDapkBot", "_blank");
+            }
+          });
+        } else {
+          throw new Error(userData.message || (currentLang === "id" ? "Terjadi kesalahan saat verifikasi user" : "Error verifying user"));
+        }
+      } catch (error) {
+        console.error("Login error details:", error);
+        Swal.fire({
+          icon: "error",
+          title: currentLang === "id" ? "Login Gagal" : "Login Failed",
+          html: `
+            <div class="text-start">
+              <p>${error.message || (currentLang === "id" ? "Terjadi kesalahan saat login." : "An error occurred during login.")}</p>
+              <p class="small mt-2">${currentLang === "id" ? "Jika masalah berlanjut, coba:" : "If problem persists, try:"}</p>
+              <ul class="small">
+                <li>${currentLang === "id" ? "Cek koneksi internet" : "Check internet connection"}</li>
+                <li>${currentLang === "id" ? "Refresh halaman" : "Refresh page"}</li>
+                <li>${currentLang === "id" ? "Hubungi admin" : "Contact admin"}</li>
+              </ul>
+            </div>
+          `
+        });
+      } finally {
+        document.getElementById("loginSubmitText").style.display = "inline-block";
+        document.getElementById("loginLoading").style.display = "none";
+      }
+    }
+
+    // Fungsi helper untuk complete login
+    function completeLogin(telegramId, userName, userKey) {
+      currentUser = {
+        telegram_id: telegramId,
+        nama_user: userName,
+        key: userKey,
+        is_anonymous: false
+      };
+
+      localStorage.setItem("requestGameUser", JSON.stringify(currentUser));
+      updateUserUI();
+      updateUserButtons(); // Update tombol
+
+      const modal = bootstrap.Modal.getInstance(document.getElementById("loginModal"));
+      modal.hide();
+
+      document.getElementById("loginForm").reset();
+
+      Swal.fire({
+        icon: "success",
+        title: currentLang === "id" ? "Login Berhasil!" : "Login Successful!",
+        text: `${currentLang === "id" ? "Selamat datang" : "Welcome"} ${userName}!`,
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+      loadRequests();
+    }
+
+    // Fungsi untuk set anonymous mode
+    function setAnonymousMode() {
+      currentUser = {
+        telegram_id: "",
+        nama_user: "Anonymous",
+        key: "",
+        is_anonymous: true
+      };
+
+      localStorage.setItem("requestGameUser", JSON.stringify(currentUser));
+      updateUserUI();
+      updateUserButtons(); // Update tombol
+      loadRequests();
+
+      Swal.fire({
+        icon: "info",
+        title: currentLang === "id" ? "Mode Anonymous" : "Anonymous Mode",
+        text: currentLang === "id"
+          ? "Anda menggunakan mode anonymous. Request Anda tidak akan terhubung dengan akun Telegram."
+          : "You are using anonymous mode. Your requests will not be connected to Telegram account.",
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+
+    // Fungsi untuk logout
+    function logout() {
+      Swal.fire({
+        title: currentLang === "id" ? "Logout?" : "Logout?",
+        text: currentLang === "id" ? "Apakah Anda yakin ingin logout?" : "Are you sure you want to logout?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: currentLang === "id" ? "Ya, Logout" : "Yes, Logout",
+        cancelButtonText: currentLang === "id" ? "Batal" : "Cancel"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          currentUser = null;
+          localStorage.removeItem("requestGameUser");
+          updateUserUI();
+          updateUserButtons(); // Update tombol
+          loadRequests(); // Reload untuk tampilkan anonymous
+
+          Swal.fire({
+            icon: "success",
+            title: currentLang === "id" ? "Berhasil Logout" : "Logout Successful",
+            timer: 1500,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+
+    // Fungsi untuk update UI berdasarkan user
+    function updateUserUI() {
+      const userName = document.getElementById("userName");
+      const userStatus = document.getElementById("userStatus");
+
+      if (currentUser) {
+        if (currentUser.is_anonymous) {
+          userName.innerHTML = `<i class="fas fa-user-secret me-2"></i>${currentLang === "id" ? "Mode Anonymous" : "Anonymous Mode"}`;
+          userStatus.textContent = currentLang === "id" ? "Request Anda akan disimpan tanpa identitas." : "Your requests will be saved without identity.";
+        } else {
+          const isAdmin = currentUser.telegram_id === "1172835542" && !currentUser.is_anonymous;
+
+          if (isAdmin) {
+            userName.innerHTML = `<i class="fas fa-crown me-2 text-warning"></i><span class="text-warning">ADMIN - </span>${currentLang === "id" ? "Selamat Datang," : "Welcome,"} ${currentUser.nama_user}!`;
+            userStatus.innerHTML = `<span class="badge bg-warning me-2">${currentLang === "id" ? "MODE ADMIN: Bisa melihat semua request" : "ADMIN MODE: Can view all requests"}</span> ${currentLang === "id" ? "ID Telegram:" : "Telegram ID:"} ${currentUser.telegram_id}`;
+          } else {
+            userName.innerHTML = `<i class="fas fa-user-check me-2"></i>${currentLang === "id" ? "Selamat Datang," : "Welcome,"} ${currentUser.nama_user}!`;
+            userStatus.innerHTML = `${currentLang === "id" ? "ID Telegram:" : "Telegram ID:"} ${currentUser.telegram_id} | ${currentLang === "id" ? "Key:" : "Key:"} ${currentUser.key}`;
+          }
+        }
+      } else {
+        userName.textContent = translations[currentLang]["welcome"];
+        userStatus.textContent = translations[currentLang]["loginPrompt"];
+      }
+    }
+
+    // Fungsi untuk submit request
+    async function submitRequest(e) {
+      e.preventDefault();
+
+      if (!currentUser) {
+        Swal.fire({
+          icon: "warning",
+          title: currentLang === "id" ? "Perlu Login" : "Login Required",
+          text: currentLang === "id" ? "Silakan login atau pilih mode anonymous terlebih dahulu." : "Please login or choose anonymous mode first."
+        });
+        return;
+      }
+
+      const gameName = document.getElementById("gameName").value.trim();
+      const platform = document.getElementById("platform").value;
+
+      if (!gameName || !platform) {
+        Swal.fire({
+          icon: "error",
+          title: currentLang === "id" ? "Data Tidak Lengkap" : "Incomplete Data",
+          text: currentLang === "id" ? "Nama Game dan Platform wajib diisi." : "Game Name and Platform are required."
+        });
+        return;
+      }
+
+      if (gameName.length < 2 || gameName.length > 100) {
+        Swal.fire({
+          icon: "error",
+          title: currentLang === "id" ? "Nama Game Tidak Valid" : "Invalid Game Name",
+          text: currentLang === "id" ? "Nama game harus antara 2-100 karakter." : "Game name must be between 2-100 characters."
+        });
+        return;
+      }
+
+      document.getElementById("submitText").style.display = "none";
+      document.getElementById("loadingText").style.display = "inline-block";
+      document.getElementById("submitBtn").disabled = true;
+
+      try {
+        const requestData = {
+          action: "create",
+          nama_game: gameName,
+          jenis_emulator: platform,
+          versi_game: document.getElementById("version").value.trim() || "",
+          link_bahan: document.getElementById("referenceLink").value.trim() || "",
+          pesan_admin: document.getElementById("adminMessage").value.trim() || "",
+          timestamp: new Date().toISOString(),
+          is_telegram_bot: "false"
+        };
+
+        if (currentUser.is_anonymous) {
+          requestData.nama_user = "Anonymous";
+          requestData.nomor_whatsapp = "";
+          requestData.telegram_id = "";
+          requestData.user_key = "";
+        } else {
+          requestData.nama_user = currentUser.nama_user;
+          requestData.nomor_whatsapp = currentUser.telegram_id;
+          requestData.telegram_id = currentUser.telegram_id;
+          requestData.user_key = currentUser.key;
+        }
+
+        console.log("Sending request from Web:");
+        console.log("is_telegram_bot:", requestData.is_telegram_bot, "(type:", typeof requestData.is_telegram_bot + ")");
+        console.log("Full payload:", requestData);
+
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(requestData)
+        });
+
+        const result = await response.json();
+        console.log("Response:", result);
+
+        if (result.status === "success") {
+          document.getElementById("requestForm").reset();
+
+          Swal.fire({
+            icon: "success",
+            title: currentLang === "id" ? "Request Berhasil Dikirim!" : "Request Sent Successfully!",
+            html: `
+              <div class="text-start">
+                <p><strong>${currentLang === "id" ? "ID Request:" : "Request ID:"}</strong> ${result.data.request_id}</p>
+                <p><strong>${currentLang === "id" ? "Game:" : "Game:"}</strong> ${gameName}</p>
+                <p><strong>${currentLang === "id" ? "Platform:" : "Platform:"}</strong> ${platform}</p>
+                <p><strong>${currentLang === "id" ? "Sumber:" : "Source:"}</strong> <i class="fas fa-globe text-success"></i> Web Form</p>
+                ${
+                  currentUser.is_anonymous
+                    ? `<p class="text-warning"><i class="fas fa-exclamation-triangle"></i> ${
+                        currentLang === "id" ? "Mode Anonymous: Request tidak terhubung dengan akun" : "Anonymous Mode: Request not connected to account"
+                      }</p>`
+                    : ""
+                }
+              </div>
+            `,
+            confirmButtonText: "OK"
+          });
+
+          if (document.getElementById("list-tab").classList.contains("active") && currentUser) {
+            loadRequests();
+          }
+
+          const listTab = new bootstrap.Tab(document.getElementById("list-tab"));
+          listTab.show();
+        } else {
+          throw new Error(result.message || (currentLang === "id" ? "Gagal mengirim request" : "Failed to send request"));
+        }
+      } catch (error) {
+        console.error("Submit error:", error);
+        Swal.fire({
+          icon: "error",
+          title: currentLang === "id" ? "Gagal Mengirim Request" : "Failed to Send Request",
+          text: error.message || (currentLang === "id" ? "Terjadi kesalahan. Silakan coba lagi." : "An error occurred. Please try again.")
+        });
+      } finally {
+        document.getElementById("submitText").style.display = "inline-block";
+        document.getElementById("loadingText").style.display = "none";
+        document.getElementById("submitBtn").disabled = false;
+      }
+    }
+
+    // MODIFIED: Fungsi untuk load requests - tampilkan anonymous untuk semua pengunjung
+    async function loadRequests() {
+      const requestsList = document.getElementById("requestsList");
+      const noResults = document.getElementById("noResults");
+
+      requestsList.innerHTML = `
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-3">${translations[currentLang]["loadingRequests"]}</p>
+        </div>
+      `;
+      noResults.style.display = "none";
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ action: "read" })
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+          requestsData = result.data;
+          console.log("Total requests data:", requestsData.length);
+
+          // MODIFIED: Logika filter berdasarkan status login
+          if (currentUser) {
+            const isAdmin = currentUser.telegram_id === "1172835542" && !currentUser.is_anonymous;
+
+            if (isAdmin) {
+              // Admin: lihat semua request
+              filteredRequests = [...requestsData];
+              console.log("Admin user, showing ALL requests:", filteredRequests.length);
+            } else if (currentUser.is_anonymous) {
+              // User anonymous: lihat hanya request anonymous
+              filteredRequests = requestsData.filter((req) => {
+                const hasTelegramId = req.telegram_id && req.telegram_id.toString().trim() !== "";
+                const isAnonymousName = req.nama_user && (req.nama_user.toLowerCase() === "anonymous" || req.nama_user === "");
+                const hasUserKey = req.user_key && req.user_key.toString().trim() !== "";
+
+                return !hasTelegramId && !hasUserKey && isAnonymousName;
+              });
+              console.log("Anonymous user, filtered requests:", filteredRequests.length);
+            } else {
+              // User biasa: lihat request miliknya sendiri
+              filteredRequests = requestsData.filter((req) => {
+                const reqTelegramId = req.telegram_id ? req.telegram_id.toString().trim() : "";
+                const reqUserKey = req.user_key ? req.user_key.toString().trim() : "";
+                const currentTelegramId = currentUser.telegram_id.toString().trim();
+                const currentUserKey = currentUser.key.toString().trim();
+
+                const matchesTelegramId = reqTelegramId !== "" && reqTelegramId === currentTelegramId;
+                const matchesUserKey = reqUserKey !== "" && reqUserKey === currentUserKey;
+
+                return matchesTelegramId || matchesUserKey;
+              });
+              console.log("Logged in user, filtered requests:", filteredRequests.length);
+            }
+          } else {
+            // MODIFIED: Tidak login: lihat hanya request anonymous
+            filteredRequests = requestsData.filter((req) => {
+              const hasTelegramId = req.telegram_id && req.telegram_id.toString().trim() !== "";
+              const isAnonymousName = req.nama_user && (req.nama_user.toLowerCase() === "anonymous" || req.nama_user === "");
+              const hasUserKey = req.user_key && req.user_key.toString().trim() !== "";
+
+              return !hasTelegramId && !hasUserKey && isAnonymousName;
+            });
+            console.log("No user logged in, showing anonymous requests:", filteredRequests.length);
+          }
+
+          filteredRequests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+          updateRequestsList();
+          updatePagination();
+        } else {
+          throw new Error(result.message || (currentLang === "id" ? "Gagal memuat data" : "Failed to load data"));
+        }
+      } catch (error) {
+        console.error("Load requests error:", error);
+        requestsList.innerHTML = `
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            ${currentLang === "id" ? "Gagal memuat data:" : "Failed to load data:"} ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    // Fungsi untuk update daftar request
+    function updateRequestsList() {
+      const requestsList = document.getElementById("requestsList");
+      const noResults = document.getElementById("noResults");
+      const requestCount = document.getElementById("requestCount");
+
+      requestCount.textContent = filteredRequests.length;
+
+      if (filteredRequests.length === 0) {
+        requestsList.innerHTML = "";
+        noResults.style.display = "block";
+        document.getElementById("pagination").style.display = "none";
+        return;
+      }
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageData = filteredRequests.slice(startIndex, endIndex);
+
+      let html = "";
+
+      pageData.forEach((request) => {
+        const timestamp = new Date(request.timestamp);
+        const dateStr = timestamp.toLocaleDateString(currentLang === "id" ? "id-ID" : "en-US", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        });
+        const timeStr = timestamp.toLocaleTimeString(currentLang === "id" ? "id-ID" : "en-US", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        let statusBadge = "";
+        let statusText = "";
+
+        switch ((request.status_request || "").toUpperCase()) {
+          case "PENDING":
+            statusText = translations[currentLang]["pending"];
+            statusBadge = `<span class="status-badge status-pending">⏳ ${statusText}</span>`;
+            break;
+          case "DONE":
+            statusText = translations[currentLang]["done"];
+            statusBadge = `<span class="status-badge status-done">✅ ${statusText}</span>`;
+            break;
+          case "REJECTED":
+            statusText = translations[currentLang]["rejected"];
+            statusBadge = `<span class="status-badge status-rejected">❌ ${statusText}</span>`;
+            break;
+          default:
+            statusBadge = `<span class="status-badge">${request.status_request || "-"}</span>`;
+        }
+
+        const sourceIcon =
+          request.request_by === "Telegram Bot"
+            ? '<i class="fab fa-telegram text-primary me-1" title="Dari Telegram Bot"></i>'
+            : '<i class="fas fa-globe text-success me-1" title="Dari Web Form"></i>';
+
+        html += `
+          <div class="request-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h6 class="mb-1">
+                  ${sourceIcon} ${request.nama_game}
+                  ${statusBadge}
+                </h6>
+                <p class="mb-1 text-muted">
+                  <i class="fas fa-laptop me-1"></i>${request.jenis_emulator || "-"}
+                  <span class="mx-2">•</span>
+                  <i class="fas fa-user me-1"></i>${request.nama_user || "Anonymous"}
+                </p>
+                <small class="timestamp">
+                  <i class="far fa-clock me-1"></i>${dateStr} ${timeStr}
+                  <span class="mx-2">•</span>
+                  ${currentLang === "id" ? "ID:" : "ID:"} ${request.request_id}
+                </small>
+              </div>
+              <div class="action-buttons">
+                <button class="action-btn copy-btn" onclick="copyRequestId('${request.request_id}')" title="${translations[currentLang]["copy"]}">
+                  <i class="fas fa-copy"></i>
+                </button>
+                <button class="action-btn view-btn" onclick="showRequestDetail('${request.request_id}')" title="${translations[currentLang]["view"]}">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            ${
+              request.versi_game
+                ? `
+              <div class="mt-2">
+                <small><strong>${currentLang === "id" ? "Versi:" : "Version:"}</strong> ${request.versi_game}</small>
+              </div>
+            `
+                : ""
+            }
+
+            ${
+              request.link_selesai && (request.status_request || "").toUpperCase() === "DONE"
+                ? `
+              <div class="mt-2">
+                <small><strong>${currentLang === "id" ? "Link Game:" : "Game Link:"}</strong>
+                  <a href="${request.link_selesai}" target="_blank" class="text-primary" rel="noopener noreferrer">
+                    ${request.link_selesai}
+                  </a>
+                </small>
+              </div>
+            `
+                : ""
+            }
+          </div>
+        `;
+      });
+
+      requestsList.innerHTML = html;
+      noResults.style.display = "none";
+      document.getElementById("pagination").style.display = "flex";
+    }
+
+    // Fungsi untuk filter requests
+    function filterRequests() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+      const statusFilter = document.getElementById("statusFilter").value;
+
+      console.log("Filtering with:", {
+        searchTerm,
+        statusFilter,
+        currentUser: currentUser ? currentUser.telegram_id : "no user",
+        isAdmin: currentUser && currentUser.telegram_id === "1172835542"
+      });
+
+      let filtered = [...requestsData];
+
+      // MODIFIED: Logika filter berdasarkan status login
+      if (currentUser) {
+        const isAdmin = currentUser.telegram_id === "1172835542" && !currentUser.is_anonymous;
+
+        if (isAdmin) {
+          // Admin: semua request
+          console.log("Admin user, showing ALL requests for filtering");
+        } else if (currentUser.is_anonymous) {
+          // User anonymous: hanya anonymous
+          filtered = filtered.filter((req) => {
+            const hasTelegramId = req.telegram_id && req.telegram_id.toString().trim() !== "";
+            const isAnonymousName = req.nama_user && (req.nama_user.toLowerCase() === "anonymous" || req.nama_user === "");
+            const hasUserKey = req.user_key && req.user_key.toString().trim() !== "";
+            return !hasTelegramId && !hasUserKey && isAnonymousName;
+          });
+          console.log("Anonymous user, filtered by user:", filtered.length);
+        } else {
+          // User biasa: request miliknya sendiri
+          filtered = filtered.filter((req) => {
+            const reqTelegramId = req.telegram_id ? req.telegram_id.toString().trim() : "";
+            const reqUserKey = req.user_key ? req.user_key.toString().trim() : "";
+            const currentTelegramId = currentUser.telegram_id.toString().trim();
+            const currentUserKey = currentUser.key.toString().trim();
+
+            return (reqTelegramId !== "" && reqTelegramId === currentTelegramId) || (reqUserKey !== "" && reqUserKey === currentUserKey);
+          });
+          console.log("Regular user, filtered by user:", filtered.length);
+        }
+      } else {
+        // Tidak login: hanya anonymous
+        filtered = filtered.filter((req) => {
+          const hasTelegramId = req.telegram_id && req.telegram_id.toString().trim() !== "";
+          const isAnonymousName = req.nama_user && (req.nama_user.toLowerCase() === "anonymous" || req.nama_user === "");
+          const hasUserKey = req.user_key && req.user_key.toString().trim() !== "";
+
+          return !hasTelegramId && !hasUserKey && isAnonymousName;
+        });
+        console.log("No user logged in, filtered anonymous requests:", filtered.length);
+      }
+
+      if (searchTerm) {
+        filtered = filtered.filter((req) => {
+          const gameNameMatch = req.nama_game && req.nama_game.toString().toLowerCase().includes(searchTerm);
+          const requestIdMatch = req.request_id && req.request_id.toString().toLowerCase().includes(searchTerm);
+          const versionMatch = req.versi_game && req.versi_game.toString().toLowerCase().includes(searchTerm);
+          const platformMatch = req.jenis_emulator && req.jenis_emulator.toString().toLowerCase().includes(searchTerm);
+          const userNameMatch = req.nama_user && req.nama_user.toString().toLowerCase().includes(searchTerm);
+          const adminMessageMatch = req.pesan_admin && req.pesan_admin.toString().toLowerCase().includes(searchTerm);
+
+          return gameNameMatch || requestIdMatch || versionMatch || platformMatch || userNameMatch || adminMessageMatch;
+        });
+        console.log("After search filter:", filtered.length);
+      }
+
+      if (statusFilter !== "all") {
+        filtered = filtered.filter((req) => {
+          return req.status_request && req.status_request.toString().toUpperCase() === statusFilter.toUpperCase();
+        });
+        console.log("After status filter:", filtered.length);
+      }
+
+      filteredRequests = filtered;
+      currentPage = 1;
+      updateRequestsList();
+      updatePagination();
+    }
+
+    // Fungsi untuk search saat mengetik
+    function setupSearchInput() {
+      const searchInput = document.getElementById("searchInput");
+      let searchTimeout;
+
+      searchInput.addEventListener("input", function () {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          filterRequests();
+        }, 300);
+      });
+
+      searchInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          filterRequests();
+        }
+      });
+    }
+
+    // Fungsi untuk update pagination
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredRequests.length / itemsPerPage) || 1;
+      const pageInfo = document.getElementById("pageInfo");
+      const prevPage = document.getElementById("prevPage");
+      const nextPage = document.getElementById("nextPage");
+
+      pageInfo.innerHTML = `<span class="page-link">${currentLang === "id" ? "Halaman" : "Page"} ${currentPage} ${
+        currentLang === "id" ? "dari" : "of"
+      } ${totalPages}</span>`;
+
+      if (currentPage > 1) prevPage.classList.remove("disabled");
+      else prevPage.classList.add("disabled");
+
+      if (currentPage < totalPages) nextPage.classList.remove("disabled");
+      else nextPage.classList.add("disabled");
+    }
+
+    // Fungsi untuk change page
+    function changePage(delta) {
+      const totalPages = Math.ceil(filteredRequests.length / itemsPerPage) || 1;
+      const newPage = currentPage + delta;
+
+      if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        updateRequestsList();
+        updatePagination();
+
+        window.scrollTo({
+          top: document.getElementById("list").offsetTop - 100,
+          behavior: "smooth"
+        });
+      }
+    }
+
+    // MODIFIED: Fungsi untuk clear requests list
+    function clearRequestsList() {
+      const requestsList = document.getElementById("requestsList");
+      const noResults = document.getElementById("noResults");
+
+      // Tampilkan pesan sesuai status login
+      if (!currentUser) {
+        requestsList.innerHTML = `
+          <div class="text-center py-5">
+            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+            <h5>${currentLang === "id" ? "Request Anonymous" : "Anonymous Requests"}</h5>
+            <p class="text-muted">${currentLang === "id" ? "Menampilkan request dari pengguna anonymous" : "Showing requests from anonymous users"}</p>
+          </div>
+        `;
+      } else {
+        requestsList.innerHTML = `
+          <div class="text-center py-5">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <h5>${currentLang === "id" ? "Tidak ada request" : "No requests"}</h5>
+            <p class="text-muted">${currentLang === "id" ? "Belum ada request yang dibuat" : "No requests have been made yet"}</p>
+          </div>
+        `;
+      }
+      
+      noResults.style.display = "none";
+      document.getElementById("pagination").style.display = "none";
+      document.getElementById("requestCount").textContent = "0";
+    }
+
+    // Fungsi untuk menyalin ID Request
+    function copyRequestId(requestId) {
+      navigator.clipboard.writeText(requestId).then(() => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true
+        });
+
+        Toast.fire({
+          icon: "success",
+          title: currentLang === "id" ? "ID Request disalin!" : "Request ID copied!"
+        });
+      });
+    }
+
+    // Fungsi untuk menampilkan detail request
+    async function showRequestDetail(requestId) {
+      try {
+        const request = filteredRequests.find((req) => req.request_id === requestId);
+
+        if (!request) {
+          Swal.fire({
+            icon: "error",
+            title: currentLang === "id" ? "Request Tidak Ditemukan" : "Request Not Found",
+            text: currentLang === "id" ? "Data request tidak ditemukan" : "Request data not found"
+          });
+          return;
+        }
+
+        const timestamp = new Date(request.timestamp);
+        const dateStr = timestamp.toLocaleDateString(currentLang === "id" ? "id-ID" : "en-US", {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        });
+
+        let statusHtml = "";
+        let statusText = "";
+
+        switch ((request.status_request || "").toUpperCase()) {
+          case "PENDING":
+            statusText = translations[currentLang]["pending"];
+            statusHtml = `<span class="badge bg-warning">⏳ ${statusText}</span>`;
+            break;
+          case "DONE":
+            statusText = translations[currentLang]["done"];
+            statusHtml = `<span class="badge bg-success">✅ ${statusText}</span>`;
+            break;
+          case "REJECTED":
+            statusText = translations[currentLang]["rejected"];
+            statusHtml = `<span class="badge bg-danger">❌ ${statusText}</span>`;
+            break;
+          default:
+            statusHtml = `<span class="badge bg-secondary">${request.status_request || "-"}</span>`;
+        }
+
+        const sourceIcon =
+          request.request_by === "Telegram Bot"
+            ? '<i class="fab fa-telegram text-primary me-2"></i>Telegram Bot'
+            : '<i class="fas fa-globe text-success me-2"></i>Web Form';
+
+        const detailHtml = `
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">${currentLang === "id" ? "ID Request" : "Request ID"}</label>
+                <div class="form-control bg-light">${request.request_id}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">${currentLang === "id" ? "Status" : "Status"}</label>
+                <div>${statusHtml}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">${currentLang === "id" ? "Sumber Request" : "Request Source"}</label>
+                <div class="form-control bg-light">${sourceIcon}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">${currentLang === "id" ? "Waktu Request" : "Request Time"}</label>
+                <div class="form-control bg-light">${dateStr}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-muted">${currentLang === "id" ? "Nama Game" : "Game Name"}</label>
+            <div class="form-control bg-light">${request.nama_game}</div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">${currentLang === "id" ? "Platform/Emulator" : "Platform/Emulator"}</label>
+                <div class="form-control bg-light">${request.jenis_emulator || "-"}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">${currentLang === "id" ? "Versi Game" : "Game Version"}</label>
+                <div class="form-control bg-light">${request.versi_game || "-"}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-muted">${currentLang === "id" ? "User" : "User"}</label>
+            <div class="form-control bg-light">
+              ${request.nama_user || "Anonymous"}
+              ${request.telegram_id ? `(${currentLang === "id" ? "ID:" : "ID:"} ${request.telegram_id})` : ""}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-muted">${currentLang === "id" ? "Link Bahan Referensi" : "Reference Link"}</label>
+            <div class="form-control bg-light">
+              ${
+                request.link_bahan
+                  ? `<a href="${request.link_bahan}" target="_blank" rel="noopener noreferrer">${request.link_bahan}</a>`
+                  : "-"
+              }
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-muted">${currentLang === "id" ? "Pesan untuk Admin" : "Message for Admin"}</label>
+            <div class="form-control bg-light" style="min-height: 80px;">${request.pesan_admin || "-"}</div>
+          </div>
+
+          ${
+            request.link_selesai
+              ? `
+            <div class="mb-3">
+              <label class="form-label text-muted">${currentLang === "id" ? "Link Game (Selesai)" : "Game Link (Done)"}</label>
+              <div class="form-control bg-light">
+                <a href="${request.link_selesai}" target="_blank" rel="noopener noreferrer">${request.link_selesai}</a>
+              </div>
+            </div>
+          `
+              : ""
+          }
+
+          ${
+            request.pesan_owner
+              ? `
+            <div class="mb-3">
+              <label class="form-label text-muted">${currentLang === "id" ? "Pesan dari Admin" : "Message from Admin"}</label>
+              <div class="form-control bg-light" style="min-height: 80px;">${request.pesan_owner}</div>
+            </div>
+          `
+              : ""
+          }
+
+          ${
+            request.user_key
+              ? `
+            <div class="mb-3">
+              <label class="form-label text-muted">${currentLang === "id" ? "Key User" : "User Key"}</label>
+              <div class="form-control bg-light">${request.user_key}</div>
+            </div>
+          `
+              : ""
+          }
+        `;
+
+        document.getElementById("detailContent").innerHTML = detailHtml;
+        const modal = new bootstrap.Modal(document.getElementById("detailModal"));
+        modal.show();
+      } catch (error) {
+        console.error("Show detail error:", error);
+        Swal.fire({
+          icon: "error",
+          title: currentLang === "id" ? "Error" : "Error",
+          text: currentLang === "id" ? "Gagal memuat detail request" : "Failed to load request detail"
+        });
+      }
+    }
+
+    // Fungsi untuk membuka bot Telegram
+    function openTelegramBot() {
+      window.open("https://t.me/INDapkBot", "_blank");
+    }
+  </script>
+</body>
+</html>
