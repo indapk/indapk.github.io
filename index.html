@@ -643,6 +643,54 @@
         animation: spinner-border .75s linear infinite !important;
       }
     }
+/* ===== PAGINATION ===== */
+.pagination-wrap {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--radius-lg);
+  padding: 14px 14px;
+  backdrop-filter: var(--glass);
+  -webkit-backdrop-filter: var(--glass);
+  box-shadow: var(--shadow-soft);
+}
+
+.pagination .page-link {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(231,234,242,0.90);
+  border-radius: 12px;
+  margin: 0 4px;
+  padding: 8px 12px;
+}
+
+.pagination .page-link:hover {
+  border-color: rgba(34,211,238,0.35);
+  background: rgba(34,211,238,0.10);
+  color: #fff;
+}
+
+.pagination .page-item.active .page-link {
+  background: var(--neon-gradient);
+  border-color: rgba(34,211,238,0.30);
+  color: #fff;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+}
+
+.pagination .page-item.disabled .page-link {
+  opacity: 0.45;
+}
+
+.page-meta {
+  color: rgba(231,234,242,0.70);
+  font-size: 0.9rem;
+}
+
+.page-jump {
+  cursor: pointer;
+  user-select: none;
+  color: rgba(231,234,242,0.70);
+  padding: 8px 10px;
+}
 
   </style>
 </head>
@@ -861,6 +909,7 @@
       </div>
     </div>
   </div>
+<div id="paginationContainer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -891,9 +940,88 @@
     const LS_LOGOUT_AT_KEY = 'indapkGameLogoutAt';
     let saldoIntervalId = null;
     let isGamesLoaded = false;
+    let currentPage = 1;
+    let searchTypingTimer = null;
+    const GAMES_PER_PAGE = 50; // kamu bisa ganti 12/16/20/24
+
 
 
     // ====== UTILITY FUNCTIONS ======
+  function getUrlParam(key) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(key);
+  }
+
+  function setUrlParam(key, value, { push = false } = {}) {
+    const url = new URL(window.location.href);
+
+    if (value === null || value === undefined || String(value).trim() === '') {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, String(value));
+    }
+
+    // Pakai replaceState biar tidak spam history saat user ngetik
+    const fn = push ? 'pushState' : 'replaceState';
+    history[fn]({}, '', url.toString());
+  }
+
+  function applySearchFromUrl() {
+    const q = getUrlParam('q') || '';
+    const input = document.getElementById('searchInput');
+    const p = parseInt(getUrlParam('page') || '1', 10);
+    if (Number.isFinite(p) && p > 1) currentPage = p;
+    if (input) input.value = q;
+
+    searchQuery = q.trim().toLowerCase();
+
+    // Kalau data game sudah siap, langsung filter tanpa reset page
+    if (isGamesLoaded) filterGames({ resetPage: false });
+  }
+
+
+function toTime(ts) {
+  if (!ts) return 0;
+
+  // Coba parse standar dulu
+  const d1 = new Date(ts);
+  if (!isNaN(d1.getTime())) return d1.getTime();
+
+  const s = String(ts).trim();
+
+  // Format: dd/mm/yyyy hh:mm:ss atau dd-mm-yyyy hh:mm:ss
+  let m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if (m) {
+    let day = parseInt(m[1], 10);
+    let mon = parseInt(m[2], 10) - 1;
+    let year = parseInt(m[3], 10);
+    if (year < 100) year += 2000;
+
+    const hh = m[4] ? parseInt(m[4], 10) : 0;
+    const mm = m[5] ? parseInt(m[5], 10) : 0;
+    const ss = m[6] ? parseInt(m[6], 10) : 0;
+
+    return new Date(year, mon, day, hh, mm, ss).getTime();
+  }
+
+  // Format: yyyy-mm-dd hh:mm:ss atau yyyy/mm/dd hh:mm:ss atau ISO-like
+  m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})(?:[T\s](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if (m) {
+    const year = parseInt(m[1], 10);
+    const mon = parseInt(m[2], 10) - 1;
+    const day = parseInt(m[3], 10);
+
+    const hh = m[4] ? parseInt(m[4], 10) : 0;
+    const mm = m[5] ? parseInt(m[5], 10) : 0;
+    const ss = m[6] ? parseInt(m[6], 10) : 0;
+
+    return new Date(year, mon, day, hh, mm, ss).getTime();
+  }
+
+  return 0;
+}
+
+
     function setButtonLoading(btn, isLoading, textLoading = 'Loading...') {
       if (!btn) return;
 
@@ -1053,22 +1181,47 @@
     }
 
     // ====== DOM CONTENT LOADED ======
-      document.addEventListener('DOMContentLoaded', function () {
-        checkLoginStatus();
-        setupEventListeners();
+document.addEventListener('DOMContentLoaded', function () {
+  checkLoginStatus();
+  setupEventListeners();
 
-        applyHashPlatform();   // <- ini ditambah
-        loadAllGames();
+  applySearchFromUrl();   // <-- tambah ini
+  applyHashPlatform();
+  loadAllGames();
 
-        window.addEventListener('hashchange', applyHashPlatform); // <- opsional, tapi enak
-      });
+  window.addEventListener('hashchange', applyHashPlatform);
+
+  // Back/Forward browser
+  window.addEventListener('popstate', () => {
+    applySearchFromUrl();
+  });
+});
 
 
     // ====== EVENT LISTENERS SETUP ======
     function setupEventListeners() {
       document.getElementById('searchInput').addEventListener('input', function (e) {
-        searchQuery = e.target.value.toLowerCase();
-        filterGames();
+        const raw = e.target.value || '';
+        searchQuery = raw.trim().toLowerCase();
+
+        clearTimeout(searchTypingTimer);
+        searchTypingTimer = setTimeout(() => {
+          setUrlParam('q', raw.trim(), { push: false });
+          setUrlParam('page', ''); // reset page saat query berubah
+        }, 250);
+
+        filterGames({ resetPage: true });
+      });
+      // Pagination click (delegation)
+      document.getElementById('paginationContainer')?.addEventListener('click', function (e) {
+        const btn = e.target.closest('[data-page]');
+        if (!btn) return;
+
+        e.preventDefault();
+        const page = parseInt(btn.dataset.page, 10);
+        if (!Number.isFinite(page)) return;
+
+        goToPage(page);
       });
 
       document.querySelectorAll('[data-platform]').forEach(item => {
@@ -1258,16 +1411,21 @@
         const ps2Result = await ps2Response.json();
         let ps2Games = [];
 
-        if (ps2Result.status === 'success' && Array.isArray(ps2Result.data)) {
-          ps2Games = ps2Result.data.map(game => ({
-            ...game,
-            platform: 'ps2',
-            platform_name: 'PlayStation 2',
-            api_url: GAMEPS2_API_URL,
-            access_action: 'accessOriginalLink',
-            category_list: splitCategories(game.category)
-          }));
-        }
+        // Load PS2 Games
+    if (ps2Result.status === 'success' && Array.isArray(ps2Result.data)) {
+      ps2Games = ps2Result.data.map(game => ({
+        ...game,
+        platform: 'ps2',
+        platform_name: 'PlayStation 2',
+        api_url: GAMEPS2_API_URL,
+        access_action: 'accessOriginalLink',
+        category_list: splitCategories(game.category)
+      }));
+
+      // URUTKAN TERBARU DI ATAS
+      ps2Games.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
+    }
+
 
         // Load Switch Games
         const switchResponse = await fetch(GAMESWITCH_API_URL, {
@@ -1279,19 +1437,24 @@
           body: 'action=getAllGames'
         });
 
+
         const switchResult = await switchResponse.json();
         let switchGames = [];
 
-        if (switchResult.status === 'success' && Array.isArray(switchResult.data)) {
-          switchGames = switchResult.data.map(game => ({
-            ...game,
-            platform: 'switch',
-            platform_name: 'Nintendo Switch',
-            api_url: GAMESWITCH_API_URL,
-            access_action: 'accessSwitchOriginalLink',
-            category_list: splitCategories(game.category)
-          }));
-        }
+      if (switchResult.status === 'success' && Array.isArray(switchResult.data)) {
+        switchGames = switchResult.data.map(game => ({
+          ...game,
+          platform: 'switch',
+          platform_name: 'Nintendo Switch',
+          api_url: GAMESWITCH_API_URL,
+          access_action: 'accessSwitchOriginalLink',
+          category_list: splitCategories(game.category)
+        }));
+
+        // URUTKAN TERBARU DI ATAS
+        switchGames.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
+      }
+
 
         // Load PSP Games
         let pspGames = [];
@@ -1306,16 +1469,20 @@
           });
 
           const pspResult = await pspResponse.json();
-          if (pspResult.status === 'success' && Array.isArray(pspResult.data)) {
-            pspGames = pspResult.data.map(game => ({
-              ...game,
-              platform: 'psp',
-              platform_name: 'PSP',
-              api_url: GAMEPSP_API_URL,
-              access_action: 'accessOriginalLink',
-              category_list: splitCategories(game.category)
-            }));
-          }
+        if (pspResult.status === 'success' && Array.isArray(pspResult.data)) {
+          pspGames = pspResult.data.map(game => ({
+            ...game,
+            platform: 'psp',
+            platform_name: 'PSP',
+            api_url: GAMEPSP_API_URL,
+            access_action: 'accessOriginalLink',
+            category_list: splitCategories(game.category)
+          }));
+
+          // URUTKAN TERBARU DI ATAS
+          pspGames.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
+        }
+
         } catch (pspError) {
           console.error('Error loading PSP games:', pspError);
         }
@@ -1333,17 +1500,21 @@
           });
 
           const androidResult = await androidResponse.json();
-          if (androidResult.status === 'success' && Array.isArray(androidResult.data)) {
-            androidGames = androidResult.data.map(game => ({
-              ...game,
-              platform: 'android',
-              platform_name: 'Android',
-              api_url: GAMEANDROID_API_URL,
-              access_action: 'accessOriginalLink',
-              category_list: splitCategories(game.category || game.ori_category),
-              game_type: game.game_type || 'ori-only'
-            }));
-          }
+        if (androidResult.status === 'success' && Array.isArray(androidResult.data)) {
+          androidGames = androidResult.data.map(game => ({
+            ...game,
+            platform: 'android',
+            platform_name: 'Android',
+            api_url: GAMEANDROID_API_URL,
+            access_action: 'accessOriginalLink',
+            category_list: splitCategories(game.category || game.ori_category),
+            game_type: game.game_type || 'ori-only'
+          }));
+
+          // URUTKAN TERBARU DI ATAS
+          androidGames.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
+        }
+
         } catch (androidError) {
           console.error('Error loading Android games:', androidError);
         }
@@ -1402,30 +1573,161 @@
       });
     }
 
-    function filterGames() {
-      filteredGames = allGames.filter(game => {
-        if (currentPlatform !== 'all' && game.platform !== currentPlatform) return false;
+function filterGames({ resetPage = true } = {}) {
+  filteredGames = allGames.filter(game => {
+    if (currentPlatform !== 'all' && game.platform !== currentPlatform) return false;
 
-        if (currentCategory !== 'all') {
-          const list = game.category_list || splitCategories(game.category || game.ori_category);
-          if (!list.includes(currentCategory)) return false;
-        }
-
-        if (searchQuery) {
-          const catText = (game.category_list || splitCategories(game.category || game.ori_category)).join(' ');
-          const searchIn = (game.nama_game || game.ori_name || '').toLowerCase()
-            + catText.toLowerCase()
-            + (game.language || '').toLowerCase()
-            + (game.region || '').toLowerCase();
-
-          if (!searchIn.includes(searchQuery)) return false;
-        }
-
-        return true;
-      });
-
-      renderGameList();
+    if (currentCategory !== 'all') {
+      const list = game.category_list || splitCategories(game.category || game.ori_category);
+      if (!list.includes(currentCategory)) return false;
     }
+
+    if (searchQuery) {
+      const catText = (game.category_list || splitCategories(game.category || game.ori_category)).join(' ');
+      const searchIn = (game.nama_game || game.ori_name || '').toLowerCase()
+        + catText.toLowerCase()
+        + (game.language || '').toLowerCase()
+        + (game.region || '').toLowerCase();
+
+      if (!searchIn.includes(searchQuery)) return false;
+    }
+
+    return true;
+  });
+
+  if (resetPage) {
+    currentPage = 1;
+    setUrlParam('page', currentPage > 1 ? String(currentPage) : '', { push: true });
+
+  }
+
+  renderGameList();
+}
+
+function clampPage(page, totalPages) {
+  if (totalPages <= 1) return 1;
+  return Math.min(Math.max(1, page), totalPages);
+}
+
+function smoothScrollToListTop() {
+  const el = document.getElementById('gameListContainer');
+  if (!el) return;
+
+  const y = el.getBoundingClientRect().top + window.pageYOffset - 90; // offset navbar
+  window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+}
+
+function goToPage(page) {
+  const totalPages = Math.max(1, Math.ceil((filteredGames?.length || 0) / GAMES_PER_PAGE));
+  const next = clampPage(page, totalPages);
+  if (next === currentPage) return;
+
+  currentPage = next;
+  renderGameList();
+  smoothScrollToListTop();
+}
+
+function renderPagination(totalItems) {
+  const container = document.getElementById('paginationContainer');
+  if (!container) return;
+
+  if (!totalItems || totalItems <= GAMES_PER_PAGE) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const totalPages = Math.ceil(totalItems / GAMES_PER_PAGE);
+  currentPage = clampPage(currentPage, totalPages);
+
+  const start = (currentPage - 1) * GAMES_PER_PAGE + 1;
+  const end = Math.min(currentPage * GAMES_PER_PAGE, totalItems);
+
+  const maxButtons = 5; // window halaman
+  let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+  let endPage = startPage + maxButtons - 1;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(1, endPage - maxButtons + 1);
+  }
+
+  let pagesHtml = '';
+
+  // First + Prev
+  pagesHtml += `
+    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="1" aria-label="First">
+        <i class="bi bi-chevron-bar-left"></i>
+      </a>
+    </li>
+    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${currentPage - 1}" aria-label="Previous">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+    </li>
+  `;
+
+  // Leading ellipsis
+  if (startPage > 1) {
+    pagesHtml += `
+      <li class="page-item">
+        <a class="page-link" href="#" data-page="1">1</a>
+      </li>
+      ${startPage > 2 ? `<li class="page-jump">...</li>` : ''}
+    `;
+  }
+
+  // Page numbers
+  for (let p = startPage; p <= endPage; p++) {
+    pagesHtml += `
+      <li class="page-item ${p === currentPage ? 'active' : ''}">
+        <a class="page-link" href="#" data-page="${p}">${p}</a>
+      </li>
+    `;
+  }
+
+  // Trailing ellipsis
+  if (endPage < totalPages) {
+    pagesHtml += `
+      ${endPage < totalPages - 1 ? `<li class="page-jump">...</li>` : ''}
+      <li class="page-item">
+        <a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>
+      </li>
+    `;
+  }
+
+  // Next + Last
+  pagesHtml += `
+    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${currentPage + 1}" aria-label="Next">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </li>
+    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${totalPages}" aria-label="Last">
+        <i class="bi bi-chevron-bar-right"></i>
+      </a>
+    </li>
+  `;
+
+  container.innerHTML = `
+    <div class="pagination-wrap">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+        <div class="page-meta">
+          Menampilkan <strong>${start}</strong> sampai <strong>${end}</strong> dari <strong>${totalItems}</strong>
+        </div>
+        <div class="page-meta">
+          Page <strong>${currentPage}</strong> dari <strong>${totalPages}</strong>
+        </div>
+      </div>
+      <nav aria-label="Game pagination">
+        <ul class="pagination justify-content-center mb-0">
+          ${pagesHtml}
+        </ul>
+      </nav>
+    </div>
+  `;
+}
 
     function renderGameList() {
       const container = document.getElementById('gameListContainer');
@@ -1438,12 +1740,23 @@
             <p class="text-muted">Coba ubah filter pencarian Anda</p>
           </div>
         `;
+        const pag = document.getElementById('paginationContainer');
+        if (pag) pag.innerHTML = '';
         return;
       }
 
-      let html = '<div class="row g-4">';
 
-      filteredGames.forEach(game => {
+     let html = '<div class="row g-4">';
+
+const totalItems = filteredGames.length;
+const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
+currentPage = clampPage(currentPage, totalPages);
+
+const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
+const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+
+
+      pageGames.forEach(game => {
         const platformClass = `badge-${game.platform}`;
         const platformIconClass = `platform-${game.platform}`;
 
@@ -1522,6 +1835,7 @@
 
       html += '</div>';
       container.innerHTML = html;
+renderPagination(filteredGames.length);
 
       animateCardReveal();
     }
