@@ -890,6 +890,8 @@
     const LS_USER_KEY = 'indapkGameUser';
     const LS_LOGOUT_AT_KEY = 'indapkGameLogoutAt';
     let saldoIntervalId = null;
+    let isGamesLoaded = false;
+
 
     // ====== UTILITY FUNCTIONS ======
     function setButtonLoading(btn, isLoading, textLoading = 'Loading...') {
@@ -964,6 +966,50 @@
       return icons[platform] || 'bi-controller';
     }
 
+
+  function getPlatformLabel(p) {
+    switch (p) {
+      case 'ps2': return 'PlayStation 2';
+      case 'switch': return 'Nintendo Switch';
+      case 'psp': return 'PSP';
+      case 'psvita': return 'PS Vita';
+      case 'wii': return 'Wii';
+      case '3ds': return '3DS';
+      case 'android': return 'Android';
+      case 'pc': return 'PC';
+      default: return 'Semua';
+    }
+  }
+
+  function applyHashPlatform() {
+    const raw = (location.hash || '').replace('#', '').trim();
+    if (!raw) return;
+
+    const hash = raw.toLowerCase();
+    const allowed = new Set(['all','ps2','switch','psp','psvita','wii','3ds','android','pc']);
+    if (!allowed.has(hash)) return;
+
+    currentPlatform = hash;
+
+    const el = document.getElementById('platformText');
+    if (el) el.textContent = getPlatformLabel(hash);
+
+    // Jangan render "Tidak ada game" saat masih loading
+    if (isGamesLoaded) filterGames();
+  }
+
+
+  function setHashFromPlatform(platform) {
+    // Biar URL kamu jadi #Android, bukan #android
+    const pretty = platform === 'android' ? 'Android' : platform;
+    if (platform === 'all') {
+      history.replaceState(null, '', location.pathname + location.search);
+      return;
+    }
+    location.hash = pretty;
+  }
+
+
     // ====== AUTO REFRESH SALDO ======
     function startSaldoAutoRefresh() {
       stopSaldoAutoRefresh();
@@ -1007,11 +1053,16 @@
     }
 
     // ====== DOM CONTENT LOADED ======
-    document.addEventListener('DOMContentLoaded', function () {
-      checkLoginStatus();
-      setupEventListeners();
-      loadAllGames();
-    });
+      document.addEventListener('DOMContentLoaded', function () {
+        checkLoginStatus();
+        setupEventListeners();
+
+        applyHashPlatform();   // <- ini ditambah
+        loadAllGames();
+
+        window.addEventListener('hashchange', applyHashPlatform); // <- opsional, tapi enak
+      });
+
 
     // ====== EVENT LISTENERS SETUP ======
     function setupEventListeners() {
@@ -1025,9 +1076,12 @@
           e.preventDefault();
           currentPlatform = this.dataset.platform;
           document.getElementById('platformText').textContent = this.textContent;
+
+          setHashFromPlatform(currentPlatform); // <- tambah ini
           filterGames();
         });
       });
+
 
       document.getElementById('btnPayYes').addEventListener('click', function () {
         processPayment(this);
@@ -1305,6 +1359,7 @@
         });
 
         populateCategoryDropdown();
+        isGamesLoaded = true;
         filterGames();
 
       } catch (error) {
