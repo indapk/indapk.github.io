@@ -1715,427 +1715,632 @@
     }
 
     // ====== LINK BUILDERS ======
-    function buildPS2Links(game) {
-      let html = '';
+function buildPS2Links(game) {
+  let html = '';
 
-      if (game.link_iklan_iso && Array.isArray(game.link_iklan_iso) && game.link_iklan_iso.length > 0) {
+  // LINK IKLAN 1 (INDapkShort) - ISO
+  if (game.link_iklan_iso && Array.isArray(game.link_iklan_iso) && game.link_iklan_iso.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - ISO</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.link_iklan_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      if (link) {
         html += `
-          <div class="link-section ad-link">
-            <h6>INDapkShort - ISO</h6>
-            <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
-        `;
-
-        game.link_iklan_iso.forEach((link, index) => {
-          const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
-          if (link) {
-            html += `
-              <div class="link-item">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span>${escapeHTML(cloud)}</span>
-                  <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
-                    <i class="bi bi-box-arrow-up-right"></i> Buka
-                  </a>
-                </div>
-              </div>
-            `;
-          }
-        });
-
-        html += `</div>`;
-      }
-
-      if (game.link_iklan_chd && Array.isArray(game.link_iklan_chd) && game.link_iklan_chd.length > 0) {
-        html += `
-          <div class="link-section ad-link">
-            <h6>INDapkShort - CHD</h6>
-            <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
-        `;
-
-        game.link_iklan_chd.forEach((link, index) => {
-          const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
-          if (link) {
-            html += `
-              <div class="link-item">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span>${escapeHTML(cloud)}</span>
-                  <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
-                    <i class="bi bi-box-arrow-up-right"></i> Buka
-                  </a>
-                </div>
-              </div>
-            `;
-          }
-        });
-
-        html += `</div>`;
-      }
-
-      if (game.link_asli_iso && Array.isArray(game.link_asli_iso) && game.link_asli_iso.length > 0) {
-        html += `
-          <div class="link-section original-link">
-            <h6>Link Asli Tanpa Iklan - ISO</h6>
-            <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
-        `;
-
-        game.link_asli_iso.forEach((link, index) => {
-          const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
-          html += `
-            <div class="link-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <span>${escapeHTML(cloud)}</span>
-                <button class="btn btn-sm btn-success"
-                  onclick="requestOriginalLink(this, '${game.download_id}', 'iso', ${index}, '${cloud}', 'ps2')"
-                  ${!currentUser ? 'disabled' : ''}>
-                  <i class="bi bi-unlock"></i> Rp 2.000
-                </button>
-              </div>
-            </div>
-          `;
-        });
-
-        html += `</div>`;
-      }
-
-      if (game.link_asli_chd && Array.isArray(game.link_asli_chd) && game.link_asli_chd.length > 0) {
-        html += `
-          <div class="link-section original-link">
-            <h6>Link Asli Tanpa Iklan - CHD</h6>
-            <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
-        `;
-
-        game.link_asli_chd.forEach((link, index) => {
-          const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
-          html += `
-            <div class="link-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <span>${escapeHTML(cloud)}</span>
-                <button class="btn btn-sm btn-success"
-                  onclick="requestOriginalLink(this, '${game.download_id}', 'chd', ${index}, '${cloud}', 'ps2')"
-                  ${!currentUser ? 'disabled' : ''}>
-                  <i class="bi bi-unlock"></i> Rp 2.000
-                </button>
-              </div>
-            </div>
-          `;
-        });
-
-        html += `</div>`;
-      }
-
-      if (!currentUser) {
-        html += `
-          <div class="alert alert-info mt-3">
-            <i class="bi bi-info-circle me-2"></i>
-            <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
-            <div class="mt-2">
-              <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
-                <i class="bi bi-telegram me-1"></i> Login Sekarang
-              </button>
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
             </div>
           </div>
         `;
       }
+    });
 
-      return html;
-    }
+    html += `</div>`;
+  }
 
-    function buildSwitchLinks(game) {
-      let html = '';
+  // LINK IKLAN 2 (Semawur) - ISO
+  if (game.link_iklan2_iso && Array.isArray(game.link_iklan2_iso) && game.link_iklan2_iso.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - ISO</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
 
-      const buildSwitchLinkSection = (title, links, clouds, linkType, platform, isAd = true) => {
-        if (!links || !Array.isArray(links) || links.length === 0) return '';
-
-        const sectionClass = isAd ? 'ad-link' : 'original-link';
-        const buttonClass = isAd ? 'btn-warning' : 'btn-success';
-        const buttonText = isAd ? '<i class="bi bi-box-arrow-up-right"></i> Buka' : '<i class="bi bi-unlock"></i> Rp 2.000';
-        const description = isAd ? 'Gunakan link ini untuk download gratis dengan iklan' : 'Rp 2.000 per link. Bebas iklan dan langsung download';
-
-        let sectionHtml = `
-          <div class="link-section ${sectionClass}">
-            <h6>${title}</h6>
-            <p class="small text-muted">${description}</p>
-        `;
-
-        links.forEach((link, index) => {
-          const cloud = clouds && clouds[index] ? clouds[index] : `Cloud ${index + 1}`;
-          if (link) {
-            sectionHtml += `
-              <div class="link-item">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span>${escapeHTML(cloud)}</span>
-            `;
-
-            if (isAd) {
-              sectionHtml += `
-                <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm ${buttonClass}">
-                  ${buttonText}
-                </a>
-              `;
-            } else {
-              sectionHtml += `
-                <button class="btn btn-sm ${buttonClass}"
-                  onclick="requestOriginalLink(this, '${game.download_id}', '${linkType}', ${index}, '${cloud}', 'switch')"
-                  ${!currentUser ? 'disabled' : ''}>
-                  ${buttonText}
-                </button>
-              `;
-            }
-
-            sectionHtml += `</div></div>`;
-          }
-        });
-
-        sectionHtml += `</div>`;
-        return sectionHtml;
-      };
-
-      html += buildSwitchLinkSection('INDapkShort - NSP', game.link_iklan_nsp, game.cloud_nsp, 'nsp', 'switch', true);
-      html += buildSwitchLinkSection('INDapkShort - XCI', game.link_iklan_xci, game.cloud_xci, 'xci', 'switch', true);
-      html += buildSwitchLinkSection('Link Asli Tanpa Iklan - NSP', game.link_asli_nsp, game.cloud_nsp, 'nsp', 'switch', false);
-      html += buildSwitchLinkSection('Link Asli Tanpa Iklan - XCI', game.link_asli_xci, game.cloud_xci, 'xci', 'switch', false);
-
-      if (!currentUser) {
+    game.link_iklan2_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      if (link) {
         html += `
-          <div class="alert alert-info mt-3">
-            <i class="bi bi-info-circle me-2"></i>
-            <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
-            <div class="mt-2">
-              <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
-                <i class="bi bi-telegram me-1"></i> Login Sekarang
-              </button>
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
             </div>
           </div>
         `;
       }
+    });
 
-      return html;
-    }
+    html += `</div>`;
+  }
 
-    function buildPSPLinks(game) {
-      let html = '';
+  // LINK IKLAN 1 (INDapkShort) - CHD
+  if (game.link_iklan_chd && Array.isArray(game.link_iklan_chd) && game.link_iklan_chd.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - CHD</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
 
-      if (game.link_iklan_iso && Array.isArray(game.link_iklan_iso) && game.link_iklan_iso.length > 0) {
+    game.link_iklan_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      if (link) {
         html += `
-          <div class="link-section ad-link">
-            <h6>INDapkShort - ISO/CSO</h6>
-            <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
-        `;
-
-        game.link_iklan_iso.forEach((link, index) => {
-          const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
-          if (link) {
-            html += `
-              <div class="link-item">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span>${escapeHTML(cloud)}</span>
-                  <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
-                    <i class="bi bi-box-arrow-up-right"></i> Buka
-                  </a>
-                </div>
-              </div>
-            `;
-          }
-        });
-
-        html += `</div>`;
-      }
-
-      if (game.link_iklan2_iso && Array.isArray(game.link_iklan2_iso) && game.link_iklan2_iso.length > 0) {
-        html += `
-          <div class="link-section ad-link">
-            <h6>Semawur - ISO/CSO</h6>
-            <p class="small text-muted">Alternatif link dengan iklan</p>
-        `;
-
-        game.link_iklan2_iso.forEach((link, index) => {
-          const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
-          if (link) {
-            html += `
-              <div class="link-item">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span>${escapeHTML(cloud)}</span>
-                  <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
-                    <i class="bi bi-box-arrow-up-right"></i> Buka
-                  </a>
-                </div>
-              </div>
-            `;
-          }
-        });
-
-        html += `</div>`;
-      }
-
-      if (game.link_asli_iso && Array.isArray(game.link_asli_iso) && game.link_asli_iso.length > 0) {
-        html += `
-          <div class="link-section original-link">
-            <h6>Link Asli Tanpa Iklan - ISO/CSO</h6>
-            <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
-        `;
-
-        game.link_asli_iso.forEach((link, index) => {
-          const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
-          html += `
-            <div class="link-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <span>${escapeHTML(cloud)}</span>
-                <button class="btn btn-sm btn-success"
-                  onclick="requestOriginalLink(this, '${game.download_id}', 'iso', ${index}, '${cloud}', 'psp')"
-                  ${!currentUser ? 'disabled' : ''}>
-                  <i class="bi bi-unlock"></i> Rp 2.000
-                </button>
-              </div>
-            </div>
-          `;
-        });
-
-        html += `</div>`;
-      }
-
-      if (!currentUser) {
-        html += `
-          <div class="alert alert-info mt-3">
-            <i class="bi bi-info-circle me-2"></i>
-            <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
-            <div class="mt-2">
-              <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
-                <i class="bi bi-telegram me-1"></i> Login Sekarang
-              </button>
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
             </div>
           </div>
         `;
       }
+    });
 
-      return html;
-    }
+    html += `</div>`;
+  }
 
-    function buildAndroidLinks(game) {
-      let html = '';
+  // LINK IKLAN 2 (Semawur) - CHD
+  if (game.link_iklan2_chd && Array.isArray(game.link_iklan2_chd) && game.link_iklan2_chd.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - CHD</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
 
-      // Link untuk game ORI (jika bukan only-mod)
-      if (game.game_type !== 'only-mod' && game.ori_ad_links1 && Array.isArray(game.ori_ad_links1) && game.ori_ad_links1.length > 0) {
+    game.link_iklan2_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      if (link) {
         html += `
-          <div class="link-section ad-link">
-            <h6>INDapkShort - Game Original</h6>
-            <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
-        `;
-
-        game.ori_ad_links1.forEach((link, index) => {
-          const cloud = game.cloud_ad1 && game.cloud_ad1[index] ? game.cloud_ad1[index] : `Cloud ${index + 1}`;
-          if (link) {
-            html += `
-              <div class="link-item">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span>${escapeHTML(cloud)} - Original</span>
-                  <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
-                    <i class="bi bi-box-arrow-up-right"></i> Buka
-                  </a>
-                </div>
-              </div>
-            `;
-          }
-        });
-
-        html += `</div>`;
-      }
-
-      // Link untuk game MOD (jika ada)
-      if ((game.game_type === 'ori-mod' || game.game_type === 'only-mod') && game.mod_ad_links1 && Array.isArray(game.mod_ad_links1) && game.mod_ad_links1.length > 0) {
-        html += `
-          <div class="link-section ad-link">
-            <h6>INDapkShort - Game MOD</h6>
-            <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
-        `;
-
-        game.mod_ad_links1.forEach((link, index) => {
-          const cloud = game.cloud_ad1 && game.cloud_ad1[index] ? game.cloud_ad1[index] : `Cloud ${index + 1}`;
-          if (link) {
-            html += `
-              <div class="link-item">
-                <div class="d-flex justify-content-between align-items-center">
-                  <span>${escapeHTML(cloud)} - MOD</span>
-                  <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
-                    <i class="bi bi-box-arrow-up-right"></i> Buka
-                  </a>
-                </div>
-              </div>
-            `;
-          }
-        });
-
-        html += `</div>`;
-      }
-
-      // Link asli untuk game ORI (jika bukan only-mod)
-      if (game.game_type !== 'only-mod' && game.ori_original_links && Array.isArray(game.ori_original_links) && game.ori_original_links.length > 0) {
-        html += `
-          <div class="link-section original-link">
-            <h6>Link Asli Tanpa Iklan - Game Original</h6>
-            <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
-        `;
-
-        game.ori_original_links.forEach((link, index) => {
-          const cloud = game.cloud_original && game.cloud_original[index] ? game.cloud_original[index] : `Cloud ${index + 1}`;
-          html += `
-            <div class="link-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <span>${escapeHTML(cloud)} - Original</span>
-                <button class="btn btn-sm btn-success"
-                  onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'android')"
-                  ${!currentUser ? 'disabled' : ''}>
-                  <i class="bi bi-unlock"></i> Rp 2.000
-                </button>
-              </div>
-            </div>
-          `;
-        });
-
-        html += `</div>`;
-      }
-
-      // Link asli untuk game MOD (jika ada)
-      if ((game.game_type === 'ori-mod' || game.game_type === 'only-mod') && game.mod_original_links && Array.isArray(game.mod_original_links) && game.mod_original_links.length > 0) {
-        html += `
-          <div class="link-section original-link">
-            <h6>Link Asli Tanpa Iklan - Game MOD</h6>
-            <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
-        `;
-
-        game.mod_original_links.forEach((link, index) => {
-          const cloud = game.cloud_original && game.cloud_original[index] ? game.cloud_original[index] : `Cloud ${index + 1}`;
-          html += `
-            <div class="link-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <span>${escapeHTML(cloud)} - MOD</span>
-                <button class="btn btn-sm btn-success"
-                  onclick="requestOriginalLink(this, '${game.download_id}', 'mod', ${index}, '${cloud}', 'android')"
-                  ${!currentUser ? 'disabled' : ''}>
-                  <i class="bi bi-unlock"></i> Rp 2.000
-                </button>
-              </div>
-            </div>
-          `;
-        });
-
-        html += `</div>`;
-      }
-
-      if (!currentUser) {
-        html += `
-          <div class="alert alert-info mt-3">
-            <i class="bi bi-info-circle me-2"></i>
-            <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
-            <div class="mt-2">
-              <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
-                <i class="bi bi-telegram me-1"></i> Login Sekarang
-              </button>
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
             </div>
           </div>
         `;
       }
+    });
 
-      return html;
-    }
+    html += `</div>`;
+  }
+
+  // LINK ASLI TANPA IKLAN - ISO
+  if (game.link_asli_iso && Array.isArray(game.link_asli_iso) && game.link_asli_iso.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - ISO</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'iso', ${index}, '${cloud}', 'ps2')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK ASLI TANPA IKLAN - CHD
+  if (game.link_asli_chd && Array.isArray(game.link_asli_chd) && game.link_asli_chd.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - CHD</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'chd', ${index}, '${cloud}', 'ps2')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+function buildSwitchLinks(game) {
+  let html = '';
+
+  const buildSwitchLinkSection = (title, links, clouds, linkType, platform, isAd = true, isAd2 = false) => {
+    if (!links || !Array.isArray(links) || links.length === 0) return '';
+
+    const sectionClass = isAd ? 'ad-link' : 'original-link';
+    const buttonClass = isAd ? 'btn-warning' : 'btn-success';
+    const buttonText = isAd ? '<i class="bi bi-box-arrow-up-right"></i> Buka' : '<i class="bi bi-unlock"></i> Rp 2.000';
+    const description = isAd 
+      ? (isAd2 ? 'Alternatif link dengan iklan' : 'Gunakan link ini untuk download gratis dengan iklan')
+      : 'Rp 2.000 per link. Bebas iklan dan langsung download';
+
+    let sectionHtml = `
+      <div class="link-section ${sectionClass}">
+        <h6>${title}</h6>
+        <p class="small text-muted">${description}</p>
+    `;
+
+    links.forEach((link, index) => {
+      const cloud = clouds && clouds[index] ? clouds[index] : `Cloud ${index + 1}`;
+      if (link) {
+        sectionHtml += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+        `;
+
+        if (isAd) {
+          sectionHtml += `
+            <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm ${buttonClass}">
+              ${buttonText}
+            </a>
+          `;
+        } else {
+          sectionHtml += `
+            <button class="btn btn-sm ${buttonClass}"
+              onclick="requestOriginalLink(this, '${game.download_id}', '${linkType}', ${index}, '${cloud}', 'switch')"
+              ${!currentUser ? 'disabled' : ''}>
+              ${buttonText}
+            </button>
+          `;
+        }
+
+        sectionHtml += `</div></div>`;
+      }
+    });
+
+    sectionHtml += `</div>`;
+    return sectionHtml;
+  };
+
+  // Link Iklan 1
+  html += buildSwitchLinkSection('INDapkShort - NSP', game.link_iklan_nsp, game.cloud_nsp, 'nsp', 'switch', true, false);
+  html += buildSwitchLinkSection('INDapkShort - XCI', game.link_iklan_xci, game.cloud_xci, 'xci', 'switch', true, false);
+  
+  // Link Iklan 2
+  html += buildSwitchLinkSection('Semawur - NSP', game.link_iklan2_nsp, game.cloud_nsp, 'nsp', 'switch', true, true);
+  html += buildSwitchLinkSection('Semawur - XCI', game.link_iklan2_xci, game.cloud_xci, 'xci', 'switch', true, true);
+  
+  // Link Original
+  html += buildSwitchLinkSection('Link Asli Tanpa Iklan - NSP', game.link_asli_nsp, game.cloud_nsp, 'nsp', 'switch', false);
+  html += buildSwitchLinkSection('Link Asli Tanpa Iklan - XCI', game.link_asli_xci, game.cloud_xci, 'xci', 'switch', false);
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+function buildPSPLinks(game) {
+  let html = '';
+
+  // LINK IKLAN 1 (INDapkShort) - ISO
+  if (game.link_iklan_iso && Array.isArray(game.link_iklan_iso) && game.link_iklan_iso.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - ISO</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.link_iklan_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 1 (INDapkShort) - CHD
+  if (game.link_iklan_chd && Array.isArray(game.link_iklan_chd) && game.link_iklan_chd.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - CHD</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.link_iklan_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 2 (Semawur) - ISO
+  if (game.link_iklan2_iso && Array.isArray(game.link_iklan2_iso) && game.link_iklan2_iso.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - ISO</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.link_iklan2_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 2 (Semawur) - CHD
+  if (game.link_iklan2_chd && Array.isArray(game.link_iklan2_chd) && game.link_iklan2_chd.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - CHD</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.link_iklan2_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK ASLI TANPA IKLAN - ISO
+  if (game.link_asli_iso && Array.isArray(game.link_asli_iso) && game.link_asli_iso.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - ISO</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'iso', ${index}, '${cloud}', 'psp')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK ASLI TANPA IKLAN - CHD
+  if (game.link_asli_chd && Array.isArray(game.link_asli_chd) && game.link_asli_chd.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - CHD</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'chd', ${index}, '${cloud}', 'psp')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+function buildAndroidLinks(game) {
+  let html = '';
+
+  // Link Iklan 1 untuk game ORI (jika bukan only-mod)
+  if (game.game_type !== 'only-mod' && game.ori_ad_links1 && Array.isArray(game.ori_ad_links1) && game.ori_ad_links1.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - Game Original</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.ori_ad_links1.forEach((link, index) => {
+      const cloud = game.cloud_ad1 && game.cloud_ad1[index] ? game.cloud_ad1[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)} - Original</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // Link Iklan 2 untuk game ORI (jika bukan only-mod)
+  if (game.game_type !== 'only-mod' && game.ori_ad_links2 && Array.isArray(game.ori_ad_links2) && game.ori_ad_links2.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - Game Original</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.ori_ad_links2.forEach((link, index) => {
+      const cloud = game.cloud_ad2 && game.cloud_ad2[index] ? game.cloud_ad2[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)} - Original</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // Link Iklan 1 untuk game MOD (jika ada)
+  if ((game.game_type === 'ori-mod' || game.game_type === 'only-mod') && game.mod_ad_links1 && Array.isArray(game.mod_ad_links1) && game.mod_ad_links1.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - Game MOD</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.mod_ad_links1.forEach((link, index) => {
+      const cloud = game.cloud_ad1 && game.cloud_ad1[index] ? game.cloud_ad1[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)} - MOD</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // Link Iklan 2 untuk game MOD (jika ada)
+  if ((game.game_type === 'ori-mod' || game.game_type === 'only-mod') && game.mod_ad_links2 && Array.isArray(game.mod_ad_links2) && game.mod_ad_links2.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - Game MOD</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.mod_ad_links2.forEach((link, index) => {
+      const cloud = game.cloud_ad2 && game.cloud_ad2[index] ? game.cloud_ad2[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)} - MOD</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // Link asli untuk game ORI (jika bukan only-mod)
+  if (game.game_type !== 'only-mod' && game.ori_original_links && Array.isArray(game.ori_original_links) && game.ori_original_links.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - Game Original</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.ori_original_links.forEach((link, index) => {
+      const cloud = game.cloud_original && game.cloud_original[index] ? game.cloud_original[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)} - Original</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'android')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  // Link asli untuk game MOD (jika ada)
+  if ((game.game_type === 'ori-mod' || game.game_type === 'only-mod') && game.mod_original_links && Array.isArray(game.mod_original_links) && game.mod_original_links.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - Game MOD</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.mod_original_links.forEach((link, index) => {
+      const cloud = game.cloud_original && game.cloud_original[index] ? game.cloud_original[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)} - MOD</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'mod', ${index}, '${cloud}', 'android')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
 
     // ====== PAYMENT SYSTEM ======
     function requestOriginalLink(btn, downloadId, linkType, index, cloudName, platform) {
