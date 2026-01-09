@@ -848,7 +848,183 @@ body.is-scrolling .navbar {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
+/* Jarak antara card list dan pagination */
+#paginationContainer{
+  margin-top: 22px;
+  margin-bottom: 28px;
+}
 
+/* Biar pagination cardnya juga tidak mepet */
+.pagination-wrap{
+  margin-top: 6px;
+}
+/* ===== FOOTER ===== */
+.site-footer{
+  margin-top: 34px;
+  padding: 18px 0;
+  background: rgba(10, 14, 26, 0.65);
+  border-top: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: var(--glass);
+  -webkit-backdrop-filter: var(--glass);
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.25);
+}
+
+.site-footer .footer-brand{
+  font-family: Orbitron, Inter, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.site-footer a{
+  color: rgba(231,234,242,0.78);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.site-footer a:hover{
+  color: #fff;
+  border-bottom-color: rgba(34,211,238,0.45);
+}
+
+.site-footer .footer-copy{
+  color: rgba(231,234,242,0.60);
+  font-size: 0.9rem;
+}
+/* ===== HEADER BANNER STYLES ===== */
+.header-banner {
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.banner-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.header-banner:hover .banner-image {
+  transform: scale(1.03);
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, 
+              rgba(10, 14, 26, 0.85) 0%, 
+              rgba(10, 14, 26, 0.65) 50%, 
+              transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 60px;
+  color: var(--text);
+}
+
+.banner-overlay h1 {
+  font-family: Orbitron, sans-serif;
+  font-weight: 700;
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  background: linear-gradient(to right, var(--text), var(--neonB));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.banner-overlay .lead {
+  font-size: 1.2rem;
+  color: rgba(231, 234, 242, 0.9);
+  max-width: 600px;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+}
+
+/* Responsive header banner */
+@media (max-width: 992px) {
+  .banner-container {
+    height: 250px;
+  }
+  
+  .banner-overlay {
+    padding: 0 40px;
+  }
+  
+  .banner-overlay h1 {
+    font-size: 2.2rem;
+  }
+  
+  .banner-overlay .lead {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-container {
+    height: 200px;
+  }
+  
+  .banner-overlay {
+    padding: 0 30px;
+    background: linear-gradient(to right, 
+                rgba(10, 14, 26, 0.9) 0%, 
+                rgba(10, 14, 26, 0.7) 70%, 
+                rgba(10, 14, 26, 0.4) 100%);
+  }
+  
+  .banner-overlay h1 {
+    font-size: 1.8rem;
+  }
+  
+  .banner-overlay .lead {
+    font-size: 1rem;
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner-container {
+    height: 180px;
+  }
+  
+  .banner-overlay {
+    padding: 0 20px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .banner-overlay h1 {
+    font-size: 1.6rem;
+  }
+  
+  .banner-overlay .lead {
+    font-size: 0.9rem;
+    max-width: 90%;
+  }
+}
+
+/* Perbaiki margin atas konten utama */
+.container.mt-4 {
+  margin-top: 20px !important;
+}
   </style>
 </head>
 
@@ -901,6 +1077,18 @@ body.is-scrolling .navbar {
   </nav>
 
   <!-- ===== MAIN CONTENT ===== -->
+  <!-- ===== HEADER BANNER ===== -->
+<div class="header-banner">
+  <div class="banner-container">
+    <img src="https://www.kuysocial.com/content/uploads/photos/2025/11/kuysocial_2e94906c5735f263e9de8a2ce662e715_cropped.jpg" 
+         alt="Header Banner" 
+         class="banner-image">
+    <div class="banner-overlay">
+      <h1>List Game INDapk</h1>
+      <p class="lead">Download Game Multi Platform Gratis dan Premium</p>
+    </div>
+  </div>
+</div>
   <div class="container mt-4">
     <!-- Filter Section -->
     <div class="filter-section">
@@ -958,7 +1146,10 @@ body.is-scrolling .navbar {
         </div>
       </div>
     </div>
+
+      <div id="paginationContainer"></div>
   </div>
+
 
   <!-- ===== MODALS ===== -->
   <!-- Login Modal -->
@@ -1066,7 +1257,6 @@ body.is-scrolling .navbar {
       </div>
     </div>
   </div>
-<div id="paginationContainer"></div>
 
 
 <!-- Thumbnail Management Modal -->
@@ -1162,7 +1352,7 @@ body.is-scrolling .navbar {
     let isGamesLoaded = false;
     let currentPage = 1;
     let searchTypingTimer = null;
-    const GAMES_PER_PAGE = 50; // kamu bisa ganti 12/16/20/24
+    const GAMES_PER_PAGE = 24; // kamu bisa ganti 12/16/20/24
     // ====== THUMBNAIL MANAGEMENT FUNCTIONS ======
     let currentThumbnailGame = null;
 let scrollTimer = null;
@@ -1175,7 +1365,10 @@ window.addEventListener('scroll', () => {
   }, 150);
 }, { passive: true });
 
-
+document.addEventListener('DOMContentLoaded', () => {
+  const y = document.getElementById('yearNow');
+  if (y) y.textContent = new Date().getFullYear();
+});
 
 // ====== THUMBNAIL MANAGEMENT FUNCTIONS ======
 function manageThumbnail(downloadId, platform, currentUrl, gameName) {
@@ -1734,6 +1927,13 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+
+  function buildSumberLinkUrl(game) {
+    const nameRaw = (game?.nama_game || game?.ori_name || '').trim();
+    if (!nameRaw) return '';
+    return 'https://www.indapk.com/?s=' + encodeURIComponent(nameRaw);
+  }
+
     // ====== EVENT LISTENERS SETUP ======
     function setupEventListeners() {
       document.getElementById('searchInput').addEventListener('input', function (e) {
@@ -2060,7 +2260,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Gabungkan semua game
-        allGames = [...ps2Games, ...switchGames, ...pspGames, ...androidGames];
+          allGames = [...ps2Games, ...switchGames, ...pspGames, ...androidGames];
+
+          // URUTKAN GLOBAL: TERBARU DI ATAS (lintas platform)
+          allGames.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
+
 
         // Ekstrak kategori
         categories = new Set();
@@ -2269,129 +2473,147 @@ function renderPagination(totalItems) {
   `;
 }
 
-    function renderGameList() {
-      const container = document.getElementById('gameListContainer');
+function renderGameList() {
+  const container = document.getElementById('gameListContainer');
 
-      if (!filteredGames || filteredGames.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <i class="bi bi-emoji-frown"></i>
-            <h5>Tidak ada game yang ditemukan</h5>
-            <p class="text-muted">Coba ubah filter pencarian Anda</p>
+  if (!filteredGames || filteredGames.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="bi bi-emoji-frown"></i>
+        <h5>Tidak ada game yang ditemukan</h5>
+        <p class="text-muted">Coba ubah filter pencarian Anda</p>
+      </div>
+    `;
+    const pag = document.getElementById('paginationContainer');
+    if (pag) pag.innerHTML = '';
+    return;
+  }
+
+  let html = '<div class="row g-4">';
+
+  const totalItems = filteredGames.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
+  currentPage = clampPage(currentPage, totalPages);
+
+  const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
+  const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+
+  pageGames.forEach(game => {
+    const platformClass = `badge-${game.platform}`;
+    const platformIconClass = `platform-${game.platform}`;
+
+    const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
+
+    const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
+      .map(cat => `<span class="category-badge">${escapeHTML(cat)}</span>`)
+      .join('');
+
+    const langHtml = game.language
+      ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
+      : '';
+
+    const regionHtml = game.region
+      ? `<span class="category-badge">${escapeHTML(game.region)}</span>`
+      : '';
+
+    const modHtml = game.game_type === 'ori-mod' || game.game_type === 'only-mod'
+      ? `<span class="category-badge">MOD</span>`
+      : '';
+
+    const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
+
+    const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
+
+    // === SUMBER LINK (INDapk search by nama game) ===
+    // Pastikan kamu sudah punya function buildSumberLinkUrl(game) di luar:
+    // function buildSumberLinkUrl(game){
+    //   const nameRaw = (game?.nama_game || game?.ori_name || '').trim();
+    //   if (!nameRaw) return '';
+    //   return 'https://www.indapk.com/?s=' + encodeURIComponent(nameRaw);
+    // }
+    const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
+
+    html += `
+      <div class="col-md-6 col-lg-4 col-xl-3">
+        <div class="game-card card h-100"
+          onclick="showGameDetail('${game.download_id}', '${game.platform}', this.querySelector('.btn-detail'))">
+
+          <!-- THUMBNAIL SECTION -->
+          <div class="thumbnail-container position-relative">
+            <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
+                 class="card-img-top game-thumbnail" 
+                 alt="${escapeHTML(gameName)}"
+                 loading="lazy">
+
+            <!-- BADGE PLATFORM DI ATAS THUMBNAIL -->
+            <span class="platform-badge ${platformClass} thumbnail-badge">
+              <span class="platform-icon ${platformIconClass}">
+                <i class="bi ${getPlatformIcon(game.platform)}"></i>
+              </span>
+              ${escapeHTML(game.platform_name || '')}
+            </span>
+
+            <!-- ADMIN THUMBNAIL CONTROLS -->
+            ${isAdminUser() ? `
+              <div class="thumbnail-admin-overlay">
+                <button class="btn btn-sm btn-outline-light" 
+                        onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
+                        title="Kelola Thumbnail">
+                  <i class="bi bi-image"></i>
+                </button>
+              </div>
+            ` : ''}
           </div>
-        `;
-        const pag = document.getElementById('paginationContainer');
-        if (pag) pag.innerHTML = '';
-        return;
-      }
 
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
+              <small class="text-muted">${dateHtml}</small>
+            </div>
 
-     let html = '<div class="row g-4">';
+            <p class="card-text small mb-3">
+              ${categoriesHtml}
+              ${regionHtml}
+              ${modHtml}
+            </p>
 
-const totalItems = filteredGames.length;
-const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
-currentPage = clampPage(currentPage, totalPages);
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div>
+                <small class="text-muted d-block">
+                  <i class="bi bi-download me-1"></i> ${game.total_downloads || 0} download
+                </small>
 
-const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
-const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+                ${sumberUrl ? `
+                  <small class="text-muted d-block mt-1">
+                    <i class="bi bi-link-45deg me-1"></i>
+                    <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
+                       style="color: rgba(231,234,242,0.85); text-decoration: none;">
+                      Sumber Link
+                    </a>
+                  </small>
+                ` : ''}
 
+                ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
+              </div>
 
-      pageGames.forEach(game => {
-        const platformClass = `badge-${game.platform}`;
-        const platformIconClass = `platform-${game.platform}`;
-
-        const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
-
-        const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
-          .map(cat => `<span class="category-badge">${escapeHTML(cat)}</span>`)
-          .join('');
-
-        const langHtml = game.language
-          ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
-          : '';
-
-        const regionHtml = game.region
-          ? `<span class="category-badge">${escapeHTML(game.region)}</span>`
-          : '';
-
-        const modHtml = game.game_type === 'ori-mod' || game.game_type === 'only-mod'
-          ? `<span class="category-badge">MOD</span>`
-          : '';
-
-        const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
-
-        const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
-
-        html += `
-          <div class="col-md-6 col-lg-4 col-xl-3">
-  <div class="game-card card h-100"
-    onclick="showGameDetail('${game.download_id}', '${game.platform}', this.querySelector('.btn-detail'))">
-    
-    <!-- THUMBNAIL SECTION -->
-    <div class="thumbnail-container position-relative">
-      <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
-     class="card-img-top game-thumbnail" 
-     alt="${escapeHTML(gameName)}"
-     loading="lazy">
-      
-      <!-- BADGE PLATFORM DI ATAS THUMBNAIL -->
-      <span class="platform-badge ${platformClass} thumbnail-badge">
-        <span class="platform-icon ${platformIconClass}">
-          <i class="bi ${getPlatformIcon(game.platform)}"></i>
-        </span>
-        ${escapeHTML(game.platform_name || '')}
-      </span>
-      
-      <!-- ADMIN THUMBNAIL CONTROLS -->
-      ${isAdminUser() ? `
-        <div class="thumbnail-admin-overlay">
-          <button class="btn btn-sm btn-outline-light" 
-                  onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
-                  title="Kelola Thumbnail">
-            <i class="bi bi-image"></i>
-          </button>
+              <button class="btn btn-sm btn-outline-primary btn-detail"
+                onclick="event.stopPropagation(); showGameDetail('${game.download_id}', '${game.platform}', this)">
+                Detail
+              </button>
+            </div>
+          </div>
         </div>
-      ` : ''}
-    </div>
-    
-    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-start mb-2">
-        <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
-        <small class="text-muted">${dateHtml}</small>
       </div>
+    `;
+  });
 
-      <p class="card-text small mb-3">
-        ${categoriesHtml}
-        ${langHtml}
-        ${regionHtml}
-        ${modHtml}
-      </p>
+  html += '</div>';
+  container.innerHTML = html;
 
-      <div class="d-flex justify-content-between align-items-center mt-auto">
-        <div>
-          <small class="text-muted d-block">
-            <i class="bi bi-download me-1"></i> ${game.total_downloads || 0} download
-          </small>
-          ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
-        </div>
+  renderPagination(filteredGames.length);
+  animateCardReveal();
+}
 
-        <button class="btn btn-sm btn-outline-primary btn-detail"
-          onclick="event.stopPropagation(); showGameDetail('${game.download_id}', '${game.platform}', this)">
-          Detail
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-        `;
-      });
-
-      html += '</div>';
-      container.innerHTML = html;
-renderPagination(filteredGames.length);
-
-      animateCardReveal();
-    }
 
     // ====== GAMER UI ANIMATION ======
     function animateCardReveal() {
@@ -2554,87 +2776,110 @@ renderPagination(filteredGames.length);
       modal.show();
     }
 
-    function displayGameDetail(game, platform) {
-      const modalEl = document.getElementById('gameDetailModal');
-      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+function displayGameDetail(game, platform) {
+  const modalEl = document.getElementById('gameDetailModal');
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
-      const platformClass = `badge-${platform}`;
-      const platformIconClass = `platform-${platform}`;
+  const platformClass = `badge-${platform}`;
+  const platformIconClass = `platform-${platform}`;
 
-      const gameName = game.nama_game || game.ori_name || 'Unknown Game';
+  const gameName = game.nama_game || game.ori_name || 'Unknown Game';
 
-      document.getElementById('gameDetailTitle').innerHTML = `
-        ${escapeHTML(gameName)}
-        <span class="platform-badge ${platformClass} ms-2">
-          <span class="platform-icon ${platformIconClass}">
-            <i class="bi ${getPlatformIcon(platform)}"></i>
-          </span>
-          ${platform === 'ps2' ? 'PlayStation 2' :
-            platform === 'switch' ? 'Nintendo Switch' :
-            platform === 'psp' ? 'PSP' :
-            platform === 'android' ? 'Android' : platform}
-        </span>
-      `;
+  // === SUMBER LINK (INDapk search by nama game) ===
+  // Pastikan helper ini SUDAH ADA di luar:
+  // function buildSumberLinkUrl(game){
+  //   const nameRaw = (game?.nama_game || game?.ori_name || '').trim();
+  //   if (!nameRaw) return '';
+  //   return 'https://www.indapk.com/?s=' + encodeURIComponent(nameRaw);
+  // }
+  const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
 
-      let content = `
-        <div class="game-detail-section">
-          <h6>Informasi Game</h6>
-          <div class="row">
-            <div class="col-md-6">
-              <table class="table table-sm">
-                <tr><th>Nama Game:</th><td>${escapeHTML(gameName)}</td></tr>
-                ${game.category || game.ori_category ? `<tr><th>Kategori:</th><td>${escapeHTML(game.category || game.ori_category)}</td></tr>` : ''}
-                ${game.language ? `<tr><th>Bahasa:</th><td>${escapeHTML(game.language)}</td></tr>` : ''}
-                ${game.region ? `<tr><th>Region:</th><td>${escapeHTML(game.region)}</td></tr>` : ''}
-                ${game.game_id ? `<tr><th>Game ID:</th><td>${escapeHTML(game.game_id)}</td></tr>` : ''}
-              </table>
-            </div>
-            <div class="col-md-6">
-              <table class="table table-sm">
-                ${game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori ?
-                  `<tr><th>Ukuran:</th><td>${escapeHTML(game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || '-')}</td></tr>` : ''}
-                ${game.ukuran_chd || game.ukuran_xci || game.ori_size_mod ?
-                  `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(game.ukuran_chd || game.ukuran_xci || game.ori_size_mod || '-')}</td></tr>` : ''}
-                ${game.versi_game || game.ori_version ? `<tr><th>Versi:</th><td>${escapeHTML(game.versi_game || game.ori_version || '-')}</td></tr>` : ''}
-                <tr><th>Total Downloads:</th><td>${game.total_downloads || 0}</td></tr>
-                ${game.last_downloaded ? `<tr><th>Terakhir diunduh:</th><td>${escapeHTML(game.last_downloaded)}</td></tr>` : ''}
-              </table>
-            </div>
-          </div>
+  document.getElementById('gameDetailTitle').innerHTML = `
+    ${escapeHTML(gameName)}
+    <span class="platform-badge ${platformClass} ms-2">
+      <span class="platform-icon ${platformIconClass}">
+        <i class="bi ${getPlatformIcon(platform)}"></i>
+      </span>
+      ${platform === 'ps2' ? 'PlayStation 2' :
+        platform === 'switch' ? 'Nintendo Switch' :
+        platform === 'psp' ? 'PSP' :
+        platform === 'android' ? 'Android' : platform}
+    </span>
+  `;
+
+  let content = `
+    <div class="game-detail-section">
+      <h6>Informasi Game</h6>
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table table-sm">
+            <tr><th>Nama Game:</th><td>${escapeHTML(gameName)}</td></tr>
+            ${game.category || game.ori_category ? `<tr><th>Kategori:</th><td>${escapeHTML(game.category || game.ori_category)}</td></tr>` : ''}
+            ${game.language ? `<tr><th>Bahasa:</th><td>${escapeHTML(game.language)}</td></tr>` : ''}
+            ${game.region ? `<tr><th>Region:</th><td>${escapeHTML(game.region)}</td></tr>` : ''}
+            ${game.game_id ? `<tr><th>Game ID:</th><td>${escapeHTML(game.game_id)}</td></tr>` : ''}
+          </table>
         </div>
-      `;
+        <div class="col-md-6">
+          <table class="table table-sm">
+            ${game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori ?
+              `<tr><th>Ukuran:</th><td>${escapeHTML(game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || '-')}</td></tr>` : ''}
+            ${game.ukuran_chd || game.ukuran_xci || game.ori_size_mod ?
+              `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(game.ukuran_chd || game.ukuran_xci || game.ori_size_mod || '-')}</td></tr>` : ''}
+            ${game.versi_game || game.ori_version ? `<tr><th>Versi:</th><td>${escapeHTML(game.versi_game || game.ori_version || '-')}</td></tr>` : ''}
+            <tr><th>Total Downloads:</th><td>${game.total_downloads || 0}</td></tr>
 
-      if (platform === 'android' && (game.game_type === 'ori-mod' || game.game_type === 'only-mod')) {
-        content += buildAndroidModInfo(game);
-      }
+            ${sumberUrl ? `
+              <tr>
+                <th>Sumber Link:</th>
+                <td>
+                  <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
+                     style="word-break: break-word;">
+                    ${escapeHTML(sumberUrl)}
+                  </a>
+                </td>
+              </tr>
+            ` : ''}
 
-      switch (platform) {
-        case 'ps2': content += buildPS2Links(game); break;
-        case 'switch': content += buildSwitchLinks(game); break;
-        case 'psp': content += buildPSPLinks(game); break;
-        case 'android': content += buildAndroidLinks(game); break;
-      }
+            ${game.last_downloaded ? `<tr><th>Terakhir diunduh:</th><td>${escapeHTML(game.last_downloaded)}</td></tr>` : ''}
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
 
-      if (isAdminUser()) {
-        content += `
-          <div class="alert alert-danger mt-3">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-              <div>
-                <i class="bi bi-shield-lock me-2"></i>
-                <strong>Mode Admin</strong> Anda bisa menghapus game ini.
-              </div>
-              <button class="btn btn-danger btn-sm"
-                onclick="adminDeleteGame('${escapeHTML(game.download_id || '')}', '${platform}', this)">
-                <i class="bi bi-trash"></i> Hapus Game
-              </button>
-            </div>
+  if (platform === 'android' && (game.game_type === 'ori-mod' || game.game_type === 'only-mod')) {
+    content += buildAndroidModInfo(game);
+  }
+
+  switch (platform) {
+    case 'ps2': content += buildPS2Links(game); break;
+    case 'switch': content += buildSwitchLinks(game); break;
+    case 'psp': content += buildPSPLinks(game); break;
+    case 'android': content += buildAndroidLinks(game); break;
+  }
+
+  if (isAdminUser()) {
+    content += `
+      <div class="alert alert-danger mt-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <i class="bi bi-shield-lock me-2"></i>
+            <strong>Mode Admin</strong> Anda bisa menghapus game ini.
           </div>
-        `;
-      }
+          <button class="btn btn-danger btn-sm"
+            onclick="adminDeleteGame('${escapeHTML(game.download_id || '')}', '${platform}', this)">
+            <i class="bi bi-trash"></i> Hapus Game
+          </button>
+        </div>
+      </div>
+    `;
+  }
 
-      document.getElementById('gameDetailContent').innerHTML = content;
-      modal.show();
-    }
+  document.getElementById('gameDetailContent').innerHTML = content;
+  modal.show();
+}
+
 
     // ====== LINK BUILDERS ======
 function buildPS2Links(game) {
@@ -3468,5 +3713,25 @@ function buildAndroidLinks(game) {
     }
 
   </script>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <div class="footer-brand">
+        <i class="bi bi-controller me-2"></i>List Game INDapk
+      </div>
+
+      <div class="d-flex gap-3 flex-wrap justify-content-center">
+        <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener">Request Game</a>
+        <a href="https://indapk.com/topup.html" target="_blank" rel="noopener">Top Up</a>
+        <a href="https://apksgi.github.io" target="_blank" rel="noopener">Video & Game (18+)</a>
+      </div>
+
+      <div class="footer-copy">
+        © <span id="yearNow"></span> INDapk
+      </div>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
