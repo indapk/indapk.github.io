@@ -1612,127 +1612,501 @@
       }
     }
 
+
+
     // Fungsi untuk submit request
-    async function submitRequest(e) {
-      e.preventDefault();
+async function submitRequest(e) {
+  e.preventDefault();
 
-      if (!currentUser) {
-        Swal.fire({
-          icon: "warning",
-          title: currentLang === "id" ? "Perlu Login" : "Login Required",
-          text: currentLang === "id" ? "Silakan login atau pilih mode anonymous terlebih dahulu." : "Please login or choose anonymous mode first."
-        });
-        return;
+  if (!currentUser) {
+    Swal.fire({
+      icon: "warning",
+      title: currentLang === "id" ? "Perlu Login" : "Login Required",
+      text: currentLang === "id" ? "Silakan login atau pilih mode anonymous terlebih dahulu." : "Please login or choose anonymous mode first."
+    });
+    return;
+  }
+
+  const gameName = document.getElementById("gameName").value.trim();
+  const platform = document.getElementById("platform").value;
+
+  if (!gameName || !platform) {
+    Swal.fire({
+      icon: "error",
+      title: currentLang === "id" ? "Data Tidak Lengkap" : "Incomplete Data",
+      text: currentLang === "id" ? "Nama Game dan Platform wajib diisi." : "Game Name and Platform are required."
+    });
+    return;
+  }
+
+  if (gameName.length < 2 || gameName.length > 100) {
+    Swal.fire({
+      icon: "error",
+      title: currentLang === "id" ? "Nama Game Tidak Valid" : "Invalid Game Name",
+      text: currentLang === "id" ? "Nama game harus antara 2-100 karakter." : "Game name must be between 2-100 characters."
+    });
+    return;
+  }
+
+  // STEP 1: CEK APAKAH GAME SUDAH ADA DI DATABASE
+  const gameCheckResult = await checkIfGameExistsInDatabase(gameName, platform);
+  
+  if (gameCheckResult.exists) {
+    // Game sudah ada - tampilkan informasi dan berikan opsi
+    await showGameAlreadyExistsNotification(gameCheckResult, gameName, platform);
+    return;
+  }
+
+  // STEP 2: JIKA GAME BELUM ADA, LANJUTKAN DENGAN REQUEST
+  await submitNewRequest(gameName, platform);
+}
+
+// FUNGSI BARU: Cek apakah game sudah ada di database
+async function checkIfGameExistsInDatabase(gameName, platform) {
+  try {
+    console.log(`🔍 Mengecek game: ${gameName} - Platform: ${platform}`);
+
+    // API URLs untuk game berdasarkan platform
+    const platformApiMap = {
+      "android": "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec",
+      "switch": "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec",
+      "nintendo switch": "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec",
+      "ps2": "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec",
+      "psp": "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec"
+    };
+
+    // Normalize platform untuk pencarian
+    const platformKey = platform.toLowerCase();
+    const apiUrl = platformApiMap[platformKey];
+
+    if (!apiUrl) {
+      console.log(`Platform ${platform} tidak didukung untuk pengecekan otomatis`);
+      return { exists: false, message: "Platform tidak didukung untuk pengecekan" };
+    }
+
+    // Tampilkan loading untuk cek game
+    Swal.fire({
+      title: currentLang === "id" ? "Mengecek ketersediaan game..." : "Checking game availability...",
+      text: currentLang === "id" ? "Mohon tunggu sebentar..." : "Please wait a moment...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
       }
+    });
 
-      const gameName = document.getElementById("gameName").value.trim();
-      const platform = document.getElementById("platform").value;
+    // Ambil semua game dari API
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ action: "getAllGames" })
+    });
 
-      if (!gameName || !platform) {
-        Swal.fire({
-          icon: "error",
-          title: currentLang === "id" ? "Data Tidak Lengkap" : "Incomplete Data",
-          text: currentLang === "id" ? "Nama Game dan Platform wajib diisi." : "Game Name and Platform are required."
+    const result = await response.json();
+    Swal.close();
+
+    if (result.status === "success" && result.data && Array.isArray(result.data)) {
+      const games = result.data;
+      const gameNameLower = gameName.toLowerCase();
+      
+      console.log(`Total game di database: ${games.length}`);
+
+      // Cari game dengan nama yang mirip
+      const matchingGames = games.filter(game => {
+        const gameNameInDb = (game.nama_game || game.ori_name || "").toLowerCase();
+        const downloadId = game.download_id || "";
+        
+        // Cek beberapa kriteria matching
+        const exactMatch = gameNameInDb === gameNameLower;
+        const containsMatch = gameNameLower.includes(gameNameInDb) || 
+                            gameNameInDb.includes(gameNameLower);
+        
+        // Split kata-kata untuk matching yang lebih baik
+        const searchWords = gameNameLower.split(/\s+/).filter(word => word.length > 2);
+        const dbWords = gameNameInDb.split(/\s+/).filter(word => word.length > 2);
+        
+        const wordMatch = searchWords.some(word => gameNameInDb.includes(word)) ||
+                         dbWords.some(word => gameNameLower.includes(word));
+
+        return exactMatch || containsMatch || wordMatch;
+      });
+
+      if (matchingGames.length > 0) {
+        console.log(`✅ Game ditemukan: ${matchingGames.length} hasil`);
+        
+        // Urutkan berdasarkan kemiripan (simple scoring)
+        matchingGames.sort((a, b) => {
+          const scoreA = calculateSimilarityScore(gameNameLower, a.nama_game || a.ori_name || "");
+          const scoreB = calculateSimilarityScore(gameNameLower, b.nama_game || b.ori_name || "");
+          return scoreB - scoreA; // Descending
         });
-        return;
-      }
 
-      if (gameName.length < 2 || gameName.length > 100) {
-        Swal.fire({
-          icon: "error",
-          title: currentLang === "id" ? "Nama Game Tidak Valid" : "Invalid Game Name",
-          text: currentLang === "id" ? "Nama game harus antara 2-100 karakter." : "Game name must be between 2-100 characters."
-        });
-        return;
-      }
-
-      document.getElementById("submitText").style.display = "none";
-      document.getElementById("loadingText").style.display = "inline-block";
-      document.getElementById("submitBtn").disabled = true;
-
-      try {
-        const requestData = {
-          action: "create",
-          nama_game: gameName,
-          jenis_emulator: platform,
-          versi_game: document.getElementById("version").value.trim() || "",
-          link_bahan: document.getElementById("referenceLink").value.trim() || "",
-          pesan_admin: document.getElementById("adminMessage").value.trim() || "",
-          timestamp: new Date().toISOString(),
-          is_telegram_bot: "false"
+        const bestMatch = matchingGames[0];
+        
+        return {
+          exists: true,
+          gameData: bestMatch,
+          message: currentLang === "id" ? "Game sudah tersedia di database" : "Game already exists in database",
+          totalMatches: matchingGames.length,
+          platform: platformKey
         };
+      } else {
+        console.log("❌ Game tidak ditemukan di database");
+        return { 
+          exists: false, 
+          message: currentLang === "id" ? "Game tidak ditemukan di database" : "Game not found in database" 
+        };
+      }
+    } else {
+      console.log("❌ Gagal mengambil data dari API");
+      return { 
+        exists: false, 
+        message: currentLang === "id" ? "Gagal mengambil data game" : "Failed to fetch game data" 
+      };
+    }
+    
+  } catch (error) {
+    console.error("Error checking game:", error);
+    Swal.close();
+    return { 
+      exists: false, 
+      message: currentLang === "id" ? "Error saat pengecekan game" : "Error checking game" 
+    };
+  }
+}
 
-        if (currentUser.is_anonymous) {
-          requestData.nama_user = "Anonymous";
-          requestData.nomor_whatsapp = "";
-          requestData.telegram_id = "";
-          requestData.user_key = "";
-        } else {
-          requestData.nama_user = currentUser.nama_user;
-          requestData.nomor_whatsapp = currentUser.telegram_id;
-          requestData.telegram_id = currentUser.telegram_id;
-          requestData.user_key = currentUser.key;
-        }
+// FUNGSI BARU: Hitung similarity score
+function calculateSimilarityScore(searchTerm, dbTerm) {
+  const searchLower = searchTerm.toLowerCase();
+  const dbLower = dbTerm.toLowerCase();
+  
+  let score = 0;
+  
+  // Exact match: 100 points
+  if (searchLower === dbLower) score += 100;
+  
+  // Contains: 50 points
+  if (searchLower.includes(dbLower) || dbLower.includes(searchLower)) score += 50;
+  
+  // Word matching: 10 points per matching word
+  const searchWords = searchLower.split(/\s+/).filter(word => word.length > 2);
+  const dbWords = dbLower.split(/\s+/).filter(word => word.length > 2);
+  
+  searchWords.forEach(word => {
+    if (dbLower.includes(word)) score += 10;
+  });
+  
+  // Same starting word: 20 points
+  if (searchWords[0] && dbWords[0] && searchWords[0] === dbWords[0]) score += 20;
+  
+  return score;
+}
 
-        console.log("Sending request from Web:");
-        console.log("is_telegram_bot:", requestData.is_telegram_bot, "(type:", typeof requestData.is_telegram_bot + ")");
-        console.log("Full payload:", requestData);
+// FUNGSI BARU: Tampilkan notifikasi game sudah ada
+async function showGameAlreadyExistsNotification(checkResult, gameName, platform) {
+  const gameData = checkResult.gameData;
+  const gameNameInDb = gameData.nama_game || gameData.ori_name || gameName;
+  
+  // Format detail game berdasarkan platform
+  let gameDetails = "";
+  
+  switch(checkResult.platform) {
+    case "android":
+      const size = gameData.ori_size_ori || gameData.ori_size_mod || "Unknown";
+      const version = gameData.ori_version || gameData.mod_version || "Unknown";
+      gameDetails = `
+        <p><strong>📱 Platform:</strong> Android</p>
+        <p><strong>📦 Ukuran:</strong> ${size}</p>
+        <p><strong>🔢 Versi:</strong> ${version}</p>
+        ${gameData.mod_description ? `<p><strong>⚡ MOD Fitur:</strong> ${gameData.mod_description.substring(0, 100)}...</p>` : ''}
+      `;
+      break;
+      
+    case "switch":
+    case "nintendo switch":
+      const sizeNSP = gameData.ukuran_nsp || "Unknown";
+      const sizeXCI = gameData.ukuran_xci || "Unknown";
+      const gameId = gameData.game_id || "Unknown";
+      gameDetails = `
+        <p><strong>🔴 Platform:</strong> Nintendo Switch</p>
+        <p><strong>📦 Ukuran NSP:</strong> ${sizeNSP}</p>
+        ${sizeXCI !== "Unknown" ? `<p><strong>📦 Ukuran XCI:</strong> ${sizeXCI}</p>` : ''}
+        <p><strong>🆔 Game ID:</strong> ${gameId}</p>
+      `;
+      break;
+      
+    case "ps2":
+      const sizeISO = gameData.ukuran_iso || "Unknown";
+      const sizeCHD = gameData.ukuran_chd || "Unknown";
+      gameDetails = `
+        <p><strong>🎮 Platform:</strong> PlayStation 2</p>
+        <p><strong>📦 Ukuran ISO:</strong> ${sizeISO}</p>
+        <p><strong>📦 Ukuran CHD:</strong> ${sizeCHD}</p>
+      `;
+      break;
+      
+    case "psp":
+      const sizeIsoPSP = gameData.ukuran_iso || "Unknown";
+      const sizeChdPSP = gameData.ukuran_chd || "Unknown";
+      gameDetails = `
+        <p><strong>📱 Platform:</strong> PSP</p>
+        <p><strong>📦 Ukuran ISO:</strong> ${sizeIsoPSP}</p>
+        <p><strong>📦 Ukuran CHD:</strong> ${sizeChdPSP}</p>
+      `;
+      break;
+      
+    default:
+      gameDetails = `<p><strong>Platform:</strong> ${platform}</p>`;
+  }
+  
+  // Tambah total downloads jika ada
+  if (gameData.total_downloads) {
+    gameDetails += `<p><strong>⬇️ Total Download:</strong> ${gameData.total_downloads}</p>`;
+  }
+  
+  // Tambah timestamp jika ada
+  if (gameData.timestamp) {
+    const date = new Date(gameData.timestamp);
+    const dateStr = date.toLocaleDateString(currentLang === "id" ? "id-ID" : "en-US", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+    gameDetails += `<p><strong>📅 Tanggal Update:</strong> ${dateStr}</p>`;
+  }
 
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams(requestData)
-        });
+  // Encode nama game untuk URL
+  const encodedGameName = encodeURIComponent(gameNameInDb.replace(/ /g, '+'));
+  
+  Swal.fire({
+    icon: "info",
+    title: currentLang === "id" ? "🎮 Game Sudah Tersedia!" : "🎮 Game Already Available!",
+    html: `
+      <div class="text-start">
+        <div class="alert alert-info mb-3">
+          <i class="fas fa-info-circle me-2"></i>
+          ${currentLang === "id" 
+            ? "Game yang Anda cari sudah tersedia di database INDapk!" 
+            : "The game you're looking for is already available in INDapk database!"}
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-body">
+            <h6 class="card-title">${gameNameInDb}</h6>
+            ${gameDetails}
+          </div>
+        </div>
+        
+        <div class="alert alert-success">
+          <i class="fas fa-check-circle me-2"></i>
+          <strong>
+            ${currentLang === "id" 
+              ? "TIDAK PERLU REQUEST!" 
+              : "NO NEED TO REQUEST!"}
+          </strong><br>
+          ${currentLang === "id" 
+            ? "Game sudah bisa diakses langsung melalui bot atau website." 
+            : "Game is already accessible through bot or website."}
+        </div>
+      </div>
+    `,
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: currentLang === "id" ? "🎮 Buka di Alternati Linkf" : "🎮 Open in Alternati Linkf",
+    denyButtonText: currentLang === "id" ? "🌐 Buka di Website" : "🌐 Open in Website",
+    cancelButtonText: currentLang === "id" ? "❌ Tetap Request" : "❌ Still Request",
+    reverseButtons: true,
+    customClass: {
+      confirmButton: 'btn btn-primary',
+      denyButton: 'btn btn-success',
+      cancelButton: 'btn btn-secondary'
+    },
+    buttonsStyling: true
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      // Buka bot Telegram dengan parameter game
+      window.open(`https://indapk.github.io/?q=${encodedGameName}`, "_blank");
+      
+      // Tampilkan pesan info
+      Swal.fire({
+        icon: "success",
+        title: currentLang === "id" ? "Bot Telegram Dibuka" : "Telegram Bot Opened",
+        text: currentLang === "id" 
+          ? "Bot Telegram telah dibuka. Gunakan perintah /listgame untuk mencari game ini." 
+          : "Telegram bot has been opened. Use /listgame command to search for this game.",
+        timer: 3000,
+        showConfirmButton: false
+      });
+      
+    } else if (result.isDenied) {
+      // Buka website dengan pencarian game
+      window.open(`https://www.indapk.com/?s=${encodedGameName}`, "_blank");
+      
+      // Tampilkan pesan info
+      Swal.fire({
+        icon: "success",
+        title: currentLang === "id" ? "Website Dibuka" : "Website Opened",
+        text: currentLang === "id" 
+          ? "Website INDapk telah dibuka. Gunakan fitur pencarian untuk menemukan game ini." 
+          : "INDapk website has been opened. Use search feature to find this game.",
+        timer: 3000,
+        showConfirmButton: false
+      });
+      
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      // User tetap ingin request - lanjutkan dengan submit request
+      await submitNewRequest(gameName, platform);
+    }
+  });
+}
 
-        const result = await response.json();
-        console.log("Response:", result);
+// FUNGSI BARU: Submit new request (dipisah dari fungsi utama)
+async function submitNewRequest(gameName, platform) {
+  // Tampilkan loading submit
+  document.getElementById("submitText").style.display = "none";
+  document.getElementById("loadingText").style.display = "inline-block";
+  document.getElementById("submitBtn").disabled = true;
 
-        if (result.status === "success") {
-          document.getElementById("requestForm").reset();
+  try {
+    const requestData = {
+      action: "create",
+      nama_game: gameName,
+      jenis_emulator: platform,
+      versi_game: document.getElementById("version").value.trim() || "",
+      link_bahan: document.getElementById("referenceLink").value.trim() || "",
+      pesan_admin: document.getElementById("adminMessage").value.trim() || "",
+      timestamp: new Date().toISOString(),
+      is_telegram_bot: "false"
+    };
 
-          Swal.fire({
-            icon: "success",
-            title: currentLang === "id" ? "Request Berhasil Dikirim!" : "Request Sent Successfully!",
-            html: `
-              <div class="text-start">
-                <p><strong>${currentLang === "id" ? "ID Request:" : "Request ID:"}</strong> ${result.data.request_id}</p>
-                <p><strong>${currentLang === "id" ? "Game:" : "Game:"}</strong> ${gameName}</p>
-                <p><strong>${currentLang === "id" ? "Platform:" : "Platform:"}</strong> ${platform}</p>
-                <p><strong>${currentLang === "id" ? "Sumber:" : "Source:"}</strong> <i class="fas fa-globe text-success"></i> Web Form</p>
-                ${
-                  currentUser.is_anonymous
-                    ? `<p class="text-warning"><i class="fas fa-exclamation-triangle"></i> ${
-                        currentLang === "id" ? "Mode Anonymous: Request tidak terhubung dengan akun" : "Anonymous Mode: Request not connected to account"
-                      }</p>`
-                    : ""
-                }
+    // Tambah informasi user
+    if (currentUser.is_anonymous) {
+      requestData.nama_user = "Anonymous";
+      requestData.nomor_whatsapp = "";
+      requestData.telegram_id = "";
+      requestData.user_key = "";
+    } else {
+      requestData.nama_user = currentUser.nama_user;
+      requestData.nomor_whatsapp = currentUser.telegram_id;
+      requestData.telegram_id = currentUser.telegram_id;
+      requestData.user_key = currentUser.key;
+    }
+
+    console.log("Mengirim request baru ke API:");
+    console.log("Game belum ditemukan di database");
+    console.log("Data request:", requestData);
+
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(requestData)
+    });
+
+    const result = await response.json();
+    console.log("Response API:", result);
+
+    if (result.status === "success") {
+      // Reset form
+      document.getElementById("requestForm").reset();
+
+      // Tampilkan konfirmasi sukses
+      Swal.fire({
+        icon: "success",
+        title: currentLang === "id" ? "✅ Request Berhasil Dikirim!" : "✅ Request Sent Successfully!",
+        html: `
+          <div class="text-start">
+            <div class="alert alert-success mb-3">
+              <i class="fas fa-check-circle me-2"></i>
+              ${currentLang === "id" 
+                ? "Request game Anda telah berhasil dikirim ke admin." 
+                : "Your game request has been successfully sent to admin."}
+            </div>
+            
+            <div class="card mb-3">
+              <div class="card-body">
+                <h6 class="card-title">📋 Detail Request</h6>
+                <p><strong>🆔 ID Request:</strong> <code>${result.data.request_id}</code></p>
+                <p><strong>🎮 Game:</strong> ${gameName}</p>
+                <p><strong>🕹️ Platform:</strong> ${platform}</p>
+                <p><strong>👤 User:</strong> ${currentUser.is_anonymous ? 'Anonymous' : currentUser.nama_user}</p>
+                <p><strong>🔍 Status Pengecekan:</strong> <span class="text-warning">Game belum tersedia di database</span></p>
               </div>
-            `,
-            confirmButtonText: "OK"
-          });
-
-          if (document.getElementById("list-tab").classList.contains("active") && currentUser) {
-            loadRequests();
-          }
-
+            </div>
+            
+            <div class="alert alert-info">
+              <h6><i class="fas fa-info-circle me-2"></i>${currentLang === "id" ? "Informasi Penting:" : "Important Information:"}</h6>
+              <ul class="mb-0">
+                <li>${currentLang === "id" 
+                  ? "Request Anda akan diproses dalam 1-3 hari kerja." 
+                  : "Your request will be processed within 1-3 working days."}</li>
+                <li>${currentLang === "id" 
+                  ? "Anda akan mendapat notifikasi di Telegram ketika request selesai." 
+                  : "You will receive notification on Telegram when request is completed."}</li>
+                <li>${currentLang === "id" 
+                  ? "Cek status request di tab 'List Request'." 
+                  : "Check request status in 'List Request' tab."}</li>
+              </ul>
+            </div>
+          </div>
+        `,
+        confirmButtonText: currentLang === "id" ? "👁️ Lihat List Request" : "👁️ View Request List",
+        showCancelButton: true,
+        cancelButtonText: currentLang === "id" ? "➕ Request Lagi" : "➕ Request Again",
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary'
+        },
+        buttonsStyling: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Switch ke tab list request
           const listTab = new bootstrap.Tab(document.getElementById("list-tab"));
           listTab.show();
+          
+          // Refresh list request
+          if (currentUser) {
+            loadRequests();
+          }
         } else {
-          throw new Error(result.message || (currentLang === "id" ? "Gagal mengirim request" : "Failed to send request"));
+          // Tetap di form untuk request lagi
+          document.getElementById("gameName").focus();
         }
-      } catch (error) {
-        console.error("Submit error:", error);
-        Swal.fire({
-          icon: "error",
-          title: currentLang === "id" ? "Gagal Mengirim Request" : "Failed to Send Request",
-          text: error.message || (currentLang === "id" ? "Terjadi kesalahan. Silakan coba lagi." : "An error occurred. Please try again.")
-        });
-      } finally {
-        document.getElementById("submitText").style.display = "inline-block";
-        document.getElementById("loadingText").style.display = "none";
-        document.getElementById("submitBtn").disabled = false;
-      }
+      });
+
+    } else {
+      throw new Error(result.message || (currentLang === "id" ? "Gagal mengirim request" : "Failed to send request"));
     }
+    
+  } catch (error) {
+    console.error("Submit error:", error);
+    
+    Swal.fire({
+      icon: "error",
+      title: currentLang === "id" ? "❌ Gagal Mengirim Request" : "❌ Failed to Send Request",
+      html: `
+        <div class="text-start">
+          <p><strong>${currentLang === "id" ? "Terjadi kesalahan:" : "An error occurred:"}</strong></p>
+          <p>${error.message || (currentLang === "id" ? "Silakan coba lagi nanti." : "Please try again later.")}</p>
+          
+          <div class="alert alert-warning mt-3">
+            <h6><i class="fas fa-lightbulb me-2"></i>${currentLang === "id" ? "Saran:" : "Suggestions:"}</h6>
+            <ul class="mb-0">
+              <li>${currentLang === "id" ? "Cek koneksi internet Anda" : "Check your internet connection"}</li>
+              <li>${currentLang === "id" ? "Refresh halaman dan coba lagi" : "Refresh page and try again"}</li>
+              <li>${currentLang === "id" ? "Hubungi admin jika masalah berlanjut" : "Contact admin if problem persists"}</li>
+            </ul>
+          </div>
+        </div>
+      `,
+      confirmButtonText: "OK"
+    });
+    
+  } finally {
+    // Reset UI
+    document.getElementById("submitText").style.display = "inline-block";
+    document.getElementById("loadingText").style.display = "none";
+    document.getElementById("submitBtn").disabled = false;
+  }
+}
 
     // MODIFIED: Fungsi untuk load requests - tampilkan anonymous untuk semua pengunjung
     async function loadRequests() {
