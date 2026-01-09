@@ -691,6 +691,163 @@
   color: rgba(231,234,242,0.70);
   padding: 8px 10px;
 }
+/* ===== THUMBNAIL STYLES ===== */
+.thumbnail-container {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.game-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(34,211,238,0.05));
+}
+
+.game-card:hover .game-thumbnail {
+  transform: scale(1.05);
+}
+
+.thumbnail-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* Admin overlay untuk thumbnail */
+.thumbnail-admin-overlay {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.game-card:hover .thumbnail-admin-overlay {
+  opacity: 1;
+}
+
+.thumbnail-admin-overlay .btn {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 4px 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.thumbnail-admin-overlay .btn:hover {
+  background: rgba(34,211,238,0.2);
+  border-color: rgba(34,211,238,0.4);
+}
+
+/* Placeholder styling */
+.game-thumbnail[src*="placeholder"] {
+  filter: grayscale(0.3) brightness(0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.8rem;
+}
+
+/* Responsive thumbnail */
+@media (max-width: 768px) {
+  .thumbnail-container {
+    height: 140px;
+  }
+}
+
+/* Modal thumbnail admin */
+.thumbnail-preview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  background: rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px dashed rgba(255,255,255,0.2);
+}
+
+.thumbnail-input-group {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.thumbnail-url-input {
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.thumbnail-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* Preview thumbnail di modal detail */
+.detail-thumbnail {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.1);
+}
+
+/* Tambahkan di CSS section */
+.thumbnail-preview.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.2);
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+  min-height: 150px;
+}
+
+.game-thumbnail[src*="placehold.co"] {
+  filter: brightness(0.8) contrast(1.1);
+}
+
+/* Paksa layer GPU lebih stabil */
+body::before,
+body::after,
+.navbar,
+.game-card,
+.filter-section {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Saat scroll, hentikan animasi background biar tidak bikin artifact */
+body.is-scrolling::before,
+body.is-scrolling::after {
+  animation-play-state: paused;
+}
+
+/* Optional: saat scroll matikan blur (ini yang paling sering bikin “kotak-kotak”) */
+body.is-scrolling .game-card,
+body.is-scrolling .filter-section,
+body.is-scrolling .navbar {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
 
   </style>
 </head>
@@ -709,12 +866,12 @@
           <i class="bi bi-play-circle me-1"></i> Video & Game (Only 18+)
         </a>
 
-        <a href="requestgame" target="_blank" rel="noopener"
+        <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
            class="btn btn-neon-outline btn-sm">
           <i class="bi bi-plus-circle me-1"></i> Request Game
         </a>
 
-        <a href="topup.html" target="_blank" rel="noopener"
+        <a href="https://indapk.com/topup.html" target="_blank" rel="noopener"
            class="btn btn-neon btn-sm">
           <i class="bi bi-wallet2 me-1"></i> Top Up
         </a>
@@ -911,6 +1068,69 @@
   </div>
 <div id="paginationContainer"></div>
 
+
+<!-- Thumbnail Management Modal -->
+<div class="modal fade" id="thumbnailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header detail-modal-header">
+        <h5 class="modal-title">Kelola Thumbnail</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Game: <strong id="thumbnailGameName">-</strong></label>
+          <div class="thumbnail-input-group">
+            <div class="mb-3">
+              <label class="form-label small">URL Thumbnail Saat Ini:</label>
+              <div class="input-group">
+                <input type="text" id="currentThumbnailUrl" class="form-control thumbnail-url-input" readonly>
+                <button class="btn btn-outline-secondary" type="button" onclick="copyThumbnailUrl()">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label small">Preview:</label>
+              <div class="text-center">
+                <img id="thumbnailPreview" src="" alt="Preview" class="thumbnail-preview">
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label small">URL Thumbnail Baru:</label>
+              <div class="input-group">
+                <input type="text" id="newThumbnailUrl" class="form-control thumbnail-url-input" 
+                       placeholder="Tempel link thumbnail di sini...">
+                <button class="btn btn-outline-secondary" type="button" onclick="testThumbnail()">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="form-text text-muted">
+                Tempel link gambar (JPEG/PNG/WEBP) dari hosting manapun. Rekomendasi: Imgur, Cloudinary, atau Google Drive (public link).
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="thumbnail-actions">
+          <button class="btn btn-success flex-grow-1" onclick="updateThumbnail()" id="btnUpdateThumbnail">
+            <i class="bi bi-check-circle me-2"></i> Update Thumbnail
+          </button>
+          <button class="btn btn-danger" onclick="removeThumbnail()" id="btnRemoveThumbnail">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        
+        <div id="thumbnailMessage" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
@@ -943,6 +1163,322 @@
     let currentPage = 1;
     let searchTypingTimer = null;
     const GAMES_PER_PAGE = 50; // kamu bisa ganti 12/16/20/24
+    // ====== THUMBNAIL MANAGEMENT FUNCTIONS ======
+    let currentThumbnailGame = null;
+let scrollTimer = null;
+
+window.addEventListener('scroll', () => {
+  document.body.classList.add('is-scrolling');
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => {
+    document.body.classList.remove('is-scrolling');
+  }, 150);
+}, { passive: true });
+
+
+
+// ====== THUMBNAIL MANAGEMENT FUNCTIONS ======
+function manageThumbnail(downloadId, platform, currentUrl, gameName) {
+  if (!isAdminUser()) {
+    alert('Hanya admin yang bisa mengelola thumbnail!');
+    return;
+  }
+  
+  currentThumbnailGame = { downloadId, platform, currentUrl };
+  
+  // Update modal UI
+  document.getElementById('thumbnailGameName').textContent = gameName;
+  document.getElementById('currentThumbnailUrl').value = currentUrl || '(Belum ada thumbnail)';
+  document.getElementById('newThumbnailUrl').value = '';
+  document.getElementById('thumbnailPreview').src = currentUrl || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image';
+  
+  // Reset message
+  document.getElementById('thumbnailMessage').innerHTML = '';
+  
+  // Show modal
+  const modal = new bootstrap.Modal(document.getElementById('thumbnailModal'));
+  modal.show();
+}
+function testThumbnail() {
+  const url = document.getElementById('newThumbnailUrl').value.trim();
+  const preview = document.getElementById('thumbnailPreview');
+  const messageDiv = document.getElementById('thumbnailMessage');
+  
+  if (!url) {
+    showThumbnailMessage('Masukkan URL thumbnail terlebih dahulu!', 'warning');
+    return;
+  }
+  
+  // Validasi URL
+  if (!isValidImageUrl(url)) {
+    showThumbnailMessage('Format URL tidak valid. Harus berupa link gambar (jpg, png, webp, gif)', 'warning');
+    preview.src = 'https://placehold.co/300x150/ff4444/ffffff?text=Invalid+URL';
+    preview.style.opacity = '1';
+    return;
+  }
+  
+  // Show loading
+  preview.src = '';
+  preview.style.opacity = '0.5';
+  preview.alt = 'Loading...';
+  
+  // Test image load
+  const testImage = new Image();
+  testImage.onload = function() {
+    preview.src = url;
+    preview.style.opacity = '1';
+    showThumbnailMessage('✅ Thumbnail valid dan dapat diakses', 'success');
+  };
+  
+  testImage.onerror = function() {
+    preview.src = 'https://placehold.co/300x150/ff4444/ffffff?text=Gagal+Memuat';
+    preview.style.opacity = '1';
+    showThumbnailMessage('❌ Gagal memuat thumbnail. Pastikan URL benar dan gambar dapat diakses secara publik.', 'danger');
+  };
+  
+  testImage.src = url;
+}
+
+function copyThumbnailUrl() {
+  const input = document.getElementById('currentThumbnailUrl');
+  input.select();
+  document.execCommand('copy');
+  showThumbnailMessage('URL berhasil disalin ke clipboard!', 'info');
+}
+
+// Di fungsi updateThumbnail() di frontend - PERBAIKI payload:
+async function updateThumbnail() {
+  const btn = document.getElementById('btnUpdateThumbnail');
+  
+  // Validasi admin lebih ketat
+  if (!isAdminUser()) {
+    showThumbnailMessage('❌ Hanya admin yang bisa mengelola thumbnail!', 'danger');
+    return;
+  }
+  
+  if (!currentThumbnailGame || btn.dataset.loading === '1') return;
+  
+  const newUrl = document.getElementById('newThumbnailUrl').value.trim();
+  
+  if (!newUrl) {
+    showThumbnailMessage('Masukkan URL thumbnail baru!', 'warning');
+    return;
+  }
+  
+  // Validasi URL
+  if (!isValidImageUrl(newUrl)) {
+    showThumbnailMessage('URL gambar tidak valid! Pastikan link berakhiran .jpg, .png, .webp, atau .gif', 'warning');
+    return;
+  }
+  
+  setButtonLoading(btn, true, 'Menyimpan...');
+  
+  try {
+    const { downloadId, platform } = currentThumbnailGame;
+    
+    // Buat payload dengan data admin
+    const payload = {
+      action: 'updateThumbnail',
+      download_id: downloadId,
+      thumbnail_url: newUrl,
+      telegram_id: currentUser.wa_number,
+      key: currentUser.key,
+      admin: true // Tambahkan flag admin
+    };
+    
+    // Tentukan API endpoint berdasarkan platform
+    let apiUrl;
+    switch(platform) {
+      case 'ps2':
+        apiUrl = GAMEPS2_API_URL;
+        break;
+      case 'switch':
+        apiUrl = GAMESWITCH_API_URL;
+        break;
+      case 'psp':
+        apiUrl = GAMEPSP_API_URL;
+        break;
+      case 'android':
+        apiUrl = GAMEANDROID_API_URL;
+        break;
+      default:
+        throw new Error('Platform tidak didukung');
+    }
+    
+    console.log('Mengirim permintaan update thumbnail:', { payload, apiUrl });
+    
+    // Kirim request
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams(payload).toString()
+    });
+    
+    const result = await response.json();
+    console.log('Response dari API:', result);
+    
+    if (result.status === 'success') {
+      showThumbnailMessage('✅ Thumbnail berhasil diperbarui!', 'success');
+      
+      // Update UI
+      document.getElementById('currentThumbnailUrl').value = newUrl;
+      document.getElementById('thumbnailPreview').src = newUrl;
+      currentThumbnailGame.currentUrl = newUrl;
+      
+      // Refresh daftar game setelah 1 detik
+      setTimeout(() => {
+        loadAllGames();
+      }, 1000);
+      
+      // Tutup modal setelah 1.5 detik
+      setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('thumbnailModal'));
+        if (modal) modal.hide();
+      }, 1500);
+      
+    } else {
+      throw new Error(result.message || 'Gagal memperbarui thumbnail');
+    }
+    
+  } catch (error) {
+    console.error('Error update thumbnail:', error);
+    showThumbnailMessage(`❌ ${error.message}`, 'danger');
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+function isValidImageUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp'];
+    const path = urlObj.pathname.toLowerCase();
+    
+    return imageExtensions.some(ext => path.endsWith(ext));
+  } catch {
+    return false;
+  }
+}
+async function removeThumbnail() {
+  if (!confirm('Yakin ingin menghapus thumbnail untuk game ini?')) {
+    return;
+  }
+  
+  const btn = document.getElementById('btnRemoveThumbnail');
+  if (!currentThumbnailGame || btn.dataset.loading === '1') return;
+  
+  setButtonLoading(btn, true, 'Menghapus...');
+  
+  try {
+    let apiUrl, payload;
+    const { downloadId, platform } = currentThumbnailGame;
+    
+    switch(platform) {
+      case 'ps2':
+        apiUrl = GAMEPS2_API_URL;
+        payload = {
+          action: 'updateThumbnail', // Gunakan action yang sama
+          download_id: downloadId,
+          thumbnail_url: '', // Kosongkan URL
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+      case 'switch':
+        apiUrl = GAMESWITCH_API_URL;
+        payload = {
+          action: 'updateThumbnail',
+          download_id: downloadId,
+          thumbnail_url: '',
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+      case 'psp':
+        apiUrl = GAMEPSP_API_URL;
+        payload = {
+          action: 'updateThumbnail',
+          download_id: downloadId,
+          thumbnail_url: '',
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+      case 'android':
+        apiUrl = GAMEANDROID_API_URL;
+        payload = {
+          action: 'updateThumbnail',
+          download_id: downloadId,
+          thumbnail_url: '',
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+      default:
+        throw new Error('Platform tidak didukung');
+    }
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      body: Object.entries(payload).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success') {
+      showThumbnailMessage('✓ Thumbnail berhasil dihapus!', 'success');
+      
+      // Update UI
+      document.getElementById('currentThumbnailUrl').value = '(Thumbnail dihapus)';
+      document.getElementById('thumbnailPreview').src = 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image';
+      currentThumbnailGame.currentUrl = '';
+      
+      // Refresh game list
+      setTimeout(() => {
+        loadAllGames();
+      }, 1000);
+      
+      // Tutup modal setelah 1.5 detik
+      setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('thumbnailModal'));
+        if (modal) modal.hide();
+      }, 1500);
+      
+    } else {
+      throw new Error(result.message || 'Gagal menghapus thumbnail');
+    }
+    
+  } catch (error) {
+    showThumbnailMessage('✗ ' + error.message, 'danger');
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+function showThumbnailMessage(message, type = 'info') {
+  const messageDiv = document.getElementById('thumbnailMessage');
+  const alertClass = {
+    'success': 'alert-success',
+    'danger': 'alert-danger',
+    'warning': 'alert-warning',
+    'info': 'alert-info'
+  }[type] || 'alert-info';
+  
+  messageDiv.innerHTML = `
+    <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+      ${message}
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+    </div>
+  `;
+}
+
+
 
 
 
@@ -1415,6 +1951,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (ps2Result.status === 'success' && Array.isArray(ps2Result.data)) {
       ps2Games = ps2Result.data.map(game => ({
         ...game,
+  thumbnail_url: game.thumbnail_url || '' ,
         platform: 'ps2',
         platform_name: 'PlayStation 2',
         api_url: GAMEPS2_API_URL,
@@ -1444,6 +1981,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (switchResult.status === 'success' && Array.isArray(switchResult.data)) {
         switchGames = switchResult.data.map(game => ({
           ...game,
+  thumbnail_url: game.thumbnail_url || '' ,
           platform: 'switch',
           platform_name: 'Nintendo Switch',
           api_url: GAMESWITCH_API_URL,
@@ -1472,6 +2010,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (pspResult.status === 'success' && Array.isArray(pspResult.data)) {
           pspGames = pspResult.data.map(game => ({
             ...game,
+  thumbnail_url: game.thumbnail_url || '' ,
             platform: 'psp',
             platform_name: 'PSP',
             api_url: GAMEPSP_API_URL,
@@ -1503,6 +2042,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (androidResult.status === 'success' && Array.isArray(androidResult.data)) {
           androidGames = androidResult.data.map(game => ({
             ...game,
+  thumbnail_url: game.thumbnail_url || '' ,
             platform: 'android',
             platform_name: 'Android',
             api_url: GAMEANDROID_API_URL,
@@ -1784,52 +2324,65 @@ const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
 
         html += `
           <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="game-card card h-100"
-              onclick="showGameDetail('${game.download_id}', '${game.platform}', this.querySelector('.btn-detail'))">
+  <div class="game-card card h-100"
+    onclick="showGameDetail('${game.download_id}', '${game.platform}', this.querySelector('.btn-detail'))">
+    
+    <!-- THUMBNAIL SECTION -->
+    <div class="thumbnail-container position-relative">
+      <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
+     class="card-img-top game-thumbnail" 
+     alt="${escapeHTML(gameName)}"
+     loading="lazy">
+      
+      <!-- BADGE PLATFORM DI ATAS THUMBNAIL -->
+      <span class="platform-badge ${platformClass} thumbnail-badge">
+        <span class="platform-icon ${platformIconClass}">
+          <i class="bi ${getPlatformIcon(game.platform)}"></i>
+        </span>
+        ${escapeHTML(game.platform_name || '')}
+      </span>
+      
+      <!-- ADMIN THUMBNAIL CONTROLS -->
+      ${isAdminUser() ? `
+        <div class="thumbnail-admin-overlay">
+          <button class="btn btn-sm btn-outline-light" 
+                  onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
+                  title="Kelola Thumbnail">
+            <i class="bi bi-image"></i>
+          </button>
+        </div>
+      ` : ''}
+    </div>
+    
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
+        <small class="text-muted">${dateHtml}</small>
+      </div>
 
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                  <span class="platform-badge ${platformClass}">
-                    <span class="platform-icon ${platformIconClass}">
-                      <i class="bi ${getPlatformIcon(game.platform)}"></i>
-                    </span>
-                    ${escapeHTML(game.platform_name || '')}
-                  </span>
+      <p class="card-text small mb-3">
+        ${categoriesHtml}
+        ${langHtml}
+        ${regionHtml}
+        ${modHtml}
+      </p>
 
-                  ${dateHtml}
-                </div>
+      <div class="d-flex justify-content-between align-items-center mt-auto">
+        <div>
+          <small class="text-muted d-block">
+            <i class="bi bi-download me-1"></i> ${game.total_downloads || 0} download
+          </small>
+          ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
+        </div>
 
-                <h6 class="card-title">${gameName}</h6>
-
-                <p class="card-text small">
-                  ${categoriesHtml}
-                  ${langHtml}
-                  ${regionHtml}
-                  ${modHtml}
-                </p>
-
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                  <div>
-                    <small class="text-muted d-block">
-                      <i class="bi bi-download me-1"></i> ${game.total_downloads || 0} download
-                    </small>
-
-                    ${
-                      isNewToday
-                        ? `<span class="new-badge mt-2"><i class="bi bi-stars"></i> NEW</span>`
-                        : ''
-                    }
-                  </div>
-
-                  <button class="btn btn-sm btn-outline-primary btn-detail"
-                    onclick="event.stopPropagation(); showGameDetail('${game.download_id}', '${game.platform}', this)">
-                    Detail
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          </div>
+        <button class="btn btn-sm btn-outline-primary btn-detail"
+          onclick="event.stopPropagation(); showGameDetail('${game.download_id}', '${game.platform}', this)">
+          Detail
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
         `;
       });
 
