@@ -1330,6 +1330,7 @@ body.is-scrolling .navbar {
     const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec"; 
     const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
     const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
+    const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
     const ADMIN_TELEGRAM_ID = "1172835542";
 
     function isAdminUser() {
@@ -1356,6 +1357,87 @@ body.is-scrolling .navbar {
     // ====== THUMBNAIL MANAGEMENT FUNCTIONS ======
     let currentThumbnailGame = null;
 let scrollTimer = null;
+const CACHE_KEY = 'indapk_games_cache_v1';
+const CACHE_TTL = 1 * 60 * 1000; // 1 menit
+let loadAbort = null;
+
+
+
+// ====== LOAD DATA GAME MANAGEMENT FUNCTIONS ======
+
+function readGamesCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (!obj?.ts || !Array.isArray(obj?.data)) return null;
+    if (Date.now() - obj.ts > CACHE_TTL) return null;
+    return obj.data;
+  } catch { return null; }
+}
+
+function writeGamesCache(data) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+  } catch {}
+}
+
+async function postAction(url, action, signal) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    },
+    body: `action=${encodeURIComponent(action)}`,
+    signal
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+function normalizeGame(game, platform, platformName, apiUrl, accessAction) {
+  const category_list = splitCategories(game.category || game.ori_category);
+  const name = (game.nama_game || game.ori_name || '').trim();
+  const ts_num = toTime(game.timestamp);
+
+  return {
+    ...game,
+    thumbnail_url: game.thumbnail_url || '',
+    platform,
+    platform_name: platformName,
+    api_url: apiUrl,
+    access_action: accessAction,
+    category_list,
+    ts_num,
+    __searchText: (
+      name + ' ' +
+      category_list.join(' ') + ' ' +
+      (game.language || '') + ' ' +
+      (game.region || '')
+    ).toLowerCase()
+  };
+}
+
+async function fetchPlatformGames({ platform, name, url, accessAction }, signal) {
+  const result = await postAction(url, 'getAllGames', signal);
+  if (result.status !== 'success' || !Array.isArray(result.data)) return [];
+  return result.data.map(g => normalizeGame(g, platform, name, url, accessAction));
+}
+
+
+function rebuildCategoriesFromAllGames() {
+  categories = new Set();
+  allGames.forEach(g => (g.category_list || []).forEach(c => categories.add(c)));
+
+  // isi dropdown saat browser lagi santai
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => populateCategoryDropdown(), { timeout: 600 });
+  } else {
+    setTimeout(populateCategoryDropdown, 0);
+  }
+}
+
 
 window.addEventListener('scroll', () => {
   document.body.classList.add('is-scrolling');
@@ -1491,6 +1573,9 @@ async function updateThumbnail() {
       case 'psp':
         apiUrl = GAMEPSP_API_URL;
         break;
+      case 'psvita':
+        apiUrl = GAMEPSVITA_API_URL;
+        break;
       case 'android':
         apiUrl = GAMEANDROID_API_URL;
         break;
@@ -1579,6 +1664,17 @@ async function removeThumbnail() {
           key: currentUser.key
         };
         break;
+      case 'psvita':
+        apiUrl = GAMEPSVITA_API_URL;
+        payload = {
+          action: 'updateThumbnail',
+          download_id: downloadId,
+          thumbnail_url: '',
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+
       case 'switch':
         apiUrl = GAMESWITCH_API_URL;
         payload = {
@@ -2132,161 +2228,67 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ====== GAME LOADING AND FILTERING ======
-    async function loadAllGames() {
-      try {
-        // Load PS2 Games
-        const ps2Response = await fetch(GAMEPS2_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-          },
-          body: 'action=getAllGames'
-        });
 
-        const ps2Result = await ps2Response.json();
-        let ps2Games = [];
-
-        // Load PS2 Games
-    if (ps2Result.status === 'success' && Array.isArray(ps2Result.data)) {
-      ps2Games = ps2Result.data.map(game => ({
-        ...game,
-  thumbnail_url: game.thumbnail_url || '' ,
-        platform: 'ps2',
-        platform_name: 'PlayStation 2',
-        api_url: GAMEPS2_API_URL,
-        access_action: 'accessOriginalLink',
-        category_list: splitCategories(game.category)
-      }));
-
-      // URUTKAN TERBARU DI ATAS
-      ps2Games.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
+async function loadAllGames({ useCache = true } = {}) {
+  // 1) Tampilkan cache dulu biar list muncul instan
+  if (useCache) {
+    const cached = readGamesCache();
+    if (cached?.length) {
+      allGames = cached;
+      rebuildCategoriesFromAllGames();
+      isGamesLoaded = true;
+      filterGames({ resetPage: false });
     }
+  }
 
+  // 2) Batalkan request lama kalau user spam refresh
+  if (loadAbort) loadAbort.abort();
+  loadAbort = new AbortController();
+  const { signal } = loadAbort;
 
-        // Load Switch Games
-        const switchResponse = await fetch(GAMESWITCH_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-          },
-          body: 'action=getAllGames'
-        });
+  const configs = [
+    { platform: 'ps2',    name: 'PlayStation 2',  url: GAMEPS2_API_URL,     accessAction: 'accessOriginalLink' },
+    { platform: 'switch', name: 'Nintendo Switch', url: GAMESWITCH_API_URL, accessAction: 'accessSwitchOriginalLink' },
+    { platform: 'psvita', name: 'PS Vita',        url: GAMEPSVITA_API_URL,  accessAction: 'accessOriginalLink' },
+    { platform: 'psp',    name: 'PSP',            url: GAMEPSP_API_URL,     accessAction: 'accessOriginalLink' },
+    { platform: 'android',name: 'Android',        url: GAMEANDROID_API_URL, accessAction: 'accessOriginalLink' }
+  ];
 
+  try {
+    // 3) PARALLEL
+    const settled = await Promise.allSettled(
+      configs.map(cfg => fetchPlatformGames(cfg, signal))
+    );
 
-        const switchResult = await switchResponse.json();
-        let switchGames = [];
+    const merged = settled.flatMap(x => x.status === 'fulfilled' ? x.value : []);
+    if (!merged.length) throw new Error('Data kosong');
 
-      if (switchResult.status === 'success' && Array.isArray(switchResult.data)) {
-        switchGames = switchResult.data.map(game => ({
-          ...game,
-  thumbnail_url: game.thumbnail_url || '' ,
-          platform: 'switch',
-          platform_name: 'Nintendo Switch',
-          api_url: GAMESWITCH_API_URL,
-          access_action: 'accessSwitchOriginalLink',
-          category_list: splitCategories(game.category)
-        }));
+    // 4) Sort sekali saja (hemat)
+    merged.sort((a, b) => (b.ts_num || 0) - (a.ts_num || 0));
 
-        // URUTKAN TERBARU DI ATAS
-        switchGames.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
-      }
+    allGames = merged;
+    writeGamesCache(merged);
 
+    rebuildCategoriesFromAllGames();
+    isGamesLoaded = true;
+    filterGames({ resetPage: false });
 
-        // Load PSP Games
-        let pspGames = [];
-        try {
-          const pspResponse = await fetch(GAMEPSP_API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'Accept': 'application/json'
-            },
-            body: 'action=getAllGames'
-          });
+  } catch (error) {
+    if (error?.name === 'AbortError') return;
 
-          const pspResult = await pspResponse.json();
-        if (pspResult.status === 'success' && Array.isArray(pspResult.data)) {
-          pspGames = pspResult.data.map(game => ({
-            ...game,
-  thumbnail_url: game.thumbnail_url || '' ,
-            platform: 'psp',
-            platform_name: 'PSP',
-            api_url: GAMEPSP_API_URL,
-            access_action: 'accessOriginalLink',
-            category_list: splitCategories(game.category)
-          }));
+    console.error('Error loading games:', error);
 
-          // URUTKAN TERBARU DI ATAS
-          pspGames.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
-        }
-
-        } catch (pspError) {
-          console.error('Error loading PSP games:', pspError);
-        }
-
-        // Load Android Games
-        let androidGames = [];
-        try {
-          const androidResponse = await fetch(GAMEANDROID_API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'Accept': 'application/json'
-            },
-            body: 'action=getAllGames'
-          });
-
-          const androidResult = await androidResponse.json();
-        if (androidResult.status === 'success' && Array.isArray(androidResult.data)) {
-          androidGames = androidResult.data.map(game => ({
-            ...game,
-  thumbnail_url: game.thumbnail_url || '' ,
-            platform: 'android',
-            platform_name: 'Android',
-            api_url: GAMEANDROID_API_URL,
-            access_action: 'accessOriginalLink',
-            category_list: splitCategories(game.category || game.ori_category),
-            game_type: game.game_type || 'ori-only'
-          }));
-
-          // URUTKAN TERBARU DI ATAS
-          androidGames.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
-        }
-
-        } catch (androidError) {
-          console.error('Error loading Android games:', androidError);
-        }
-
-        // Gabungkan semua game
-          allGames = [...ps2Games, ...switchGames, ...pspGames, ...androidGames];
-
-          // URUTKAN GLOBAL: TERBARU DI ATAS (lintas platform)
-          allGames.sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp));
-
-
-        // Ekstrak kategori
-        categories = new Set();
-        allGames.forEach(game => {
-          const list = game.category_list || splitCategories(game.category || game.ori_category);
-          list.forEach(cat => categories.add(cat));
-        });
-
-        populateCategoryDropdown();
-        isGamesLoaded = true;
-        filterGames();
-
-      } catch (error) {
-        console.error('Error loading games:', error);
-        document.getElementById('gameListContainer').innerHTML = `
-          <div class="alert alert-danger">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            Gagal memuat data game. Silakan refresh halaman.
-          </div>
-        `;
-      }
+    // kalau sudah ada cache yang tampil, jangan timpa dengan error
+    if (!isGamesLoaded) {
+      document.getElementById('gameListContainer').innerHTML = `
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Gagal memuat data game. Silakan refresh halaman.
+        </div>
+      `;
     }
+  }
+}
 
     function populateCategoryDropdown() {
       const categoryList = document.getElementById('categoryList');
@@ -2318,22 +2320,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 function filterGames({ resetPage = true } = {}) {
+  const q = (searchQuery || '').trim().toLowerCase();
+
   filteredGames = allGames.filter(game => {
     if (currentPlatform !== 'all' && game.platform !== currentPlatform) return false;
 
     if (currentCategory !== 'all') {
-      const list = game.category_list || splitCategories(game.category || game.ori_category);
-      if (!list.includes(currentCategory)) return false;
+      if (!game.category_list?.includes(currentCategory)) return false;
     }
 
-    if (searchQuery) {
-      const catText = (game.category_list || splitCategories(game.category || game.ori_category)).join(' ');
-      const searchIn = (game.nama_game || game.ori_name || '').toLowerCase()
-        + catText.toLowerCase()
-        + (game.language || '').toLowerCase()
-        + (game.region || '').toLowerCase();
-
-      if (!searchIn.includes(searchQuery)) return false;
+    if (q) {
+      if (!game.__searchText?.includes(q)) return false;
     }
 
     return true;
@@ -2341,12 +2338,12 @@ function filterGames({ resetPage = true } = {}) {
 
   if (resetPage) {
     currentPage = 1;
-    setUrlParam('page', currentPage > 1 ? String(currentPage) : '', { push: true });
-
+    setUrlParam('page', '', { push: true });
   }
 
   renderGameList();
 }
+
 
 function clampPage(page, totalPages) {
   if (totalPages <= 1) return 1;
@@ -2651,6 +2648,10 @@ function renderGameList() {
             apiUrl = GAMEANDROID_API_URL;
             action = 'getGameByDownloadId';
             break;
+          case 'psvita':
+            apiUrl = GAMEPSVITA_API_URL;
+            action = 'getGameByDownloadId';
+            break;
           default:
             alert('Platform tidak didukung');
             return;
@@ -2803,6 +2804,7 @@ function displayGameDetail(game, platform) {
       ${platform === 'ps2' ? 'PlayStation 2' :
         platform === 'switch' ? 'Nintendo Switch' :
         platform === 'psp' ? 'PSP' :
+        platform === 'psvita' ? 'PS Vita' :
         platform === 'android' ? 'Android' : platform}
     </span>
   `;
@@ -2822,8 +2824,8 @@ function displayGameDetail(game, platform) {
         </div>
         <div class="col-md-6">
           <table class="table table-sm">
-            ${game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori ?
-              `<tr><th>Ukuran:</th><td>${escapeHTML(game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || '-')}</td></tr>` : ''}
+            ${game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || game.ukuran_game ?
+            `<tr><th>Ukuran:</th><td>${escapeHTML(game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || game.ukuran_game || '-')}</td></tr>` : ''}
             ${game.ukuran_chd || game.ukuran_xci || game.ori_size_mod ?
               `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(game.ukuran_chd || game.ukuran_xci || game.ori_size_mod || '-')}</td></tr>` : ''}
             ${game.versi_game || game.ori_version ? `<tr><th>Versi:</th><td>${escapeHTML(game.versi_game || game.ori_version || '-')}</td></tr>` : ''}
@@ -2857,6 +2859,7 @@ function displayGameDetail(game, platform) {
     case 'switch': content += buildSwitchLinks(game); break;
     case 'psp': content += buildPSPLinks(game); break;
     case 'android': content += buildAndroidLinks(game); break;
+    case 'psvita': content += buildPSVitaLinks(game); break;
   }
 
   if (isAdminUser()) {
@@ -2882,6 +2885,105 @@ function displayGameDetail(game, platform) {
 
 
     // ====== LINK BUILDERS ======
+function buildPSVitaLinks(game) {
+  let html = '';
+
+  const clouds = Array.isArray(game.cloud_types) ? game.cloud_types : [];
+  const ad1 = Array.isArray(game.link_iklan) ? game.link_iklan : [];
+  const ad2 = Array.isArray(game.link_iklan2) ? game.link_iklan2 : [];
+  const ori = Array.isArray(game.link_asli) ? game.link_asli : [];
+
+  // Link iklan 1
+  if (ad1.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort</h6>
+        <p class="small text-muted">Download gratis dengan iklan</p>
+    `;
+    ad1.forEach((link, i) => {
+      const cloud = clouds[i] || `Cloud ${i + 1}`;
+      if (!link) return;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+              <i class="bi bi-box-arrow-up-right"></i> Buka
+            </a>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  // Link iklan 2
+  if (ad2.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+    ad2.forEach((link, i) => {
+      const cloud = clouds[i] || `Cloud ${i + 1}`;
+      if (!link) return;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+              <i class="bi bi-box-arrow-up-right"></i> Buka
+            </a>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  // Link asli (bayar)
+  if (ori.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan</h6>
+        <p class="small text-muted">Rp 2.000 per link</p>
+    `;
+    ori.forEach((link, i) => {
+      const cloud = clouds[i] || `Cloud ${i + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${i}, '${cloud}', 'psvita')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk link asli tanpa iklan, login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+
 function buildPS2Links(game) {
   let html = '';
 
@@ -3540,6 +3642,10 @@ function buildAndroidLinks(game) {
             apiUrl = GAMEPSP_API_URL;
             action = 'accessOriginalLink';
             break;
+          case 'psvita':
+            apiUrl = GAMEPSVITA_API_URL;
+            action = 'accessOriginalLink';
+            break;
           case 'android':
             apiUrl = GAMEANDROID_API_URL;
             action = 'accessOriginalLink';
@@ -3580,17 +3686,22 @@ function buildAndroidLinks(game) {
 
       try {
         let body;
-        if (platform === 'android') {
-          body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
-                 `&game_type=${encodeURIComponent(linkType)}&link_index=${encodeURIComponent(index)}` +
-                 `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
-                 `&key=${encodeURIComponent(currentUser.key)}`;
-        } else {
-          body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
-                 `&link_type=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
-                 `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
-                 `&key=${encodeURIComponent(currentUser.key)}`;
-        }
+          if (platform === 'android') {
+            body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                   `&game_type=${encodeURIComponent(linkType)}&link_index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key)}`;
+          } else if (platform === 'psvita') {
+            body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                   `&index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key)}`;
+          } else {
+            body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                   `&link_type=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key)}`;
+          }
 
         const response = await fetch(apiUrl, {
           method: 'POST',
@@ -3663,6 +3774,13 @@ function buildAndroidLinks(game) {
                  `&download_id=${encodeURIComponent(downloadId)}` +
                  `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
                  `&key=${encodeURIComponent(currentUser.key)}`;
+        }else if (platform === 'psvita') {
+  apiUrl = GAMEPSVITA_API_URL;
+  action = 'adminDeleteGame';
+  body = `action=${encodeURIComponent(action)}` +
+         `&download_id=${encodeURIComponent(downloadId)}` +
+         `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+         `&key=${encodeURIComponent(currentUser.key)}`;
         } else if (platform === 'psp') {
           apiUrl = GAMEPSP_API_URL;
           action = 'deleteGame';
@@ -3677,7 +3795,8 @@ function buildAndroidLinks(game) {
                  `&game_id=${encodeURIComponent(downloadId)}` +
                  `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
                  `&key=${encodeURIComponent(currentUser.key)}`;
-        } else {
+        }
+         else {
           alert('Platform tidak didukung.');
           return;
         }
