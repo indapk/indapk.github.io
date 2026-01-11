@@ -15,27 +15,140 @@
             --psvita-gradient: linear-gradient(135deg, #003791 0%, #001f4d 100%);
         }
         
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(0, 102, 204, 0.6);
+            }
+        }
+        
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s infinite linear;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
         }
         
         .game-header {
             background: var(--ps2-gradient);
             color: white;
-            border-radius: 15px;
+            border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease, glow 3s infinite;
+        }
+
+        .game-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        .game-header h1 {
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .game-header p {
+            position: relative;
+            z-index: 1;
         }
         
         .platform-badge {
             color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.85rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .platform-badge:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
         
         .ps2-badge { background: var(--ps2-gradient); }
@@ -46,31 +159,72 @@
         
         .btn-cloud {
             margin: 0;
-            transition: all 0.3s ease;
-            border-radius: 10px;
-            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 12px;
+            font-weight: 600;
             padding: 12px 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-cloud::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-cloud:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-cloud:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-cloud:active {
+            transform: translateY(-2px);
         }
         
         .ps2-tabs-wrap {
-            margin-top: 10px;
+            margin-top: 15px;
+            animation: fadeInUp 1s ease;
         }
         
         .ps2-tabs {
             display: grid !important;
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 10px !important;
-            padding: 10px !important;
-            background: #fff !important;
-            border-radius: 14px !important;
-            box-shadow: 0 8px 22px rgba(0,0,0,0.08) !important;
+            gap: 12px !important;
+            padding: 15px !important;
+            background: rgba(255,255,255,0.95) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
             border: 0 !important;
             overflow: visible !important;
+            backdrop-filter: blur(10px);
         }
         
         .ps2-tabs .nav-item {
             margin: 0 !important;
             width: 100% !important;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .ps2-tabs .nav-item:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .ps2-tabs .nav-item:nth-child(3) {
+            animation-delay: 0.2s;
         }
         
         .ps2-tabs .nav-link {
@@ -79,46 +233,76 @@
             align-items: center !important;
             justify-content: center !important;
             border: 0 !important;
-            border-radius: 12px !important;
-            padding: 12px 10px !important;
+            border-radius: 15px !important;
+            padding: 14px 12px !important;
             font-size: 0.95rem !important;
-            font-weight: 800 !important;
-            line-height: 1.15 !important;
-            background: #f1f5f9 !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
             color: #0f172a !important;
             white-space: normal !important;
             text-align: center !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ps2-tabs .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: currentColor;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .ps2-tabs .nav-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
         
         .ps2-tabs .nav-link.active {
             background: var(--ps2-gradient) !important;
             color: #fff !important;
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,102,204,0.4);
+        }
+
+        .ps2-tabs .nav-link.active::after {
+            transform: scaleX(1);
         }
         
         .switch-tabs .nav-link.active {
             background: var(--switch-gradient) !important;
             color: #fff !important;
+            box-shadow: 0 8px 25px rgba(230,0,18,0.4);
         }
         
         .psp-tabs .nav-link.active {
             background: var(--psp-gradient) !important;
             color: #fff !important;
+            box-shadow: 0 8px 25px rgba(0,112,204,0.4);
         }
         
         .android-tabs .nav-link.active {
             background: var(--android-gradient) !important;
             color: #fff !important;
+            box-shadow: 0 8px 25px rgba(61,220,132,0.4);
         }
         
         .psvita-tabs .nav-link.active {
             background: var(--psvita-gradient) !important;
             color: #fff !important;
+            box-shadow: 0 8px 25px rgba(0,55,145,0.4);
         }
         
         @media (max-width: 576px) {
             .ps2-tabs {
                 grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                gap: 8px !important;
+                gap: 10px !important;
             }
             .ps2-tabs .nav-item:last-child {
                 grid-column: 1 / -1 !important;
@@ -128,19 +312,27 @@
         .ad-note-banner {
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             border: 2px solid #2196f3;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 15px;
+            padding: 18px;
             margin-bottom: 20px;
+            animation: fadeInUp 1.4s ease;
+            transition: transform 0.3s ease;
+        }
+
+        .ad-note-banner:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(33,150,243,0.3);
         }
         
         .ad-note-pill {
             background: #2196f3;
             color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 6px 16px;
+            border-radius: 25px;
             display: inline-block;
             font-weight: 600;
             margin-bottom: 10px;
+            animation: pulse 2s infinite;
         }
         
         .ad-note-grid {
@@ -151,22 +343,30 @@
         
         .ad-note-box {
             background: white;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 10px;
             border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .ad-note-box:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .login-prompt {
             background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             border: 2px dashed #ffc107;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 25px;
+            border-radius: 15px;
+            animation: fadeInUp 1.6s ease;
         }
         
         .modal-icon-lg {
             font-size: 3rem;
             display: block;
             margin: 0 auto 15px;
+            animation: float 3s infinite;
         }
         
         .btn-copy-success {
@@ -175,76 +375,212 @@
         }
         
         .link-section {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 22px;
             margin-bottom: 20px;
-            border-left: 4px solid #2196f3;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid #2196f3;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            animation: slideInLeft 0.8s ease;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .link-section:hover {
+            transform: translateX(5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
         }
         
         .ad-link {
             border-left-color: #ffc107;
-            background: #fffcf3;
+            background: linear-gradient(135deg, #fffcf3 0%, #fff9e6 100%);
         }
         
         .original-link {
             border-left-color: #28a745;
-            background: #f8fff9;
+            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e9 100%);
         }
         
         .link-item {
-            padding: 12px 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 12px;
             margin-bottom: 12px;
             border: 1px solid #e9ecef;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .link-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-4px) translateX(4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            border-color: #2196f3;
         }
+
         .game-thumb-wrap {
-          background: #fff;
-          border-radius: 14px;
-          padding: 12px;
-          box-shadow: 0 8px 22px rgba(0,0,0,0.08);
-          margin-bottom: 16px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+            transition: all 0.3s ease;
+        }
+
+        .game-thumb-wrap:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
         .game-thumb {
-          width: 100%;
-          max-height: 360px;
-          object-fit: cover;
-          border-radius: 12px;
-          display: block;
+            width: 100%;
+            max-height: 360px;
+            object-fit: cover;
+            border-radius: 12px;
+            display: block;
+            transition: transform 0.3s ease;
         }
-      .tutorial-video-card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 16px;
-        margin: 0 0 18px 0;
-        border-left: 4px solid #0d6efd;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      }
 
-      .tutorial-video-card .title {
-        font-weight: 800;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
+        .game-thumb:hover {
+            transform: scale(1.02);
+        }
 
-      .ratio video {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        background: #000;
-        border-radius: 12px;
-      }
+        .tutorial-video-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 18px;
+            margin: 0 0 20px 0;
+            border-left: 5px solid #0d6efd;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            animation: fadeInUp 1.2s ease;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-video-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+
+        .tutorial-video-card .title {
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ratio video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .ratio video:hover {
+            transform: scale(1.01);
+        }
+
+        .btn-outline-secondary {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .btn-outline-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .user-info-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 18px;
+            border-radius: 15px;
+            border-left: 5px solid #0d6efd;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .modal-content {
+            border-radius: 20px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            border-bottom: none;
+            padding: 20px 25px;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .tab-content {
+            background: rgba(255,255,255,0.95);
+            border-radius: 0 0 20px 20px;
+            animation: fadeInUp 1.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .spinner-border {
+            animation: fadeInUp 0.5s ease, spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-success, .btn-danger, .btn-primary, .btn-secondary {
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-success:hover, .btn-danger:hover, .btn-primary:hover, .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table-striped tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table-striped tbody tr:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.01);
+        }
+        /* Toast style */
+        .ind-toast {
+          border: 0;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 15px 45px rgba(0,0,0,0.18);
+          backdrop-filter: blur(10px);
+        }
+
+        .ind-toast .toast-header {
+          background: linear-gradient(135deg, rgba(25,135,84,0.12) 0%, rgba(13,110,253,0.10) 100%);
+          border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        @keyframes glowGreen {
+          0%, 100% { box-shadow: 0 0 0 rgba(25,135,84,0); }
+          50% { box-shadow: 0 0 35px rgba(25,135,84,0.35); }
+        }
+
+        .user-info-box.login-flash {
+          animation: glowGreen 1.2s ease;
+          border-left-color: #198754 !important;
+        }
 
     </style>
 </head>
@@ -418,6 +754,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="text-center mb-3">
+                        <i class="bi bi-check-circle-fill modal-icon-lg" style="color:#198754;"></i>
                         <h5 class="mb-1" style="color:#198754;">✅ Pembayaran Berhasil!</h5>
                         <div>Link game Anda sudah siap diakses</div>
                     </div>
@@ -436,6 +773,69 @@
         </div>
     </div>
     
+    <!-- Emulator Detail Modal -->
+    <div class="modal fade" id="emulatorDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background:#0d6efd;">
+                    <h5 class="modal-title"><i class="bi bi-cpu"></i> Daftar Emulator</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="small text-muted mb-2" id="emuListInfo">-</div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>Versi</th>
+                                    <th>Link</th>
+                                </tr>
+                            </thead>
+                            <tbody id="emuListBody">
+                                <tr><td colspan="3" class="text-muted">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000;">
+  <div id="loginSuccessToast" class="toast ind-toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <i class="bi bi-check-circle-fill text-success me-2"></i>
+      <strong class="me-auto">Login Berhasil</strong>
+      <small class="text-muted" id="loginToastTime">barusan</small>
+      <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <div class="fw-bold mb-1" id="loginToastName">-</div>
+      <div class="small text-muted">
+        Saldo: Rp <span id="loginToastBalance">0</span> • ID: <span id="loginToastId">-</span>
+      </div>
+      <div class="mt-2 d-flex gap-2 flex-wrap">
+        <button class="btn btn-sm btn-success" type="button" onclick="openOriginalTab()">
+          <i class="bi bi-unlock"></i> Buka Tab Tanpa Iklan
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-dismiss="toast">
+          Oke
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -445,6 +845,7 @@
         const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec";
         const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
         const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
+        const EMULATOR_API_URL = "https://script.google.com/macros/s/AKfycbwsXDL0iknPvS-KhQXEzODz_fcBkNm_aieq3eTSN33di7A7mqlX2y0O0XhMAbgBY8DV/exec";
         const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
         
         const LS_USER_KEY = 'indapkGameUser';
@@ -456,6 +857,9 @@
         let currentPlatform = null;
         let pendingAccess = null;
         let saldoIntervalId = null;
+        let currentEmulator = null;
+        const emulatorCache = {};
+        let emulatorMasterList = null; 
         
         // ====== UTILITY FUNCTIONS ======
         function getUrlParam(key) {
@@ -522,6 +926,48 @@
                 updateUserUI(false);
             }
         }
+        
+function showLoginSuccessToast() {
+  try {
+    const toastEl = document.getElementById('loginSuccessToast');
+    if (!toastEl) return;
+
+    // isi data toast
+    document.getElementById('loginToastName').textContent = currentUser?.nama_user || 'User';
+    document.getElementById('loginToastBalance').textContent = rupiah(currentUser?.saldo || 0);
+    document.getElementById('loginToastId').textContent = currentUser?.wa_number || '-';
+
+    // efek highlight user box
+    const userHeader = document.getElementById('userHeader');
+    if (userHeader) {
+      userHeader.classList.remove('login-flash');
+      void userHeader.offsetWidth; // restart animation
+      userHeader.classList.add('login-flash');
+    }
+
+    // show toast
+    const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 4500 });
+    toast.show();
+  } catch (e) {
+    // fallback aman
+    alert('Login berhasil!');
+  }
+}
+
+function openOriginalTab() {
+  const tabBtn = document.getElementById('original-tab');
+  if (!tabBtn) return;
+
+  // pakai bootstrap tab API biar rapi
+  const tab = bootstrap.Tab.getOrCreateInstance(tabBtn);
+  tab.show();
+
+  // scroll ke area tab biar user langsung lihat
+  const tabContent = document.getElementById('gameTabContent');
+  if (tabContent) tabContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+
         
         function updateUserUI(isLoggedIn) {
             const userHeader = document.getElementById('userHeader');
@@ -595,8 +1041,8 @@
                 const modal = bootstrap.Modal.getInstance(modalEl);
                 if (modal) modal.hide();
                 
-                alert('Login berhasil!');
-                startSaldoAutoRefresh();
+                    showLoginSuccessToast();
+                    startSaldoAutoRefresh();
             } catch (err) {
                 alert('Login gagal: ' + err.message);
             } finally {
@@ -815,6 +1261,7 @@ function displayGameDetail(game, platform) {
   document.getElementById('tabOriginalLinks').innerHTML = generateOriginalLinksHTML(game, platform);
 
   updateUserUI(!!currentUser);
+loadEmulatorForPlatform(platform);
 }
 
 function getThumbnailUrl(game) {
@@ -829,6 +1276,160 @@ function getThumbnailUrl(game) {
 }
 
         
+function normStr(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function getEmulatorPlatformKey(platform) {
+  switch (platform) {
+    case 'ps2': return 'ps2';
+    case 'psp': return 'psp';
+    case 'switch': return 'switch';
+    case 'psvita': return 'psvita';
+    default: return '';
+  }
+}
+
+function filterEmulatorsForPlatform(list, platformKey) {
+  const target = normStr(platformKey);
+  if (!target) return [];
+
+  const filtered = list.filter(it => {
+    const p = normStr(it.platform);
+    return p === target || p.includes(target) || target.includes(p);
+  });
+
+  // urutkan terbaru dulu (pakai row kalau ada)
+  filtered.sort((a, b) => Number(b.row || 0) - Number(a.row || 0));
+  return filtered;
+}
+
+async function fetchEmulatorList() {
+  if (!EMULATOR_API_URL || EMULATOR_API_URL.includes('PASTE_URL')) {
+    throw new Error('EMULATOR_API_URL belum diisi');
+  }
+
+  const res = await fetch(EMULATOR_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    },
+    body: 'action=getEmulators'
+  });
+
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+
+  const json = await res.json();
+  if (json.status !== 'success') throw new Error(json.message || 'Gagal ambil emulator');
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+function pickEmulatorForPlatform(list, platformKey) {
+  const target = normStr(platformKey);
+  if (!target) return null;
+
+  // Ambil yang platform-nya match. Kalau banyak, ambil yang terbaru (row terbesar)
+  const matches = list.filter(it => {
+    const p = normStr(it.platform);
+    return p === target || p.includes(target) || target.includes(p);
+  });
+
+  if (matches.length === 0) return null;
+
+  matches.sort((a, b) => Number(b.row || 0) - Number(a.row || 0));
+  return matches[0];
+}
+
+async function loadEmulatorForPlatform(platform) {
+  if (platform === 'android') return;
+
+  const rowEl = document.getElementById('emulatorRow');
+  const nameEl = document.getElementById('emulatorNameText');
+  const hintEl = document.getElementById('emulatorHint');
+  if (!rowEl || !nameEl || !hintEl) return;
+
+  const key = getEmulatorPlatformKey(platform);
+  if (!key) {
+    rowEl.style.display = 'none';
+    return;
+  }
+
+  rowEl.style.display = 'table-row';
+  nameEl.textContent = 'Loading...';
+  hintEl.textContent = '';
+
+  try {
+    // ambil list master sekali saja
+    if (!emulatorMasterList) {
+      emulatorMasterList = await fetchEmulatorList();
+    }
+
+    // cache per platformKey
+    if (!emulatorCache[key]) {
+      emulatorCache[key] = filterEmulatorsForPlatform(emulatorMasterList, key);
+    }
+
+    currentEmulators = emulatorCache[key] || [];
+
+    if (currentEmulators.length === 0) {
+      nameEl.textContent = 'Tidak tersedia';
+      hintEl.textContent = 'Emulator untuk platform ini belum ada di database';
+      return;
+    }
+
+    // tampilkan ringkas di row
+    nameEl.textContent = `Lihat daftar Emulator (${currentEmulators.length})`;
+    hintEl.textContent = 'Klik untuk lihat semua versi';
+  } catch (e) {
+    currentEmulators = [];
+    nameEl.textContent = 'Tidak tersedia';
+    hintEl.textContent = 'Gagal memuat emulator';
+  }
+}
+
+
+function showEmulatorDetailModal() {
+  const modalEl = document.getElementById('emulatorDetailModal');
+  const bodyEl = document.getElementById('emuListBody');
+  const infoEl = document.getElementById('emuListInfo');
+
+  if (!modalEl || !bodyEl || !infoEl) {
+    alert('Modal emulator belum ada di HTML.');
+    return;
+  }
+
+  if (!currentEmulators || currentEmulators.length === 0) {
+    bodyEl.innerHTML = `<tr><td colspan="3" class="text-muted">Emulator belum tersedia.</td></tr>`;
+    infoEl.textContent = '0 emulator ditemukan';
+    bootstrap.Modal.getOrCreateInstance(modalEl).show();
+    return;
+  }
+
+  infoEl.textContent = `${currentEmulators.length} emulator ditemukan untuk platform ini`;
+
+  bodyEl.innerHTML = currentEmulators.map((emu) => {
+    const nama = emu.nama_emulator || '-';
+    const versi = emu.versi || '-';
+    const link = emu.link_emulator || '';
+
+    const linkHtml = link
+      ? `<a href="${escapeHTML(link)}" target="_blank" rel="noopener">${escapeHTML(link)}</a>`
+      : `<span class="text-muted">-</span>`;
+
+    return `
+      <tr>
+        <td>${escapeHTML(nama)}</td>
+        <td>${escapeHTML(versi)}</td>
+        <td style="word-break:break-word;">${linkHtml}</td>
+      </tr>
+    `;
+  }).join('');
+
+  bootstrap.Modal.getOrCreateInstance(modalEl).show();
+}
+
 
 
 function splitModFeatures(desc) {
@@ -903,12 +1504,28 @@ function buildAndroidModInfo(game) {
 
 
 function generateDetailsHTML(game, platform, platformName) {
-  const gameName = getGameName(game); // ✅ FIX
+  const isAndroid = platform === 'android'; // ✅ deklarasi dulu
+  const isAndroidMod =
+    isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod');
+
+  const gameName = getGameName(game);
   const category = game.category || game.ori_category || '-';
   const totalDownloads = game.total_downloads || 0;
 
-  const isAndroid = platform === 'android';
-  const isAndroidMod = isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod');
+  const emulatorRow = !isAndroid
+    ? `
+      <tr id="emulatorRow" style="display:none;">
+        <th>Emulator:</th>
+        <td>
+          <a href="#" id="emulatorNameLink" class="text-decoration-none"
+             onclick="showEmulatorDetailModal(); return false;">
+            <span id="emulatorNameText">-</span> <i class="bi bi-info-circle"></i>
+          </a>
+          <span id="emulatorHint" class="small text-muted ms-2"></span>
+        </td>
+      </tr>
+    `
+    : '';
 
   let sizeInfo = '';
   if (game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || game.ukuran_game) {
@@ -927,26 +1544,27 @@ function generateDetailsHTML(game, platform, platformName) {
 
   const sumberUrl = buildSumberLinkUrl(game);
 
-  // HANYA tampil untuk non-Android
   const languageRow = !isAndroid && game.language ? `<tr><th>Bahasa:</th><td>${escapeHTML(game.language || '-')}</td></tr>` : '';
   const regionRow = !isAndroid && game.region ? `<tr><th>Region:</th><td>${escapeHTML(game.region || '-')}</td></tr>` : '';
   const gameIdRow = !isAndroid && game.game_id ? `<tr><th>Game ID:</th><td>${escapeHTML(game.game_id || '-')}</td></tr>` : '';
-    const thumbnailUrl = getThumbnailUrl(game);
-    const thumbHtml = `
-      <div class="game-thumb-wrap">
-        <img
-          class="game-thumb"
-          src="${escapeHTML(thumbnailUrl || 'https://placehold.co/900x450?text=No+Thumbnail')}"
-          alt="${escapeHTML(gameName)}"
-          loading="lazy"
-          referrerpolicy="no-referrer"
-          onerror="this.onerror=null;this.src='https://placehold.co/900x450?text=No+Thumbnail';"
-        />
-      </div>
-    `;
+
+  const thumbnailUrl = getThumbnailUrl(game);
+  const thumbHtml = `
+    <div class="game-thumb-wrap">
+      <img
+        class="game-thumb"
+        src="${escapeHTML(thumbnailUrl || 'https://placehold.co/900x450?text=No+Thumbnail')}"
+        alt="${escapeHTML(gameName)}"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        onerror="this.onerror=null;this.src='https://placehold.co/900x450?text=No+Thumbnail';"
+      />
+    </div>
+  `;
+
   return `
     <h3>Detail Game ${platformName}</h3>
-     ${thumbHtml}
+    ${thumbHtml}
     <div class="row">
       <div class="col-md-6">
         <table class="table">
@@ -963,7 +1581,9 @@ function generateDetailsHTML(game, platform, platformName) {
           ${sizeInfo}
           ${altSizeInfo}
           ${versionInfo}
+          ${emulatorRow}
           <tr><th>Total Downloads:</th><td>${totalDownloads}</td></tr>
+
           ${sumberUrl ? `
             <tr>
               <th>Sumber Link:</th>
@@ -987,6 +1607,7 @@ function generateDetailsHTML(game, platform, platformName) {
     </div>
   `;
 }
+
 
         
 function buildSumberLinkUrl(game) {
