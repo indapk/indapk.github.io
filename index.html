@@ -974,6 +974,36 @@
       display: inline-block;
       margin: 3px;
     }
+    /* ===== FIX: DROPDOWN KATEGORI TERLALU PANJANG ===== */
+    #categoryList.category-menu {
+      max-height: 360px;
+      overflow-y: auto;
+      min-width: 100%;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    /* Potong teks kategori yang kepanjangan di list dropdown */
+    #categoryList.category-menu .dropdown-item {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Potong teks kategori yang kepanjangan di tombol dropdown */
+    #categoryText {
+      display: inline-block;
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: bottom;
+    }
+
+    @media (max-width: 576px) {
+      #categoryText { max-width: 120px; }
+    }
+
 
   </style>
 </head>
@@ -1066,9 +1096,23 @@
               <button class="btn btn-outline-secondary dropdown-toggle dropdown-category w-100" type="button" data-bs-toggle="dropdown">
                 <i class="bi bi-tags me-2"></i> Kategori: <span id="categoryText">Semua</span>
               </button>
-              <ul class="dropdown-menu" id="categoryList">
-                <li><a class="dropdown-item" href="#" data-category="all">Semua Kategori</a></li>
-              </ul>
+            <ul class="dropdown-menu category-menu w-100" id="categoryList">
+              <li>
+                <a class="dropdown-item" href="#" data-category="all">Semua Kategori</a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+
+              <li class="px-3 py-2">
+                <input
+                  type="text"
+                  id="categorySearch"
+                  class="form-control form-control-sm"
+                  placeholder="Cari kategori..."
+                  autocomplete="off"
+                />
+              </li>
+              <li><hr class="dropdown-divider"></li>
+            </ul>
             </div>
             <button id="btnRefreshGames" class="btn-refresh-icon" type="button" title="Refresh Game">
               <i class="bi bi-arrow-clockwise"></i>
@@ -1826,34 +1870,80 @@ function selectCategory(category) {
 }
 
 
-    function populateCategoryDropdown() {
-      const categoryList = document.getElementById('categoryList');
+function populateCategoryDropdown() {
+  const categoryList = document.getElementById('categoryList');
+  if (!categoryList) return;
 
-      const allCategoryItem = categoryList.querySelector('[data-category="all"]').parentElement;
-      categoryList.innerHTML = '';
-      categoryList.appendChild(allCategoryItem);
+  // Build ulang struktur awal (Semua + search)
+  categoryList.innerHTML = `
+    <li>
+      <a class="dropdown-item" href="#" data-category="all">Semua Kategori</a>
+    </li>
+    <li><hr class="dropdown-divider"></li>
 
-      const sortedCategories = Array.from(categories).sort();
-      sortedCategories.forEach(category => {
-        const li = document.createElement('li');
-        li.innerHTML = `<a class="dropdown-item" href="#" data-category="${category}">${category}</a>`;
-        categoryList.appendChild(li);
+    <li class="px-3 py-2">
+      <input
+        type="text"
+        id="categorySearch"
+        class="form-control form-control-sm"
+        placeholder="Cari kategori..."
+        autocomplete="off"
+      />
+    </li>
+    <li><hr class="dropdown-divider"></li>
+  `;
 
-        li.querySelector('a').addEventListener('click', function (e) {
-          e.preventDefault();
-          currentCategory = category;
-          document.getElementById('categoryText').textContent = category;
-          filterGames();
-        });
-      });
+  // Render kategori
+  const sortedCategories = Array.from(categories).sort((a, b) => a.localeCompare(b, 'id'));
+  sortedCategories.forEach(category => {
+    const li = document.createElement('li');
+    li.dataset.catItem = '1';
+    li.innerHTML = `<a class="dropdown-item" href="#" data-category="${escapeHTML(category)}">${escapeHTML(category)}</a>`;
+    categoryList.appendChild(li);
 
-      document.querySelector('[data-category="all"]').addEventListener('click', function (e) {
-        e.preventDefault();
-        currentCategory = 'all';
-        document.getElementById('categoryText').textContent = 'Semua';
-        filterGames();
-      });
+    li.querySelector('a').addEventListener('click', function (e) {
+      e.preventDefault();
+      currentCategory = category;
+
+      const textEl = document.getElementById('categoryText');
+      if (textEl) {
+        textEl.textContent = category;
+        textEl.title = category;
+      }
+
+      filterGames({ resetPage: true });
+    });
+  });
+
+  // Click "Semua Kategori"
+  categoryList.querySelector('[data-category="all"]').addEventListener('click', function (e) {
+    e.preventDefault();
+    currentCategory = 'all';
+
+    const textEl = document.getElementById('categoryText');
+    if (textEl) {
+      textEl.textContent = 'Semua';
+      textEl.title = 'Semua';
     }
+
+    filterGames({ resetPage: true });
+  });
+
+  // Search filter
+  const searchInput = categoryList.querySelector('#categorySearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      const q = (this.value || '').trim().toLowerCase();
+
+      categoryList.querySelectorAll('li[data-cat-item="1"]').forEach(li => {
+        const a = li.querySelector('a');
+        const text = (a?.textContent || '').toLowerCase();
+        li.style.display = text.includes(q) ? '' : 'none';
+      });
+    });
+  }
+}
+
 
     function filterGames({ resetPage = true } = {}) {
       const q = (searchQuery || '').trim().toLowerCase();
@@ -2100,6 +2190,7 @@ function selectCategory(category) {
 
                 <p class="card-text small mb-3">
                   ${categoriesHtml}
+                <br><br>
                   ${regionHtml}
                   ${modHtml}
                 </p>
