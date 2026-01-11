@@ -221,6 +221,30 @@
           border-radius: 12px;
           display: block;
         }
+      .tutorial-video-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        margin: 0 0 18px 0;
+        border-left: 4px solid #0d6efd;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      }
+
+      .tutorial-video-card .title {
+        font-weight: 800;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ratio video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: #000;
+        border-radius: 12px;
+      }
 
     </style>
 </head>
@@ -228,7 +252,7 @@
     <div class="container mt-4">
         <!-- Back Button -->
         <div class="mb-3">
-            <a href="index" class="btn btn-outline-secondary">
+            <a href="https://indapk.github.io" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> Kembali ke List Game
             </a>
         </div>
@@ -957,7 +981,7 @@ function generateDetailsHTML(game, platform, platformName) {
     ${isAndroidMod ? buildAndroidModInfo(game) : ''}
 
     <div class="mt-3 text-center">
-      <a href="index" class="btn btn-success">
+      <a href="https://indapk.github.io" class="btn btn-success">
         <i class="bi bi-controller"></i> List Game
       </a>
     </div>
@@ -971,7 +995,37 @@ function buildSumberLinkUrl(game) {
   return 'https://www.indapk.com/?s=' + encodeURIComponent(nameRaw);
 }
 
-        
+function generateSemawurTutorialVideoHTML() {
+  const fileId = "1rUMAXSG6G5b0sk8Zg9KVCur-jPsKZFOJ";
+  const pageUrl = `https://drive.google.com/file/d/${fileId}/view?usp=sharing`;
+  const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+
+  return `
+    <div class="tutorial-video-card">
+      <div class="title">
+        <i class="bi bi-play-circle"></i>
+        Video Tutorial: Cara Download Lewat Semawur
+      </div>
+
+      <div class="ratio ratio-16x9">
+        <iframe
+          src="${previewUrl}"
+          allow="autoplay"
+          allowfullscreen
+          style="width:100%;height:100%;border:0;border-radius:12px;background:#000;"
+        ></iframe>
+      </div>
+
+      <div class="small text-muted mt-2">
+        Jika video tidak tampil, buka:
+        <a href="${pageUrl}" target="_blank" rel="noopener">Google Drive</a>
+      </div>
+    </div>
+  `;
+}
+
+
+
         function generateAdLinksHTML(game, platform) {
             let html = `<h3>Link Dengan Iklan ! (Link With Ads !)</h3>`;
             
@@ -996,6 +1050,9 @@ function buildSumberLinkUrl(game) {
                 </div>
             `;
             
+
+  // ✅ VIDEO TUTORIAL SEMAWUR
+  html += generateSemawurTutorialVideoHTML();
             // Generate platform-specific ad links
             switch(platform) {
                 case 'ps2':
