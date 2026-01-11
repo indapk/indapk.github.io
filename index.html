@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="favicon.png" sizes="16x16" type="image/png">
 
   <style>
     /* ===== GLOBAL VARIABLES ===== */
@@ -956,6 +959,22 @@
       opacity: 1;
       transform: translateY(0);
     }
+    .category-badge {
+      cursor: pointer;
+    }
+    .category-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--neon-cyan);
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      display: inline-block;
+      margin: 3px;
+    }
+
   </style>
 </head>
 
@@ -1230,7 +1249,7 @@
       document.querySelectorAll('.game-card').forEach(card => observer.observe(card));
     });
 
-    
+
     // Fungsi untuk redirect ke halaman detail game
     function goToGameDetail(downloadId, platform) {
       // Redirect ke halaman detail dengan format: detail.html?game=downloadId&platform=platform
@@ -1790,6 +1809,23 @@
       }
     }
 
+
+function selectCategory(category) {
+  if (!category) return;
+
+  currentCategory = category;
+  const textEl = document.getElementById('categoryText');
+  if (textEl) textEl.textContent = category;
+
+  // optional: reset page
+  currentPage = 1;
+  setUrlParam('page', '', { push: true });
+
+  filterGames({ resetPage: true });
+  smoothScrollToListTop();
+}
+
+
     function populateCategoryDropdown() {
       const categoryList = document.getElementById('categoryList');
 
@@ -1995,9 +2031,16 @@
 
         const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
 
-        const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
-          .map(cat => `<span class="category-badge">${escapeHTML(cat)}</span>`)
-          .join('');
+      const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
+        .map(cat => `
+          <button type="button"
+            class="category-badge"
+            onclick="event.stopPropagation(); selectCategory('${escapeHTML(cat).replace(/'/g, "\\'")}')">
+            ${escapeHTML(cat)}
+          </button>
+        `)
+        .join('');
+
 
         const langHtml = game.language
           ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
