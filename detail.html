@@ -866,7 +866,56 @@
             const url = new URL(window.location.href);
             return url.searchParams.get(key);
         }
-        
+
+  function hasArr(v) {
+    return Array.isArray(v) && v.some(x => String(x || '').trim().length > 0);
+  }
+
+  function pickArray(game, keys) {
+    for (const k of keys) {
+      const v = game?.[k];
+      if (hasArr(v)) return v;
+    }
+    return [];
+  }
+
+  function pickCloud(game, keys) {
+    for (const k of keys) {
+      const v = game?.[k];
+      if (Array.isArray(v) && v.length) return v;
+    }
+    return [];
+  }
+
+  function buildBadges(labels) {
+    return labels
+      .map(x => `<span class="badge bg-dark me-1">${escapeHTML(x)}</span>`)
+      .join(' ');
+  }
+
+  function detectSwitchFormats(game) {
+    const hasNSP = hasArr(pickArray(game, ['link_iklan_nsp', 'link_iklan2_nsp', 'link_asli_nsp']));
+    const hasXCI = hasArr(pickArray(game, ['link_iklan_xci', 'link_iklan2_xci', 'link_asli_xci']));
+
+    const hasNSPPart = hasArr(pickArray(game, [
+      'link_iklan_nsp_part', 'link_iklan2_nsp_part', 'link_asli_nsp_part',
+      'link_iklan_nsppart', 'link_iklan2_nsppart', 'link_asli_nsppart'
+    ]));
+
+    const hasXCIPart = hasArr(pickArray(game, [
+      'link_iklan_xci_part', 'link_iklan2_xci_part', 'link_asli_xci_part',
+      'link_iklan_xcipart', 'link_iklan2_xcipart', 'link_asli_xcipart'
+    ]));
+
+    const formats = [];
+    if (hasNSP) formats.push('NSP');
+    if (hasXCI) formats.push('XCI');
+    if (hasNSPPart) formats.push('NSP PART');
+    if (hasXCIPart) formats.push('XCI PART');
+    return formats;
+  }
+
+
         function escapeHTML(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -1504,14 +1553,42 @@ function buildAndroidModInfo(game) {
 
 
 function generateDetailsHTML(game, platform, platformName) {
-  const isAndroid = platform === 'android'; // ✅ deklarasi dulu
-  const isAndroidMod =
-    isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod');
+  const isAndroid = platform === 'android';
+  const isSwitch  = platform === 'switch';
 
   const gameName = getGameName(game);
   const category = game.category || game.ori_category || '-';
   const totalDownloads = game.total_downloads || 0;
 
+  // ========= Helpers (khusus buat function ini) =========
+  function hasArr(v) {
+    return Array.isArray(v) && v.filter(Boolean).length > 0;
+  }
+
+  function hasAnyKey(keys) {
+    return keys.some(k => hasArr(game?.[k]) || String(game?.[k] || '').trim().length > 0);
+  }
+
+  function badge(text, cls = 'ps2-badge') {
+    return `<span class="platform-badge ${cls}" style="font-size:.75rem; padding:6px 12px; margin:2px;">${escapeHTML(text)}</span>`;
+  }
+
+  // ========= Thumbnail =========
+  const thumbnailUrl = getThumbnailUrl(game);
+  const thumbHtml = `
+    <div class="game-thumb-wrap">
+      <img
+        class="game-thumb"
+        src="${escapeHTML(thumbnailUrl || 'https://placehold.co/900x450?text=No+Thumbnail')}"
+        alt="${escapeHTML(gameName)}"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        onerror="this.onerror=null;this.src='https://placehold.co/900x450?text=No+Thumbnail';"
+      />
+    </div>
+  `;
+
+  // ========= Emulator row (non-android) =========
   const emulatorRow = !isAndroid
     ? `
       <tr id="emulatorRow" style="display:none;">
@@ -1527,44 +1604,171 @@ function generateDetailsHTML(game, platform, platformName) {
     `
     : '';
 
-  let sizeInfo = '';
-  if (game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || game.ukuran_game) {
-    sizeInfo = `<tr><th>Ukuran:</th><td>${escapeHTML(game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || game.ukuran_game || '-')}</td></tr>`;
-  }
+  // ========= Basic rows =========
+  const languageRow = !isAndroid && game.language
+    ? `<tr><th>Bahasa:</th><td>${escapeHTML(game.language || '-')}</td></tr>`
+    : '';
 
-  let altSizeInfo = '';
-  if (game.ukuran_chd || game.ukuran_xci || game.ori_size_mod) {
-    altSizeInfo = `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(game.ukuran_chd || game.ukuran_xci || game.ori_size_mod || '-')}</td></tr>`;
-  }
+  const regionRow = !isAndroid && game.region
+    ? `<tr><th>Region:</th><td>${escapeHTML(game.region || '-')}</td></tr>`
+    : '';
 
-  let versionInfo = '';
-  if (game.versi_game || game.ori_version) {
-    versionInfo = `<tr><th>Versi:</th><td>${escapeHTML(game.versi_game || game.ori_version || '-')}</td></tr>`;
-  }
+  const gameIdRow = !isAndroid && game.game_id
+    ? `<tr><th>Game ID:</th><td>${escapeHTML(game.game_id || '-')}</td></tr>`
+    : '';
+
+  const versionRow = (game.versi_game || game.ori_version)
+    ? `<tr><th>Versi:</th><td>${escapeHTML(game.versi_game || game.ori_version || '-')}</td></tr>`
+    : '';
 
   const sumberUrl = buildSumberLinkUrl(game);
+  const sumberRow = sumberUrl
+    ? `
+      <tr>
+        <th>Sumber Link:</th>
+        <td>
+          <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener" style="word-break: break-word;">
+            ${escapeHTML(sumberUrl)}
+          </a>
+        </td>
+      </tr>
+    `
+    : '';
 
-  const languageRow = !isAndroid && game.language ? `<tr><th>Bahasa:</th><td>${escapeHTML(game.language || '-')}</td></tr>` : '';
-  const regionRow = !isAndroid && game.region ? `<tr><th>Region:</th><td>${escapeHTML(game.region || '-')}</td></tr>` : '';
-  const gameIdRow = !isAndroid && game.game_id ? `<tr><th>Game ID:</th><td>${escapeHTML(game.game_id || '-')}</td></tr>` : '';
+  // ========= FORMAT DETECTION (ini yang kamu minta) =========
+  // Switch: NSP, XCI, NSP PART, XCI PART
+  const hasNSP = isSwitch && hasAnyKey([
+    'link_iklan_nsp', 'link_iklan2_nsp', 'link_asli_nsp',
+    'cloud_nsp', 'ukuran_nsp'
+  ]);
 
-  const thumbnailUrl = getThumbnailUrl(game);
-  const thumbHtml = `
-    <div class="game-thumb-wrap">
-      <img
-        class="game-thumb"
-        src="${escapeHTML(thumbnailUrl || 'https://placehold.co/900x450?text=No+Thumbnail')}"
-        alt="${escapeHTML(gameName)}"
-        loading="lazy"
-        referrerpolicy="no-referrer"
-        onerror="this.onerror=null;this.src='https://placehold.co/900x450?text=No+Thumbnail';"
-      />
-    </div>
-  `;
+  const hasXCI = isSwitch && hasAnyKey([
+    'link_iklan_xci', 'link_iklan2_xci', 'link_asli_xci',
+    'cloud_xci', 'ukuran_xci'
+  ]);
+
+  // Banyak orang beda penamaan. Kita buat beberapa kandidat.
+  const hasNSPPart = isSwitch && hasAnyKey([
+    'link_iklan_nsp_part', 'link_iklan2_nsp_part', 'link_asli_nsp_part',
+    'link_iklan_nspPart',  'link_iklan2_nspPart',  'link_asli_nspPart',
+    'link_nsp_part', 'link_nspPart',
+    'cloud_nsp_part', 'cloud_nspPart',
+    'ukuran_nsp_part', 'ukuran_nspPart'
+  ]);
+
+  const hasXCIPart = isSwitch && hasAnyKey([
+    'link_iklan_xci_part', 'link_iklan2_xci_part', 'link_asli_xci_part',
+    'link_iklan_xciPart',  'link_iklan2_xciPart',  'link_asli_xciPart',
+    'link_xci_part', 'link_xciPart',
+    'cloud_xci_part', 'cloud_xciPart',
+    'ukuran_xci_part', 'ukuran_xciPart'
+  ]);
+
+  // PS2/PSP: ISO/CHD (biar rapi juga)
+  const hasISO = (platform === 'ps2' || platform === 'psp') && hasAnyKey([
+    'link_iklan_iso', 'link_iklan2_iso', 'link_asli_iso',
+    'cloud_iso', 'ukuran_iso'
+  ]);
+
+  const hasCHD = (platform === 'ps2' || platform === 'psp') && hasAnyKey([
+    'link_iklan_chd', 'link_iklan2_chd', 'link_asli_chd',
+    'cloud_chd', 'ukuran_chd'
+  ]);
+
+  // Android: ORI/MOD
+  const hasAndroidOri = isAndroid && (game.game_type !== 'only-mod') && hasAnyKey([
+    'ori_original_links', 'ori_ad_links1', 'ori_ad_links2', 'ukuran_ori', 'ori_size_ori', 'ukuran_game'
+  ]);
+
+  const hasAndroidMod = isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod') && hasAnyKey([
+    'mod_original_links', 'mod_ad_links1', 'mod_ad_links2', 'ori_size_mod', 'mod_size', 'mod_description'
+  ]);
+
+  // PSVita (opsional, kalau kamu punya field tertentu bisa tambah)
+  const hasVitaLinks = (platform === 'psvita') && hasAnyKey([
+    'link_iklan', 'link_iklan2', 'link_asli', 'cloud_types'
+  ]);
+
+  // ========= Build format badges =========
+  let formatBadges = '';
+
+  if (isSwitch) {
+    if (hasNSP)     formatBadges += badge('NSP', 'switch-badge');
+    if (hasXCI)     formatBadges += badge('XCI', 'switch-badge');
+    if (hasNSPPart) formatBadges += badge('NSP PART', 'switch-badge');
+    if (hasXCIPart) formatBadges += badge('XCI PART', 'switch-badge');
+
+    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+  } else if (platform === 'ps2' || platform === 'psp') {
+    if (hasISO) formatBadges += badge('ISO', 'ps2-badge');
+    if (hasCHD) formatBadges += badge('CHD', 'ps2-badge');
+    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+  } else if (isAndroid) {
+    if (hasAndroidOri) formatBadges += badge('ORIGINAL', 'android-badge');
+    if (hasAndroidMod) formatBadges += badge('MOD', 'android-badge');
+    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+  } else if (platform === 'psvita') {
+    if (hasVitaLinks) formatBadges += badge('GAME', 'psvita-badge');
+    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+  }
+
+  const formatRow = formatBadges
+    ? `<tr><th>Format:</th><td>${formatBadges}</td></tr>`
+    : '';
+
+  // ========= Size rows (lebih detail untuk Switch) =========
+  let sizeRows = '';
+
+  if (isSwitch) {
+    const nspSize = game.ukuran_nsp || '';
+    const xciSize = game.ukuran_xci || '';
+    const nspPartSize = game.ukuran_nsp_part || game.ukuran_nspPart || '';
+    const xciPartSize = game.ukuran_xci_part || game.ukuran_xciPart || '';
+
+    if (hasNSP && String(nspSize).trim()) {
+      sizeRows += `<tr><th>Ukuran NSP:</th><td>${escapeHTML(nspSize)}</td></tr>`;
+    }
+    if (hasXCI && String(xciSize).trim()) {
+      sizeRows += `<tr><th>Ukuran XCI:</th><td>${escapeHTML(xciSize)}</td></tr>`;
+    }
+    if (hasNSPPart && String(nspPartSize).trim()) {
+      sizeRows += `<tr><th>Ukuran NSP PART:</th><td>${escapeHTML(nspPartSize)}</td></tr>`;
+    }
+    if (hasXCIPart && String(xciPartSize).trim()) {
+      sizeRows += `<tr><th>Ukuran XCI PART:</th><td>${escapeHTML(xciPartSize)}</td></tr>`;
+    }
+  } else {
+    // fallback umum (punya kamu sebelumnya)
+    const sizeMain =
+      game.ukuran_iso ||
+      game.ukuran_nsp ||
+      game.ori_size_ori ||
+      game.ukuran_ori ||
+      game.ukuran_game ||
+      '';
+
+    const sizeAlt =
+      game.ukuran_chd ||
+      game.ukuran_xci ||
+      game.ori_size_mod ||
+      '';
+
+    if (String(sizeMain).trim()) {
+      sizeRows += `<tr><th>Ukuran:</th><td>${escapeHTML(sizeMain)}</td></tr>`;
+    }
+    if (String(sizeAlt).trim()) {
+      sizeRows += `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(sizeAlt)}</td></tr>`;
+    }
+  }
+
+  // ========= Android MOD info =========
+  const isAndroidModDetail =
+    isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod');
 
   return `
-    <h3>Detail Game ${platformName}</h3>
+    <h3>Detail Game ${escapeHTML(platformName)}</h3>
     ${thumbHtml}
+
     <div class="row">
       <div class="col-md-6">
         <table class="table">
@@ -1578,27 +1782,17 @@ function generateDetailsHTML(game, platform, platformName) {
 
       <div class="col-md-6">
         <table class="table">
-          ${sizeInfo}
-          ${altSizeInfo}
-          ${versionInfo}
+          ${formatRow}
+          ${sizeRows}
+          ${versionRow}
           ${emulatorRow}
           <tr><th>Total Downloads:</th><td>${totalDownloads}</td></tr>
-
-          ${sumberUrl ? `
-            <tr>
-              <th>Sumber Link:</th>
-              <td>
-                <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener" style="word-break: break-word;">
-                  ${escapeHTML(sumberUrl)}
-                </a>
-              </td>
-            </tr>
-          ` : ''}
+          ${sumberRow}
         </table>
       </div>
     </div>
 
-    ${isAndroidMod ? buildAndroidModInfo(game) : ''}
+    ${isAndroidModDetail ? buildAndroidModInfo(game) : ''}
 
     <div class="mt-3 text-center">
       <a href="https://indapk.github.io" class="btn btn-success">
@@ -1607,6 +1801,7 @@ function generateDetailsHTML(game, platform, platformName) {
     </div>
   `;
 }
+
 
 
         
@@ -1808,115 +2003,90 @@ function generateSemawurTutorialVideoHTML() {
             return html;
         }
         
-        function generateSwitchAdLinks(game) {
-            let html = '';
-            
-            // LINK IKLAN 1 (INDapkShort) - NSP
-            if (game.link_iklan_nsp && Array.isArray(game.link_iklan_nsp) && game.link_iklan_nsp.length > 0) {
-                html += `
-                    <div class="card border-primary mb-4" style="border-width: 2px;">
-                        <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-                            <span><i class="bi bi-star-fill"></i> INDapk Short</span>
-                            <span class="badge bg-light text-dark">Utama</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="text-muted mb-2">
-                                Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
-                            </div>
-                            <h4>NSP Link (Link Iklan 1)</h4>
-                            <div class="d-flex flex-wrap gap-2 mb-3">
-                `;
-                
-                game.link_iklan_nsp.forEach((link, index) => {
-                    const cloud = game.cloud_nsp && game.cloud_nsp[index] ? game.cloud_nsp[index] : `Cloud ${index + 1}`;
-                    if (link) {
-                        html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
-                    }
-                });
-                
-                html += `</div></div></div>`;
-            }
-            
-            // LINK IKLAN 1 (INDapkShort) - XCI
-            if (game.link_iklan_xci && Array.isArray(game.link_iklan_xci) && game.link_iklan_xci.length > 0) {
-                html += `
-                    <div class="card border-primary mb-4" style="border-width: 2px;">
-                        <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-                            <span><i class="bi bi-star-fill"></i> INDapk Short</span>
-                            <span class="badge bg-light text-dark">Utama</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="text-muted mb-2">
-                                Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
-                            </div>
-                            <h4>XCI Link (Link Iklan 1)</h4>
-                            <div class="d-flex flex-wrap gap-2 mb-3">
-                `;
-                
-                game.link_iklan_xci.forEach((link, index) => {
-                    const cloud = game.cloud_xci && game.cloud_xci[index] ? game.cloud_xci[index] : `Cloud ${index + 1}`;
-                    if (link) {
-                        html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
-                    }
-                });
-                
-                html += `</div></div></div>`;
-            }
-            
-            // LINK IKLAN 2 (Semawur) - NSP
-            if (game.link_iklan2_nsp && Array.isArray(game.link_iklan2_nsp) && game.link_iklan2_nsp.length > 0) {
-                html += `
-                    <div class="card border-secondary mb-3">
-                        <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                            <span><i class="bi bi-link-45deg"></i> Semawur Short</span>
-                            <span class="badge bg-light text-dark">Alternatif</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="text-muted mb-2">
-                                Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
-                            </div>
-                            <h4>NSP Link (Link Iklan 2)</h4>
-                            <div class="d-flex flex-wrap gap-2 mb-3">
-                `;
-                
-                game.link_iklan2_nsp.forEach((link, index) => {
-                    const cloud = game.cloud_nsp && game.cloud_nsp[index] ? game.cloud_nsp[index] : `Cloud ${index + 1}`;
-                    if (link) {
-                        html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
-                    }
-                });
-                
-                html += `</div></div></div>`;
-            }
-            
-            // LINK IKLAN 2 (Semawur) - XCI
-            if (game.link_iklan2_xci && Array.isArray(game.link_iklan2_xci) && game.link_iklan2_xci.length > 0) {
-                html += `
-                    <div class="card border-secondary mb-3">
-                        <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                            <span><i class="bi bi-link-45deg"></i> Semawur Short</span>
-                            <span class="badge bg-light text-dark">Alternatif</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="text-muted mb-2">
-                                Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
-                            </div>
-                            <h4>XCI Link (Link Iklan 2)</h4>
-                            <div class="d-flex flex-wrap gap-2 mb-3">
-                `;
-                
-                game.link_iklan2_xci.forEach((link, index) => {
-                    const cloud = game.cloud_xci && game.cloud_xci[index] ? game.cloud_xci[index] : `Cloud ${index + 1}`;
-                    if (link) {
-                        html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
-                    }
-                });
-                
-                html += `</div></div></div>`;
-            }
-            
-            return html;
-        }
+function generateSwitchAdLinks(game) {
+  let html = '';
+
+  // Ambil data link
+  const nspLinks1 = pickArray(game, ['link_iklan_nsp']);
+  const xciLinks1 = pickArray(game, ['link_iklan_xci']);
+  const nspPartLinks1 = pickArray(game, ['link_iklan_nsp_part', 'link_iklan_nsppart']);
+  const xciPartLinks1 = pickArray(game, ['link_iklan_xci_part', 'link_iklan_xcipart']);
+
+  const nspLinks2 = pickArray(game, ['link_iklan2_nsp']);
+  const xciLinks2 = pickArray(game, ['link_iklan2_xci']);
+  const nspPartLinks2 = pickArray(game, ['link_iklan2_nsp_part', 'link_iklan2_nsppart']);
+  const xciPartLinks2 = pickArray(game, ['link_iklan2_xci_part', 'link_iklan2_xcipart']);
+
+  // Cloud label
+  const cloudNSP = pickCloud(game, ['cloud_nsp']);
+  const cloudXCI = pickCloud(game, ['cloud_xci']);
+  const cloudNSPPart = pickCloud(game, ['cloud_nsp_part', 'cloud_nsppart', 'cloud_nsp']);
+  const cloudXCIPart = pickCloud(game, ['cloud_xci_part', 'cloud_xcipart', 'cloud_xci']);
+
+  function buildCard({ title, links, cloud, btnClass, headerClass, borderStyle }) {
+    if (!hasArr(links)) return '';
+    let out = `
+      <div class="card ${borderStyle} mb-4" style="border-width:2px;">
+        <div class="card-header ${headerClass} text-white d-flex align-items-center justify-content-between">
+          <span><i class="bi bi-star-fill"></i> ${escapeHTML(title)}</span>
+          <span class="badge bg-light text-dark">Utama</span>
+        </div>
+        <div class="card-body">
+          <div class="text-muted mb-2">Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.</div>
+          <div class="d-flex flex-wrap gap-2 mb-3">
+    `;
+
+    links.forEach((link, index) => {
+      const label = cloud?.[index] ? cloud[index] : `Cloud ${index + 1}`;
+      if (link) out += `<a href="${escapeHTML(link)}" target="_blank" class="btn ${btnClass} btn-cloud">${escapeHTML(label)}</a>`;
+    });
+
+    out += `</div></div></div>`;
+    return out;
+  }
+
+  function buildCardAlt({ title, links, cloud, btnClass, headerClass }) {
+    if (!hasArr(links)) return '';
+    let out = `
+      <div class="card border-secondary mb-3">
+        <div class="card-header ${headerClass} text-white d-flex align-items-center justify-content-between">
+          <span><i class="bi bi-link-45deg"></i> Semawur Short</span>
+          <span class="badge bg-light text-dark">Alternatif</span>
+        </div>
+        <div class="card-body">
+          <div class="text-muted mb-2">Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.</div>
+          <h4>${escapeHTML(title)}</h4>
+          <div class="d-flex flex-wrap gap-2 mb-3">
+    `;
+
+    links.forEach((link, index) => {
+      const label = cloud?.[index] ? cloud[index] : `Cloud ${index + 1}`;
+      if (link) out += `<a href="${escapeHTML(link)}" target="_blank" class="btn ${btnClass} btn-cloud">${escapeHTML(label)}</a>`;
+    });
+
+    out += `</div></div></div>`;
+    return out;
+  }
+
+  // Link Iklan 1 (INDapk Short)
+  html += buildCard({ title: 'NSP Link (Link Iklan 1)', links: nspLinks1, cloud: cloudNSP, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCard({ title: 'XCI Link (Link Iklan 1)', links: xciLinks1, cloud: cloudXCI, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+
+  // ✅ PART
+  html += buildCard({ title: 'NSP PART Link (Link Iklan 1)', links: nspPartLinks1, cloud: cloudNSPPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCard({ title: 'XCI PART Link (Link Iklan 1)', links: xciPartLinks1, cloud: cloudXCIPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+
+  // Link Iklan 2 (Semawur)
+  html += buildCardAlt({ title: 'NSP Link (Link Iklan 2)', links: nspLinks2, cloud: cloudNSP, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ title: 'XCI Link (Link Iklan 2)', links: xciLinks2, cloud: cloudXCI, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+
+  // ✅ PART
+  html += buildCardAlt({ title: 'NSP PART Link (Link Iklan 2)', links: nspPartLinks2, cloud: cloudNSPPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ title: 'XCI PART Link (Link Iklan 2)', links: xciPartLinks2, cloud: cloudXCIPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+
+  return html || '<p>Link iklan tidak tersedia untuk game ini.</p>';
+}
+
         
         function generatePSPAdLinks(game) {
             let html = '';
@@ -2304,65 +2474,60 @@ function generateOriginalLinksHTML(game, platform) {
             return html;
         }
         
-        function generateSwitchOriginalLinks(game) {
-            let html = '';
-            
-            // LINK ASLI TANPA IKLAN - NSP
-            if (game.link_asli_nsp && Array.isArray(game.link_asli_nsp) && game.link_asli_nsp.length > 0) {
-                html += `
-                    <div class="link-section original-link">
-                        <h6>Link Asli Tanpa Iklan - NSP</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
-                `;
-                
-                game.link_asli_nsp.forEach((link, index) => {
-                    const cloud = game.cloud_nsp && game.cloud_nsp[index] ? game.cloud_nsp[index] : `Cloud ${index + 1}`;
-                    html += `
-                        <div class="link-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>${escapeHTML(cloud)}</span>
-                                <button class="btn btn-sm btn-success"
-                                    onclick="requestOriginalLink(this, '${game.download_id}', 'nsp', ${index}, '${cloud}', 'switch')"
-                                    ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                html += `</div>`;
-            }
-            
-            // LINK ASLI TANPA IKLAN - XCI
-            if (game.link_asli_xci && Array.isArray(game.link_asli_xci) && game.link_asli_xci.length > 0) {
-                html += `
-                    <div class="link-section original-link">
-                        <h6>Link Asli Tanpa Iklan - XCI</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
-                `;
-                
-                game.link_asli_xci.forEach((link, index) => {
-                    const cloud = game.cloud_xci && game.cloud_xci[index] ? game.cloud_xci[index] : `Cloud ${index + 1}`;
-                    html += `
-                        <div class="link-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>${escapeHTML(cloud)}</span>
-                                <button class="btn btn-sm btn-success"
-                                    onclick="requestOriginalLink(this, '${game.download_id}', 'xci', ${index}, '${cloud}', 'switch')"
-                                    ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                html += `</div>`;
-            }
-            
-            return html;
-        }
+function generateSwitchOriginalLinks(game) {
+  let html = '';
+
+  const linkNSP = pickArray(game, ['link_asli_nsp']);
+  const linkXCI = pickArray(game, ['link_asli_xci']);
+
+  // ✅ PART
+  const linkNSPPart = pickArray(game, ['link_asli_nsp_part', 'link_asli_nsppart']);
+  const linkXCIPart = pickArray(game, ['link_asli_xci_part', 'link_asli_xcipart']);
+
+  const cloudNSP = pickCloud(game, ['cloud_nsp']);
+  const cloudXCI = pickCloud(game, ['cloud_xci']);
+  const cloudNSPPart = pickCloud(game, ['cloud_nsp_part', 'cloud_nsppart', 'cloud_nsp']);
+  const cloudXCIPart = pickCloud(game, ['cloud_xci_part', 'cloud_xcipart', 'cloud_xci']);
+
+  function buildOriginalSection(title, links, cloudArr, linkType) {
+    if (!hasArr(links)) return '';
+
+    let out = `
+      <div class="link-section original-link">
+        <h6>${escapeHTML(title)}</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    links.forEach((_, index) => {
+      const cloud = cloudArr?.[index] ? cloudArr[index] : `Cloud ${index + 1}`;
+      out += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', '${linkType}', ${index}, '${cloud}', 'switch')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    out += `</div>`;
+    return out;
+  }
+
+  html += buildOriginalSection('Link Asli Tanpa Iklan - NSP', linkNSP, cloudNSP, 'nsp');
+  html += buildOriginalSection('Link Asli Tanpa Iklan - XCI', linkXCI, cloudXCI, 'xci');
+
+  // ✅ PART
+  html += buildOriginalSection('Link Asli Tanpa Iklan - NSP PART', linkNSPPart, cloudNSPPart, 'nsp_part');
+  html += buildOriginalSection('Link Asli Tanpa Iklan - XCI PART', linkXCIPart, cloudXCIPart, 'xci_part');
+
+  return html || '<p class="text-muted">Link asli belum tersedia.</p>';
+}
+
         
         function generatePSPOriginalLinks(game) {
             let html = '';
