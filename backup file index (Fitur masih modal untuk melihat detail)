@@ -1,0 +1,3856 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>List Game INDapk - Multi Platform Game Download</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== GLOBAL VARIABLES ===== */
+    :root {
+      --ps2-color: #0066cc;
+      --switch-color: #e60012;
+      --psp-color: #0070cc;
+      --psvita-color: #003791;
+      --wii-color: #009ac7;
+      --3ds-color: #d12229;
+      --android-color: #3ddc84;
+      --pc-color: #00a4ef;
+
+      /* gamer palette */
+      --bg0: #070a12;
+      --bg1: #0b1020;
+      --card: rgba(255, 255, 255, 0.06);
+      --card2: rgba(255, 255, 255, 0.08);
+      --stroke: rgba(255, 255, 255, 0.10);
+      --text: #e7eaf2;
+      --muted: rgba(231, 234, 242, 0.70);
+      --neonA: #7c3aed;
+      --neonB: #22d3ee;
+      --neonC: #a3ff12;
+      --danger: #ff3b6a;
+
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --neon-gradient: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(34,211,238,0.9));
+      --glass: blur(14px);
+
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.35);
+      --shadow-glow: 0 0 0 1px rgba(34,211,238,0.18), 0 10px 40px rgba(124,58,237,0.22);
+    }
+
+    /* ===== GLOBAL STYLES ===== */
+    html, body { height: 100%; }
+    body {
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(124,58,237,0.25), transparent 60%),
+                  radial-gradient(900px 600px at 80% 20%, rgba(34,211,238,0.20), transparent 55%),
+                  radial-gradient(900px 700px at 60% 90%, rgba(163,255,18,0.08), transparent 55%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      padding-bottom: 60px;
+      overflow-x: hidden;
+    }
+
+    /* animated background layers */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(124,58,237,0.10), transparent 60%),
+        linear-gradient(300deg, rgba(34,211,238,0.08), transparent 60%);
+      filter: blur(0px);
+      animation: bgShift 10s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 52px 52px;
+      opacity: 0.18;
+      mask-image: radial-gradient(500px 400px at 50% 30%, black 30%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+      animation: gridDrift 14s linear infinite;
+    }
+
+    @keyframes bgShift {
+      from { transform: translate3d(-1%, -1%, 0) scale(1.02); }
+      to   { transform: translate3d(1%, 1%, 0) scale(1.06); }
+    }
+
+    @keyframes gridDrift {
+      from { transform: translate3d(0,0,0); }
+      to   { transform: translate3d(-52px, -52px, 0); }
+    }
+
+    /* nice scrollbar */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+
+    /* ===== NAVBAR STYLES ===== */
+    .navbar {
+      background: rgba(10, 14, 26, 0.60) !important;
+      backdrop-filter: var(--glass);
+      -webkit-backdrop-filter: var(--glass);
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
+
+    .navbar-brand {
+      font-family: Orbitron, Inter, system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      font-size: 1.15rem;
+      display: inline-flex;
+      align-items: center;
+      color: var(--text) !important;
+      position: relative;
+    }
+
+    .navbar-brand i {
+      color: var(--neonB);
+      text-shadow: 0 0 14px rgba(34,211,238,0.40);
+    }
+
+    .navbar-brand::after {
+      content: "";
+      position: absolute;
+      left: 34px;
+      right: 0;
+      bottom: -6px;
+      height: 2px;
+      background: var(--neon-gradient);
+      border-radius: 999px;
+      opacity: 0.75;
+      transform: scaleX(0.55);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+    .navbar-brand:hover::after { transform: scaleX(1); }
+
+    /* user header badge */
+    #userHeader .badge {
+      background: rgba(34,211,238,0.14) !important;
+      border: 1px solid rgba(34,211,238,0.25);
+      color: var(--text) !important;
+      box-shadow: 0 0 0 1px rgba(124,58,237,0.10);
+      border-radius: 999px;
+    }
+
+    /* ===== SECTION STYLES ===== */
+    .filter-section,
+    .user-info-box,
+    .game-detail-section {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: var(--glass);
+      -webkit-backdrop-filter: var(--glass);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .filter-section {
+      position: relative;
+      z-index: 20;
+      margin-bottom: 22px;
+      padding: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .filter-section {
+        margin-bottom: 16px;
+        padding: 14px;
+      }
+    }
+
+    #gameListContainer {
+      margin-top: 8px;
+    }
+
+    .filter-section .dropdown {
+      position: relative;
+    }
+
+    .filter-section .dropdown-menu {
+      z-index: 30 !important;
+    }
+
+    #gameListContainer,
+    .game-card {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== INPUT STYLES ===== */
+    .input-group-text {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: var(--muted);
+      border-right: 0;
+      border-radius: 14px 0 0 14px;
+    }
+    .form-control {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: var(--text);
+      border-left: 0;
+      border-radius: 0 14px 14px 0;
+    }
+    .form-control::placeholder { color: rgba(231,234,242,0.55); }
+    .form-control:focus {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-color: rgba(34,211,238,0.35);
+      box-shadow: 0 0 0 0.2rem rgba(34,211,238,0.12);
+    }
+
+    /* ===== DROPDOWN STYLES ===== */
+    .btn-outline-secondary.dropdown-toggle {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-outline-secondary.dropdown-toggle:hover {
+      transform: translateY(-1px);
+      border-color: rgba(34,211,238,0.30);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+    }
+    .dropdown-menu {
+      background: rgba(10, 14, 26, 0.90);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: var(--glass);
+      -webkit-backdrop-filter: var(--glass);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+    }
+    .dropdown-item {
+      color: rgba(231,234,242,0.85);
+      padding: 10px 12px;
+    }
+    .dropdown-item:hover {
+      color: var(--text);
+      background: rgba(34,211,238,0.10);
+    }
+    .dropdown-divider { border-top: 1px solid rgba(255,255,255,0.10); }
+
+    /* ===== BADGE STYLES ===== */
+    .platform-badge {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 0.2px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.10) inset, 0 10px 25px rgba(0,0,0,0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-ps2 { background: linear-gradient(135deg, rgba(0,102,204,0.95), rgba(34,211,238,0.25)); }
+    .badge-switch { background: linear-gradient(135deg, rgba(230,0,18,0.95), rgba(124,58,237,0.25)); }
+    .badge-psp { background: linear-gradient(135deg, rgba(0,112,204,0.95), rgba(34,211,238,0.20)); }
+    .badge-psvita { background: linear-gradient(135deg, rgba(0,55,145,0.95), rgba(124,58,237,0.20)); }
+    .badge-wii { background: linear-gradient(135deg, rgba(0,154,199,0.95), rgba(34,211,238,0.20)); }
+    .badge-3ds { background: linear-gradient(135deg, rgba(209,34,41,0.95), rgba(230,0,18,0.20)); }
+    .badge-android { background: linear-gradient(135deg, rgba(61,220,132,0.95), rgba(163,255,18,0.18)); }
+    .badge-pc { background: linear-gradient(135deg, rgba(0,164,239,0.95), rgba(34,211,238,0.20)); }
+
+    .platform-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.8rem;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.12) inset;
+    }
+
+    .platform-ps2 { background: rgba(0,102,204,0.9); }
+    .platform-switch { background: rgba(230,0,18,0.9); }
+    .platform-psp { background: rgba(0,112,204,0.9); }
+    .platform-psvita { background: rgba(0,55,145,0.9); }
+    .platform-wii { background: rgba(0,154,199,0.9); }
+    .platform-3ds { background: rgba(209,34,41,0.9); }
+    .platform-android { background: rgba(61,220,132,0.9); }
+    .platform-pc { background: rgba(0,164,239,0.9); }
+
+    .category-badge {
+      background: rgba(255,255,255,0.06);
+      color: rgba(231,234,242,0.85);
+      border: 1px solid rgba(255,255,255,0.10);
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      display: inline-block;
+      transition: transform 0.15s ease, border-color 0.2s ease;
+    }
+    .category-badge:hover {
+      transform: translateY(-1px);
+      border-color: rgba(34,211,238,0.28);
+    }
+
+    /* ===== CARD STYLES ===== */
+    .game-card {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: var(--glass);
+      -webkit-backdrop-filter: var(--glass);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      height: 100%;
+      transition: transform 0.18s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+    }
+
+    .game-card.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .game-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(34,211,238,0.26);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      letter-spacing: 0.2px;
+    }
+
+    .card-text {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .text-muted { color: rgba(231,234,242,0.60) !important; }
+
+    /* ===== BUTTON STYLES ===== */
+    .btn {
+      border-radius: 14px;
+      transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+
+    .btn-telegram {
+      background: var(--neon-gradient);
+      border: 1px solid rgba(34,211,238,0.20);
+      color: white;
+      box-shadow: 0 12px 30px rgba(124,58,237,0.18);
+    }
+    .btn-telegram:hover {
+      filter: brightness(1.06);
+      box-shadow: 0 16px 40px rgba(34,211,238,0.14), 0 12px 30px rgba(124,58,237,0.16);
+      color: white;
+    }
+
+    .btn-outline-primary {
+      border-color: rgba(34,211,238,0.38);
+      color: rgba(34,211,238,0.95);
+      background: rgba(34,211,238,0.06);
+    }
+    .btn-outline-primary:hover {
+      background: rgba(34,211,238,0.12);
+      border-color: rgba(34,211,238,0.55);
+      color: white;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.25);
+    }
+
+    .btn-outline-secondary {
+      border-color: rgba(255,255,255,0.14);
+      color: rgba(231,234,242,0.88);
+      background: rgba(255,255,255,0.06);
+    }
+    .btn-outline-secondary:hover {
+      background: rgba(255,255,255,0.10);
+      color: var(--text);
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, rgba(255,193,7,0.95), rgba(255,193,7,0.55));
+      border: 0;
+      color: #1b1300;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, rgba(34,197,94,0.95), rgba(163,255,18,0.20));
+      border: 1px solid rgba(34,197,94,0.25);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+    }
+
+    .btn-danger {
+      background: rgba(255,59,106,0.15);
+      border: 1px solid rgba(255,59,106,0.30);
+      color: rgba(255,210,223,0.95);
+    }
+    .btn-danger:hover {
+      background: rgba(255,59,106,0.24);
+      border-color: rgba(255,59,106,0.45);
+      color: white;
+    }
+
+    /* ===== MODAL STYLES ===== */
+    .modal-content {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(10, 14, 26, 0.92);
+      backdrop-filter: var(--glass);
+      -webkit-backdrop-filter: var(--glass);
+      box-shadow: 0 20px 80px rgba(0,0,0,0.55);
+    }
+
+    .login-modal-header,
+    .detail-modal-header {
+      background: var(--neon-gradient);
+      color: white;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .modal.fade .modal-dialog {
+      transform: translateY(10px) scale(0.98);
+      transition: transform 0.22s ease;
+    }
+    .modal.show .modal-dialog {
+      transform: translateY(0) scale(1);
+    }
+
+    /* tables in detail */
+    .table {
+      color: rgba(231,234,242,0.88);
+      margin-bottom: 0;
+    }
+    .table th, .table td {
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+
+    /* ===== LINK SECTION STYLES ===== */
+    .link-section {
+      background: rgba(255,255,255,0.05);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 14px;
+      border-left: 4px solid rgba(34,211,238,0.75);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .ad-link {
+      border-left-color: rgba(255,193,7,0.85);
+      background: rgba(255,193,7,0.08);
+    }
+
+    .original-link {
+      border-left-color: rgba(34,197,94,0.80);
+      background: rgba(34,197,94,0.08);
+    }
+
+    .link-item {
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,0.10);
+      transition: transform 0.15s ease, border-color 0.2s ease;
+    }
+    .link-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(34,211,238,0.22);
+    }
+
+    /* ===== LOADING & EMPTY STATES ===== */
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 220px;
+      position: relative;
+    }
+    .spinner-border {
+      filter: drop-shadow(0 0 16px rgba(34,211,238,0.35));
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 46px 18px;
+      color: rgba(231,234,242,0.70);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius-lg);
+      backdrop-filter: var(--glass);
+      -webkit-backdrop-filter: var(--glass);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      opacity: 0.65;
+      color: rgba(34,211,238,0.85);
+      text-shadow: 0 0 18px rgba(34,211,238,0.22);
+    }
+
+    /* ===== ALERT STYLES ===== */
+    .alert {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: rgba(231,234,242,0.88);
+    }
+    .alert-info {
+      border-color: rgba(34,211,238,0.25);
+      background: rgba(34,211,238,0.08);
+    }
+    .alert-warning {
+      border-color: rgba(255,193,7,0.25);
+      background: rgba(255,193,7,0.10);
+      color: rgba(255,240,200,0.95);
+    }
+    .alert-danger {
+      border-color: rgba(255,59,106,0.25);
+      background: rgba(255,59,106,0.10);
+      color: rgba(255,220,230,0.95);
+    }
+
+    /* ===== NAVBAR EXTRA BUTTONS ===== */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn-neon {
+      background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(34,211,238,0.9));
+      border: 1px solid rgba(34,211,238,0.22);
+      color: #fff;
+      box-shadow: 0 12px 28px rgba(124,58,237,0.18);
+    }
+    .btn-neon:hover {
+      filter: brightness(1.06);
+      color: #fff;
+    }
+
+    .btn-neon-outline {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(34,211,238,0.35);
+      color: rgba(231,234,242,0.92);
+    }
+    .btn-neon-outline:hover {
+      background: rgba(34,211,238,0.12);
+      border-color: rgba(34,211,238,0.55);
+      color: #fff;
+    }
+
+    /* ===== NEW BADGE STYLES ===== */
+    .new-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.70rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(255,59,106,0.98), rgba(209,34,41,0.95));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+      white-space: nowrap;
+    }
+
+    /* Samakan tinggi dropdown & tombol refresh */
+    .dropdown-platform,
+    .dropdown-category,
+    .btn-refresh-icon {
+      min-height: 46px;
+    }
+
+    /* Tombol refresh versi icon */
+    .btn-refresh-icon {
+      width: 52px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+    }
+
+    /* ===== RESPONSIVE STYLES ===== */
+    @media (max-width: 768px) {
+      .dropdown-platform, .dropdown-category { width: 100%; margin-bottom: 10px; }
+      .navbar-brand { font-size: 1rem; }
+    }
+
+    @media (max-width: 576px) {
+      .nav-actions { width: 100%; justify-content: space-between; }
+      .nav-actions .btn { padding: 8px 10px; font-size: 0.85rem; }
+      .category-wrap {
+        flex-direction: column;
+      }
+      .btn-refresh-icon {
+        width: 100%;
+      }
+    }
+
+    /* ===== ANIMATION STYLES ===== */
+    @keyframes spinner-border {
+      to { transform: rotate(360deg); }
+    }
+
+    .spinner-border,
+    .spinner-border-sm {
+      animation: spinner-border .75s linear infinite !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spinner-border,
+      .spinner-border-sm {
+        animation: spinner-border .75s linear infinite !important;
+      }
+    }
+/* ===== PAGINATION ===== */
+.pagination-wrap {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--radius-lg);
+  padding: 14px 14px;
+  backdrop-filter: var(--glass);
+  -webkit-backdrop-filter: var(--glass);
+  box-shadow: var(--shadow-soft);
+}
+
+.pagination .page-link {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(231,234,242,0.90);
+  border-radius: 12px;
+  margin: 0 4px;
+  padding: 8px 12px;
+}
+
+.pagination .page-link:hover {
+  border-color: rgba(34,211,238,0.35);
+  background: rgba(34,211,238,0.10);
+  color: #fff;
+}
+
+.pagination .page-item.active .page-link {
+  background: var(--neon-gradient);
+  border-color: rgba(34,211,238,0.30);
+  color: #fff;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+}
+
+.pagination .page-item.disabled .page-link {
+  opacity: 0.45;
+}
+
+.page-meta {
+  color: rgba(231,234,242,0.70);
+  font-size: 0.9rem;
+}
+
+.page-jump {
+  cursor: pointer;
+  user-select: none;
+  color: rgba(231,234,242,0.70);
+  padding: 8px 10px;
+}
+/* ===== THUMBNAIL STYLES ===== */
+.thumbnail-container {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.game-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(34,211,238,0.05));
+}
+
+.game-card:hover .game-thumbnail {
+  transform: scale(1.05);
+}
+
+.thumbnail-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* Admin overlay untuk thumbnail */
+.thumbnail-admin-overlay {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.game-card:hover .thumbnail-admin-overlay {
+  opacity: 1;
+}
+
+.thumbnail-admin-overlay .btn {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 4px 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.thumbnail-admin-overlay .btn:hover {
+  background: rgba(34,211,238,0.2);
+  border-color: rgba(34,211,238,0.4);
+}
+
+/* Placeholder styling */
+.game-thumbnail[src*="placeholder"] {
+  filter: grayscale(0.3) brightness(0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.8rem;
+}
+
+/* Responsive thumbnail */
+@media (max-width: 768px) {
+  .thumbnail-container {
+    height: 140px;
+  }
+}
+
+/* Modal thumbnail admin */
+.thumbnail-preview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  background: rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px dashed rgba(255,255,255,0.2);
+}
+
+.thumbnail-input-group {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.thumbnail-url-input {
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.thumbnail-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* Preview thumbnail di modal detail */
+.detail-thumbnail {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.1);
+}
+
+/* Tambahkan di CSS section */
+.thumbnail-preview.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.2);
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+  min-height: 150px;
+}
+
+.game-thumbnail[src*="placehold.co"] {
+  filter: brightness(0.8) contrast(1.1);
+}
+
+/* Paksa layer GPU lebih stabil */
+body::before,
+body::after,
+.navbar,
+.game-card,
+.filter-section {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Saat scroll, hentikan animasi background biar tidak bikin artifact */
+body.is-scrolling::before,
+body.is-scrolling::after {
+  animation-play-state: paused;
+}
+
+/* Optional: saat scroll matikan blur (ini yang paling sering bikin “kotak-kotak”) */
+body.is-scrolling .game-card,
+body.is-scrolling .filter-section,
+body.is-scrolling .navbar {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+/* Jarak antara card list dan pagination */
+#paginationContainer{
+  margin-top: 22px;
+  margin-bottom: 28px;
+}
+
+/* Biar pagination cardnya juga tidak mepet */
+.pagination-wrap{
+  margin-top: 6px;
+}
+/* ===== FOOTER ===== */
+.site-footer{
+  margin-top: 34px;
+  padding: 18px 0;
+  background: rgba(10, 14, 26, 0.65);
+  border-top: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: var(--glass);
+  -webkit-backdrop-filter: var(--glass);
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.25);
+}
+
+.site-footer .footer-brand{
+  font-family: Orbitron, Inter, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.site-footer a{
+  color: rgba(231,234,242,0.78);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.site-footer a:hover{
+  color: #fff;
+  border-bottom-color: rgba(34,211,238,0.45);
+}
+
+.site-footer .footer-copy{
+  color: rgba(231,234,242,0.60);
+  font-size: 0.9rem;
+}
+/* ===== HEADER BANNER STYLES ===== */
+.header-banner {
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.banner-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.header-banner:hover .banner-image {
+  transform: scale(1.03);
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, 
+              rgba(10, 14, 26, 0.85) 0%, 
+              rgba(10, 14, 26, 0.65) 50%, 
+              transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 60px;
+  color: var(--text);
+}
+
+.banner-overlay h1 {
+  font-family: Orbitron, sans-serif;
+  font-weight: 700;
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  background: linear-gradient(to right, var(--text), var(--neonB));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.banner-overlay .lead {
+  font-size: 1.2rem;
+  color: rgba(231, 234, 242, 0.9);
+  max-width: 600px;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+}
+
+/* Responsive header banner */
+@media (max-width: 992px) {
+  .banner-container {
+    height: 250px;
+  }
+  
+  .banner-overlay {
+    padding: 0 40px;
+  }
+  
+  .banner-overlay h1 {
+    font-size: 2.2rem;
+  }
+  
+  .banner-overlay .lead {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-container {
+    height: 200px;
+  }
+  
+  .banner-overlay {
+    padding: 0 30px;
+    background: linear-gradient(to right, 
+                rgba(10, 14, 26, 0.9) 0%, 
+                rgba(10, 14, 26, 0.7) 70%, 
+                rgba(10, 14, 26, 0.4) 100%);
+  }
+  
+  .banner-overlay h1 {
+    font-size: 1.8rem;
+  }
+  
+  .banner-overlay .lead {
+    font-size: 1rem;
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner-container {
+    height: 180px;
+  }
+  
+  .banner-overlay {
+    padding: 0 20px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .banner-overlay h1 {
+    font-size: 1.6rem;
+  }
+  
+  .banner-overlay .lead {
+    font-size: 0.9rem;
+    max-width: 90%;
+  }
+}
+
+/* Perbaiki margin atas konten utama */
+.container.mt-4 {
+  margin-top: 20px !important;
+}
+  </style>
+</head>
+
+<body>
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-controller me-2"></i>INDapk
+      </a>
+      <div class="nav-actions">
+
+        <a href="https://apksgi.github.io" target="_blank" rel="noopener"
+           class="btn btn-neon-outline btn-sm">
+          <i class="bi bi-play-circle me-1"></i> Video & Game (Only 18+)
+        </a>
+
+        <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
+           class="btn btn-neon-outline btn-sm">
+          <i class="bi bi-plus-circle me-1"></i> Request Game
+        </a>
+
+        <a href="https://indapk.com/topup.html" target="_blank" rel="noopener"
+           class="btn btn-neon btn-sm">
+          <i class="bi bi-wallet2 me-1"></i> Top Up
+        </a>
+
+        <!-- User Info / Login Button -->
+        <div id="userHeader" class="d-none">
+          <span class="badge me-2">
+            <i class="bi bi-person me-1"></i>
+            <span id="loggedUserName">-</span>
+          </span>
+
+          <span class="badge me-2">
+            <i class="bi bi-coin me-1"></i>
+            Rp <span id="loggedUserBalance">0</span>
+          </span>
+
+          <button class="btn btn-danger btn-sm" onclick="logout()">
+            <i class="bi bi-box-arrow-right me-1"></i> Logout
+          </button>
+        </div>
+
+        <button id="loginButton" class="btn btn-telegram" onclick="openLoginModal()">
+          <i class="bi bi-telegram"></i> Login Telegram
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <!-- ===== HEADER BANNER ===== -->
+<div class="header-banner">
+  <div class="banner-container">
+    <img src="https://www.kuysocial.com/content/uploads/photos/2025/11/kuysocial_2e94906c5735f263e9de8a2ce662e715_cropped.jpg" 
+         alt="Header Banner" 
+         class="banner-image">
+    <div class="banner-overlay">
+      <h1>List Game INDapk</h1>
+      <p class="lead">Download Game Multi Platform Gratis dan Premium</p>
+    </div>
+  </div>
+</div>
+  <div class="container mt-4">
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Cari game..." />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle dropdown-platform w-100" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-device-ssd me-2"></i> Platform: <span id="platformText">Semua</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" data-platform="all">Semua Platform</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="wii">Wii</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="3ds">3DS</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="pc">PC</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="d-flex gap-2 align-items-stretch category-wrap">
+            <div class="dropdown flex-grow-1">
+              <button class="btn btn-outline-secondary dropdown-toggle dropdown-category w-100" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-tags me-2"></i> Kategori: <span id="categoryText">Semua</span>
+              </button>
+              <ul class="dropdown-menu" id="categoryList">
+                <li><a class="dropdown-item" href="#" data-category="all">Semua Kategori</a></li>
+              </ul>
+            </div>
+
+            <button id="btnRefreshGames" class="btn btn-neon-outline btn-refresh-icon" type="button" title="Refresh Game">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game List -->
+    <div id="gameListContainer">
+      <div class="spinner-container">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+      <div id="paginationContainer"></div>
+  </div>
+
+
+  <!-- ===== MODALS ===== -->
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header login-modal-header">
+          <h5 class="modal-title">Login dengan Telegram</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Cara daftar:</strong> Buka bot <a href="https://t.me/indapkbot" target="_blank">@indapkbot</a>,
+            ketik <code>/register</code>, lalu <code>/profile</code> untuk melihat ID dan Key.
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Telegram ID</label>
+            <input type="text" id="telegramId" class="form-control" placeholder="Contoh: 123456789" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Key</label>
+            <input type="password" id="telegramKey" class="form-control" placeholder="Masukkan key dari bot" />
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-telegram" onclick="login(this)">
+              <i class="bi bi-telegram me-2"></i> Login
+            </button>
+            <a href="https://t.me/indapkbot" target="_blank" class="btn btn-outline-primary">
+              <i class="bi bi-arrow-up-right-square me-2"></i> Buka Bot Telegram
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Detail Modal -->
+  <div class="modal fade" id="gameDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header detail-modal-header">
+          <h5 class="modal-title" id="gameDetailTitle"></h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="gameDetailContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Confirmation Modal -->
+  <div class="modal fade" id="payConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title">Konfirmasi Pembayaran</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Anda akan mengakses link <strong id="payCloudName">-</strong></p>
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Biaya: Rp 2.000</strong><br />
+            Saldo Anda: Rp <span id="payBalance">0</span><br />
+            Saldo setelah potongan: Rp <span id="payAfter">0</span>
+          </div>
+          <p>Apakah Anda yakin ingin melanjutkan?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" id="btnPayYes">Ya, Lanjutkan</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link Ready Modal -->
+  <div class="modal fade" id="linkReadyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">Link Siap Diakses</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-3">
+            <i class="bi bi-check-circle-fill" style="font-size: 3rem;"></i>
+            <h5 class="mt-2">Pembayaran Berhasil!</h5>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Link Download:</label>
+            <div class="input-group">
+              <input id="readyLinkInput" type="text" class="form-control" readonly />
+              <button class="btn btn-outline-secondary" type="button" id="btnCopyReadyLink">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+          </div>
+          <button class="btn btn-success w-100" id="btnOpenReadyLink">
+            <i class="bi bi-box-arrow-up-right me-2"></i> Buka Link di Tab Baru
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Thumbnail Management Modal -->
+<div class="modal fade" id="thumbnailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header detail-modal-header">
+        <h5 class="modal-title">Kelola Thumbnail</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Game: <strong id="thumbnailGameName">-</strong></label>
+          <div class="thumbnail-input-group">
+            <div class="mb-3">
+              <label class="form-label small">URL Thumbnail Saat Ini:</label>
+              <div class="input-group">
+                <input type="text" id="currentThumbnailUrl" class="form-control thumbnail-url-input" readonly>
+                <button class="btn btn-outline-secondary" type="button" onclick="copyThumbnailUrl()">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label small">Preview:</label>
+              <div class="text-center">
+                <img id="thumbnailPreview" src="" alt="Preview" class="thumbnail-preview">
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label small">URL Thumbnail Baru:</label>
+              <div class="input-group">
+                <input type="text" id="newThumbnailUrl" class="form-control thumbnail-url-input" 
+                       placeholder="Tempel link thumbnail di sini...">
+                <button class="btn btn-outline-secondary" type="button" onclick="testThumbnail()">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="form-text text-muted">
+                Tempel link gambar (JPEG/PNG/WEBP) dari hosting manapun. Rekomendasi: Imgur, Cloudinary, atau Google Drive (public link).
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="thumbnail-actions">
+          <button class="btn btn-success flex-grow-1" onclick="updateThumbnail()" id="btnUpdateThumbnail">
+            <i class="bi bi-check-circle me-2"></i> Update Thumbnail
+          </button>
+          <button class="btn btn-danger" onclick="removeThumbnail()" id="btnRemoveThumbnail">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        
+        <div id="thumbnailMessage" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ====== CONFIGURATION ======
+    const GAMEPS2_API_URL = "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec";
+    const GAMESWITCH_API_URL = "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec";
+    const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec"; 
+    const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
+    const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
+    const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
+    const ADMIN_TELEGRAM_ID = "1172835542";
+
+    function isAdminUser() {
+      return currentUser && String(currentUser.wa_number).trim() === ADMIN_TELEGRAM_ID;
+    }
+    
+    // ====== GLOBAL STATE ======
+    let currentUser = null;
+    let allGames = [];
+    let filteredGames = [];
+    let currentPlatform = 'all';
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let categories = new Set();
+    let pendingAccess = null;
+    const COST_PER_LINK = 2000;
+    const LS_USER_KEY = 'indapkGameUser';
+    const LS_LOGOUT_AT_KEY = 'indapkGameLogoutAt';
+    let saldoIntervalId = null;
+    let isGamesLoaded = false;
+    let currentPage = 1;
+    let searchTypingTimer = null;
+    const GAMES_PER_PAGE = 24; // kamu bisa ganti 12/16/20/24
+    // ====== THUMBNAIL MANAGEMENT FUNCTIONS ======
+    let currentThumbnailGame = null;
+let scrollTimer = null;
+const CACHE_KEY = 'indapk_games_cache_v1';
+const CACHE_TTL = 1 * 60 * 1000; // 1 menit
+let loadAbort = null;
+
+
+
+// ====== LOAD DATA GAME MANAGEMENT FUNCTIONS ======
+
+function readGamesCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (!obj?.ts || !Array.isArray(obj?.data)) return null;
+    if (Date.now() - obj.ts > CACHE_TTL) return null;
+    return obj.data;
+  } catch { return null; }
+}
+
+function writeGamesCache(data) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+  } catch {}
+}
+
+async function postAction(url, action, signal) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    },
+    body: `action=${encodeURIComponent(action)}`,
+    signal
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+function normalizeGame(game, platform, platformName, apiUrl, accessAction) {
+  const category_list = splitCategories(game.category || game.ori_category);
+  const name = (game.nama_game || game.ori_name || '').trim();
+  const ts_num = toTime(game.timestamp);
+
+  return {
+    ...game,
+    thumbnail_url: game.thumbnail_url || '',
+    platform,
+    platform_name: platformName,
+    api_url: apiUrl,
+    access_action: accessAction,
+    category_list,
+    ts_num,
+    __searchText: (
+      name + ' ' +
+      category_list.join(' ') + ' ' +
+      (game.language || '') + ' ' +
+      (game.region || '')
+    ).toLowerCase()
+  };
+}
+
+async function fetchPlatformGames({ platform, name, url, accessAction }, signal) {
+  const result = await postAction(url, 'getAllGames', signal);
+  if (result.status !== 'success' || !Array.isArray(result.data)) return [];
+  return result.data.map(g => normalizeGame(g, platform, name, url, accessAction));
+}
+
+
+function rebuildCategoriesFromAllGames() {
+  categories = new Set();
+  allGames.forEach(g => (g.category_list || []).forEach(c => categories.add(c)));
+
+  // isi dropdown saat browser lagi santai
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => populateCategoryDropdown(), { timeout: 600 });
+  } else {
+    setTimeout(populateCategoryDropdown, 0);
+  }
+}
+
+
+window.addEventListener('scroll', () => {
+  document.body.classList.add('is-scrolling');
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => {
+    document.body.classList.remove('is-scrolling');
+  }, 150);
+}, { passive: true });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const y = document.getElementById('yearNow');
+  if (y) y.textContent = new Date().getFullYear();
+});
+
+// ====== THUMBNAIL MANAGEMENT FUNCTIONS ======
+function manageThumbnail(downloadId, platform, currentUrl, gameName) {
+  if (!isAdminUser()) {
+    alert('Hanya admin yang bisa mengelola thumbnail!');
+    return;
+  }
+  
+  currentThumbnailGame = { downloadId, platform, currentUrl };
+  
+  // Update modal UI
+  document.getElementById('thumbnailGameName').textContent = gameName;
+  document.getElementById('currentThumbnailUrl').value = currentUrl || '(Belum ada thumbnail)';
+  document.getElementById('newThumbnailUrl').value = '';
+  document.getElementById('thumbnailPreview').src = currentUrl || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image';
+  
+  // Reset message
+  document.getElementById('thumbnailMessage').innerHTML = '';
+  
+  // Show modal
+  const modal = new bootstrap.Modal(document.getElementById('thumbnailModal'));
+  modal.show();
+}
+function testThumbnail() {
+  const url = document.getElementById('newThumbnailUrl').value.trim();
+  const preview = document.getElementById('thumbnailPreview');
+  const messageDiv = document.getElementById('thumbnailMessage');
+  
+  if (!url) {
+    showThumbnailMessage('Masukkan URL thumbnail terlebih dahulu!', 'warning');
+    return;
+  }
+  
+  // Validasi URL
+  if (!isValidImageUrl(url)) {
+    showThumbnailMessage('Format URL tidak valid. Harus berupa link gambar (jpg, png, webp, gif)', 'warning');
+    preview.src = 'https://placehold.co/300x150/ff4444/ffffff?text=Invalid+URL';
+    preview.style.opacity = '1';
+    return;
+  }
+  
+  // Show loading
+  preview.src = '';
+  preview.style.opacity = '0.5';
+  preview.alt = 'Loading...';
+  
+  // Test image load
+  const testImage = new Image();
+  testImage.onload = function() {
+    preview.src = url;
+    preview.style.opacity = '1';
+    showThumbnailMessage('✅ Thumbnail valid dan dapat diakses', 'success');
+  };
+  
+  testImage.onerror = function() {
+    preview.src = 'https://placehold.co/300x150/ff4444/ffffff?text=Gagal+Memuat';
+    preview.style.opacity = '1';
+    showThumbnailMessage('❌ Gagal memuat thumbnail. Pastikan URL benar dan gambar dapat diakses secara publik.', 'danger');
+  };
+  
+  testImage.src = url;
+}
+
+function copyThumbnailUrl() {
+  const input = document.getElementById('currentThumbnailUrl');
+  input.select();
+  document.execCommand('copy');
+  showThumbnailMessage('URL berhasil disalin ke clipboard!', 'info');
+}
+
+// Di fungsi updateThumbnail() di frontend - PERBAIKI payload:
+async function updateThumbnail() {
+  const btn = document.getElementById('btnUpdateThumbnail');
+  
+  // Validasi admin lebih ketat
+  if (!isAdminUser()) {
+    showThumbnailMessage('❌ Hanya admin yang bisa mengelola thumbnail!', 'danger');
+    return;
+  }
+  
+  if (!currentThumbnailGame || btn.dataset.loading === '1') return;
+  
+  const newUrl = document.getElementById('newThumbnailUrl').value.trim();
+  
+  if (!newUrl) {
+    showThumbnailMessage('Masukkan URL thumbnail baru!', 'warning');
+    return;
+  }
+  
+  // Validasi URL
+  if (!isValidImageUrl(newUrl)) {
+    showThumbnailMessage('URL gambar tidak valid! Pastikan link berakhiran .jpg, .png, .webp, atau .gif', 'warning');
+    return;
+  }
+  
+  setButtonLoading(btn, true, 'Menyimpan...');
+  
+  try {
+    const { downloadId, platform } = currentThumbnailGame;
+    
+    // Buat payload dengan data admin
+    const payload = {
+      action: 'updateThumbnail',
+      download_id: downloadId,
+      thumbnail_url: newUrl,
+      telegram_id: currentUser.wa_number,
+      key: currentUser.key,
+      admin: true // Tambahkan flag admin
+    };
+    
+    // Tentukan API endpoint berdasarkan platform
+    let apiUrl;
+    switch(platform) {
+      case 'ps2':
+        apiUrl = GAMEPS2_API_URL;
+        break;
+      case 'switch':
+        apiUrl = GAMESWITCH_API_URL;
+        break;
+      case 'psp':
+        apiUrl = GAMEPSP_API_URL;
+        break;
+      case 'psvita':
+        apiUrl = GAMEPSVITA_API_URL;
+        break;
+      case 'android':
+        apiUrl = GAMEANDROID_API_URL;
+        break;
+      default:
+        throw new Error('Platform tidak didukung');
+    }
+    
+    console.log('Mengirim permintaan update thumbnail:', { payload, apiUrl });
+    
+    // Kirim request
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams(payload).toString()
+    });
+    
+    const result = await response.json();
+    console.log('Response dari API:', result);
+    
+    if (result.status === 'success') {
+      showThumbnailMessage('✅ Thumbnail berhasil diperbarui!', 'success');
+      
+      // Update UI
+      document.getElementById('currentThumbnailUrl').value = newUrl;
+      document.getElementById('thumbnailPreview').src = newUrl;
+      currentThumbnailGame.currentUrl = newUrl;
+      
+      // Refresh daftar game setelah 1 detik
+      setTimeout(() => {
+        loadAllGames();
+      }, 1000);
+      
+      // Tutup modal setelah 1.5 detik
+      setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('thumbnailModal'));
+        if (modal) modal.hide();
+      }, 1500);
+      
+    } else {
+      throw new Error(result.message || 'Gagal memperbarui thumbnail');
+    }
+    
+  } catch (error) {
+    console.error('Error update thumbnail:', error);
+    showThumbnailMessage(`❌ ${error.message}`, 'danger');
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+function isValidImageUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp'];
+    const path = urlObj.pathname.toLowerCase();
+    
+    return imageExtensions.some(ext => path.endsWith(ext));
+  } catch {
+    return false;
+  }
+}
+async function removeThumbnail() {
+  if (!confirm('Yakin ingin menghapus thumbnail untuk game ini?')) {
+    return;
+  }
+  
+  const btn = document.getElementById('btnRemoveThumbnail');
+  if (!currentThumbnailGame || btn.dataset.loading === '1') return;
+  
+  setButtonLoading(btn, true, 'Menghapus...');
+  
+  try {
+    let apiUrl, payload;
+    const { downloadId, platform } = currentThumbnailGame;
+    
+    switch(platform) {
+      case 'ps2':
+        apiUrl = GAMEPS2_API_URL;
+        payload = {
+          action: 'updateThumbnail', // Gunakan action yang sama
+          download_id: downloadId,
+          thumbnail_url: '', // Kosongkan URL
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+      case 'psvita':
+        apiUrl = GAMEPSVITA_API_URL;
+        payload = {
+          action: 'updateThumbnail',
+          download_id: downloadId,
+          thumbnail_url: '',
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+
+      case 'switch':
+        apiUrl = GAMESWITCH_API_URL;
+        payload = {
+          action: 'updateThumbnail',
+          download_id: downloadId,
+          thumbnail_url: '',
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+      case 'psp':
+        apiUrl = GAMEPSP_API_URL;
+        payload = {
+          action: 'updateThumbnail',
+          download_id: downloadId,
+          thumbnail_url: '',
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+      case 'android':
+        apiUrl = GAMEANDROID_API_URL;
+        payload = {
+          action: 'updateThumbnail',
+          download_id: downloadId,
+          thumbnail_url: '',
+          telegram_id: currentUser.wa_number,
+          key: currentUser.key
+        };
+        break;
+      default:
+        throw new Error('Platform tidak didukung');
+    }
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      body: Object.entries(payload).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success') {
+      showThumbnailMessage('✓ Thumbnail berhasil dihapus!', 'success');
+      
+      // Update UI
+      document.getElementById('currentThumbnailUrl').value = '(Thumbnail dihapus)';
+      document.getElementById('thumbnailPreview').src = 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image';
+      currentThumbnailGame.currentUrl = '';
+      
+      // Refresh game list
+      setTimeout(() => {
+        loadAllGames();
+      }, 1000);
+      
+      // Tutup modal setelah 1.5 detik
+      setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('thumbnailModal'));
+        if (modal) modal.hide();
+      }, 1500);
+      
+    } else {
+      throw new Error(result.message || 'Gagal menghapus thumbnail');
+    }
+    
+  } catch (error) {
+    showThumbnailMessage('✗ ' + error.message, 'danger');
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+function showThumbnailMessage(message, type = 'info') {
+  const messageDiv = document.getElementById('thumbnailMessage');
+  const alertClass = {
+    'success': 'alert-success',
+    'danger': 'alert-danger',
+    'warning': 'alert-warning',
+    'info': 'alert-info'
+  }[type] || 'alert-info';
+  
+  messageDiv.innerHTML = `
+    <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+      ${message}
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+    </div>
+  `;
+}
+
+
+
+
+
+    // ====== UTILITY FUNCTIONS ======
+  function getUrlParam(key) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(key);
+  }
+
+  function setUrlParam(key, value, { push = false } = {}) {
+    const url = new URL(window.location.href);
+
+    if (value === null || value === undefined || String(value).trim() === '') {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, String(value));
+    }
+
+    // Pakai replaceState biar tidak spam history saat user ngetik
+    const fn = push ? 'pushState' : 'replaceState';
+    history[fn]({}, '', url.toString());
+  }
+
+  function applySearchFromUrl() {
+    const q = getUrlParam('q') || '';
+    const input = document.getElementById('searchInput');
+    const p = parseInt(getUrlParam('page') || '1', 10);
+    if (Number.isFinite(p) && p > 1) currentPage = p;
+    if (input) input.value = q;
+
+    searchQuery = q.trim().toLowerCase();
+
+    // Kalau data game sudah siap, langsung filter tanpa reset page
+    if (isGamesLoaded) filterGames({ resetPage: false });
+  }
+
+
+function toTime(ts) {
+  if (!ts) return 0;
+
+  // Coba parse standar dulu
+  const d1 = new Date(ts);
+  if (!isNaN(d1.getTime())) return d1.getTime();
+
+  const s = String(ts).trim();
+
+  // Format: dd/mm/yyyy hh:mm:ss atau dd-mm-yyyy hh:mm:ss
+  let m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if (m) {
+    let day = parseInt(m[1], 10);
+    let mon = parseInt(m[2], 10) - 1;
+    let year = parseInt(m[3], 10);
+    if (year < 100) year += 2000;
+
+    const hh = m[4] ? parseInt(m[4], 10) : 0;
+    const mm = m[5] ? parseInt(m[5], 10) : 0;
+    const ss = m[6] ? parseInt(m[6], 10) : 0;
+
+    return new Date(year, mon, day, hh, mm, ss).getTime();
+  }
+
+  // Format: yyyy-mm-dd hh:mm:ss atau yyyy/mm/dd hh:mm:ss atau ISO-like
+  m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})(?:[T\s](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if (m) {
+    const year = parseInt(m[1], 10);
+    const mon = parseInt(m[2], 10) - 1;
+    const day = parseInt(m[3], 10);
+
+    const hh = m[4] ? parseInt(m[4], 10) : 0;
+    const mm = m[5] ? parseInt(m[5], 10) : 0;
+    const ss = m[6] ? parseInt(m[6], 10) : 0;
+
+    return new Date(year, mon, day, hh, mm, ss).getTime();
+  }
+
+  return 0;
+}
+
+
+    function setButtonLoading(btn, isLoading, textLoading = 'Loading...') {
+      if (!btn) return;
+
+      if (isLoading) {
+        if (btn.dataset.loading === '1') return;
+        btn.dataset.loading = '1';
+        btn.dataset.originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>${textLoading}`;
+      } else {
+        btn.dataset.loading = '0';
+        btn.disabled = false;
+        if (btn.dataset.originalHtml) btn.innerHTML = btn.dataset.originalHtml;
+      }
+    }
+
+    function isToday(dateString) {
+      if (!dateString) return false;
+
+      const d = new Date(dateString);
+      if (isNaN(d.getTime())) return false;
+
+      const now = new Date();
+      return (
+        d.getFullYear() === now.getFullYear() &&
+        d.getMonth() === now.getMonth() &&
+        d.getDate() === now.getDate()
+      );
+    }
+
+    function splitCategories(categoryStr) {
+      if (!categoryStr) return [];
+      return String(categoryStr)
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+    }
+
+    function escapeHTML(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatRupiah(amount) {
+      return Number(amount || 0).toLocaleString('id-ID');
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID');
+      } catch {
+        return dateString;
+      }
+    }
+
+    function getPlatformIcon(platform) {
+      const icons = {
+        'ps2': 'bi-playstation',
+        'switch': 'bi-nintendo-switch',
+        'psp': 'bi-phone',
+        'psvita': 'bi-phone',
+        'wii': 'bi-controller',
+        '3ds': 'bi-laptop',
+        'android': 'bi-phone',
+        'pc': 'bi-pc'
+      };
+      return icons[platform] || 'bi-controller';
+    }
+
+
+  function getPlatformLabel(p) {
+    switch (p) {
+      case 'ps2': return 'PlayStation 2';
+      case 'switch': return 'Nintendo Switch';
+      case 'psp': return 'PSP';
+      case 'psvita': return 'PS Vita';
+      case 'wii': return 'Wii';
+      case '3ds': return '3DS';
+      case 'android': return 'Android';
+      case 'pc': return 'PC';
+      default: return 'Semua';
+    }
+  }
+
+  function applyHashPlatform() {
+    const raw = (location.hash || '').replace('#', '').trim();
+    if (!raw) return;
+
+    const hash = raw.toLowerCase();
+    const allowed = new Set(['all','ps2','switch','psp','psvita','wii','3ds','android','pc']);
+    if (!allowed.has(hash)) return;
+
+    currentPlatform = hash;
+
+    const el = document.getElementById('platformText');
+    if (el) el.textContent = getPlatformLabel(hash);
+
+    // Jangan render "Tidak ada game" saat masih loading
+    if (isGamesLoaded) filterGames();
+  }
+
+
+  function setHashFromPlatform(platform) {
+    // Biar URL kamu jadi #Android, bukan #android
+    const pretty = platform === 'android' ? 'Android' : platform;
+    if (platform === 'all') {
+      history.replaceState(null, '', location.pathname + location.search);
+      return;
+    }
+    location.hash = pretty;
+  }
+
+
+    // ====== AUTO REFRESH SALDO ======
+    function startSaldoAutoRefresh() {
+      stopSaldoAutoRefresh();
+      refreshSaldoSekarang();
+      saldoIntervalId = setInterval(refreshSaldoSekarang, 3000);
+    }
+
+    function stopSaldoAutoRefresh() {
+      if (saldoIntervalId) {
+        clearInterval(saldoIntervalId);
+        saldoIntervalId = null;
+      }
+    }
+
+    async function refreshSaldoSekarang() {
+      if (!currentUser || !currentUser.wa_number) return;
+
+      try {
+        const response = await fetch(USER_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          body: `action=getUser&wa_number=${encodeURIComponent(currentUser.wa_number)}`
+        });
+
+        if (!response.ok) return;
+
+        const result = await response.json();
+        if (result.status !== 'success' || !result.data) return;
+
+        const newSaldo = Number(result.data.saldo || 0);
+
+        if (Number(currentUser.saldo || 0) !== newSaldo) {
+          currentUser.saldo = newSaldo;
+          localStorage.setItem(LS_USER_KEY, JSON.stringify(currentUser));
+          document.getElementById('loggedUserBalance').textContent = formatRupiah(newSaldo);
+        }
+      } catch (e) {}
+    }
+
+    // ====== DOM CONTENT LOADED ======
+document.addEventListener('DOMContentLoaded', function () {
+  checkLoginStatus();
+  setupEventListeners();
+
+  applySearchFromUrl();   // <-- tambah ini
+  applyHashPlatform();
+  loadAllGames();
+
+  window.addEventListener('hashchange', applyHashPlatform);
+
+  // Back/Forward browser
+  window.addEventListener('popstate', () => {
+    applySearchFromUrl();
+  });
+});
+
+
+
+  function buildSumberLinkUrl(game) {
+    const nameRaw = (game?.nama_game || game?.ori_name || '').trim();
+    if (!nameRaw) return '';
+    return 'https://www.indapk.com/?s=' + encodeURIComponent(nameRaw);
+  }
+
+    // ====== EVENT LISTENERS SETUP ======
+    function setupEventListeners() {
+      document.getElementById('searchInput').addEventListener('input', function (e) {
+        const raw = e.target.value || '';
+        searchQuery = raw.trim().toLowerCase();
+
+        clearTimeout(searchTypingTimer);
+        searchTypingTimer = setTimeout(() => {
+          setUrlParam('q', raw.trim(), { push: false });
+          setUrlParam('page', ''); // reset page saat query berubah
+        }, 250);
+
+        filterGames({ resetPage: true });
+      });
+      // Pagination click (delegation)
+      document.getElementById('paginationContainer')?.addEventListener('click', function (e) {
+        const btn = e.target.closest('[data-page]');
+        if (!btn) return;
+
+        e.preventDefault();
+        const page = parseInt(btn.dataset.page, 10);
+        if (!Number.isFinite(page)) return;
+
+        goToPage(page);
+      });
+
+      document.querySelectorAll('[data-platform]').forEach(item => {
+        item.addEventListener('click', function (e) {
+          e.preventDefault();
+          currentPlatform = this.dataset.platform;
+          document.getElementById('platformText').textContent = this.textContent;
+
+          setHashFromPlatform(currentPlatform); // <- tambah ini
+          filterGames();
+        });
+      });
+
+
+      document.getElementById('btnPayYes').addEventListener('click', function () {
+        processPayment(this);
+      });
+
+      document.getElementById('btnCopyReadyLink').addEventListener('click', function () {
+        const btn = this;
+        if (btn.dataset.loading === '1') return;
+        setButtonLoading(btn, true, 'Copy...');
+
+        try {
+          const input = document.getElementById('readyLinkInput');
+          input.select();
+          document.execCommand('copy');
+          alert('Link berhasil disalin!');
+        } finally {
+          setTimeout(() => setButtonLoading(btn, false), 500);
+        }
+      });
+
+      document.getElementById('btnOpenReadyLink').addEventListener('click', function () {
+        const btn = this;
+        if (btn.dataset.loading === '1') return;
+        setButtonLoading(btn, true, 'Membuka...');
+
+        const link = document.getElementById('readyLinkInput').value;
+        if (link) window.open(link, '_blank');
+
+        setTimeout(() => setButtonLoading(btn, false), 800);
+      });
+
+      document.getElementById('btnRefreshGames')?.addEventListener('click', async function () {
+        const btn = this;
+        if (btn.dataset.loading === '1') return;
+
+        setButtonLoading(btn, true, 'Refreshing...');
+
+        const container = document.getElementById('gameListContainer');
+        if (container) {
+          container.innerHTML = `
+            <div class="spinner-container">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          `;
+        }
+
+        try {
+          await loadAllGames();
+        } finally {
+          setButtonLoading(btn, false);
+        }
+      });
+    }
+
+    // ====== LOGIN SYSTEM ======
+    function checkLoginStatus() {
+      const savedUser = localStorage.getItem(LS_USER_KEY);
+      if (savedUser) {
+        try {
+          currentUser = JSON.parse(savedUser);
+          updateLoginUI(true);
+        } catch (e) {
+          localStorage.removeItem(LS_USER_KEY);
+          updateLoginUI(false);
+        }
+      } else {
+        updateLoginUI(false);
+      }
+    }
+
+    function updateLoginUI(isLoggedIn) {
+      const userHeader = document.getElementById('userHeader');
+      const loginButton = document.getElementById('loginButton');
+
+      const nameEl = document.getElementById('loggedUserName');
+      const balEl  = document.getElementById('loggedUserBalance');
+
+      if (isLoggedIn && currentUser) {
+        userHeader?.classList.remove('d-none');
+        loginButton?.classList.add('d-none');
+
+        if (nameEl) nameEl.textContent = currentUser.nama_user || currentUser.wa_number || '-';
+        if (balEl)  balEl.textContent  = formatRupiah(currentUser.saldo || 0);
+
+        startSaldoAutoRefresh();
+      } else {
+        userHeader?.classList.add('d-none');
+        loginButton?.classList.remove('d-none');
+        stopSaldoAutoRefresh();
+      }
+    }
+
+    function openLoginModal() {
+      const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+      modal.show();
+    }
+
+    async function login(btn) {
+      const telegramId = document.getElementById('telegramId').value.trim();
+      const key = document.getElementById('telegramKey').value.trim();
+
+      if (!telegramId || !key) {
+        alert('Masukkan Telegram ID dan Key!');
+        return;
+      }
+
+      setButtonLoading(btn, true, 'Login...');
+
+      try {
+        const response = await fetch(USER_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          body: `action=getUser&wa_number=${encodeURIComponent(telegramId)}`
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        const result = await response.json();
+
+        if (result.status !== 'success' || !result.data) {
+          alert('User tidak ditemukan! Silakan daftar di bot @indapkbot terlebih dahulu.');
+          return;
+        }
+
+        const serverKey = String(result.data.key || '').trim();
+        if (serverKey !== key) {
+          alert('Key tidak sesuai! Dapatkan key dari bot @indapkbot dengan perintah /key');
+          return;
+        }
+
+        currentUser = { ...result.data, key: serverKey };
+        localStorage.setItem(LS_USER_KEY, JSON.stringify(currentUser));
+
+        updateLoginUI(true);
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+        modal.hide();
+
+        alert('Login berhasil!');
+      } catch (err) {
+        alert('Login gagal: ' + err.message);
+      } finally {
+        setButtonLoading(btn, false);
+      }
+    }
+
+    function logout() {
+      if (confirm('Yakin ingin logout?')) {
+        localStorage.removeItem(LS_USER_KEY);
+        localStorage.setItem(LS_LOGOUT_AT_KEY, Date.now().toString());
+        currentUser = null;
+        updateLoginUI(false);
+      }
+    }
+
+    // ====== GAME LOADING AND FILTERING ======
+
+async function loadAllGames({ useCache = true } = {}) {
+  // 1) Tampilkan cache dulu biar list muncul instan
+  if (useCache) {
+    const cached = readGamesCache();
+    if (cached?.length) {
+      allGames = cached;
+      rebuildCategoriesFromAllGames();
+      isGamesLoaded = true;
+      filterGames({ resetPage: false });
+    }
+  }
+
+  // 2) Batalkan request lama kalau user spam refresh
+  if (loadAbort) loadAbort.abort();
+  loadAbort = new AbortController();
+  const { signal } = loadAbort;
+
+  const configs = [
+    { platform: 'ps2',    name: 'PlayStation 2',  url: GAMEPS2_API_URL,     accessAction: 'accessOriginalLink' },
+    { platform: 'switch', name: 'Nintendo Switch', url: GAMESWITCH_API_URL, accessAction: 'accessSwitchOriginalLink' },
+    { platform: 'psvita', name: 'PS Vita',        url: GAMEPSVITA_API_URL,  accessAction: 'accessOriginalLink' },
+    { platform: 'psp',    name: 'PSP',            url: GAMEPSP_API_URL,     accessAction: 'accessOriginalLink' },
+    { platform: 'android',name: 'Android',        url: GAMEANDROID_API_URL, accessAction: 'accessOriginalLink' }
+  ];
+
+  try {
+    // 3) PARALLEL
+    const settled = await Promise.allSettled(
+      configs.map(cfg => fetchPlatformGames(cfg, signal))
+    );
+
+    const merged = settled.flatMap(x => x.status === 'fulfilled' ? x.value : []);
+    if (!merged.length) throw new Error('Data kosong');
+
+    // 4) Sort sekali saja (hemat)
+    merged.sort((a, b) => (b.ts_num || 0) - (a.ts_num || 0));
+
+    allGames = merged;
+    writeGamesCache(merged);
+
+    rebuildCategoriesFromAllGames();
+    isGamesLoaded = true;
+    filterGames({ resetPage: false });
+
+  } catch (error) {
+    if (error?.name === 'AbortError') return;
+
+    console.error('Error loading games:', error);
+
+    // kalau sudah ada cache yang tampil, jangan timpa dengan error
+    if (!isGamesLoaded) {
+      document.getElementById('gameListContainer').innerHTML = `
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Gagal memuat data game. Silakan refresh halaman.
+        </div>
+      `;
+    }
+  }
+}
+
+    function populateCategoryDropdown() {
+      const categoryList = document.getElementById('categoryList');
+
+      const allCategoryItem = categoryList.querySelector('[data-category="all"]').parentElement;
+      categoryList.innerHTML = '';
+      categoryList.appendChild(allCategoryItem);
+
+      const sortedCategories = Array.from(categories).sort();
+      sortedCategories.forEach(category => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a class="dropdown-item" href="#" data-category="${category}">${category}</a>`;
+        categoryList.appendChild(li);
+
+        li.querySelector('a').addEventListener('click', function (e) {
+          e.preventDefault();
+          currentCategory = category;
+          document.getElementById('categoryText').textContent = category;
+          filterGames();
+        });
+      });
+
+      document.querySelector('[data-category="all"]').addEventListener('click', function (e) {
+        e.preventDefault();
+        currentCategory = 'all';
+        document.getElementById('categoryText').textContent = 'Semua';
+        filterGames();
+      });
+    }
+
+function filterGames({ resetPage = true } = {}) {
+  const q = (searchQuery || '').trim().toLowerCase();
+
+  filteredGames = allGames.filter(game => {
+    if (currentPlatform !== 'all' && game.platform !== currentPlatform) return false;
+
+    if (currentCategory !== 'all') {
+      if (!game.category_list?.includes(currentCategory)) return false;
+    }
+
+    if (q) {
+      if (!game.__searchText?.includes(q)) return false;
+    }
+
+    return true;
+  });
+
+  if (resetPage) {
+    currentPage = 1;
+    setUrlParam('page', '', { push: true });
+  }
+
+  renderGameList();
+}
+
+
+function clampPage(page, totalPages) {
+  if (totalPages <= 1) return 1;
+  return Math.min(Math.max(1, page), totalPages);
+}
+
+function smoothScrollToListTop() {
+  const el = document.getElementById('gameListContainer');
+  if (!el) return;
+
+  const y = el.getBoundingClientRect().top + window.pageYOffset - 90; // offset navbar
+  window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+}
+
+function goToPage(page) {
+  const totalPages = Math.max(1, Math.ceil((filteredGames?.length || 0) / GAMES_PER_PAGE));
+  const next = clampPage(page, totalPages);
+  if (next === currentPage) return;
+
+  currentPage = next;
+  renderGameList();
+  smoothScrollToListTop();
+}
+
+function renderPagination(totalItems) {
+  const container = document.getElementById('paginationContainer');
+  if (!container) return;
+
+  if (!totalItems || totalItems <= GAMES_PER_PAGE) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const totalPages = Math.ceil(totalItems / GAMES_PER_PAGE);
+  currentPage = clampPage(currentPage, totalPages);
+
+  const start = (currentPage - 1) * GAMES_PER_PAGE + 1;
+  const end = Math.min(currentPage * GAMES_PER_PAGE, totalItems);
+
+  const maxButtons = 5; // window halaman
+  let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+  let endPage = startPage + maxButtons - 1;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(1, endPage - maxButtons + 1);
+  }
+
+  let pagesHtml = '';
+
+  // First + Prev
+  pagesHtml += `
+    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="1" aria-label="First">
+        <i class="bi bi-chevron-bar-left"></i>
+      </a>
+    </li>
+    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${currentPage - 1}" aria-label="Previous">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+    </li>
+  `;
+
+  // Leading ellipsis
+  if (startPage > 1) {
+    pagesHtml += `
+      <li class="page-item">
+        <a class="page-link" href="#" data-page="1">1</a>
+      </li>
+      ${startPage > 2 ? `<li class="page-jump">...</li>` : ''}
+    `;
+  }
+
+  // Page numbers
+  for (let p = startPage; p <= endPage; p++) {
+    pagesHtml += `
+      <li class="page-item ${p === currentPage ? 'active' : ''}">
+        <a class="page-link" href="#" data-page="${p}">${p}</a>
+      </li>
+    `;
+  }
+
+  // Trailing ellipsis
+  if (endPage < totalPages) {
+    pagesHtml += `
+      ${endPage < totalPages - 1 ? `<li class="page-jump">...</li>` : ''}
+      <li class="page-item">
+        <a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>
+      </li>
+    `;
+  }
+
+  // Next + Last
+  pagesHtml += `
+    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${currentPage + 1}" aria-label="Next">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </li>
+    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${totalPages}" aria-label="Last">
+        <i class="bi bi-chevron-bar-right"></i>
+      </a>
+    </li>
+  `;
+
+  container.innerHTML = `
+    <div class="pagination-wrap">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+        <div class="page-meta">
+          Menampilkan <strong>${start}</strong> sampai <strong>${end}</strong> dari <strong>${totalItems}</strong>
+        </div>
+        <div class="page-meta">
+          Page <strong>${currentPage}</strong> dari <strong>${totalPages}</strong>
+        </div>
+      </div>
+      <nav aria-label="Game pagination">
+        <ul class="pagination justify-content-center mb-0">
+          ${pagesHtml}
+        </ul>
+      </nav>
+    </div>
+  `;
+}
+
+function renderGameList() {
+  const container = document.getElementById('gameListContainer');
+
+  if (!filteredGames || filteredGames.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="bi bi-emoji-frown"></i>
+        <h5>Tidak ada game yang ditemukan</h5>
+        <p class="text-muted">Coba ubah filter pencarian Anda</p>
+      </div>
+    `;
+    const pag = document.getElementById('paginationContainer');
+    if (pag) pag.innerHTML = '';
+    return;
+  }
+
+  let html = '<div class="row g-4">';
+
+  const totalItems = filteredGames.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
+  currentPage = clampPage(currentPage, totalPages);
+
+  const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
+  const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+
+  pageGames.forEach(game => {
+    const platformClass = `badge-${game.platform}`;
+    const platformIconClass = `platform-${game.platform}`;
+
+    const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
+
+    const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
+      .map(cat => `<span class="category-badge">${escapeHTML(cat)}</span>`)
+      .join('');
+
+    const langHtml = game.language
+      ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
+      : '';
+
+    const regionHtml = game.region
+      ? `<span class="category-badge">${escapeHTML(game.region)}</span>`
+      : '';
+
+    const modHtml = game.game_type === 'ori-mod' || game.game_type === 'only-mod'
+      ? `<span class="category-badge">MOD</span>`
+      : '';
+
+    const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
+
+    const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
+
+    // === SUMBER LINK (INDapk search by nama game) ===
+    // Pastikan kamu sudah punya function buildSumberLinkUrl(game) di luar:
+    // function buildSumberLinkUrl(game){
+    //   const nameRaw = (game?.nama_game || game?.ori_name || '').trim();
+    //   if (!nameRaw) return '';
+    //   return 'https://www.indapk.com/?s=' + encodeURIComponent(nameRaw);
+    // }
+    const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
+
+    html += `
+      <div class="col-md-6 col-lg-4 col-xl-3">
+        <div class="game-card card h-100"
+          onclick="showGameDetail('${game.download_id}', '${game.platform}', this.querySelector('.btn-detail'))">
+
+          <!-- THUMBNAIL SECTION -->
+          <div class="thumbnail-container position-relative">
+            <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
+                 class="card-img-top game-thumbnail" 
+                 alt="${escapeHTML(gameName)}"
+                 loading="lazy">
+
+            <!-- BADGE PLATFORM DI ATAS THUMBNAIL -->
+            <span class="platform-badge ${platformClass} thumbnail-badge">
+              <span class="platform-icon ${platformIconClass}">
+                <i class="bi ${getPlatformIcon(game.platform)}"></i>
+              </span>
+              ${escapeHTML(game.platform_name || '')}
+            </span>
+
+            <!-- ADMIN THUMBNAIL CONTROLS -->
+            ${isAdminUser() ? `
+              <div class="thumbnail-admin-overlay">
+                <button class="btn btn-sm btn-outline-light" 
+                        onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
+                        title="Kelola Thumbnail">
+                  <i class="bi bi-image"></i>
+                </button>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
+              <small class="text-muted">${dateHtml}</small>
+            </div>
+
+            <p class="card-text small mb-3">
+              ${categoriesHtml}
+              ${regionHtml}
+              ${modHtml}
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div>
+                <small class="text-muted d-block">
+                  <i class="bi bi-download me-1"></i> ${game.total_downloads || 0} download
+                </small>
+
+                ${sumberUrl ? `
+                  <small class="text-muted d-block mt-1">
+                    <i class="bi bi-link-45deg me-1"></i>
+                    <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
+                       style="color: rgba(231,234,242,0.85); text-decoration: none;">
+                      Sumber Link
+                    </a>
+                  </small>
+                ` : ''}
+
+                ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
+              </div>
+
+              <button class="btn btn-sm btn-outline-primary btn-detail"
+                onclick="event.stopPropagation(); showGameDetail('${game.download_id}', '${game.platform}', this)">
+                Detail
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+
+  renderPagination(filteredGames.length);
+  animateCardReveal();
+}
+
+
+    // ====== GAMER UI ANIMATION ======
+    function animateCardReveal() {
+      const cards = document.querySelectorAll('.game-card');
+      cards.forEach((card, i) => {
+        card.classList.remove('is-visible');
+        const delay = Math.min(i * 35, 420);
+        setTimeout(() => card.classList.add('is-visible'), delay);
+      });
+    }
+
+    // ====== GAME DETAIL VIEW ======
+    async function showGameDetail(downloadId, platform, btn) {
+      if (btn && btn.dataset.loading === '1') return;
+      setButtonLoading(btn, true, 'Loading...');
+
+      openDetailModalLoading(platform);
+
+      try {
+        let apiUrl, action;
+        switch(platform) {
+          case 'ps2':
+            apiUrl = GAMEPS2_API_URL;
+            action = 'getGameByDownloadId';
+            break;
+          case 'switch':
+            apiUrl = GAMESWITCH_API_URL;
+            action = 'getGameByDownloadId';
+            break;
+          case 'psp':
+            apiUrl = GAMEPSP_API_URL;
+            action = 'getGameByDownloadId';
+            break;
+          case 'android':
+            apiUrl = GAMEANDROID_API_URL;
+            action = 'getGameByDownloadId';
+            break;
+          case 'psvita':
+            apiUrl = GAMEPSVITA_API_URL;
+            action = 'getGameByDownloadId';
+            break;
+          default:
+            alert('Platform tidak didukung');
+            return;
+        }
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          body: `action=${action}&download_id=${encodeURIComponent(downloadId)}`
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        const result = await response.json();
+        if (result.status !== 'success') {
+          alert('Game tidak ditemukan');
+          return;
+        }
+
+        displayGameDetail(result.data, platform);
+      } catch (error) {
+        console.error('Error loading game details:', error);
+        alert('Gagal memuat detail game');
+      } finally {
+        setButtonLoading(btn, false);
+      }
+    }
+
+    function splitModFeatures(desc) {
+      if (!desc) return [];
+      return String(desc)
+        .split(/\r?\n|,|;|\||•/g)
+        .map(s => s.trim())
+        .filter(Boolean)
+        .slice(0, 30);
+    }
+
+    function buildAndroidModInfo(game) {
+      if (game.game_type !== 'ori-mod' && game.game_type !== 'only-mod') return '';
+
+      let mods = [];
+
+      // Prefer data lengkap dari game_data jika ada
+      if (game.game_data && Array.isArray(game.game_data.modGames) && game.game_data.modGames.length > 0) {
+        mods = game.game_data.modGames.map(m => ({
+          name: m.name || '',
+          version: m.version || '',
+          size: m.size || '',
+          desc: m.modDescription || ''
+        }));
+      } else {
+        // Fallback dari kolom MOD 1
+        mods = [{
+          name: game.mod_name || 'MOD',
+          version: game.mod_version || '',
+          size: game.mod_size || '',
+          desc: game.mod_description || ''
+        }];
+      }
+
+      const itemsHtml = mods.map((m, idx) => {
+        const features = splitModFeatures(m.desc);
+
+        return `
+          <div class="link-item mb-2">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+              <div>
+                <div class="fw-bold">${escapeHTML(m.name || `MOD ${idx + 1}`)}</div>
+                <div class="small text-muted">
+                  ${m.version ? `Versi: ${escapeHTML(m.version)}` : ''}
+                  ${m.version && m.size ? ' | ' : ''}
+                  ${m.size ? `Ukuran: ${escapeHTML(m.size)}` : ''}
+                </div>
+              </div>
+              <span class="category-badge">MOD</span>
+            </div>
+
+            ${
+              features.length > 0
+                ? `<div class="mt-2">
+                    ${features.map(f => `<span class="category-badge">${escapeHTML(f)}</span>`).join('')}
+                  </div>`
+                : (m.desc ? `<div class="mt-2 small">${escapeHTML(m.desc)}</div>` : '')
+            }
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="game-detail-section mt-3">
+          <h6>Info MOD</h6>
+          <div class="small text-muted mb-2">Daftar Fitur MOD</div>
+          ${itemsHtml || `<div class="text-muted small">Detail MOD belum tersedia.</div>`}
+        </div>
+      `;
+    }
+
+    function openDetailModalLoading(platform) {
+      const modalEl = document.getElementById('gameDetailModal');
+      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+      document.getElementById('gameDetailTitle').innerHTML = `
+        <span>Loading...</span>
+        <span class="platform-badge badge-${platform} ms-2">
+          <span class="platform-icon platform-${platform}">
+            <i class="bi ${getPlatformIcon(platform)}"></i>
+          </span>
+          ${platform.toUpperCase()}
+        </span>
+      `;
+
+      document.getElementById('gameDetailContent').innerHTML = `
+        <div class="spinner-container">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      `;
+
+      modal.show();
+    }
+
+function displayGameDetail(game, platform) {
+  const modalEl = document.getElementById('gameDetailModal');
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+  const platformClass = `badge-${platform}`;
+  const platformIconClass = `platform-${platform}`;
+
+  const gameName = game.nama_game || game.ori_name || 'Unknown Game';
+
+  // === SUMBER LINK (INDapk search by nama game) ===
+  // Pastikan helper ini SUDAH ADA di luar:
+  // function buildSumberLinkUrl(game){
+  //   const nameRaw = (game?.nama_game || game?.ori_name || '').trim();
+  //   if (!nameRaw) return '';
+  //   return 'https://www.indapk.com/?s=' + encodeURIComponent(nameRaw);
+  // }
+  const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
+
+  document.getElementById('gameDetailTitle').innerHTML = `
+    ${escapeHTML(gameName)}
+    <span class="platform-badge ${platformClass} ms-2">
+      <span class="platform-icon ${platformIconClass}">
+        <i class="bi ${getPlatformIcon(platform)}"></i>
+      </span>
+      ${platform === 'ps2' ? 'PlayStation 2' :
+        platform === 'switch' ? 'Nintendo Switch' :
+        platform === 'psp' ? 'PSP' :
+        platform === 'psvita' ? 'PS Vita' :
+        platform === 'android' ? 'Android' : platform}
+    </span>
+  `;
+
+  let content = `
+    <div class="game-detail-section">
+      <h6>Informasi Game</h6>
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table table-sm">
+            <tr><th>Nama Game:</th><td>${escapeHTML(gameName)}</td></tr>
+            ${game.category || game.ori_category ? `<tr><th>Kategori:</th><td>${escapeHTML(game.category || game.ori_category)}</td></tr>` : ''}
+            ${game.language ? `<tr><th>Bahasa:</th><td>${escapeHTML(game.language)}</td></tr>` : ''}
+            ${game.region ? `<tr><th>Region:</th><td>${escapeHTML(game.region)}</td></tr>` : ''}
+            ${game.game_id ? `<tr><th>Game ID:</th><td>${escapeHTML(game.game_id)}</td></tr>` : ''}
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table class="table table-sm">
+            ${game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || game.ukuran_game ?
+            `<tr><th>Ukuran:</th><td>${escapeHTML(game.ukuran_iso || game.ukuran_nsp || game.ori_size_ori || game.ukuran_ori || game.ukuran_game || '-')}</td></tr>` : ''}
+            ${game.ukuran_chd || game.ukuran_xci || game.ori_size_mod ?
+              `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(game.ukuran_chd || game.ukuran_xci || game.ori_size_mod || '-')}</td></tr>` : ''}
+            ${game.versi_game || game.ori_version ? `<tr><th>Versi:</th><td>${escapeHTML(game.versi_game || game.ori_version || '-')}</td></tr>` : ''}
+            <tr><th>Total Downloads:</th><td>${game.total_downloads || 0}</td></tr>
+
+            ${sumberUrl ? `
+              <tr>
+                <th>Sumber Link:</th>
+                <td>
+                  <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
+                     style="word-break: break-word;">
+                    ${escapeHTML(sumberUrl)}
+                  </a>
+                </td>
+              </tr>
+            ` : ''}
+
+            ${game.last_downloaded ? `<tr><th>Terakhir diunduh:</th><td>${escapeHTML(game.last_downloaded)}</td></tr>` : ''}
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (platform === 'android' && (game.game_type === 'ori-mod' || game.game_type === 'only-mod')) {
+    content += buildAndroidModInfo(game);
+  }
+
+  switch (platform) {
+    case 'ps2': content += buildPS2Links(game); break;
+    case 'switch': content += buildSwitchLinks(game); break;
+    case 'psp': content += buildPSPLinks(game); break;
+    case 'android': content += buildAndroidLinks(game); break;
+    case 'psvita': content += buildPSVitaLinks(game); break;
+  }
+
+  if (isAdminUser()) {
+    content += `
+      <div class="alert alert-danger mt-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <i class="bi bi-shield-lock me-2"></i>
+            <strong>Mode Admin</strong> Anda bisa menghapus game ini.
+          </div>
+          <button class="btn btn-danger btn-sm"
+            onclick="adminDeleteGame('${escapeHTML(game.download_id || '')}', '${platform}', this)">
+            <i class="bi bi-trash"></i> Hapus Game
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById('gameDetailContent').innerHTML = content;
+  modal.show();
+}
+
+
+    // ====== LINK BUILDERS ======
+function buildPSVitaLinks(game) {
+  let html = '';
+
+  const clouds = Array.isArray(game.cloud_types) ? game.cloud_types : [];
+  const ad1 = Array.isArray(game.link_iklan) ? game.link_iklan : [];
+  const ad2 = Array.isArray(game.link_iklan2) ? game.link_iklan2 : [];
+  const ori = Array.isArray(game.link_asli) ? game.link_asli : [];
+
+  // Link iklan 1
+  if (ad1.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort</h6>
+        <p class="small text-muted">Download gratis dengan iklan</p>
+    `;
+    ad1.forEach((link, i) => {
+      const cloud = clouds[i] || `Cloud ${i + 1}`;
+      if (!link) return;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+              <i class="bi bi-box-arrow-up-right"></i> Buka
+            </a>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  // Link iklan 2
+  if (ad2.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+    ad2.forEach((link, i) => {
+      const cloud = clouds[i] || `Cloud ${i + 1}`;
+      if (!link) return;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+              <i class="bi bi-box-arrow-up-right"></i> Buka
+            </a>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  // Link asli (bayar)
+  if (ori.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan</h6>
+        <p class="small text-muted">Rp 2.000 per link</p>
+    `;
+    ori.forEach((link, i) => {
+      const cloud = clouds[i] || `Cloud ${i + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${i}, '${cloud}', 'psvita')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk link asli tanpa iklan, login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+
+function buildPS2Links(game) {
+  let html = '';
+
+  // LINK IKLAN 1 (INDapkShort) - ISO
+  if (game.link_iklan_iso && Array.isArray(game.link_iklan_iso) && game.link_iklan_iso.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - ISO</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.link_iklan_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 2 (Semawur) - ISO
+  if (game.link_iklan2_iso && Array.isArray(game.link_iklan2_iso) && game.link_iklan2_iso.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - ISO</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.link_iklan2_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 1 (INDapkShort) - CHD
+  if (game.link_iklan_chd && Array.isArray(game.link_iklan_chd) && game.link_iklan_chd.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - CHD</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.link_iklan_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 2 (Semawur) - CHD
+  if (game.link_iklan2_chd && Array.isArray(game.link_iklan2_chd) && game.link_iklan2_chd.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - CHD</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.link_iklan2_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK ASLI TANPA IKLAN - ISO
+  if (game.link_asli_iso && Array.isArray(game.link_asli_iso) && game.link_asli_iso.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - ISO</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'iso', ${index}, '${cloud}', 'ps2')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK ASLI TANPA IKLAN - CHD
+  if (game.link_asli_chd && Array.isArray(game.link_asli_chd) && game.link_asli_chd.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - CHD</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'chd', ${index}, '${cloud}', 'ps2')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+function buildSwitchLinks(game) {
+  let html = '';
+
+  const buildSwitchLinkSection = (title, links, clouds, linkType, platform, isAd = true, isAd2 = false) => {
+    if (!links || !Array.isArray(links) || links.length === 0) return '';
+
+    const sectionClass = isAd ? 'ad-link' : 'original-link';
+    const buttonClass = isAd ? 'btn-warning' : 'btn-success';
+    const buttonText = isAd ? '<i class="bi bi-box-arrow-up-right"></i> Buka' : '<i class="bi bi-unlock"></i> Rp 2.000';
+    const description = isAd 
+      ? (isAd2 ? 'Alternatif link dengan iklan' : 'Gunakan link ini untuk download gratis dengan iklan')
+      : 'Rp 2.000 per link. Bebas iklan dan langsung download';
+
+    let sectionHtml = `
+      <div class="link-section ${sectionClass}">
+        <h6>${title}</h6>
+        <p class="small text-muted">${description}</p>
+    `;
+
+    links.forEach((link, index) => {
+      const cloud = clouds && clouds[index] ? clouds[index] : `Cloud ${index + 1}`;
+      if (link) {
+        sectionHtml += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+        `;
+
+        if (isAd) {
+          sectionHtml += `
+            <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm ${buttonClass}">
+              ${buttonText}
+            </a>
+          `;
+        } else {
+          sectionHtml += `
+            <button class="btn btn-sm ${buttonClass}"
+              onclick="requestOriginalLink(this, '${game.download_id}', '${linkType}', ${index}, '${cloud}', 'switch')"
+              ${!currentUser ? 'disabled' : ''}>
+              ${buttonText}
+            </button>
+          `;
+        }
+
+        sectionHtml += `</div></div>`;
+      }
+    });
+
+    sectionHtml += `</div>`;
+    return sectionHtml;
+  };
+
+  // Link Iklan 1
+  html += buildSwitchLinkSection('INDapkShort - NSP', game.link_iklan_nsp, game.cloud_nsp, 'nsp', 'switch', true, false);
+  html += buildSwitchLinkSection('INDapkShort - XCI', game.link_iklan_xci, game.cloud_xci, 'xci', 'switch', true, false);
+  
+  // Link Iklan 2
+  html += buildSwitchLinkSection('Semawur - NSP', game.link_iklan2_nsp, game.cloud_nsp, 'nsp', 'switch', true, true);
+  html += buildSwitchLinkSection('Semawur - XCI', game.link_iklan2_xci, game.cloud_xci, 'xci', 'switch', true, true);
+  
+  // Link Original
+  html += buildSwitchLinkSection('Link Asli Tanpa Iklan - NSP', game.link_asli_nsp, game.cloud_nsp, 'nsp', 'switch', false);
+  html += buildSwitchLinkSection('Link Asli Tanpa Iklan - XCI', game.link_asli_xci, game.cloud_xci, 'xci', 'switch', false);
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+function buildPSPLinks(game) {
+  let html = '';
+
+  // LINK IKLAN 1 (INDapkShort) - ISO
+  if (game.link_iklan_iso && Array.isArray(game.link_iklan_iso) && game.link_iklan_iso.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - ISO</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.link_iklan_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 1 (INDapkShort) - CHD
+  if (game.link_iklan_chd && Array.isArray(game.link_iklan_chd) && game.link_iklan_chd.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - CHD</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.link_iklan_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 2 (Semawur) - ISO
+  if (game.link_iklan2_iso && Array.isArray(game.link_iklan2_iso) && game.link_iklan2_iso.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - ISO</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.link_iklan2_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK IKLAN 2 (Semawur) - CHD
+  if (game.link_iklan2_chd && Array.isArray(game.link_iklan2_chd) && game.link_iklan2_chd.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - CHD</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.link_iklan2_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK ASLI TANPA IKLAN - ISO
+  if (game.link_asli_iso && Array.isArray(game.link_asli_iso) && game.link_asli_iso.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - ISO</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli_iso.forEach((link, index) => {
+      const cloud = game.cloud_iso && game.cloud_iso[index] ? game.cloud_iso[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'iso', ${index}, '${cloud}', 'psp')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  // LINK ASLI TANPA IKLAN - CHD
+  if (game.link_asli_chd && Array.isArray(game.link_asli_chd) && game.link_asli_chd.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - CHD</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli_chd.forEach((link, index) => {
+      const cloud = game.cloud_chd && game.cloud_chd[index] ? game.cloud_chd[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'chd', ${index}, '${cloud}', 'psp')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+function buildAndroidLinks(game) {
+  let html = '';
+
+  // Link Iklan 1 untuk game ORI (jika bukan only-mod)
+  if (game.game_type !== 'only-mod' && game.ori_ad_links1 && Array.isArray(game.ori_ad_links1) && game.ori_ad_links1.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - Game Original</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.ori_ad_links1.forEach((link, index) => {
+      const cloud = game.cloud_ad1 && game.cloud_ad1[index] ? game.cloud_ad1[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)} - Original</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // Link Iklan 2 untuk game ORI (jika bukan only-mod)
+  if (game.game_type !== 'only-mod' && game.ori_ad_links2 && Array.isArray(game.ori_ad_links2) && game.ori_ad_links2.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - Game Original</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.ori_ad_links2.forEach((link, index) => {
+      const cloud = game.cloud_ad2 && game.cloud_ad2[index] ? game.cloud_ad2[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)} - Original</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // Link Iklan 1 untuk game MOD (jika ada)
+  if ((game.game_type === 'ori-mod' || game.game_type === 'only-mod') && game.mod_ad_links1 && Array.isArray(game.mod_ad_links1) && game.mod_ad_links1.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>INDapkShort - Game MOD</h6>
+        <p class="small text-muted">Gunakan link ini untuk download gratis dengan iklan</p>
+    `;
+
+    game.mod_ad_links1.forEach((link, index) => {
+      const cloud = game.cloud_ad1 && game.cloud_ad1[index] ? game.cloud_ad1[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)} - MOD</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // Link Iklan 2 untuk game MOD (jika ada)
+  if ((game.game_type === 'ori-mod' || game.game_type === 'only-mod') && game.mod_ad_links2 && Array.isArray(game.mod_ad_links2) && game.mod_ad_links2.length > 0) {
+    html += `
+      <div class="link-section ad-link">
+        <h6>Semawur - Game MOD</h6>
+        <p class="small text-muted">Alternatif link dengan iklan</p>
+    `;
+
+    game.mod_ad_links2.forEach((link, index) => {
+      const cloud = game.cloud_ad2 && game.cloud_ad2[index] ? game.cloud_ad2[index] : `Cloud ${index + 1}`;
+      if (link) {
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)} - MOD</span>
+              <a href="${escapeHTML(link)}" target="_blank" class="btn btn-sm btn-warning">
+                <i class="bi bi-box-arrow-up-right"></i> Buka
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    html += `</div>`;
+  }
+
+  // Link asli untuk game ORI (jika bukan only-mod)
+  if (game.game_type !== 'only-mod' && game.ori_original_links && Array.isArray(game.ori_original_links) && game.ori_original_links.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - Game Original</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.ori_original_links.forEach((link, index) => {
+      const cloud = game.cloud_original && game.cloud_original[index] ? game.cloud_original[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)} - Original</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'android')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  // Link asli untuk game MOD (jika ada)
+  if ((game.game_type === 'ori-mod' || game.game_type === 'only-mod') && game.mod_original_links && Array.isArray(game.mod_original_links) && game.mod_original_links.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan - Game MOD</h6>
+        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.mod_original_links.forEach((link, index) => {
+      const cloud = game.cloud_original && game.cloud_original[index] ? game.cloud_original[index] : `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)} - MOD</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'mod', ${index}, '${cloud}', 'android')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="bi bi-unlock"></i> Rp 2.000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  if (!currentUser) {
+    html += `
+      <div class="alert alert-info mt-3">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Login diperlukan!</strong> Untuk mengakses link asli tanpa iklan, Anda perlu login dengan Telegram.
+        <div class="mt-2">
+          <button class="btn btn-telegram btn-sm" onclick="openLoginModal()">
+            <i class="bi bi-telegram me-1"></i> Login Sekarang
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+    // ====== PAYMENT SYSTEM ======
+    function requestOriginalLink(btn, downloadId, linkType, index, cloudName, platform) {
+      if (btn && btn.dataset.loading === '1') return;
+      setButtonLoading(btn, true, 'Tunggu...');
+
+      try {
+        if (!currentUser) {
+          openLoginModal();
+          return;
+        }
+
+        const saldo = Number(currentUser.saldo || 0);
+        if (saldo < COST_PER_LINK) {
+          alert(`Saldo tidak mencukupi. Harga per link: Rp ${formatRupiah(COST_PER_LINK)}. Saldo Anda: Rp ${formatRupiah(saldo)}`);
+          return;
+        }
+
+        let apiUrl, action;
+        switch(platform) {
+          case 'ps2':
+            apiUrl = GAMEPS2_API_URL;
+            action = 'accessOriginalLink';
+            break;
+          case 'switch':
+            apiUrl = GAMESWITCH_API_URL;
+            action = 'accessSwitchOriginalLink';
+            break;
+          case 'psp':
+            apiUrl = GAMEPSP_API_URL;
+            action = 'accessOriginalLink';
+            break;
+          case 'psvita':
+            apiUrl = GAMEPSVITA_API_URL;
+            action = 'accessOriginalLink';
+            break;
+          case 'android':
+            apiUrl = GAMEANDROID_API_URL;
+            action = 'accessOriginalLink';
+            break;
+          default:
+            alert('Platform tidak didukung');
+            return;
+        }
+
+        pendingAccess = {
+          downloadId,
+          linkType,
+          index,
+          cloudName,
+          platform,
+          apiUrl,
+          action
+        };
+
+        document.getElementById('payCloudName').textContent = cloudName;
+        document.getElementById('payBalance').textContent = formatRupiah(saldo);
+        document.getElementById('payAfter').textContent = formatRupiah(saldo - COST_PER_LINK);
+
+        const modal = new bootstrap.Modal(document.getElementById('payConfirmModal'));
+        modal.show();
+      } finally {
+        setButtonLoading(btn, false);
+      }
+    }
+
+    async function processPayment(btn) {
+      if (!pendingAccess || !currentUser) return;
+      if (btn && btn.dataset.loading === '1') return;
+
+      setButtonLoading(btn, true, 'Memproses...');
+
+      const { downloadId, linkType, index, apiUrl, action, platform } = pendingAccess;
+
+      try {
+        let body;
+          if (platform === 'android') {
+            body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                   `&game_type=${encodeURIComponent(linkType)}&link_index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key)}`;
+          } else if (platform === 'psvita') {
+            body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                   `&index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key)}`;
+          } else {
+            body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                   `&link_type=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key)}`;
+          }
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          body: body
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        const result = await response.json();
+        if (result.status !== 'success') throw new Error(result.message || 'Gagal mengakses link');
+
+        const newBalance = Number(result.data.new_balance || 0);
+        currentUser.saldo = newBalance;
+        localStorage.setItem(LS_USER_KEY, JSON.stringify(currentUser));
+        updateLoginUI(true);
+
+        const payModal = bootstrap.Modal.getInstance(document.getElementById('payConfirmModal'));
+        payModal.hide();
+
+        document.getElementById('readyLinkInput').value = result.data.link || '';
+        const linkModal = new bootstrap.Modal(document.getElementById('linkReadyModal'));
+        linkModal.show();
+
+        pendingAccess = null;
+      } catch (error) {
+        alert('Gagal mengakses link: ' + error.message);
+        pendingAccess = null;
+      } finally {
+        setButtonLoading(btn, false);
+      }
+    }
+
+    // ====== ADMIN FUNCTIONS ======
+    async function adminDeleteGame(downloadId, platform, btn) {
+      if (!isAdminUser()) {
+        alert('Akses ditolak. Hanya admin yang bisa menghapus game.');
+        return;
+      }
+
+      if (!downloadId) {
+        alert('Download ID tidak valid.');
+        return;
+      }
+
+      const ok = confirm(`Yakin ingin menghapus game ini?\nDownload ID: ${downloadId}`);
+      if (!ok) return;
+
+      setButtonLoading(btn, true, 'Menghapus...');
+
+      try {
+        let apiUrl = '';
+        let action = '';
+        let body = '';
+
+        if (platform === 'ps2') {
+          apiUrl = GAMEPS2_API_URL;
+          action = 'deleteGame';
+          body = `action=${encodeURIComponent(action)}` +
+                 `&game_id=${encodeURIComponent(downloadId)}` +
+                 `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                 `&key=${encodeURIComponent(currentUser.key)}`;
+        } else if (platform === 'switch') {
+          apiUrl = GAMESWITCH_API_URL;
+          action = 'adminDeleteGame';
+          body = `action=${encodeURIComponent(action)}` +
+                 `&download_id=${encodeURIComponent(downloadId)}` +
+                 `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                 `&key=${encodeURIComponent(currentUser.key)}`;
+        }else if (platform === 'psvita') {
+  apiUrl = GAMEPSVITA_API_URL;
+  action = 'adminDeleteGame';
+  body = `action=${encodeURIComponent(action)}` +
+         `&download_id=${encodeURIComponent(downloadId)}` +
+         `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+         `&key=${encodeURIComponent(currentUser.key)}`;
+        } else if (platform === 'psp') {
+          apiUrl = GAMEPSP_API_URL;
+          action = 'deleteGame';
+          body = `action=${encodeURIComponent(action)}` +
+                 `&game_id=${encodeURIComponent(downloadId)}` +
+                 `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                 `&key=${encodeURIComponent(currentUser.key)}`;
+        } else if (platform === 'android') {
+          apiUrl = GAMEANDROID_API_URL;
+          action = 'deleteGame';
+          body = `action=${encodeURIComponent(action)}` +
+                 `&game_id=${encodeURIComponent(downloadId)}` +
+                 `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                 `&key=${encodeURIComponent(currentUser.key)}`;
+        }
+         else {
+          alert('Platform tidak didukung.');
+          return;
+        }
+
+        const res = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          body
+        });
+
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+
+        const result = await res.json();
+        if (result.status !== 'success') {
+          throw new Error(result.message || 'Gagal menghapus game');
+        }
+
+        const detailModalEl = document.getElementById('gameDetailModal');
+        const modalInstance = bootstrap.Modal.getInstance(detailModalEl);
+        if (modalInstance) modalInstance.hide();
+
+        alert('Game berhasil dihapus.');
+        await loadAllGames();
+
+      } catch (err) {
+        alert('Gagal menghapus game: ' + err.message);
+      } finally {
+        setButtonLoading(btn, false);
+      }
+    }
+
+  </script>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <div class="footer-brand">
+        <i class="bi bi-controller me-2"></i>List Game INDapk
+      </div>
+
+      <div class="d-flex gap-3 flex-wrap justify-content-center">
+        <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener">Request Game</a>
+        <a href="https://indapk.com/topup.html" target="_blank" rel="noopener">Top Up</a>
+        <a href="https://apksgi.github.io" target="_blank" rel="noopener">Video & Game (18+)</a>
+      </div>
+
+      <div class="footer-copy">
+        © <span id="yearNow"></span> INDapk
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
