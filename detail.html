@@ -13,6 +13,10 @@
             --psp-gradient: linear-gradient(135deg, #0070cc 0%, #004080 100%);
             --android-gradient: linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%);
             --psvita-gradient: linear-gradient(135deg, #003791 0%, #001f4d 100%);
+              --community-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              --community-bar: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+              --community-shadow: rgba(102, 126, 234, 0.4);
+              --community-shadow-hover: rgba(102, 126, 234, 0.6);
         }
         
         @keyframes fadeInUp {
@@ -582,6 +586,227 @@
           border-left-color: #198754 !important;
         }
 
+        /* Komunitas Section - Enhanced Design */
+        .komunitas-section {
+            margin-top: 50px;
+            padding: 30px 0;
+        }
+        
+        .komunitas-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+            border: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .komunitas-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 5px;
+          background: var(--community-bar);
+          animation: shimmer 3s infinite;
+        }
+
+        .komunitas-card:hover {
+          transform: translateY(-10px) scale(1.02);
+          box-shadow: 0 30px 80px var(--community-shadow-hover);
+        }
+        
+            .komunitas-card {
+              background: var(--community-bg);
+              border-radius: 25px;
+              overflow: hidden;
+              box-shadow: 0 20px 60px var(--community-shadow);
+              border: none;
+              transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+              position: relative;
+            }
+        
+        .komunitas-header {
+            text-align: center;
+            padding: 30px 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .komunitas-header h3 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .komunitas-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .komunitas-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .komunitas-body {
+            padding: 0 30px 30px;
+        }
+        
+        .social-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .social-card:hover::before {
+            left: 100%;
+        }
+        
+        .social-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .social-icon {
+            font-size: 2.5rem;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .social-card:hover .social-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .social-content {
+            flex: 1;
+        }
+        
+        .social-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .social-link {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            word-break: break-all;
+            display: block;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding-left: 5px;
+        }
+        
+        .social-link:hover {
+            color: #ffd166;
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 15px;
+        }
+        
+        .social-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .komunitas-footer {
+            text-align: center;
+            padding: 25px 30px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 20px;
+        }
+        
+        .info-text {
+            font-size: 1rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        /* Platform-specific colors for social icons */
+        .whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .telegram { background: linear-gradient(135deg, #0088cc, #005999); }
+        .megaphone { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .robot { background: linear-gradient(135deg, #ffd166, #ffb142); }
+        .tiktok { background: linear-gradient(135deg, #000000, #333333); }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .komunitas-header h3 {
+                font-size: 1.8rem;
+            }
+            
+            .social-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .social-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+                align-self: center;
+            }
+            
+            .social-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                display: inline-block;
+                margin-top: 10px;
+            }
+            
+            .header-controls {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+        }
     </style>
 </head>
 <body>
@@ -661,16 +886,11 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
+
+    </div>
         </div>
         
         <!-- Request Game Button -->
-        <div class="text-center mt-4">
-            <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
-               class="btn btn-success">
-                <i class="bi bi-plus-circle me-2"></i> Request Game
-            </a>
-        </div>
-    </div>
     
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal">
@@ -836,6 +1056,136 @@
 </div>
 
 
+
+<!-- Pembatas/Sekat -->
+
+    <!-- Komunitas INDapk - Enhanced Design -->
+    <div class="komunitas-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="komunitas-card">
+                        <div class="komunitas-header">
+                            <div class="komunitas-icon">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                            <h3 id="communityTitle">INDapk Community</h3>
+                            <p id="communitySubtitle">Join our community for the latest updates, discussions, and support</p>
+                        </div>
+                        
+                        <div class="komunitas-body">
+                            <div class="row g-4">
+                                <div class="col-lg-6">
+                                    <div class="social-card d-flex align-items-center">
+                                        <div class="social-icon whatsapp">
+                                            <i class="bi bi-whatsapp"></i>
+                                        </div>
+                                        <div class="social-content">
+                                            <div class="social-title">
+                                                WhatsApp Group
+                                                <span class="social-badge" id="whatsappStatus">Active</span>
+                                            </div>
+                                            <a href="https://chat.whatsapp.com/EQGL0y5OTwUGYWsbuoJ7pA" 
+                                               target="_blank" 
+                                               class="social-link"
+                                               id="whatsappLink">
+                                                https://chat.whatsapp.com/EQGL0y5OTwUGYWsbuoJ7pA
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="social-card d-flex align-items-center">
+                                        <div class="social-icon telegram">
+                                            <i class="bi bi-telegram"></i>
+                                        </div>
+                                        <div class="social-content">
+                                            <div class="social-title">
+                                                Telegram Group
+                                                <span class="social-badge" id="telegramGroupStatus">Active</span>
+                                            </div>
+                                            <a href="https://t.me/indapkgroup" 
+                                               target="_blank" 
+                                               class="social-link"
+                                               id="telegramGroupLink">
+                                                https://t.me/indapkgroup
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="social-card d-flex align-items-center">
+                                        <div class="social-icon megaphone">
+                                            <i class="bi bi-megaphone"></i>
+                                        </div>
+                                        <div class="social-content">
+                                            <div class="social-title">
+                                                Telegram Channel
+                                                <span class="social-badge" id="telegramChannelStatus">Active</span>
+                                            </div>
+                                            <a href="https://t.me/iindapk" 
+                                               target="_blank" 
+                                               class="social-link"
+                                               id="telegramChannelLink">
+                                                https://t.me/iindapk
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="social-card d-flex align-items-center">
+                                        <div class="social-icon robot">
+                                            <i class="bi bi-robot"></i>
+                                        </div>
+                                        <div class="social-content">
+                                            <div class="social-title">
+                                                Telegram Bot
+                                                <span class="social-badge" id="telegramBotStatus">Active</span>
+                                            </div>
+                                            <a href="https://t.me/INDapkBot" 
+                                               target="_blank" 
+                                               class="social-link"
+                                               id="telegramBotLink">
+                                                https://t.me/INDapkBot
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="social-card d-flex align-items-center">
+                                        <div class="social-icon tiktok">
+                                            <i class="bi bi-tiktok"></i>
+                                        </div>
+                                        <div class="social-content">
+                                            <div class="social-title">
+                                                TikTok
+                                                <span class="social-badge" id="tiktokStatus">Follow</span>
+                                            </div>
+                                            <div class="social-link" style="cursor: default;" id="tiktokUsername">
+                                                @INDapk
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="komunitas-footer">
+                            <p class="info-text" id="communityFooter">
+                                <i class="bi bi-info-circle"></i>
+                                Follow and join to get game notifications & technical support
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -914,6 +1264,20 @@
     if (hasXCIPart) formats.push('XCI PART');
     return formats;
   }
+
+    // Tambahkan event listener untuk efek hover
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.card-body .d-flex').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.background = 'rgba(255,255,255,0.25)';
+            });
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.background = 'rgba(255,255,255,0.15)';
+            });
+        });
+    });
 
 
         function escapeHTML(text) {
@@ -1245,56 +1609,89 @@ function getGameName(game) {
 }
 
 
-        function setPlatformTheme(platform) {
-            const header = document.getElementById('gameHeader');
-            const tabs = document.getElementById('gameTabs');
-            const loginHeader = document.getElementById('loginModalHeader');
-            
-            let gradient, badgeClass, platformName;
-            
-            switch(platform) {
-                case 'ps2':
-                    gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
-                    badgeClass = 'ps2-badge';
-                    platformName = 'PlayStation 2';
-                    tabs.className = 'nav nav-tabs ps2-tabs';
-                    break;
-                case 'switch':
-                    gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
-                    badgeClass = 'switch-badge';
-                    platformName = 'Nintendo Switch';
-                    tabs.className = 'nav nav-tabs ps2-tabs switch-tabs';
-                    break;
-                case 'psp':
-                    gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
-                    badgeClass = 'psp-badge';
-                    platformName = 'PSP';
-                    tabs.className = 'nav nav-tabs ps2-tabs psp-tabs';
-                    break;
-                case 'android':
-                    gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
-                    badgeClass = 'android-badge';
-                    platformName = 'Android';
-                    tabs.className = 'nav nav-tabs ps2-tabs android-tabs';
-                    break;
-                case 'psvita':
-                    gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
-                    badgeClass = 'psvita-badge';
-                    platformName = 'PS Vita';
-                    tabs.className = 'nav nav-tabs ps2-tabs psvita-tabs';
-                    break;
-                default:
-                    gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
-                    badgeClass = 'ps2-badge';
-                    platformName = platform.toUpperCase();
-                    tabs.className = 'nav nav-tabs ps2-tabs';
-            }
-            
-            header.style.background = gradient;
-            if (loginHeader) loginHeader.style.background = gradient;
-            
-            return { badgeClass, platformName };
-        }
+function setPlatformTheme(platform) {
+  const header = document.getElementById('gameHeader');
+  const tabs = document.getElementById('gameTabs');
+  const loginHeader = document.getElementById('loginModalHeader');
+
+  let gradient, badgeClass, platformName;
+  let c1, c2, shadow, shadowHover;
+
+  switch (platform) {
+    case 'ps2':
+      gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
+      badgeClass = 'ps2-badge';
+      platformName = 'PlayStation 2';
+      tabs.className = 'nav nav-tabs ps2-tabs';
+      c1 = '#0066cc'; c2 = '#003366';
+      shadow = 'rgba(0, 102, 204, 0.4)';
+      shadowHover = 'rgba(0, 102, 204, 0.6)';
+      break;
+
+    case 'switch':
+      gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
+      badgeClass = 'switch-badge';
+      platformName = 'Nintendo Switch';
+      tabs.className = 'nav nav-tabs ps2-tabs switch-tabs';
+      c1 = '#e60012'; c2 = '#8b0000';
+      shadow = 'rgba(230, 0, 18, 0.4)';
+      shadowHover = 'rgba(230, 0, 18, 0.6)';
+      break;
+
+    case 'psp':
+      gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
+      badgeClass = 'psp-badge';
+      platformName = 'PSP';
+      tabs.className = 'nav nav-tabs ps2-tabs psp-tabs';
+      c1 = '#0070cc'; c2 = '#004080';
+      shadow = 'rgba(0, 112, 204, 0.4)';
+      shadowHover = 'rgba(0, 112, 204, 0.6)';
+      break;
+
+    case 'android':
+      gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
+      badgeClass = 'android-badge';
+      platformName = 'Android';
+      tabs.className = 'nav nav-tabs ps2-tabs android-tabs';
+      c1 = '#3ddc84'; c2 = '#1a8c4f';
+      shadow = 'rgba(61, 220, 132, 0.4)';
+      shadowHover = 'rgba(61, 220, 132, 0.6)';
+      break;
+
+    case 'psvita':
+      gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
+      badgeClass = 'psvita-badge';
+      platformName = 'PS Vita';
+      tabs.className = 'nav nav-tabs ps2-tabs psvita-tabs';
+      c1 = '#003791'; c2 = '#001f4d';
+      shadow = 'rgba(0, 55, 145, 0.4)';
+      shadowHover = 'rgba(0, 55, 145, 0.6)';
+      break;
+
+    default:
+      gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
+      badgeClass = 'ps2-badge';
+      platformName = String(platform || '').toUpperCase() || 'PLATFORM';
+      tabs.className = 'nav nav-tabs ps2-tabs';
+      c1 = '#0066cc'; c2 = '#003366';
+      shadow = 'rgba(0, 102, 204, 0.4)';
+      shadowHover = 'rgba(0, 102, 204, 0.6)';
+  }
+
+  // header utama
+  if (header) header.style.background = gradient;
+  if (loginHeader) loginHeader.style.background = gradient;
+
+  // ✅ komunitas ikut platform
+  const root = document.documentElement;
+  root.style.setProperty('--community-bg', gradient);
+  root.style.setProperty('--community-bar', `linear-gradient(90deg, ${c1}, ${c2}, ${c1})`);
+  root.style.setProperty('--community-shadow', shadow);
+  root.style.setProperty('--community-shadow-hover', shadowHover);
+
+  return { badgeClass, platformName };
+}
+
         
 function displayGameDetail(game, platform) {
   const gameName = getGameName(game);
@@ -1790,15 +2187,19 @@ function generateDetailsHTML(game, platform, platformName) {
           ${sumberRow}
         </table>
       </div>
-    </div>
-
-    ${isAndroidModDetail ? buildAndroidModInfo(game) : ''}
-
     <div class="mt-3 text-center">
       <a href="https://indapk.github.io" class="btn btn-success">
         <i class="bi bi-controller"></i> List Game
       </a>
+            <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
+               class="btn btn-success">
+                <i class="bi bi-plus-circle me-2"></i> Request Game
+            </a>
     </div>
+    </div>
+
+    ${isAndroidModDetail ? buildAndroidModInfo(game) : ''}
+
   `;
 }
 
