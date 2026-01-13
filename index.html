@@ -1004,6 +1004,96 @@
       #categoryText { max-width: 120px; }
     }
 
+    /* ===== SEARCH INPUT MUNCUL SAAT HOVER ICON ===== */
+      .search-reveal {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* tombol icon */
+      .search-reveal-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        color: var(--neon-cyan);
+
+        transition: var(--transition-smooth);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+      }
+
+      .search-reveal-btn i {
+        font-size: 1.1rem;
+        transition: transform 0.35s ease, filter 0.35s ease;
+        filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.45));
+      }
+
+      .search-reveal:hover .search-reveal-btn,
+      .search-reveal:focus-within .search-reveal-btn,
+      .search-reveal.is-open .search-reveal-btn {
+        background: rgba(0, 240, 255, 0.15);
+        border-color: var(--neon-cyan);
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+      }
+
+      .search-reveal:hover .search-reveal-btn i,
+      .search-reveal:focus-within .search-reveal-btn i,
+      .search-reveal.is-open .search-reveal-btn i {
+        transform: rotate(-10deg) scale(1.08);
+        filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.7));
+      }
+
+      /* wrapper input yang disembunyikan */
+      .search-reveal-input {
+        width: 0;
+        opacity: 0;
+        transform: translateX(-10px) scale(0.98);
+        pointer-events: none;
+        overflow: hidden;
+
+        transition:
+          width 0.45s ease,
+          opacity 0.25s ease,
+          transform 0.35s ease;
+      }
+
+      /* saat hover / fokus / mode open */
+      .search-reveal:hover .search-reveal-input,
+      .search-reveal:focus-within .search-reveal-input,
+      .search-reveal.is-open .search-reveal-input {
+        width: 320px; /* ukuran kolom ketik muncul */
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        pointer-events: auto;
+      }
+
+      /* rapihin input biar tinggi sama */
+      .search-reveal-input .form-control {
+        height: 52px;
+        border-radius: 20px;
+      }
+
+      /* responsive */
+      @media (max-width: 768px) {
+        .search-reveal:hover .search-reveal-input,
+        .search-reveal:focus-within .search-reveal-input,
+        .search-reveal.is-open .search-reveal-input {
+          width: 100%;
+        }
+        .search-reveal {
+          width: 100%;
+        }
+        .search-reveal-input {
+          flex: 1;
+        }
+      }
+
 
   </style>
 </head>
@@ -1012,7 +1102,7 @@
   <!-- ===== NAVIGATION ===== -->
   <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
     <div class="container">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="https://indapk.github.io">
         <i class="bi bi-controller me-2"></i>INDapk
       </a>
       <div class="nav-actions">
@@ -1056,7 +1146,7 @@
            alt="Header Banner" 
            class="banner-image">
       <div class="banner-overlay">
-        <h1>List Game INDapk</h1>
+        <h1>INDapk Library</h1>
         <p class="lead">Download Game Multi Platform Gratis dan Premium</p>
       </div>
     </div>
@@ -1066,10 +1156,16 @@
     <div class="filter-section">
       <div class="row g-3 align-items-center">
         <div class="col-md-4">
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <div class="search-reveal" id="searchReveal">
+          <button type="button" class="search-reveal-btn" id="searchIconBtn" aria-label="Cari Game">
+            <i class="bi bi-search"></i>
+          </button>
+
+          <div class="search-reveal-input">
             <input type="text" id="searchInput" class="form-control" placeholder="Cari game..." />
           </div>
+        </div>
+
         </div>
         <div class="col-md-4">
           <div class="dropdown">
@@ -1296,7 +1392,7 @@
 
     // Fungsi untuk redirect ke halaman detail game
     function goToGameDetail(downloadId, platform) {
-      //  Redirect ke halaman detail dengan format: download.html?game=downloadId&platform=platform
+      // Redirect ke halaman detail dengan format: download.html?game=downloadId&platform=platform
       window.location.href = `download.html?game=${downloadId}&platform=${platform}`;
     }
 
@@ -1644,6 +1740,32 @@
 
         filterGames({ resetPage: true });
       });
+
+      const searchReveal = document.getElementById('searchReveal');
+      const searchIconBtn = document.getElementById('searchIconBtn');
+      const searchInput = document.getElementById('searchInput');
+
+      searchIconBtn?.addEventListener('click', () => {
+        // toggle open
+        searchReveal?.classList.toggle('is-open');
+
+        // kalau sudah open, fokus ke input
+        if (searchReveal?.classList.contains('is-open')) {
+          setTimeout(() => searchInput?.focus(), 0);
+        } else {
+          searchInput?.blur();
+        }
+      });
+
+      // kalau klik di luar, tutup (opsional biar rapi)
+      document.addEventListener('click', (e) => {
+        if (!searchReveal) return;
+        if (!searchReveal.contains(e.target)) {
+          // tutup kalau input kosong
+          if (!searchInput?.value?.trim()) searchReveal.classList.remove('is-open');
+        }
+      });
+
       
       document.getElementById('paginationContainer')?.addEventListener('click', function (e) {
         const btn = e.target.closest('[data-page]');
@@ -2197,9 +2319,6 @@ function populateCategoryDropdown() {
 
                 <div class="d-flex justify-content-between align-items-center mt-auto">
                   <div>
-                    <small class="text-muted d-block">
-                      <i class="bi bi-download me-1"></i> ${game.total_downloads || 0} download
-                    </small>
 
                     ${sumberUrl ? `
                       <small class="text-muted d-block mt-1">
