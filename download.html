@@ -360,14 +360,59 @@
             transform: scale(1.03);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        
+        /* Login Prompt */
         .login-prompt {
             background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             border: 2px dashed #ffc107;
-            padding: 25px;
-            border-radius: 15px;
-            animation: fadeInUp 1.6s ease;
+            padding: 20px;
+            border-radius: 12px;
+            animation: pulseWarning 2s infinite;
+            position: relative;
+            overflow: hidden;
         }
+        
+        @keyframes pulseWarning {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .login-prompt::before {
+            content: '⚠️';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            opacity: 0.2;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* User Info Box */
+        .user-info-box {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #007bff;
+            animation: slideInRight 0.5s ease-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
         
         .modal-icon-lg {
             font-size: 3rem;
@@ -3113,7 +3158,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>${escapeHTML(gameName)})</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -3161,14 +3206,23 @@ function generateOriginalLinksHTML(game, platform) {
 
   // Selalu render loginPrompt, cuma tampil/sembunyi via style
   html += `
-    <div class="login-prompt mb-3" id="loginPrompt" style="display:${currentUser ? 'none' : 'block'}">
-      <p class="mb-2">
-        <strong>⚠️ Perhatian:</strong>
-        Untuk mengakses link download tanpa iklan, Anda perlu login dengan Telegram.
-        Daftar melalui bot Telegram <strong>@INDapkBot</strong>.
-      </p>
-      <button class="btn btn-primary" onclick="openLoginModal()">Login dengan Telegram</button>
-    </div>
+                <div class="login-prompt mb-3" id="loginPrompt">
+                    <p class="mb-2">
+                        <strong>⚠️ Perhatian:</strong>
+                        Untuk mengakses link download tanpa iklan, Anda perlu login dengan Telegram.
+                        Daftar melalui bot Telegram <strong><a href="https://t.me/INDapkBot" target="_blank">@INDapkBot</a></strong>.
+                        Lalu ketik command <strong>/profile</strong> di bot telegram untuk mendapatkan ID Telegram Anda.
+                    </p>
+
+                    <p class="mb-3 text-muted">
+                        <strong>⚠️ Notice:</strong>
+                        To access the ad-free download links, you must log in with Telegram.
+                        Register via the Telegram bot <strong><a href="https://t.me/INDapkBot" target="_blank">@INDapkBot</a></strong>.
+                        Then type <strong>/profile</strong> in the bot to get your Telegram ID.
+                    </p>
+
+                    <button class="btn btn-primary" onclick="openLoginModal()">Login dengan Telegram</button>
+                </div>
   `;
 
   // Container link asli
