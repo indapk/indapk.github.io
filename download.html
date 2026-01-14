@@ -983,7 +983,7 @@
         body.theme-dark .card .card-header{
           border-bottom-color: rgba(255,255,255,0.10) !important;
         }
-        
+
     /* ANIMASI KHUSUS UNTUK TOMBOL DARK/LIGHT MODE */
     #themeToggle {
         position: relative;
@@ -2485,7 +2485,7 @@ function generateDetailsHTML(game, platform, platformName) {
     if (hasAndroidMod) formatBadges += badge('Mod', 'android-badge');
     if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
   } else if (platform === 'psvita') {
-    if (hasVitaLinks) formatBadges += badge('GAME', 'psvita-badge');
+    if (hasVitaLinks) formatBadges += badge('NoNpDRM', 'psvita-badge');
     if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
   }
 
@@ -2543,7 +2543,7 @@ function generateDetailsHTML(game, platform, platformName) {
     isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod');
 
   return `
-    <h3>Detail Game ${escapeHTML(platformName)}</h3>
+    <h3>Detail Game ${escapeHTML(gameName)}</h3>
     ${thumbHtml}
 
     <div class="row">
@@ -2805,6 +2805,7 @@ function generateSwitchAdLinks(game) {
 
   function buildCard({ title, links, cloud, btnClass, headerClass, borderStyle }) {
     if (!hasArr(links)) return '';
+    const gameName = getGameName(game);
     let out = `
       <div class="card ${borderStyle} mb-4" style="border-width:2px;">
         <div class="card-header ${headerClass} text-white d-flex align-items-center justify-content-between">
@@ -2813,6 +2814,7 @@ function generateSwitchAdLinks(game) {
         </div>
         <div class="card-body">
           <div class="text-muted mb-2">Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.</div>
+            <h4>${escapeHTML(gameName)}</h4>
           <div class="d-flex flex-wrap gap-2 mb-3">
     `;
 
@@ -2847,22 +2849,23 @@ function generateSwitchAdLinks(game) {
     out += `</div></div></div>`;
     return out;
   }
+    const gameName = getGameName(game);
 
   // Link Iklan 1 (INDapk Short)
-  html += buildCard({ title: 'NSP Link (Link Iklan 1)', links: nspLinks1, cloud: cloudNSP, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
-  html += buildCard({ title: 'XCI Link (Link Iklan 1)', links: xciLinks1, cloud: cloudXCI, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCard({ title: 'INDapk Short', links: nspLinks1, cloud: cloudNSP, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCard({ title: 'INDapk Short', links: xciLinks1, cloud: cloudXCI, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
 
   // ✅ PART
-  html += buildCard({ title: 'NSP PART Link (Link Iklan 1)', links: nspPartLinks1, cloud: cloudNSPPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
-  html += buildCard({ title: 'XCI PART Link (Link Iklan 1)', links: xciPartLinks1, cloud: cloudXCIPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCard({ title: 'INDapk Short', links: nspPartLinks1, cloud: cloudNSPPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCard({ title: 'INDapk Short', links: xciPartLinks1, cloud: cloudXCIPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
 
   // Link Iklan 2 (Semawur)
-  html += buildCardAlt({ title: 'NSP Link (Link Iklan 2)', links: nspLinks2, cloud: cloudNSP, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
-  html += buildCardAlt({ title: 'XCI Link (Link Iklan 2)', links: xciLinks2, cloud: cloudXCI, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ title: `${escapeHTML(gameName)}`, links: nspLinks2, cloud: cloudNSP, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ title: `${escapeHTML(gameName)}`, links: xciLinks2, cloud: cloudXCI, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
 
   // ✅ PART
-  html += buildCardAlt({ title: 'NSP PART Link (Link Iklan 2)', links: nspPartLinks2, cloud: cloudNSPPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
-  html += buildCardAlt({ title: 'XCI PART Link (Link Iklan 2)', links: xciPartLinks2, cloud: cloudXCIPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ title: `${escapeHTML(gameName)}`, links: nspPartLinks2, cloud: cloudNSPPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ title: `${escapeHTML(gameName)}`, links: xciPartLinks2, cloud: cloudXCIPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
 
   return html || '<p>Link iklan tidak tersedia untuk game ini.</p>';
 }
@@ -2870,6 +2873,7 @@ function generateSwitchAdLinks(game) {
         
         function generatePSPAdLinks(game) {
             let html = '';
+            const gameName = getGameName(game);
             
             // LINK IKLAN 1 (INDapkShort) - ISO
             if (game.link_iklan_iso && Array.isArray(game.link_iklan_iso) && game.link_iklan_iso.length > 0) {
@@ -2883,7 +2887,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>ISO Link (Link Iklan 1)</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -2909,7 +2913,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>CHD Link (Link Iklan 1)</h4>
+                            <h4>${escapeHTML(gameName)})</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -2935,7 +2939,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
                             </div>
-                            <h4>ISO Link (Link Iklan 2)</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -2961,7 +2965,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
                             </div>
-                            <h4>CHD Link (Link Iklan 2)</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -2980,6 +2984,7 @@ function generateSwitchAdLinks(game) {
         
         function generateAndroidAdLinks(game) {
             let html = '';
+            const gameName = getGameName(game);
             
             // Tentukan tipe game
             const isModGame = game.game_type === 'ori-mod' || game.game_type === 'only-mod';
@@ -2997,7 +3002,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>Original Link (Link Iklan 1)</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -3023,7 +3028,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>MOD Link (Link Iklan 1)</h4>
+                            <h4>${escapeHTML(gameName)})</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -3049,7 +3054,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
                             </div>
-                            <h4>Original Link (Link Iklan 2)</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -3075,7 +3080,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
                             </div>
-                            <h4>MOD Link (Link Iklan 2)</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -3094,6 +3099,7 @@ function generateSwitchAdLinks(game) {
         
         function generatePSVitaAdLinks(game) {
             let html = '';
+            const gameName = getGameName(game);
             
             // LINK IKLAN 1 (INDapkShort)
             if (game.link_iklan && Array.isArray(game.link_iklan) && game.link_iklan.length > 0) {
@@ -3107,7 +3113,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>Game Link (Link Iklan 1)</h4>
+                            <h4>${escapeHTML(gameName)})</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -3133,7 +3139,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
                             </div>
-                            <h4>Game Link (Link Iklan 2)</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
