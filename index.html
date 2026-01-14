@@ -557,23 +557,41 @@
       font-size: 0.85rem;
     }
 
-    .new-badge {
-      background: linear-gradient(135deg, var(--neon-pink), #ff0066);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 0 20px rgba(255, 46, 151, 0.6);
-      animation: newPulse 1.5s ease-in-out infinite;
-    }
+/* ===== NEW BADGE (ikuti warna platform) ===== */
+.new-badge {
+  --new-main: var(--neon-pink);
+  --new-dark: #ff0066;
+  --new-glow: rgba(255, 46, 151, 0.6);
 
-    @keyframes newPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 46, 151, 0.8); }
-    }
+  background: linear-gradient(135deg, var(--new-main), var(--new-dark));
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 20px var(--new-glow);
+  animation: newPulse 1.5s ease-in-out infinite;
+}
+
+/* Atur warna NEW berdasarkan platform (pakai class platform di kartu) */
+.game-card.platform-ps2    .new-badge { --new-main: var(--ps2-color);    --new-dark: #004d99; --new-glow: var(--ps2-glow); }
+.game-card.platform-switch .new-badge { --new-main: var(--switch-color); --new-dark: #b30000; --new-glow: var(--switch-glow); }
+.game-card.platform-psp    .new-badge { --new-main: var(--psp-color);    --new-dark: #005299; --new-glow: var(--psp-glow); }
+.game-card.platform-psvita .new-badge { --new-main: var(--psvita-color); --new-dark: #002466; --new-glow: var(--psvita-glow); }
+.game-card.platform-wii    .new-badge { --new-main: var(--wii-color);    --new-dark: #007299; --new-glow: var(--wii-glow); }
+.game-card.platform-3ds    .new-badge { --new-main: var(--3ds-color);    --new-dark: #a01b1f; --new-glow: var(--3ds-glow); }
+.game-card.platform-android .new-badge { --new-main: var(--android-color); --new-dark: #2ba861; --new-glow: var(--android-glow); }
+.game-card.platform-pc     .new-badge { --new-main: var(--pc-color);     --new-dark: #0082c4; --new-glow: var(--pc-glow); }
+
+@keyframes newPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); box-shadow: 0 0 30px var(--new-glow); }
+}
 
     .category-badge {
       background: rgba(255, 255, 255, 0.05);
@@ -1093,6 +1111,105 @@
           flex: 1;
         }
       }
+        /* ===== PINNED / FEATURED SECTION ===== */
+  .pinned-section {
+    margin-bottom: 22px;
+    padding: 18px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 46, 151, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 35px rgba(255, 46, 151, 0.12);
+    position: relative;
+    z-index: 1;
+  }
+
+  .pinned-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+
+  .pinned-title i {
+    color: var(--neon-pink);
+    filter: drop-shadow(0 0 12px rgba(255, 46, 151, 0.55));
+  }
+
+/* ===== PIN BADGE: GERAK + WARNA NGIKUT PLATFORM ===== */
+.pin-badge{
+  --pin-main: var(--neon-pink);
+  --pin-dark: #dc2626;
+  --pin-glow: rgba(255, 46, 151, 0.45);
+
+  position: absolute;
+  top: 150px;
+  right: 14px;
+  z-index: 3;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  background: linear-gradient(135deg, var(--pin-main), var(--pin-dark));
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+
+  box-shadow: 0 0 22px var(--pin-glow);
+  backdrop-filter: blur(10px);
+
+  animation: pinFloat 1.9s ease-in-out infinite;
+  transform-origin: center;
+  overflow: hidden;
+}
+
+/* efek “shine” biar hidup */
+.pin-badge::before{
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.16), transparent);
+  transform: rotate(35deg) translateX(-120%);
+  animation: pinShine 3s linear infinite;
+}
+
+/* hover lebih “nendang” */
+.game-card:hover .pin-badge{
+  animation-duration: 1.2s;
+  box-shadow: 0 0 30px var(--pin-glow);
+}
+
+/* animasi gerak mirip platform badge */
+@keyframes pinFloat{
+  0%,100%{ transform: translateY(0) rotate(-3deg) scale(1); }
+  50%{ transform: translateY(-6px) rotate(3deg) scale(1.03); }
+}
+
+@keyframes pinShine{
+  0%{ transform: rotate(35deg) translateX(-120%); }
+  100%{ transform: rotate(35deg) translateX(120%); }
+}
+
+/* ===== WARNA PIN IKUT PLATFORM (karena card punya class platform-xxx) ===== */
+.game-card.platform-ps2    .pin-badge{ --pin-main: var(--ps2-color);    --pin-dark:#004d99; --pin-glow: var(--ps2-glow); }
+.game-card.platform-switch .pin-badge{ --pin-main: var(--switch-color); --pin-dark:#b30000; --pin-glow: var(--switch-glow); }
+.game-card.platform-psp    .pin-badge{ --pin-main: var(--psp-color);    --pin-dark:#005299; --pin-glow: var(--psp-glow); }
+.game-card.platform-psvita .pin-badge{ --pin-main: var(--psvita-color); --pin-dark:#002466; --pin-glow: var(--psvita-glow); }
+.game-card.platform-wii    .pin-badge{ --pin-main: var(--wii-color);    --pin-dark:#007299; --pin-glow: var(--wii-glow); }
+.game-card.platform-3ds    .pin-badge{ --pin-main: var(--3ds-color);    --pin-dark:#a01b1f; --pin-glow: var(--3ds-glow); }
+.game-card.platform-android .pin-badge{ --pin-main: var(--android-color); --pin-dark:#2ba861; --pin-glow: var(--android-glow); }
+.game-card.platform-pc     .pin-badge{ --pin-main: var(--pc-color);     --pin-dark:#0082c4; --pin-glow: var(--pc-glow); }
+
 
 
   </style>
@@ -1139,7 +1256,6 @@
   </nav>
 
   <!-- ===== MAIN CONTENT ===== -->
-  <!-- ===== HEADER BANNER ===== -->
   <div class="header-banner">
     <div class="banner-container">
       <img src="https://www.kuysocial.com/content/uploads/photos/2025/11/kuysocial_2e94906c5735f263e9de8a2ce662e715_cropped.jpg" 
@@ -1147,7 +1263,7 @@
            class="banner-image">
       <div class="banner-overlay">
         <h1>INDapk Library</h1>
-        <p class="lead">Download Game Multi Platform Gratis dan Premium</p>
+        <p class="lead">Explore Free and Premium Games Across Multiple Platforms</p>
       </div>
     </div>
   </div>
@@ -1367,6 +1483,59 @@
     const CACHE_KEY = 'indapk_games_cache_v1';
     const CACHE_TTL = 1 * 60 * 1000;
     let loadAbort = null;
+    let pinnedGames = [];
+
+const PINNED_GAMES_RULES = [
+  { platform: 'switch', name: 'Hollow Knight: Silksong' },
+  { platform: 'switch', name: 'DRAGON BALL Sparking ZERO' },
+  { platform: 'switch', name: 'Mortal Kombat 1 Premium Edition' },
+  { platform: 'switch', name: 'EA SPORTS FC 25 Standard Edition' },
+];
+
+function normalizeText(s) {
+  return String(s || '').trim().toLowerCase();
+}
+
+function findPinnedGames(list) {
+  const rules = (PINNED_GAMES_RULES || []).map(r => ({
+    platform: normalizeText(r.platform),
+    name: normalizeText(r.name)
+  }));
+
+  const found = [];
+  const usedIndexes = new Set();
+
+  rules.forEach(rule => {
+    const idx = list.findIndex((g, i) => {
+      if (usedIndexes.has(i)) return false;
+      const gName = normalizeText(g?.nama_game || g?.ori_name);
+      const gPlat = normalizeText(g?.platform);
+      return gPlat === rule.platform && gName === rule.name;
+    });
+
+    if (idx >= 0) {
+      usedIndexes.add(idx);
+      found.push(list[idx]);
+    } else {
+      // kalau tidak ketemu di API, tetap masuk pinned (placeholder)
+      found.push({
+        nama_game: rule.name,
+        platform: rule.platform,
+        platform_name: getPlatformLabel(rule.platform),
+        thumbnail_url: 'https://placehold.co/600x300/1a1a2e/ffffff?text=PINNED',
+        timestamp: '',
+        category_list: ['Featured'],
+        download_id: ''
+      });
+    }
+  });
+
+  // Buang item pinned yang benar-benar ketemu dari list utama biar tidak dobel
+  const cleaned = list.filter((_, i) => !usedIndexes.has(i));
+
+  return { pinned: found, cleaned };
+}
+
 
     // ====== FUNGSI UTAMA ======
     
@@ -1919,61 +2088,82 @@
     }
 
     // ====== GAME LOADING AND FILTERING ======
-    async function loadAllGames({ useCache = true } = {}) {
-      if (useCache) {
-        const cached = readGamesCache();
-        if (cached?.length) {
-          allGames = cached;
-          rebuildCategoriesFromAllGames();
-          isGamesLoaded = true;
-          filterGames({ resetPage: false });
-        }
-      }
+// ====== GAME LOADING AND FILTERING ======
+async function loadAllGames({ useCache = true } = {}) {
+  // 1) tampilkan cache dulu (biar halaman tidak kosong)
+  if (useCache) {
+    const cached = readGamesCache();
+    if (cached?.length) {
+      allGames = cached;
+      rebuildCategoriesFromAllGames();
+      isGamesLoaded = true;
+      filterGames({ resetPage: false });
+    }
+  }
 
-      if (loadAbort) loadAbort.abort();
-      loadAbort = new AbortController();
-      const { signal } = loadAbort;
+  // 2) abort request lama kalau ada
+  if (loadAbort) loadAbort.abort();
+  loadAbort = new AbortController();
+  const { signal } = loadAbort;
 
-      const configs = [
-        { platform: 'ps2',    name: 'PlayStation 2',  url: GAMEPS2_API_URL,     accessAction: 'accessOriginalLink' },
-        { platform: 'switch', name: 'Nintendo Switch', url: GAMESWITCH_API_URL, accessAction: 'accessSwitchOriginalLink' },
-        { platform: 'psvita', name: 'PS Vita',        url: GAMEPSVITA_API_URL,  accessAction: 'accessOriginalLink' },
-        { platform: 'psp',    name: 'PSP',            url: GAMEPSP_API_URL,     accessAction: 'accessOriginalLink' },
-        { platform: 'android',name: 'Android',        url: GAMEANDROID_API_URL, accessAction: 'accessOriginalLink' }
-      ];
+  const configs = [
+    { platform: 'ps2',     name: 'PlayStation 2',   url: GAMEPS2_API_URL,      accessAction: 'accessOriginalLink' },
+    { platform: 'switch',  name: 'Nintendo Switch', url: GAMESWITCH_API_URL,   accessAction: 'accessSwitchOriginalLink' },
+    { platform: 'psvita',  name: 'PS Vita',         url: GAMEPSVITA_API_URL,   accessAction: 'accessOriginalLink' },
+    { platform: 'psp',     name: 'PSP',             url: GAMEPSP_API_URL,      accessAction: 'accessOriginalLink' },
+    { platform: 'android', name: 'Android',         url: GAMEANDROID_API_URL,  accessAction: 'accessOriginalLink' }
+  ];
 
-      try {
-        const settled = await Promise.allSettled(
-          configs.map(cfg => fetchPlatformGames(cfg, signal))
-        );
+  try {
+    // 3) fetch paralel
+    const settled = await Promise.allSettled(
+      configs.map(cfg => fetchPlatformGames(cfg, signal))
+    );
 
-        const merged = settled.flatMap(x => x.status === 'fulfilled' ? x.value : []);
-        if (!merged.length) throw new Error('Data kosong');
+    // 4) gabungkan semua hasil
+    let merged = settled.flatMap(x => (x.status === 'fulfilled' ? x.value : []));
+    if (!merged.length) throw new Error('Data kosong');
 
-        merged.sort((a, b) => (b.ts_num || 0) - (a.ts_num || 0));
+    // 5) sorting terbaru dulu (butuh ts_num dari normalizeGame)
+    merged.sort((a, b) => (b.ts_num || 0) - (a.ts_num || 0));
 
-        allGames = merged;
-        writeGamesCache(merged);
+    // 6) cari pinned, lalu keluarkan dari list utama biar tidak dobel
+    const resultPin = findPinnedGames(merged);
+    pinnedGames = resultPin.pinned || [];
+    merged = resultPin.cleaned || merged;
 
-        rebuildCategoriesFromAllGames();
-        isGamesLoaded = true;
-        filterGames({ resetPage: false });
+    // 7) simpan ke global state
+    allGames = merged;
 
-      } catch (error) {
-        if (error?.name === 'AbortError') return;
+    // 8) simpan cache
+    writeGamesCache(merged);
 
-        console.error('Error loading games:', error);
+    // 9) rebuild kategori + render
+    rebuildCategoriesFromAllGames();
+    isGamesLoaded = true;
+    filterGames({ resetPage: false });
 
-        if (!isGamesLoaded) {
-          document.getElementById('gameListContainer').innerHTML = `
-            <div class="alert alert-danger">
-              <i class="bi bi-exclamation-triangle me-2"></i>
-              Gagal memuat data game. Silakan refresh halaman.
-            </div>
-          `;
-        }
+  } catch (error) {
+    // kalau abort, diamkan
+    if (error?.name === 'AbortError') return;
+
+    console.error('Error loading games:', error?.message || error);
+
+    // kalau belum pernah loaded sama sekali, tampilkan error di UI
+    if (!isGamesLoaded) {
+      const el = document.getElementById('gameListContainer');
+      if (el) {
+        el.innerHTML = `
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Gagal memuat data game. Silakan refresh halaman.
+          </div>
+        `;
       }
     }
+  }
+}
+
 
 
 function selectCategory(category) {
@@ -2115,6 +2305,93 @@ function populateCategoryDropdown() {
       smoothScrollToListTop();
     }
 
+function renderPinnedSectionHtml() {
+  const list = Array.isArray(pinnedGames) ? pinnedGames : [];
+  if (!list.length) return '';
+
+  const cardsHtml = list.map(game => {
+    const platformClass = `badge-${game.platform}`;
+    const platformIconClass = `platform-${game.platform}`;
+    const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
+
+    const categoriesHtml = (game.category_list || [])
+      .map(cat => `<span class="category-badge">${escapeHTML(cat)}</span>`)
+      .join('');
+
+    const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
+
+    const clickable = game.download_id ? `onclick="goToGameDetail('${game.download_id}', '${game.platform}')"` : '';
+    const detailBtn = game.download_id
+      ? `<button class="btn btn-sm btn-outline-primary"
+           onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}')">
+           Detail
+         </button>`
+      : `<button class="btn btn-sm btn-outline-primary" disabled>Belum tersedia</button>`;
+
+    return `
+      <div class="col-md-6 col-lg-4 col-xl-3">
+        <div class="game-card card h-100 platform-${game.platform}" ${clickable}>
+          <div class="thumbnail-container position-relative">
+            <span class="pin-badge">PINNED</span>
+
+            <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}"
+                 class="card-img-top game-thumbnail"
+                 alt="${gameName}"
+                 loading="lazy">
+
+            <span class="platform-badge ${platformClass} thumbnail-badge">
+              <span class="platform-icon ${platformIconClass}">
+                <i class="bi ${getPlatformIcon(game.platform)}"></i>
+              </span>
+              ${escapeHTML(game.platform_name || '')}
+            </span>
+          </div>
+
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
+            </div>
+
+            <p class="card-text small mb-3">${categoriesHtml}</p>
+
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div>
+                ${sumberUrl ? `
+                  <small class="text-muted d-block mt-1">
+                    <i class="bi bi-link-45deg me-1"></i>
+                    <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
+                       style="color: rgba(231,234,242,0.85); text-decoration: none;"
+                       onclick="event.stopPropagation()">
+                      Source Link
+                    </a>
+                  </small>
+                ` : ''}
+              </div>
+              ${detailBtn}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="pinned-section">
+      <div class="pinned-title">
+        <i class="bi bi-pin-angle-fill"></i>
+        <div>Game Pinned</div>
+      </div>
+      <div class="pinned-muted">Populer Game</div>
+
+      <div class="row g-4">
+        ${cardsHtml}
+      </div>
+    </div>
+  `;
+}
+
+
+
     function renderPagination(totalItems) {
       const container = document.getElementById('paginationContainer');
       if (!container) return;
@@ -2212,23 +2489,28 @@ function populateCategoryDropdown() {
       `;
     }
 
-    function renderGameList() {
-      const container = document.getElementById('gameListContainer');
+function renderGameList() {
+  const container = document.getElementById('gameListContainer');
 
-      if (!filteredGames || filteredGames.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <i class="bi bi-emoji-frown"></i>
-            <h5>Tidak ada game yang ditemukan</h5>
-            <p class="text-muted">Coba ubah filter pencarian Anda</p>
-          </div>
-        `;
-        const pag = document.getElementById('paginationContainer');
-        if (pag) pag.innerHTML = '';
-        return;
-      }
+  // Tampilkan pinned section selalu di atas
+  let pinnedHtml = renderPinnedSectionHtml();
 
-      let html = '<div class="row g-4">';
+  if (!filteredGames || filteredGames.length === 0) {
+    container.innerHTML = `
+      ${pinnedHtml}
+      <div class="empty-state">
+        <i class="bi bi-emoji-frown"></i>
+        <h5>Tidak ada game yang ditemukan</h5>
+        <p class="text-muted">Coba ubah filter pencarian Anda</p>
+      </div>
+    `;
+    const pag = document.getElementById('paginationContainer');
+    if (pag) pag.innerHTML = '';
+    animateCardReveal();
+    return;
+  }
+
+  let html = pinnedHtml + '<div class="row g-4">';
 
       const totalItems = filteredGames.length;
       const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
@@ -2274,8 +2556,9 @@ function populateCategoryDropdown() {
 
         html += `
           <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="game-card card h-100"
-              onclick="goToGameDetail('${game.download_id}', '${game.platform}')">
+            <div class="game-card card h-100 platform-${game.platform}"
+  onclick="goToGameDetail('${game.download_id}', '${game.platform}')">
+
 
               <!-- THUMBNAIL SECTION -->
               <div class="thumbnail-container position-relative">
@@ -2326,7 +2609,7 @@ function populateCategoryDropdown() {
                         <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
                            style="color: rgba(231,234,242,0.85); text-decoration: none;"
                            onclick="event.stopPropagation()">
-                          Sumber Link
+                          Source Link
                         </a>
                       </small>
                     ` : ''}
