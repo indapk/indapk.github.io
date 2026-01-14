@@ -1210,6 +1210,33 @@
 .game-card.platform-android .pin-badge{ --pin-main: var(--android-color); --pin-dark:#2ba861; --pin-glow: var(--android-glow); }
 .game-card.platform-pc     .pin-badge{ --pin-main: var(--pc-color);     --pin-dark:#0082c4; --pin-glow: var(--pc-glow); }
 
+/* cegah overflow global */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* khusus HP: biar navbar bisa turun baris */
+@media (max-width: 576px) {
+  .navbar .container {
+    flex-wrap: wrap;
+  }
+
+  .navbar-brand {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* biar tombol bisa wrap (jangan dipaksa 1 baris) */
+  .nav-actions .btn {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+  }
+}
 
 
   </style>
