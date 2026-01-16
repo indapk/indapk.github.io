@@ -1,0 +1,38 @@
+{
+  "name": "INDapk",
+  "short_name": "INDapk",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0a0e1a",
+  "background_color": "#0a0e1a",
+  "description": "INDapk Library. Explore Free and Premium Games Across Multiple Platforms.",
+  "orientation": "any",
+  "lang": "id-ID",
+  "categories": ["games", "entertainment"],
+
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Cari Game",
+      "short_name": "Cari",
+      "description": "Buka INDapk dan cari game",
+      "url": "/?focus=search",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
