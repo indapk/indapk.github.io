@@ -2720,7 +2720,7 @@ function generateSemawurTutorialVideoHTML() {
         
         function generatePS2AdLinks(game) {
             let html = '';
-            
+            const gameName = getGameName(game);
             // LINK IKLAN 1 (INDapkShort) - ISO
             if (game.link_iklan_iso && Array.isArray(game.link_iklan_iso) && game.link_iklan_iso.length > 0) {
                 html += `
@@ -2733,7 +2733,7 @@ function generateSemawurTutorialVideoHTML() {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>ISO Link (Link Iklan 1)</h4>
+                            <h4>${escapeHTML(gameName)} ISO</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -2759,7 +2759,7 @@ function generateSemawurTutorialVideoHTML() {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>CHD Link (Link Iklan 1)</h4>
+                            <h4>${escapeHTML(gameName)} CHD</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -2785,7 +2785,7 @@ function generateSemawurTutorialVideoHTML() {
                             <div class="text-muted mb-2">
                                 Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
                             </div>
-                            <h4>ISO Link (Link Iklan 2)</h4>
+                            <h4>${escapeHTML(gameName)} ISO</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -2811,7 +2811,7 @@ function generateSemawurTutorialVideoHTML() {
                             <div class="text-muted mb-2">
                                 Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
                             </div>
-                            <h4>CHD Link (Link Iklan 2)</h4>
+                            <h4>${escapeHTML(gameName)} CHD</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -2958,7 +2958,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>${escapeHTML(gameName)})</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
