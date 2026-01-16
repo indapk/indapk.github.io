@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Detail - INDapk</title>
+    <title>Download Game - INDapk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
       <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -2831,49 +2831,64 @@ function generateSemawurTutorialVideoHTML() {
 function generateSwitchAdLinks(game) {
   let html = '';
 
-  // Ambil data link
-  const nspLinks1 = pickArray(game, ['link_iklan_nsp']);
-  const xciLinks1 = pickArray(game, ['link_iklan_xci']);
-  const nspPartLinks1 = pickArray(game, ['link_iklan_nsp_part', 'link_iklan_nsppart']);
-  const xciPartLinks1 = pickArray(game, ['link_iklan_xci_part', 'link_iklan_xcipart']);
+  // Ambil data link (tetap pakai key punyamu)
+  const linksA1 = pickArray(game, ['link_iklan_nsp']);
+  const linksB1 = pickArray(game, ['link_iklan_xci']);
+  const linksAPart1 = pickArray(game, ['link_iklan_nsp_part', 'link_iklan_nsppart']);
+  const linksBPart1 = pickArray(game, ['link_iklan_xci_part', 'link_iklan_xcipart']);
 
-  const nspLinks2 = pickArray(game, ['link_iklan2_nsp']);
-  const xciLinks2 = pickArray(game, ['link_iklan2_xci']);
-  const nspPartLinks2 = pickArray(game, ['link_iklan2_nsp_part', 'link_iklan2_nsppart']);
-  const xciPartLinks2 = pickArray(game, ['link_iklan2_xci_part', 'link_iklan2_xcipart']);
+  const linksA2 = pickArray(game, ['link_iklan2_nsp']);
+  const linksB2 = pickArray(game, ['link_iklan2_xci']);
+  const linksAPart2 = pickArray(game, ['link_iklan2_nsp_part', 'link_iklan2_nsppart']);
+  const linksBPart2 = pickArray(game, ['link_iklan2_xci_part', 'link_iklan2_xcipart']);
 
   // Cloud label
-  const cloudNSP = pickCloud(game, ['cloud_nsp']);
-  const cloudXCI = pickCloud(game, ['cloud_xci']);
-  const cloudNSPPart = pickCloud(game, ['cloud_nsp_part', 'cloud_nsppart', 'cloud_nsp']);
-  const cloudXCIPart = pickCloud(game, ['cloud_xci_part', 'cloud_xcipart', 'cloud_xci']);
+  const cloudA = pickCloud(game, ['cloud_nsp']);
+  const cloudB = pickCloud(game, ['cloud_xci']);
+  const cloudAPart = pickCloud(game, ['cloud_nsp_part', 'cloud_nsppart', 'cloud_nsp']);
+  const cloudBPart = pickCloud(game, ['cloud_xci_part', 'cloud_xcipart', 'cloud_xci']);
 
-  function buildCard({ title, links, cloud, btnClass, headerClass, borderStyle }) {
+  const gameName = getGameName(game);
+
+  // Ganti label ini sesuai kebutuhanmu
+  const LABELS = {
+    A_LINK: 'NSP',
+    B_LINK: 'XCI',
+    A_PART: 'NSP Part',
+    B_PART: 'XCI Part'
+  };
+
+  function buildCardMain({ label, links, cloud, btnClass, headerClass, borderStyle }) {
     if (!hasArr(links)) return '';
-    const gameName = getGameName(game);
+
+    const displayTitle = `${gameName} ${label}`;
+
     let out = `
       <div class="card ${borderStyle} mb-4" style="border-width:2px;">
         <div class="card-header ${headerClass} text-white d-flex align-items-center justify-content-between">
-          <span><i class="bi bi-star-fill"></i> ${escapeHTML(title)}</span>
+          <span><i class="bi bi-star-fill"></i> INDapk Short</span>
           <span class="badge bg-light text-dark">Utama</span>
         </div>
         <div class="card-body">
-          <div class="text-muted mb-2">Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.</div>
-            <h4>${escapeHTML(gameName)}</h4>
+          <div class="text-muted mb-2">Gunakan ini. Jika sulit lewat iklannya, pakai Link Alternatif.</div>
+          <h4>${escapeHTML(displayTitle)}</h4>
           <div class="d-flex flex-wrap gap-2 mb-3">
     `;
 
     links.forEach((link, index) => {
-      const label = cloud?.[index] ? cloud[index] : `Cloud ${index + 1}`;
-      if (link) out += `<a href="${escapeHTML(link)}" target="_blank" class="btn ${btnClass} btn-cloud">${escapeHTML(label)}</a>`;
+      const labelBtn = cloud?.[index] ? cloud[index] : `Cloud ${index + 1}`;
+      if (link) out += `<a href="${escapeHTML(link)}" target="_blank" class="btn ${btnClass} btn-cloud">${escapeHTML(labelBtn)}</a>`;
     });
 
     out += `</div></div></div>`;
     return out;
   }
 
-  function buildCardAlt({ title, links, cloud, btnClass, headerClass }) {
+  function buildCardAlt({ label, links, cloud, btnClass, headerClass }) {
     if (!hasArr(links)) return '';
+
+    const displayTitle = `${gameName} ${label}`;
+
     let out = `
       <div class="card border-secondary mb-3">
         <div class="card-header ${headerClass} text-white d-flex align-items-center justify-content-between">
@@ -2881,39 +2896,35 @@ function generateSwitchAdLinks(game) {
           <span class="badge bg-light text-dark">Alternatif</span>
         </div>
         <div class="card-body">
-          <div class="text-muted mb-2">Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.</div>
-          <h4>${escapeHTML(title)}</h4>
+          <div class="text-muted mb-2">Jika Link Utama sulit dilewati, gunakan Link Alternatif di bawah.</div>
+          <h4>${escapeHTML(displayTitle)}</h4>
           <div class="d-flex flex-wrap gap-2 mb-3">
     `;
 
     links.forEach((link, index) => {
-      const label = cloud?.[index] ? cloud[index] : `Cloud ${index + 1}`;
-      if (link) out += `<a href="${escapeHTML(link)}" target="_blank" class="btn ${btnClass} btn-cloud">${escapeHTML(label)}</a>`;
+      const labelBtn = cloud?.[index] ? cloud[index] : `Cloud ${index + 1}`;
+      if (link) out += `<a href="${escapeHTML(link)}" target="_blank" class="btn ${btnClass} btn-cloud">${escapeHTML(labelBtn)}</a>`;
     });
 
     out += `</div></div></div>`;
     return out;
   }
-    const gameName = getGameName(game);
 
-  // Link Iklan 1 (INDapk Short)
-  html += buildCard({ title: 'INDapk Short', links: nspLinks1, cloud: cloudNSP, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
-  html += buildCard({ title: 'INDapk Short', links: xciLinks1, cloud: cloudXCI, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  // Utama (INDapk Short) dengan judul mirip Alternatif: "<Nama> <Label>"
+  html += buildCardMain({ label: LABELS.A_LINK, links: linksA1, cloud: cloudA, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCardMain({ label: LABELS.B_LINK, links: linksB1, cloud: cloudB, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCardMain({ label: LABELS.A_PART, links: linksAPart1, cloud: cloudAPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  html += buildCardMain({ label: LABELS.B_PART, links: linksBPart1, cloud: cloudBPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
 
-  // ✅ PART
-  html += buildCard({ title: 'INDapk Short', links: nspPartLinks1, cloud: cloudNSPPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
-  html += buildCard({ title: 'INDapk Short', links: xciPartLinks1, cloud: cloudXCIPart, btnClass: 'btn-primary', headerClass: 'bg-primary', borderStyle: 'border-primary' });
+  // Alternatif (Semawur Short)
+  html += buildCardAlt({ label: LABELS.A_LINK, links: linksA2, cloud: cloudA, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ label: LABELS.B_LINK, links: linksB2, cloud: cloudB, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ label: LABELS.A_PART, links: linksAPart2, cloud: cloudAPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
+  html += buildCardAlt({ label: LABELS.B_PART, links: linksBPart2, cloud: cloudBPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
 
-  // Link Iklan 2 (Semawur)
-  html += buildCardAlt({ title: `${escapeHTML(gameName)}`, links: nspLinks2, cloud: cloudNSP, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
-  html += buildCardAlt({ title: `${escapeHTML(gameName)}`, links: xciLinks2, cloud: cloudXCI, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
-
-  // ✅ PART
-  html += buildCardAlt({ title: `${escapeHTML(gameName)}`, links: nspPartLinks2, cloud: cloudNSPPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
-  html += buildCardAlt({ title: `${escapeHTML(gameName)}`, links: xciPartLinks2, cloud: cloudXCIPart, btnClass: 'btn-secondary', headerClass: 'bg-secondary' });
-
-  return html || '<p>Link iklan tidak tersedia untuk game ini.</p>';
+  return html || '<p>Link iklan tidak tersedia untuk item ini.</p>';
 }
+
 
         
         function generatePSPAdLinks(game) {
