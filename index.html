@@ -191,10 +191,79 @@ body::after{content:"";position:fixed;width:100%;height:100%;background-image:ra
 body::before,body::after,.game-card,.navbar,.filter-section{will-change:transform}
 body.is-scrolling::before,body.is-scrolling::after{animation-play-state:paused}
 body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.game-card){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+/* Admin Pinned Game Styles */
+.thumbnail-admin-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.game-card:hover .thumbnail-admin-overlay {
+  opacity: 1;
+}
+
+.text-neon {
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Table styles for manage pinned */
+.table-dark {
+  --bs-table-bg: rgba(255, 255, 255, 0.03);
+  --bs-table-border-color: rgba(0, 240, 255, 0.15);
+  --bs-table-striped-bg: rgba(0, 240, 255, 0.05);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 240, 255, 0.1) !important;
+}
+
+/* Form select in table */
+.table .form-select-sm {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--text);
+  border-radius: 8px;
+}
+
+.table .form-control-sm {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--text);
+  border-radius: 8px;
+}
+
+.table .form-control-sm:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+/* Badge styles */
+.badge {
+  font-size: 0.75em;
+  padding: 4px 8px;
+}
+
+.bg-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+}
+
+.bg-warning {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+  color: #78350f !important;
+}
+
+.bg-danger {
+  background: linear-gradient(135deg, var(--neon-pink), #dc2626) !important;
+}
 </style>
-
 </head>
-
 <body>
   <!-- ===== NAVIGATION ===== -->
   <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
@@ -232,9 +301,11 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
           <i class="bi bi-telegram"></i> Login Telegram
         </button>
       </div>
+    <button id="adminPinnedBtn" class="btn btn-warning btn-sm d-none" onclick="openManagePinnedModal()">
+      <i class="bi bi-pin-angle-fill me-1"></i>Manage Pinned
+    </button>
     </div>
   </nav>
-
   <!-- ===== MAIN CONTENT ===== -->
   <div class="header-banner">
     <div class="banner-container">
@@ -313,8 +384,6 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
         </div>
       </div>
     </div>
-
-
     <!-- Game List -->
     <div id="gameListContainer">
       <div class="spinner-container">
@@ -326,10 +395,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
 
     <div id="paginationContainer"></div>
   </div>
-
-
   <!-- ===== MODALS ===== -->
-
   <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -363,7 +429,6 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
       </div>
     </div>
   </div>
-
   <!-- Thumbnail Management Modal -->
 <div class="modal fade" id="thumbnailModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -385,14 +450,12 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
                 </button>
               </div>
             </div>
-            
             <div class="mb-3">
               <label class="form-label small">Preview:</label>
               <div class="text-center">
                 <img id="thumbnailPreview" src="" alt="Preview" class="thumbnail-preview">
               </div>
             </div>
-            
             <div class="mb-3">
               <label class="form-label small">URL Thumbnail Baru:</label>
               <div class="input-group">
@@ -408,7 +471,6 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
             </div>
           </div>
         </div>
-        
         <div class="thumbnail-actions">
           <button class="btn btn-success flex-grow-1" onclick="updateThumbnail()" id="btnUpdateThumbnail">
             <i class="bi bi-check-circle me-2"></i> Update Thumbnail
@@ -417,13 +479,11 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
             <i class="bi bi-trash"></i>
           </button>
         </div>
-        
         <div id="thumbnailMessage" class="mt-3"></div>
       </div>
     </div>
   </div>
 </div>
-
 <div id="pwaInstallContainer" style="display:none; position:fixed; left:16px; right:16px; bottom:16px; z-index:9999;">
   <div style="background:#0b1220; border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:14px; color:#fff;">
     <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
@@ -439,9 +499,103 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
   </div>
 </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<div class="modal fade" id="pinnedGameModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header detail-modal-header">
+        <h5 class="modal-title">Change Pinned Game</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2 small text-muted">Slot: <strong id="pinSlotText">-</strong></div>
 
+        <div class="mb-3">
+          <label class="form-label">Platform</label>
+          <select class="form-control" id="pinPlatform">
+            <option value="switch">Nintendo Switch</option>
+            <option value="ps2">PlayStation 2</option>
+            <option value="psp">PSP</option>
+            <option value="psvita">PS Vita</option>
+            <option value="android">Android</option>
+            <option value="pc">PC</option>
+            <option value="wii">Wii</option>
+            <option value="3ds">3DS</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Nama Game</label>
+          <input type="text" class="form-control" id="pinName" placeholder="Contoh: Monster Hunter Rise" />
+        </div>
+
+        <div id="pinMsg"></div>
+
+        <button class="btn btn-success w-100" id="btnSavePinned" onclick="savePinnedChange()">
+          Simpan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal untuk Manage Pinned Games (Admin Only) -->
+<div class="modal fade" id="managePinnedModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header detail-modal-header">
+        <h5 class="modal-title">Kelola Pinned Games</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle me-2"></i>
+          <strong>Instruksi:</strong> Atur game yang akan ditampilkan di bagian PINNED. Maksimal 8 slot.
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table table-dark table-hover" id="pinnedGamesTable">
+            <thead>
+              <tr>
+                <th width="50">Slot</th>
+                <th width="120">Platform</th>
+                <th>Nama Game</th>
+                <th width="120">Status</th>
+                <th width="100">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pinnedGamesBody">
+              <!-- Data akan diisi oleh JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="mt-3">
+          <button class="btn btn-neon w-100" onclick="addNewPinnedSlot()">
+            <i class="bi bi-plus-circle me-2"></i>Tambah Slot Baru
+          </button>
+        </div>
+        
+        <div id="managePinMessage" class="mt-3"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-success" onclick="saveAllPinnedGames()">
+          <i class="bi bi-save me-2"></i>Simpan Semua Perubahan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+function isAdminUser() {
+  // Admin kalau sudah login dan wa_number sama dengan ADMIN_TELEGRAM_ID
+  if (!currentUser) return false;
+  const wa = String(currentUser.wa_number || '').trim();
+  const adminId = String(ADMIN_TELEGRAM_ID || '').trim();
+  if (!wa || !adminId) return false;
+  return wa === adminId;
+}
     // ====== CONFIGURATION ======
     const GAMEPS2_API_URL = "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec";
     const GAMESWITCH_API_URL = "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec";
@@ -449,12 +603,8 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
     const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
     const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
+    const PINNEDGAME_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const ADMIN_TELEGRAM_ID = "1172835542";
-
-    function isAdminUser() {
-      return currentUser && String(currentUser.wa_number).trim() === ADMIN_TELEGRAM_ID;
-    }
-    
     // ====== GLOBAL STATE ======
     let currentUser = null;
     let allGames = [];
@@ -479,13 +629,96 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     let loadAbort = null;
     let pinnedGames = [];
     let deferredPrompt = null;
+    let PINNED_GAMES_RULES = [];
+    let currentPinSlot = null;
 
-const PINNED_GAMES_RULES = [
-  { platform: 'switch', name: 'Hollow Knight: Silksong' },
-  { platform: 'switch', name: 'DRAGON BALL Sparking ZERO' },
-  { platform: 'switch', name: 'Mortal Kombat 1 Premium Edition' },
-  { platform: 'switch', name: 'EA SPORTS FC 25 Standard Edition' },
-];
+function openPinnedChangeModal(slot) {
+  if (!isAdminUser()) {
+    alert('Hanya admin yang bisa mengubah pinned game');
+    return;
+  }
+  currentPinSlot = Number(slot || 0);
+  if (!currentPinSlot) return;
+
+  const rule = (PINNED_GAMES_RULES || []).find(r => Number(r.slot) === currentPinSlot) || {};
+
+  document.getElementById('pinSlotText').textContent = String(currentPinSlot);
+  document.getElementById('pinPlatform').value = rule.platform || 'switch';
+  document.getElementById('pinName').value = rule.name || '';
+  document.getElementById('pinMsg').innerHTML = '';
+
+  const modal = new bootstrap.Modal(document.getElementById('pinnedGameModal'));
+  modal.show();
+}
+
+function showPinMsg(text, type) {
+  const map = { success: 'alert-success', danger: 'alert-danger', warning: 'alert-warning', info: 'alert-info' };
+  const cls = map[type] || 'alert-info';
+  document.getElementById('pinMsg').innerHTML = `<div class="alert ${cls}">${text}</div>`;
+}
+
+
+async function savePinnedChange() {
+  if (!currentPinSlot) return;
+
+  const btn = document.getElementById('btnSavePinned');
+  if (btn.dataset.loading === '1') return;
+
+  const platform = String(document.getElementById('pinPlatform').value || '').trim().toLowerCase();
+  const name = String(document.getElementById('pinName').value || '').trim();
+
+  if (!platform || !name) {
+    showPinMsg('Platform dan nama game wajib diisi', 'warning');
+    return;
+  }
+
+  setButtonLoading(btn, true, 'Menyimpan...');
+
+  try {
+    const payload = {
+      action: 'updatePinnedGame',
+      slot: String(currentPinSlot),
+      platform: platform,
+      name: name,
+      telegram_id: currentUser.wa_number  // HANYA kirim telegram_id, TIDAK perlu key
+    };
+
+    console.log("📤 Saving pinned game:", payload);
+
+    const response = await fetch(PINNEDGAME_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams(payload)
+    });
+
+    const result = await response.json();
+    console.log("📥 Response:", result);
+
+    if (result.status === 'success') {
+      showPinMsg('✅ Pinned game berhasil diubah', 'success');
+
+      // Reload rules dan games
+      await loadPinnedRules();
+      await loadAllGames({ useCache: false });
+
+      setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('pinnedGameModal'));
+        if (modal) modal.hide();
+      }, 600);
+
+    } else {
+      throw new Error(result.message || 'Gagal menyimpan');
+    }
+
+  } catch (e) {
+    console.error("❌ Error saving pinned game:", e);
+    showPinMsg('❌ ' + (e.message || 'Gagal menyimpan'), 'danger');
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
 
 
 
@@ -535,9 +768,10 @@ function normalizeText(s) {
 
 function findPinnedGames(list) {
   const rules = (PINNED_GAMES_RULES || []).map(r => ({
+    slot: Number(r.slot) || 0,
     platform: normalizeText(r.platform),
     name: normalizeText(r.name)
-  }));
+  })).filter(r => r.slot && r.platform && r.name);
 
   const found = [];
   const usedIndexes = new Set();
@@ -552,10 +786,10 @@ function findPinnedGames(list) {
 
     if (idx >= 0) {
       usedIndexes.add(idx);
-      found.push(list[idx]);
+      found.push({ ...list[idx], __pin_slot: rule.slot });
     } else {
-      // kalau tidak ketemu di API, tetap masuk pinned (placeholder)
       found.push({
+        __pin_slot: rule.slot,
         nama_game: rule.name,
         platform: rule.platform,
         platform_name: getPlatformLabel(rule.platform),
@@ -567,33 +801,59 @@ function findPinnedGames(list) {
     }
   });
 
-  // Buang item pinned yang benar-benar ketemu dari list utama biar tidak dobel
   const cleaned = list.filter((_, i) => !usedIndexes.has(i));
-
   return { pinned: found, cleaned };
 }
 
 
     // ====== FUNGSI UTAMA ======
-    
-    
-    // Scroll reveal animation
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+async function postForm(url, data, signal) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    },
+    body: new URLSearchParams(data).toString(),
+    signal
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-        }
-      });
-    }, observerOptions);
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.game-card').forEach(card => observer.observe(card));
+async function loadPinnedRules() {
+  try {
+    const response = await fetch(PINNEDGAME_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        action: 'getPinnedGames'
+      })
     });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success' && Array.isArray(result.data)) {
+      PINNED_GAMES_RULES = result.data.map(item => ({
+        slot: Number(item.slot) || 0,
+        platform: String(item.platform || '').trim().toLowerCase(),
+        name: String(item.name || '').trim()
+      })).filter(item => item.slot && item.platform && item.name);
+      
+      PINNED_GAMES_RULES.sort((a, b) => a.slot - b.slot);
+      console.log("✅ Pinned rules loaded:", PINNED_GAMES_RULES);
+    } else {
+      PINNED_GAMES_RULES = [];
+      console.warn("⚠️ No pinned games found or error:", result);
+    }
+  } catch (error) {
+    console.error("❌ Error loading pinned rules:", error);
+    PINNED_GAMES_RULES = [];
+  }
+}
+
     // Fungsi untuk redirect ke halaman detail game
     function goToGameDetail(downloadId, platform) {
       // Redirect ke halaman detail dengan format: download.html?game=downloadId&platform=platform
@@ -877,8 +1137,12 @@ function findPinnedGames(list) {
     function startSaldoAutoRefresh() {
       stopSaldoAutoRefresh();
       refreshSaldoSekarang();
-      saldoIntervalId = setInterval(refreshSaldoSekarang, 3000);
+      saldoIntervalId = setInterval(refreshSaldoSekarang, 30000);
     }
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopSaldoAutoRefresh();
+      else startSaldoAutoRefresh();
+    });
 
     function stopSaldoAutoRefresh() {
       if (saldoIntervalId) {
@@ -886,7 +1150,6 @@ function findPinnedGames(list) {
         saldoIntervalId = null;
       }
     }
-
     async function refreshSaldoSekarang() {
       if (!currentUser || !currentUser.wa_number) return;
 
@@ -914,7 +1177,6 @@ function findPinnedGames(list) {
         }
       } catch (e) {}
     }
-
     // ====== DOM CONTENT LOADED ======
     document.addEventListener('DOMContentLoaded', function () {
       checkLoginStatus();
@@ -929,7 +1191,6 @@ function findPinnedGames(list) {
         applySearchFromUrl();
       });
     });
-
     // ====== EVENT LISTENERS SETUP ======
     function setupEventListeners() {
       document.getElementById('searchInput').addEventListener('input', function (e) {
@@ -944,7 +1205,6 @@ function findPinnedGames(list) {
 
         filterGames({ resetPage: true });
       });
-
       const searchReveal = document.getElementById('searchReveal');
       const searchIconBtn = document.getElementById('searchIconBtn');
       const searchInput = document.getElementById('searchInput');
@@ -968,9 +1228,7 @@ function findPinnedGames(list) {
           // tutup kalau input kosong
           if (!searchInput?.value?.trim()) searchReveal.classList.remove('is-open');
         }
-      });
-
-      
+      }); 
       document.getElementById('paginationContainer')?.addEventListener('click', function (e) {
         const btn = e.target.closest('[data-page]');
         if (!btn) return;
@@ -992,7 +1250,6 @@ function findPinnedGames(list) {
           filterGames();
         });
       });
-
       document.getElementById('btnRefreshGames')?.addEventListener('click', async function () {
         const btn = this;
         if (btn.dataset.loading === '1') return;
@@ -1009,7 +1266,6 @@ function findPinnedGames(list) {
             </div>
           `;
         }
-
         try {
           await loadAllGames();
         } finally {
@@ -1017,7 +1273,6 @@ function findPinnedGames(list) {
         }
       });
     }
-
     // ====== LOGIN SYSTEM ======
     function checkLoginStatus() {
       const savedUser = localStorage.getItem(LS_USER_KEY);
@@ -1034,27 +1289,79 @@ function findPinnedGames(list) {
       }
     }
 
-    function updateLoginUI(isLoggedIn) {
-      const userHeader = document.getElementById('userHeader');
-      const loginButton = document.getElementById('loginButton');
+// ====== FUNGSI MANAGE PINNED GAMES (ADMIN) ======
 
-      const nameEl = document.getElementById('loggedUserName');
-      const balEl  = document.getElementById('loggedUserBalance');
-
-      if (isLoggedIn && currentUser) {
-        userHeader?.classList.remove('d-none');
-        loginButton?.classList.add('d-none');
-
-        if (nameEl) nameEl.textContent = currentUser.nama_user || currentUser.wa_number || '-';
-        if (balEl)  balEl.textContent  = formatRupiah(currentUser.saldo || 0);
-
-        startSaldoAutoRefresh();
-      } else {
-        userHeader?.classList.add('d-none');
-        loginButton?.classList.remove('d-none');
-        stopSaldoAutoRefresh();
-      }
+function updateAdminUI() {
+  const isAdmin = isAdminUser();
+  const adminBtn = document.getElementById('adminPinnedBtn');
+  if (adminBtn) {
+    if (isAdmin) {
+      adminBtn.classList.remove('d-none');
+    } else {
+      adminBtn.classList.add('d-none');
     }
+  }
+}
+
+// Panggil fungsi ini setelah login/logout
+function updateLoginUI(isLoggedIn) {
+  const userHeader = document.getElementById('userHeader');
+  const loginButton = document.getElementById('loginButton');
+
+  const nameEl = document.getElementById('loggedUserName');
+  const balEl  = document.getElementById('loggedUserBalance');
+
+  if (isLoggedIn && currentUser) {
+    userHeader?.classList.remove('d-none');
+    loginButton?.classList.add('d-none');
+
+    if (nameEl) nameEl.textContent = currentUser.nama_user || currentUser.wa_number || '-';
+    if (balEl)  balEl.textContent  = formatRupiah(currentUser.saldo || 0);
+
+    // Update UI admin
+    updateAdminUI();
+    
+    startSaldoAutoRefresh();
+  } else {
+    userHeader?.classList.add('d-none');
+    loginButton?.classList.remove('d-none');
+    updateAdminUI();
+    stopSaldoAutoRefresh();
+  }
+}
+function openManagePinnedModal() {
+  if (!isAdminUser()) {
+    alert('Hanya admin yang bisa mengelola pinned games');
+    return;
+  }
+  
+  loadPinnedGamesForAdmin();
+  const modal = new bootstrap.Modal(document.getElementById('managePinnedModal'));
+  modal.show();
+}
+
+async function loadPinnedGamesForAdmin() {
+  try {
+    const response = await fetch(PINNEDGAME_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'action=getPinnedGames'
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success' && Array.isArray(result.data)) {
+      renderPinnedGamesTable(result.data);
+    } else {
+      renderPinnedGamesTable([]);
+    }
+  } catch (error) {
+    console.error('Error loading pinned games:', error);
+    renderPinnedGamesTable([]);
+  }
+}
 
     function openLoginModal() {
       const modal = new bootstrap.Modal(document.getElementById('loginModal'));
@@ -1161,8 +1468,8 @@ async function loadAllGames({ useCache = true } = {}) {
 
     // 5) sorting terbaru dulu (butuh ts_num dari normalizeGame)
     merged.sort((a, b) => (b.ts_num || 0) - (a.ts_num || 0));
+    await loadPinnedRules(signal);
 
-    // 6) cari pinned, lalu keluarkan dari list utama biar tidak dobel
     const resultPin = findPinnedGames(merged);
     pinnedGames = resultPin.pinned || [];
     merged = resultPin.cleaned || merged;
@@ -1340,69 +1647,475 @@ function populateCategoryDropdown() {
       smoothScrollToListTop();
     }
 
+
+function renderPinnedGamesTable(pinnedGames) {
+  const tbody = document.getElementById('pinnedGamesBody');
+  if (!tbody) return;
+  
+  if (!pinnedGames || pinnedGames.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="text-center text-muted">
+          <i class="bi bi-inbox me-2"></i>Belum ada pinned games
+        </td>
+      </tr>
+    `;
+    return;
+  }
+  
+  // Urutkan berdasarkan slot
+  const sorted = [...pinnedGames].sort((a, b) => (a.slot || 0) - (b.slot || 0));
+  
+  let html = '';
+  sorted.forEach(item => {
+    const slot = item.slot || 0;
+    const platform = item.platform || '';
+    const name = item.name || '';
+    const platformLabel = getPlatformLabel(platform);
+    
+    // Cek apakah game tersedia di database
+    const isGameAvailable = checkGameAvailability(platform, name);
+    
+    html += `
+      <tr data-slot="${slot}">
+        <td>
+          <strong class="text-neon">${slot}</strong>
+        </td>
+        <td>
+          <select class="form-select form-select-sm pinned-platform-select" 
+                  data-slot="${slot}">
+            ${getPlatformOptions(platform)}
+          </select>
+        </td>
+        <td>
+          <input type="text" 
+                 class="form-control form-control-sm pinned-name-input" 
+                 data-slot="${slot}"
+                 value="${escapeHTML(name)}"
+                 placeholder="Masukkan nama game...">
+        </td>
+        <td>
+          ${isGameAvailable 
+            ? '<span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Tersedia</span>' 
+            : '<span class="badge bg-warning"><i class="bi bi-exclamation-triangle me-1"></i>Belum ada</span>'}
+        </td>
+        <td>
+          <button class="btn btn-sm btn-danger" onclick="deletePinnedSlot(${slot})">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+  
+  tbody.innerHTML = html;
+}
+
+
+function getPlatformOptions(selectedPlatform) {
+  const platforms = [
+    { value: 'switch', label: 'Nintendo Switch' },
+    { value: 'ps2', label: 'PlayStation 2' },
+    { value: 'psp', label: 'PSP' },
+    { value: 'psvita', label: 'PS Vita' },
+    { value: 'android', label: 'Android' },
+    { value: 'pc', label: 'PC' },
+    { value: 'wii', label: 'Wii' },
+    { value: '3ds', label: '3DS' }
+  ];
+  
+  return platforms.map(p => `
+    <option value="${p.value}" ${p.value === selectedPlatform ? 'selected' : ''}>
+      ${p.label}
+    </option>
+  `).join('');
+}
+
+function checkGameAvailability(platform, gameName) {
+  if (!platform || !gameName) return false;
+  
+  const normalizedName = normalizeText(gameName);
+  const normalizedPlatform = normalizeText(platform);
+  
+  return allGames.some(game => {
+    const gamePlatform = normalizeText(game.platform);
+    const gameName = normalizeText(game.nama_game || game.ori_name);
+    
+    return gamePlatform === normalizedPlatform && gameName === normalizedName;
+  });
+}
+
+
+function addNewPinnedSlot() {
+  const tbody = document.getElementById('pinnedGamesBody');
+  if (!tbody) return;
+  
+  // Cari slot terakhir
+  const currentRows = tbody.querySelectorAll('tr[data-slot]');
+  let nextSlot = 1;
+  
+  if (currentRows.length > 0) {
+    const slots = Array.from(currentRows).map(row => {
+      return parseInt(row.dataset.slot) || 0;
+    });
+    nextSlot = Math.max(...slots) + 1;
+  }
+  
+  // Batasi maksimal 8 slot
+  if (nextSlot > 8) {
+    showPinAdminMessage('Maksimal 8 slot pinned games', 'warning');
+    return;
+  }
+  
+  const newRow = `
+    <tr data-slot="${nextSlot}">
+      <td>
+        <strong class="text-neon">${nextSlot}</strong>
+      </td>
+      <td>
+        <select class="form-select form-select-sm pinned-platform-select" 
+                data-slot="${nextSlot}">
+          ${getPlatformOptions('switch')}
+        </select>
+      </td>
+      <td>
+        <input type="text" 
+               class="form-control form-control-sm pinned-name-input" 
+               data-slot="${nextSlot}"
+               placeholder="Masukkan nama game...">
+      </td>
+      <td>
+        <span class="badge bg-secondary"><i class="bi bi-question-circle me-1"></i>Baru</span>
+      </td>
+      <td>
+        <button class="btn btn-sm btn-danger" onclick="deletePinnedSlot(${nextSlot})">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>
+  `;
+  
+  tbody.innerHTML += newRow;
+}
+
+
+
+function deletePinnedSlot(slot) {
+  if (!confirm(`Yakin ingin menghapus slot ${slot}?`)) return;
+  
+  const row = document.querySelector(`tr[data-slot="${slot}"]`);
+  if (row) {
+    row.remove();
+    showPinAdminMessage(`Slot ${slot} dihapus`, 'info');
+  }
+}
+
+function collectPinnedGamesData() {
+  const data = [];
+  const rows = document.querySelectorAll('#pinnedGamesBody tr[data-slot]');
+  
+  rows.forEach(row => {
+    const slot = parseInt(row.dataset.slot) || 0;
+    const platformSelect = row.querySelector('.pinned-platform-select');
+    const nameInput = row.querySelector('.pinned-name-input');
+    
+    if (platformSelect && nameInput) {
+      const platform = platformSelect.value.trim().toLowerCase();
+      const name = nameInput.value.trim();
+      
+      if (slot > 0 && platform && name) {
+        data.push({
+          slot: slot,
+          platform: platform,
+          name: name
+        });
+      }
+    }
+  });
+  
+  // Urutkan berdasarkan slot
+  return data.sort((a, b) => a.slot - b.slot);
+}
+
+async function saveAllPinnedGames() {
+  if (!isAdminUser()) {
+    showPinAdminMessage('Hanya admin yang bisa menyimpan pinned games', 'danger');
+    return;
+  }
+  
+  const data = collectPinnedGamesData();
+  
+  if (data.length === 0) {
+    showPinAdminMessage('Tidak ada data untuk disimpan', 'warning');
+    return;
+  }
+  
+  const btn = document.querySelector('#managePinnedModal .btn-success');
+  if (btn.dataset.loading === '1') return;
+  
+  setButtonLoading(btn, true, 'Menyimpan...');
+  
+  try {
+    const payload = {
+      action: 'setPinnedGames',
+      rules: JSON.stringify(data),
+      telegram_id: currentUser.wa_number  // HANYA kirim telegram_id
+    };
+    
+    console.log("💾 Saving all pinned games:", payload);
+    
+    const response = await fetch(PINNEDGAME_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams(payload)
+    });
+    
+    const result = await response.json();
+    console.log("📥 Response:", result);
+    
+    if (result.status === 'success') {
+      showPinAdminMessage(`✅ ${result.count || data.length} pinned games berhasil disimpan!`, 'success');
+      
+      // Reload data pinned games
+      await loadPinnedRules();
+      await loadAllGames({ useCache: false });
+      
+      setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('managePinnedModal'));
+        if (modal) modal.hide();
+      }, 1500);
+      
+    } else {
+      throw new Error(result.message || 'Gagal menyimpan');
+    }
+    
+  } catch (error) {
+    console.error("❌ Save Error:", error);
+    showPinAdminMessage('❌ ' + (error.message || 'Gagal menyimpan pinned games'), 'danger');
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+function showPinAdminMessage(message, type) {
+  const msgDiv = document.getElementById('managePinMessage');
+  if (!msgDiv) return;
+  
+  const alertClass = {
+    'success': 'alert-success',
+    'danger': 'alert-danger',
+    'warning': 'alert-warning',
+    'info': 'alert-info'
+  }[type] || 'alert-info';
+  
+  msgDiv.innerHTML = `
+    <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+      ${message}
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+    </div>
+  `;
+}
+
 function renderPinnedSectionHtml() {
   const list = Array.isArray(pinnedGames) ? pinnedGames : [];
   if (!list.length) return '';
 
-  const cardsHtml = list.map(game => {
+  // Urutkan pinned games berdasarkan slot
+  const sortedList = [...list].sort((a, b) => {
+    const slotA = Number(a.__pin_slot || 0);
+    const slotB = Number(b.__pin_slot || 0);
+    return slotA - slotB;
+  });
+
+  const cardsHtml = sortedList.map(game => {
     const platformClass = `badge-${game.platform}`;
     const platformIconClass = `platform-${game.platform}`;
     const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
-
+    const pinSlot = Number(game.__pin_slot || 0);
+    
+    // Categories HTML
     const categoriesHtml = (game.category_list || [])
       .map(cat => `<span class="category-badge">${escapeHTML(cat)}</span>`)
       .join('');
-
+    
+    // Sumber URL
     const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
-
-    const clickable = game.download_id ? `onclick="goToGameDetail('${game.download_id}', '${game.platform}')"` : '';
-    const detailBtn = game.download_id
+    
+    // Check if game has download_id (is a real game or placeholder)
+    const hasRealGame = !!game.download_id;
+    
+    // Click handler - only for real games
+    const clickable = hasRealGame 
+      ? `onclick="goToGameDetail('${game.download_id}', '${game.platform}')"`
+      : '';
+    
+    // Admin buttons
+    const adminBtn = isAdminUser()
+      ? `<div class="d-flex gap-1 mt-2">
+           <button class="btn btn-sm btn-warning"
+                   onclick="event.stopPropagation(); openPinnedChangeModal(${pinSlot})"
+                   title="Edit Pinned Game" 
+                   style="padding: 3px 8px; font-size: 0.75rem;">
+             <i class="bi bi-pencil"></i>
+           </button>
+           <button class="btn btn-sm btn-danger"
+                   onclick="event.stopPropagation(); removePinnedGame(${pinSlot})"
+                   title="Hapus dari Pinned"
+                   style="padding: 3px 8px; font-size: 0.75rem;">
+             <i class="bi bi-trash"></i>
+           </button>
+         </div>`
+      : '';
+    
+    // Detail/Download button
+    const detailBtn = hasRealGame
       ? `<button class="btn btn-sm btn-outline-primary"
-           onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}')">
-           Download
+           onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}')"
+           style="padding: 4px 12px; font-size: 0.8rem;">
+           <i class="bi bi-download me-1"></i>Download
          </button>`
-      : `<button class="btn btn-sm btn-outline-primary" disabled>Belum tersedia</button>`;
-
+      : `<button class="btn btn-sm btn-outline-secondary" disabled
+           style="padding: 4px 12px; font-size: 0.8rem;">
+           <i class="bi bi-question-circle me-1"></i>Belum tersedia
+         </button>`;
+    
+    // New badge if game was added today
+    const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
+    const newBadge = isNewToday 
+      ? `<span class="new-badge" style="position: absolute; top: 15px; right: 15px;">
+           <i class="bi bi-stars"></i> NEW
+         </span>`
+      : '';
+    
+    // Placeholder indicator for games not in database
+    const placeholderIndicator = !hasRealGame
+      ? `<div class="placeholder-overlay" style="
+           position: absolute; inset: 0;
+           background: rgba(0,0,0,0.7);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           backdrop-filter: blur(2px);
+           z-index: 2;
+           border-radius: 20px 20px 0 0;
+           font-size: 0.9rem;
+           color: #ffcc00;
+           font-weight: bold;
+           text-align: center;
+           padding: 10px;
+         ">
+           <div>
+             <i class="bi bi-exclamation-triangle me-1"></i><br>
+             Game belum tersedia<br>
+             <small style="font-size: 0.7rem; opacity: 0.8;">Slot ${pinSlot}</small>
+           </div>
+         </div>`
+      : '';
+    
     return `
       <div class="col-md-6 col-lg-4 col-xl-3">
-        <div class="game-card card h-100 platform-${game.platform}" ${clickable}>
+        <div class="game-card card h-100 platform-${game.platform}" ${clickable}
+             style="position: relative; ${!hasRealGame ? 'cursor: default;' : ''}">
+          
+          <!-- THUMBNAIL SECTION -->
           <div class="thumbnail-container position-relative">
-            <span class="pin-badge">PINNED</span>
-
-            <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}"
+            <!-- Pin Badge -->
+            <span class="pin-badge">PINNED #${pinSlot}</span>
+            
+            <!-- Placeholder Overlay (if game not in database) -->
+            ${placeholderIndicator}
+            
+            <!-- Thumbnail Image -->
+            <img src="${game.thumbnail_url || 'https://placehold.co/600x300/1a1a2e/ffffff?text=No+Image'}"
                  class="card-img-top game-thumbnail"
                  alt="${gameName}"
-                 loading="lazy">
-
+                 loading="lazy"
+                 style="${!hasRealGame ? 'filter: grayscale(0.7) brightness(0.5);' : ''}">
+            
+            <!-- Platform Badge -->
             <span class="platform-badge ${platformClass} thumbnail-badge">
               <span class="platform-icon ${platformIconClass}">
                 <i class="bi ${getPlatformIcon(game.platform)}"></i>
               </span>
-              ${escapeHTML(game.platform_name || '')}
+              ${escapeHTML(game.platform_name || getPlatformLabel(game.platform))}
             </span>
-          </div>
-
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
-            </div>
-
-            <p class="card-text small mb-3">${categoriesHtml}</p>
-
-            <div class="d-flex justify-content-between align-items-center mt-auto">
-              <div>
-                ${sumberUrl ? `
-                  <small class="text-muted d-block mt-1">
-                    <i class="bi bi-link-45deg me-1"></i>
-                    <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
-                       style="color: rgba(231,234,242,0.85); text-decoration: none;"
-                       onclick="event.stopPropagation()">
-                      Source Link
-                    </a>
-                  </small>
-                ` : ''}
+            
+            <!-- New Badge -->
+            ${newBadge}
+            
+            <!-- Admin Thumbnail Controls (only for real games) -->
+            ${isAdminUser() && hasRealGame ? `
+              <div class="thumbnail-admin-overlay">
+                <button class="btn btn-sm btn-outline-light" 
+                        onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
+                        title="Kelola Thumbnail"
+                        style="padding: 2px 6px; font-size: 0.7rem;">
+                  <i class="bi bi-image"></i>
+                </button>
               </div>
-              ${detailBtn}
+            ` : ''}
+          </div>
+          
+          <!-- CARD BODY -->
+          <div class="card-body d-flex flex-column">
+            <!-- Game Title and Date -->
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title mb-0 flex-grow-1" style="font-size: 0.95rem;">
+                ${gameName}
+                ${!hasRealGame ? '<span class="badge bg-warning ms-1" style="font-size: 0.6rem;">Placeholder</span>' : ''}
+              </h6>
+              <small class="text-muted" style="font-size: 0.75rem;">
+                ${game.timestamp ? formatDate(game.timestamp) : ''}
+              </small>
+            </div>
+            
+            <!-- Categories -->
+            <div class="mb-2">
+              ${categoriesHtml || '<span class="text-muted" style="font-size: 0.8rem;">No categories</span>'}
+            </div>
+            
+            <!-- Additional Info (Language, Region, Mod) -->
+            <div class="mb-3" style="font-size: 0.8rem;">
+              ${game.language ? `<span class="badge bg-info me-1" style="font-size: 0.65rem;">${escapeHTML(game.language)}</span>` : ''}
+              ${game.region ? `<span class="badge bg-secondary me-1" style="font-size: 0.65rem;">${escapeHTML(game.region)}</span>` : ''}
+              ${game.game_type === 'ori-mod' || game.game_type === 'only-mod' 
+                ? `<span class="badge bg-success me-1" style="font-size: 0.65rem;">MOD</span>` 
+                : ''}
+            </div>
+            
+            <!-- Source Link -->
+            ${sumberUrl && hasRealGame ? `
+              <div class="mb-2" style="font-size: 0.75rem;">
+                <small class="text-muted">
+                  <i class="bi bi-link-45deg me-1"></i>
+                  <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
+                     style="color: rgba(231,234,242,0.85); text-decoration: none;"
+                     onclick="event.stopPropagation()">
+                    Source Link
+                  </a>
+                </small>
+              </div>
+            ` : ''}
+            
+            <!-- Spacer to push buttons to bottom -->
+            <div class="mt-auto">
+              <!-- Admin Controls -->
+              ${adminBtn}
+              
+              <!-- Action Buttons -->
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <div>
+                  <!-- Slot indicator -->
+                  <small class="text-muted" style="font-size: 0.7rem;">
+                    <i class="bi bi-pin me-1"></i>Slot ${pinSlot}
+                  </small>
+                </div>
+                <div>
+                  ${detailBtn}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1410,21 +2123,139 @@ function renderPinnedSectionHtml() {
     `;
   }).join('');
 
+  // Admin manage button (appears above pinned section)
+  const manageButton = isAdminUser()
+    ? `<div class="d-flex justify-content-between align-items-center mb-3">
+         <div>
+           <div class="pinned-title">
+             <i class="bi bi-pin-angle-fill"></i>
+             <div>Game Pinned</div>
+           </div>
+           <div class="pinned-muted">Game Populer Pilihan (Admin Managed)</div>
+         </div>
+         <div>
+           <button class="btn btn-sm btn-warning" onclick="openManagePinnedModal()"
+                   style="padding: 6px 15px;">
+             <i class="bi bi-gear me-1"></i>Manage All Pinned
+           </button>
+         </div>
+       </div>`
+    : `<div class="mb-3">
+         <div class="pinned-title">
+           <i class="bi bi-pin-angle-fill"></i>
+           <div>Game Pinned</div>
+         </div>
+         <div class="pinned-muted">Game Populer Pilihan</div>
+       </div>`;
+
   return `
     <div class="pinned-section">
-      <div class="pinned-title">
-        <i class="bi bi-pin-angle-fill"></i>
-        <div>Game Pinned</div>
-      </div>
-      <div class="pinned-muted">Populer Game</div>
-
+      ${manageButton}
+      
+      <!-- Stats for Admin -->
+      ${isAdminUser() ? `
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="d-flex gap-2 flex-wrap" style="font-size: 0.85rem;">
+              <span class="badge bg-info">
+                <i class="bi bi-grid-3x3 me-1"></i>
+                Total: ${list.length} slot${list.length > 1 ? 's' : ''}
+              </span>
+              <span class="badge bg-success">
+                <i class="bi bi-check-circle me-1"></i>
+                Tersedia: ${list.filter(g => !!g.download_id).length} game
+              </span>
+              <span class="badge bg-warning">
+                <i class="bi bi-clock me-1"></i>
+                Placeholder: ${list.filter(g => !g.download_id).length}
+              </span>
+              <span class="badge bg-primary">
+                <i class="bi bi-controller me-1"></i>
+                Platform: ${[...new Set(list.map(g => g.platform))].length} jenis
+              </span>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+      
+      <!-- Pinned Games Grid -->
       <div class="row g-4">
         ${cardsHtml}
+        
+        <!-- Empty state if no pinned games -->
+        ${list.length === 0 ? `
+          <div class="col-12">
+            <div class="text-center py-5">
+              <i class="bi bi-pin-angle" style="font-size: 3rem; color: var(--neon-cyan); opacity: 0.5;"></i>
+              <h5 class="mt-3">Belum ada Pinned Games</h5>
+              <p class="text-muted">Admin dapat menambahkan game pinned melalui tombol "Manage All Pinned"</p>
+              ${isAdminUser() ? `
+                <button class="btn btn-neon mt-2" onclick="openManagePinnedModal()">
+                  <i class="bi bi-plus-circle me-2"></i>Tambahkan Pinned Game
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        ` : ''}
       </div>
+      
+      <!-- Instructions for Admin -->
+      ${isAdminUser() && list.length > 0 ? `
+        <div class="mt-4 pt-3 border-top border-light" style="border-color: rgba(255,255,255,0.1) !important;">
+          <small class="text-muted">
+            <i class="bi bi-info-circle me-1"></i>
+            <strong>Petunjuk Admin:</strong> Klik tombol <i class="bi bi-pencil"></i> untuk edit game, atau 
+            <i class="bi bi-trash"></i> untuk hapus dari pinned. Gunakan "Manage All Pinned" untuk pengaturan lengkap.
+          </small>
+        </div>
+      ` : ''}
     </div>
   `;
 }
 
+// Fungsi untuk menghapus game dari pinned
+async function removePinnedGame(slot) {
+  if (!isAdminUser()) {
+    alert('Hanya admin yang bisa menghapus pinned game');
+    return;
+  }
+  
+  if (!confirm(`Yakin ingin menghapus game dari slot ${slot}?`)) return;
+  
+  try {
+    const payload = {
+      action: 'deletePinnedGame',
+      slot: String(slot),
+      telegram_id: currentUser.wa_number  // HANYA kirim telegram_id
+    };
+
+    console.log("🗑️ Deleting pinned game:", payload);
+
+    const response = await fetch(PINNEDGAME_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams(payload)
+    });
+
+    const result = await response.json();
+    console.log("📥 Response:", result);
+
+    if (result.status === 'success') {
+      // Reload data
+      await loadPinnedRules();
+      await loadAllGames({ useCache: false });
+      
+      alert('✅ Game berhasil dihapus dari pinned!');
+    } else {
+      throw new Error(result.message || 'Gagal menghapus');
+    }
+  } catch (error) {
+    console.error("❌ Error deleting pinned game:", error);
+    alert('❌ ' + (error.message || 'Gagal menghapus pinned game'));
+  }
+}
 
 
     function renderPagination(totalItems) {
@@ -2038,9 +2869,7 @@ function renderGameList() {
         </div>
       `;
     }
-
   </script>
-
 <footer class="site-footer">
   <div class="container">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
