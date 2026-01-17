@@ -1762,7 +1762,7 @@
             <div class="col-12">
                 <div class="other-games-card">
                     <div class="other-games-header">
-                        <h3>Game Lainnya</h3>
+                        <h3>Game Emulator Lainnya</h3>
                         <p id="otherGamesSubtitle">Temukan lebih banyak game dari berbagai platform</p>
                     </div>
                     
@@ -2216,12 +2216,17 @@ function toggleTheme() {
             window.open('https://web.telegram.org/k/#@indapkbot', '_blank');
         }
         
-        function updateUserBalanceUI() {
-            if (!currentUser) return;
-            document.getElementById('loggedUserBalance').textContent = rupiah(currentUser.saldo || 0);
-            document.getElementById('loggedUserName').textContent = currentUser.nama_user || '-';
-            document.getElementById('loggedUserId').textContent = currentUser.wa_number || '-';
-        }
+function updateUserBalanceUI() {
+    if (!currentUser) return;
+    
+    const nameEl = document.getElementById('loggedUserName');
+    const balanceEl = document.getElementById('loggedUserBalance');
+    const idEl = document.getElementById('loggedUserId');
+    
+    if (nameEl) nameEl.textContent = currentUser.nama_user || '-';
+    if (balanceEl) balanceEl.textContent = rupiah(currentUser.saldo || 0);
+    if (idEl) idEl.textContent = currentUser.wa_number || '-';
+}
         
         // ====== LOGIN SYSTEM ======
         function checkLoginStatus() {
@@ -2339,75 +2344,64 @@ function updateOtherGamesSection(platform) {
         
 function updateUserUI(isLoggedIn) {
     const userHeader = document.getElementById('userHeader');
+    const originalLinksContent = document.getElementById('originalLinksContent');
+    const loginPrompt = document.getElementById('loginPrompt');
     
     if (isLoggedIn && currentUser) {
-        userHeader.style.display = 'block';
-        
-        // Update konten dengan desain baru
-        userHeader.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <div>
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <div class="user-avatar">
-                            <i class="bi bi-person-circle fs-4 text-primary"></i>
-                        </div>
-                        <div>
-                            <div class="fw-bold">${escapeHTML(currentUser.nama_user || 'User')}</div>
-                            <div class="small text-muted">
-                                <i class="bi bi-telegram me-1"></i>ID: ${escapeHTML(currentUser.wa_number || '-')}
+        if (userHeader) {
+            userHeader.style.display = 'block';
+            userHeader.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <div class="user-avatar">
+                                <i class="bi bi-person-circle fs-4 text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">${escapeHTML(currentUser.nama_user || 'User')}</div>
+                                <div class="small text-muted">
+                                    <i class="bi bi-telegram me-1"></i>ID: ${escapeHTML(currentUser.wa_number || '-')}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="d-flex align-items-center gap-3">
-                    <div class="saldo-box text-center">
-                        <div class="small text-muted mb-1">Saldo</div>
-                        <div class="saldo-amount fw-bold text-success">
-                            <i class="bi bi-wallet2 me-1"></i>Rp ${rupiah(currentUser.saldo || 0)}
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="saldo-box text-center">
+                            <div class="small text-muted mb-1">Saldo</div>
+                            <div class="saldo-amount fw-bold text-success">
+                                <i class="bi bi-wallet2 me-1"></i>Rp ${rupiah(currentUser.saldo || 0)}
+                            </div>
+                        </div>
+                        
+                        <div class="vr" style="height: 40px;"></div>
+                        
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-success btn-sm d-flex align-items-center gap-1" 
+                               href="https://indapk.com/topup.html" 
+                               target="_blank" 
+                               rel="noopener">
+                                <i class="bi bi-plus-circle"></i> Top Up
+                            </a>
+                            <button class="btn btn-danger btn-sm d-flex align-items-center gap-1" 
+                                    onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
                         </div>
                     </div>
-                    
-                    <div class="vr" style="height: 40px;"></div>
-                    
-                    <div class="d-flex gap-2">
-                        <a class="btn btn-success btn-sm d-flex align-items-center gap-1" 
-                           href="https://indapk.com/topup.html" 
-                           target="_blank" 
-                           rel="noopener">
-                            <i class="bi bi-plus-circle"></i> Top Up
-                        </a>
-                        <button class="btn btn-danger btn-sm d-flex align-items-center gap-1" 
-                                onclick="logout()">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </button>
-                    </div>
                 </div>
-            </div>
-        `;
-        
-        // ✅ TAMBAHKAN EFEK GLOW LOGIN SUKSES
-        userHeader.classList.add('login-success');
-        setTimeout(() => {
-            userHeader.classList.remove('login-success');
-        }, 1500);
-        
-        startSaldoAutoRefresh();
+            `;
+        }
         
         // Tampilkan konten original links
-        const originalLinks = document.getElementById('originalLinksContent');
-        if (originalLinks) originalLinks.style.display = 'block';
-        const loginPrompt = document.getElementById('loginPrompt');
+        if (originalLinksContent) originalLinksContent.style.display = 'block';
         if (loginPrompt) loginPrompt.style.display = 'none';
         
     } else {
-        userHeader.style.display = 'none';
-        stopSaldoAutoRefresh();
+        if (userHeader) userHeader.style.display = 'none';
         
         // Sembunyikan konten original links
-        const originalLinks = document.getElementById('originalLinksContent');
-        if (originalLinks) originalLinks.style.display = 'none';
-        const loginPrompt = document.getElementById('loginPrompt');
+        if (originalLinksContent) originalLinksContent.style.display = 'none';
         if (loginPrompt) loginPrompt.style.display = 'block';
     }
 }
@@ -2742,22 +2736,48 @@ function setPlatformTheme(platform) {
 
         
 function displayGameDetail(game, platform) {
-  const gameName = getGameName(game);
-  const { badgeClass, platformName } = setPlatformTheme(platform);
-
-  document.getElementById('gameTitle').innerHTML = `
-    ${escapeHTML(gameName)} <span class="platform-badge ${badgeClass}">${platformName}</span>
-  `;
-  document.getElementById('gameSubtitle').textContent = `${platformName} Game Download`;
-
-  document.getElementById('tabDetails').innerHTML = generateDetailsHTML(game, platform, platformName);
-  document.getElementById('tabAdLinks').innerHTML = generateAdLinksHTML(game, platform);
-  document.getElementById('tabOriginalLinks').innerHTML = generateOriginalLinksHTML(game, platform);
-
-updateUserUI(!!currentUser);
-updateOtherGamesSection(platform);
-updateModalHeadersForPlatform(platform);
-loadEmulatorForPlatform(platform);
+    // PERBAIKAN 1: Pastikan elemen ada sebelum diakses
+    const gameTitleElement = document.getElementById('gameTitle');
+    const gameSubtitleElement = document.getElementById('gameSubtitle');
+    
+    if (!gameTitleElement || !gameSubtitleElement) {
+        console.error('Element not found');
+        return;
+    }
+    
+    const gameName = getGameName(game);
+    const { badgeClass, platformName } = setPlatformTheme(platform);
+    
+    // PERBAIKAN 2: Gunakan innerHTML dengan pengecekan
+    gameTitleElement.innerHTML = `
+        ${escapeHTML(gameName)} <span class="platform-badge ${badgeClass}">${platformName}</span>
+    `;
+    
+    if (gameSubtitleElement) {
+        gameSubtitleElement.textContent = `${platformName} Game Download`;
+    }
+    
+    // PERBAIKAN 3: Pastikan tab content ada sebelum diisi
+    const detailsTab = document.getElementById('tabDetails');
+    const adLinksTab = document.getElementById('tabAdLinks');
+    const originalLinksTab = document.getElementById('tabOriginalLinks');
+    
+    if (detailsTab) {
+        detailsTab.innerHTML = generateDetailsHTML(game, platform, platformName);
+    }
+    
+    if (adLinksTab) {
+        adLinksTab.innerHTML = generateAdLinksHTML(game, platform);
+    }
+    
+    if (originalLinksTab) {
+        originalLinksTab.innerHTML = generateOriginalLinksHTML(game, platform);
+    }
+    
+    updateUserUI(!!currentUser);
+    updateOtherGamesSection(platform);
+    updateModalHeadersForPlatform(platform);
+    loadEmulatorForPlatform(platform);
 }
 
 function getThumbnailUrl(game) {
@@ -3278,7 +3298,7 @@ function generateDetailsHTML(game, platform, platformName) {
           ${emulatorRow}
           ${sumberRow}
         </table>
-    
+
         ${gameLainnyaSection}
       </div>
     </div>
