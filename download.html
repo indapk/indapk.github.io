@@ -1164,6 +1164,185 @@
                        0 0 25px rgba(30, 64, 175, 0.2); 
         }
     }
+
+    /* ===== EFEK GLOW LOGIN SUKSES ===== */
+    .user-info-box {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px;
+        border-left: 6px solid var(--accent1, #0d6efd);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        animation: slideInRight 0.5s ease-out;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .user-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent1, #0d6efd), var(--accent2, #004080));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+    }
+
+    .saldo-box {
+        background: linear-gradient(135deg, rgba(25, 135, 84, 0.1) 0%, rgba(21, 128, 61, 0.1) 100%);
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(25, 135, 84, 0.2);
+        min-width: 140px;
+        transition: all 0.3s ease;
+    }
+
+    .saldo-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(25, 135, 84, 0.15);
+        border-color: rgba(25, 135, 84, 0.3);
+    }
+
+    .saldo-amount {
+        font-size: 1.3rem;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #198754 0%, #157347 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(25, 135, 84, 0.3);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    /* Animation untuk login */
+    @keyframes slideInRight {
+        from {
+            transform: translateX(-30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            transform: translateY(10px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Dark mode support */
+    body.theme-dark .user-info-box {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+        border-left-color: var(--accent1, #3b82f6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body.theme-dark .saldo-box {
+        background: linear-gradient(135deg, rgba(21, 128, 61, 0.2) 0%, rgba(20, 83, 45, 0.2) 100%);
+        border-color: rgba(21, 128, 61, 0.3);
+    }
+
+    body.theme-dark .user-avatar {
+        background: linear-gradient(135deg, var(--accent1, #3b82f6), var(--accent2, #1e40af));
+    }
+    /* Efek glow saat login sukses */
+    .user-info-box.login-success {
+        animation: glowPulse 1.5s ease;
+    }
+
+    @keyframes glowPulse {
+        0%, 100% {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        50% {
+            box-shadow: 0 8px 40px rgba(13, 110, 253, 0.4);
+        }
+    }
+    /* Modal Saldo Tidak Cukup */
+    .balance-icon {
+        font-size: 4rem;
+        color: #ff6b6b;
+        animation: pulseBalance 2s infinite;
+    }
+
+    @keyframes pulseBalance {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+    }
+
+    .balance-info-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 20px;
+        border-left: 4px solid #dc3545;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .balance-info-card hr {
+        border-top: 2px dashed #dee2e6;
+        opacity: 0.6;
+    }
+
+    /* Dark mode support */
+    body.theme-dark .balance-info-card {
+        background: linear-gradient(135deg, rgba(33, 37, 41, 0.9) 0%, rgba(52, 58, 64, 0.9) 100%);
+        border-left-color: #ff6b6b;
+    }
+
+    body.theme-dark .balance-icon {
+        color: #ff8787;
+    }
+    /* Efek getar untuk modal saldo tidak cukup */
+    @keyframes shakeModal {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    .modal-shake .modal-content {
+        animation: shakeModal 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    /* Efek getar untuk modal saldo tidak cukup */
+    @keyframes shakeModal {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    .modal-shake .modal-content {
+        animation: shakeModal 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
     </style>
 </head>
 <body>
@@ -1251,10 +1430,7 @@
 
     </div>
         </div>
-        
-        <!-- Request Game Button -->
-    
-    <!-- Login Modal -->
+            <!-- Login Modal -->
     <div class="modal fade" id="loginModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1548,6 +1724,74 @@
         </div>
     </div>
 
+<!-- Modal Saldo Tidak Cukup -->
+<div class="modal fade" id="insufficientBalanceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-white" id="insufficientBalanceHeader">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Saldo Tidak Cukup
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="mb-4">
+                    <div class="balance-icon mb-3">
+                        <i class="bi bi-wallet-x"></i>
+                    </div>
+                    <h5 class="mb-2">Saldo Tidak Mencukupi</h5>
+                    <p class="text-muted mb-3">
+                        Harga per link: <strong>Rp 2.000</strong>
+                    </p>
+                </div>
+                
+                <div class="balance-info-card mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Saldo Anda:</span>
+                        <span class="fw-bold" id="currentBalanceText">Rp 0</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Biaya Link:</span>
+                        <span class="fw-bold text-danger">- Rp 2.000</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between">
+                        <span>Kekurangan:</span>
+                        <span class="fw-bold text-danger" id="shortageAmount">Rp 2.000</span>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle-fill me-2 mt-1"></i>
+                        <div>
+                            <strong>Top Up Saldo</strong> melalui:
+                            <div class="mt-1">
+                                <a href="https://indapk.com/topup.html" target="_blank" class="text-decoration-none">
+                                    <i class="bi bi-link-45deg"></i> Halaman Top Up
+                                </a>
+                                <span class="mx-2">•</span>
+                                <a href="https://t.me/INDapkBot" target="_blank" class="text-decoration-none">
+                                    <i class="bi bi-telegram"></i> Bot Telegram
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Tutup
+                </button>
+                <a href="https://indapk.com/topup.html" target="_blank" class="btn btn-success">
+                    <i class="bi bi-arrow-up-circle me-1"></i> Top Up Sekarang
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -1805,87 +2049,147 @@ function openOriginalTab() {
 
 
         
-        function updateUserUI(isLoggedIn) {
-            const userHeader = document.getElementById('userHeader');
-            
-            if (isLoggedIn && currentUser) {
-                userHeader.style.display = 'block';
-                updateUserBalanceUI();
-                startSaldoAutoRefresh();
+function updateUserUI(isLoggedIn) {
+    const userHeader = document.getElementById('userHeader');
+    
+    if (isLoggedIn && currentUser) {
+        userHeader.style.display = 'block';
+        
+        // Update konten dengan desain baru
+        userHeader.innerHTML = `
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <div class="user-avatar">
+                            <i class="bi bi-person-circle fs-4 text-primary"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold">${escapeHTML(currentUser.nama_user || 'User')}</div>
+                            <div class="small text-muted">
+                                <i class="bi bi-telegram me-1"></i>ID: ${escapeHTML(currentUser.wa_number || '-')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
-                // Tampilkan tab original links jika sudah login
-                const originalLinks = document.getElementById('originalLinksContent');
-                if (originalLinks) originalLinks.style.display = 'block';
-                const loginPrompt = document.getElementById('loginPrompt');
-                if (loginPrompt) loginPrompt.style.display = 'none';
-            } else {
-                userHeader.style.display = 'none';
-                stopSaldoAutoRefresh();
-                
-                // Sembunyikan tab original links jika belum login
-                const originalLinks = document.getElementById('originalLinksContent');
-                if (originalLinks) originalLinks.style.display = 'none';
-                const loginPrompt = document.getElementById('loginPrompt');
-                if (loginPrompt) loginPrompt.style.display = 'block';
-            }
+                <div class="d-flex align-items-center gap-3">
+                    <div class="saldo-box text-center">
+                        <div class="small text-muted mb-1">Saldo</div>
+                        <div class="saldo-amount fw-bold text-success">
+                            <i class="bi bi-wallet2 me-1"></i>Rp ${rupiah(currentUser.saldo || 0)}
+                        </div>
+                    </div>
+                    
+                    <div class="vr" style="height: 40px;"></div>
+                    
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-success btn-sm d-flex align-items-center gap-1" 
+                           href="https://indapk.com/topup.html" 
+                           target="_blank" 
+                           rel="noopener">
+                            <i class="bi bi-plus-circle"></i> Top Up
+                        </a>
+                        <button class="btn btn-danger btn-sm d-flex align-items-center gap-1" 
+                                onclick="logout()">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // ✅ TAMBAHKAN EFEK GLOW LOGIN SUKSES
+        userHeader.classList.add('login-success');
+        setTimeout(() => {
+            userHeader.classList.remove('login-success');
+        }, 1500);
+        
+        startSaldoAutoRefresh();
+        
+        // Tampilkan konten original links
+        const originalLinks = document.getElementById('originalLinksContent');
+        if (originalLinks) originalLinks.style.display = 'block';
+        const loginPrompt = document.getElementById('loginPrompt');
+        if (loginPrompt) loginPrompt.style.display = 'none';
+        
+    } else {
+        userHeader.style.display = 'none';
+        stopSaldoAutoRefresh();
+        
+        // Sembunyikan konten original links
+        const originalLinks = document.getElementById('originalLinksContent');
+        if (originalLinks) originalLinks.style.display = 'none';
+        const loginPrompt = document.getElementById('loginPrompt');
+        if (loginPrompt) loginPrompt.style.display = 'block';
+    }
+}
+        
+async function login(btn) {
+    const telegramId = document.getElementById('telegramId').value.trim();
+    const key = document.getElementById('telegramKey').value.trim();
+    
+    if (!telegramId || !key) {
+        alert('Masukkan Telegram ID dan Key!');
+        return;
+    }
+    
+    const originalBtnHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...';
+    
+    try {
+        const response = await fetch(USER_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+            },
+            body: 'action=getUser&wa_number=' + encodeURIComponent(telegramId)
+        });
+        
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        
+        const result = await response.json();
+        
+        if (result.status !== 'success' || !result.data) {
+            alert('User tidak ditemukan!');
+            return;
         }
         
-        async function login(btn) {
-            const telegramId = document.getElementById('telegramId').value.trim();
-            const key = document.getElementById('telegramKey').value.trim();
-            
-            if (!telegramId || !key) {
-                alert('Masukkan Telegram ID dan Key!');
-                return;
-            }
-            
-            const originalBtnHtml = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...';
-            
-            try {
-                const response = await fetch(USER_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Accept': 'application/json'
-                    },
-                    body: 'action=getUser&wa_number=' + encodeURIComponent(telegramId)
-                });
-                
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                
-                const result = await response.json();
-                
-                if (result.status !== 'success' || !result.data) {
-                    alert('User tidak ditemukan!');
-                    return;
-                }
-                
-                const serverKey = String(result.data.key || '').trim();
-                if (serverKey !== key) {
-                    alert('Key tidak sesuai!');
-                    return;
-                }
-                
-                currentUser = { ...result.data, key: serverKey };
-                localStorage.setItem(LS_USER_KEY, JSON.stringify(currentUser));
-                
-                updateUserUI(true);
-                
-                const modalEl = document.getElementById('loginModal');
-                const modal = bootstrap.Modal.getInstance(modalEl);
-                if (modal) modal.hide();
-                
-                    showLoginSuccessToast();
-                    startSaldoAutoRefresh();
-            } catch (err) {
-                alert('Login gagal: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalBtnHtml;
-            }
+        const serverKey = String(result.data.key || '').trim();
+        if (serverKey !== key) {
+            alert('Key tidak sesuai!');
+            return;
         }
+        
+        // SIMPAN DATA USER
+        currentUser = { ...result.data, key: serverKey };
+        localStorage.setItem(LS_USER_KEY, JSON.stringify(currentUser));
+        
+        // UPDATE UI
+        updateUserUI(true);
+        
+        // TUTUP MODAL LOGIN
+        const modalEl = document.getElementById('loginModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+        
+        // TAMPILKAN TOAST NOTIFIKASI (opsional)
+        showLoginSuccessToast();
+        
+        // AUTO REFRESH HALAMAN SETELAH 500ms
+        setTimeout(() => {
+            location.reload();
+        }, 500);
+        
+    } catch (err) {
+        alert('Login gagal: ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnHtml;
+    }
+}
+
         
         function logout() {
             localStorage.removeItem(LS_USER_KEY);
@@ -2132,6 +2436,7 @@ function displayGameDetail(game, platform) {
   document.getElementById('tabOriginalLinks').innerHTML = generateOriginalLinksHTML(game, platform);
 
   updateUserUI(!!currentUser);
+updateModalHeadersForPlatform(platform);
 loadEmulatorForPlatform(platform);
 }
 
@@ -3537,22 +3842,153 @@ function generateSwitchOriginalLinks(game) {
         }
         
         // ====== PAYMENT SYSTEM ======
-        async function requestOriginalLink(btn, downloadId, linkType, index, cloudName, platform) {
-            if (!currentUser) {
-                openLoginModal();
-                return;
-            }
-            
-            const saldo = Number(currentUser.saldo || 0);
-            if (saldo < COST_PER_LINK) {
-                alert(`Saldo tidak mencukupi. Harga per link: Rp ${rupiah(COST_PER_LINK)}. Saldo Anda: Rp ${rupiah(saldo)}`);
-                return;
-            }
-            
-            pendingAccess = { downloadId, linkType, index, cloudName, platform };
-            openPayConfirmModal(cloudName, saldo);
+function requestOriginalLink(btn, downloadId, linkType, index, cloudName, platform) {
+    if (!currentUser) {
+        openLoginModal();
+        return;
+    }
+    
+    const saldo = Number(currentUser.saldo || 0);
+    const requiredAmount = COST_PER_LINK;
+    
+    if (saldo < requiredAmount) {
+        // Tampilkan modal saldo tidak cukup
+        showInsufficientBalanceModal(saldo, requiredAmount, platform);
+        return;
+    }
+    
+    pendingAccess = { downloadId, linkType, index, cloudName, platform };
+    openPayConfirmModal(cloudName, saldo);
+}
+
+// Function untuk menampilkan modal saldo tidak cukup
+function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) {
+    // Set data di modal
+    document.getElementById('currentBalanceText').textContent = `Rp ${rupiah(currentBalance)}`;
+    
+    const shortage = requiredAmount - currentBalance;
+    document.getElementById('shortageAmount').textContent = `Rp ${rupiah(shortage)}`;
+    
+    // Set warna header sesuai platform
+    const modalHeader = document.getElementById('insufficientBalanceHeader');
+    if (modalHeader) {
+        let gradient;
+        switch(platform) {
+            case 'ps2':
+                gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
+                break;
+            case 'switch':
+                gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
+                break;
+            case 'psp':
+                gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
+                break;
+            case 'android':
+                gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
+                break;
+            case 'psvita':
+                gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
+                break;
+            default:
+                gradient = 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)';
         }
-        
+        modalHeader.style.background = gradient;
+    }
+    
+    // Tampilkan modal
+    const modalEl = document.getElementById('insufficientBalanceModal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+    
+    // Tambahkan efek getar pada modal
+    modalEl.addEventListener('shown.bs.modal', function () {
+        this.classList.add('modal-shake');
+        setTimeout(() => {
+            this.classList.remove('modal-shake');
+        }, 500);
+    });
+}
+
+
+
+// Function untuk menampilkan modal saldo tidak cukup
+function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) {
+    // Set data di modal
+    document.getElementById('currentBalanceText').textContent = `Rp ${rupiah(currentBalance)}`;
+    
+    const shortage = requiredAmount - currentBalance;
+    document.getElementById('shortageAmount').textContent = `Rp ${rupiah(shortage)}`;
+    
+    // Set warna header sesuai platform
+    const modalHeader = document.getElementById('insufficientBalanceHeader');
+    if (modalHeader) {
+        let gradient;
+        switch(platform) {
+            case 'ps2':
+                gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
+                break;
+            case 'switch':
+                gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
+                break;
+            case 'psp':
+                gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
+                break;
+            case 'android':
+                gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
+                break;
+            case 'psvita':
+                gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
+                break;
+            default:
+                gradient = 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)';
+        }
+        modalHeader.style.background = gradient;
+    }
+    
+    // Tampilkan modal
+    const modalEl = document.getElementById('insufficientBalanceModal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+    
+    // Tambahkan efek getar pada modal
+    modalEl.addEventListener('shown.bs.modal', function () {
+        this.classList.add('modal-shake');
+        setTimeout(() => {
+            this.classList.remove('modal-shake');
+        }, 500);
+    });
+}
+
+// Function untuk update semua modal header sesuai platform
+function updateModalHeadersForPlatform(platform) {
+    let gradient;
+    switch(platform) {
+        case 'ps2':
+            gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
+            break;
+        case 'switch':
+            gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
+            break;
+        case 'psp':
+            gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
+            break;
+        case 'android':
+            gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
+            break;
+        case 'psvita':
+            gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
+            break;
+        default:
+            gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
+    }
+    
+    // Update semua modal header
+    const modalHeaders = document.querySelectorAll('.modal-header.text-white[id$="Header"]');
+    modalHeaders.forEach(header => {
+        header.style.background = gradient;
+    });
+}
+
         function openPayConfirmModal(cloudName, saldo) {
             document.getElementById('payCloudName').textContent = cloudName || '-';
             document.getElementById('payCost').textContent = rupiah(COST_PER_LINK);
