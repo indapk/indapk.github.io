@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0a0e1a">
   <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
@@ -298,7 +299,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
           </button>
         </div>
         <button id="loginButton" class="btn btn-telegram" onclick="openLoginModal()">
-          <i class="bi bi-telegram"></i> Login Telegram
+          <i class="fa fa-sign-in-alt"></i> Login
         </button>
       </div>
     <button id="adminPinnedBtn" class="btn btn-warning btn-sm d-none" onclick="openManagePinnedModal()">
@@ -406,22 +407,22 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
         <div class="modal-body">
           <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
-            <strong>Cara daftar:</strong> Buka bot <a href="https://t.me/indapkbot" target="_blank">@indapkbot</a>,
-            ketik <code>/register</code>, lalu <code>/profile</code> untuk melihat ID dan Key. atau bisa register disini  <a href="dashboard" target="_blank">Register</a>
+            <strong>Cara daftar:</strong>bisa register disini  <a href="download" target="_blank">Register</a>, atau Buka bot <a href="https://t.me/indapkbot" target="_blank">@indapkbot</a>,
+            ketik <code>/register</code>, lalu <code>/profile</code> untuk melihat ID dan Key.
           </div>
           <div class="mb-3">
-            <label class="form-label">Telegram ID</label>
+            <label class="form-label">Telegram ID / Username</label>
             <input type="text" id="telegramId" class="form-control" placeholder="Contoh: 123456789" />
           </div>
           <div class="mb-3">
-            <label class="form-label">Key</label>
+            <label class="form-label">Key / Password</label>
             <input type="password" id="telegramKey" class="form-control" placeholder="Masukkan key dari bot" />
           </div>
           <div class="d-grid gap-2">
             <button class="btn btn-telegram" onclick="login(this)">
               <i class="bi bi-telegram me-2"></i> Login
             </button>
-            <a href="https://indapk.com/dashboard.html" target="_blank" class="btn btn-outline-primary">
+            <a href="https://indapk.github.io/dashboard.html" target="_blank" class="btn btn-outline-primary">
               <i class="bi bi-arrow-up-right-square me-2"></i> Register
             </a>
           </div>
@@ -1373,7 +1374,7 @@ async function loadPinnedGamesForAdmin() {
       const key = document.getElementById('telegramKey').value.trim();
 
       if (!telegramId || !key) {
-        alert('Masukkan Telegram ID dan Key!');
+        alert('Masukkan Telegram ID atau Username dan Key!');
         return;
       }
 
