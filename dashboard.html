@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopUp System - INDAPK</title>
+    <style>
+        /* RESET & GLOBAL */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* HEADER */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #34a853 0%, #2e7d32 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-text h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .user-balance {
+            color: #34a853;
+            font-weight: 700;
+            font-size: 22px;
+        }
+
+        .user-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .status-premium {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #8B4513;
+        }
+
+        .status-reguler {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ea4335 0%, #c62828 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(234, 67, 53, 0.3);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            display: none; /* Awalnya tersembunyi */
+        }
+
+        .dashboard {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* WELCOME SECTION */
+        .welcome-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-section p {
+            color: #666;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+        }
+
+        /* QUICK STATS */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid #34a853;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.balance {
+            border-left-color: #34a853;
+        }
+
+        .stat-card.status {
+            border-left-color: #4285f4;
+        }
+
+        .stat-card.id {
+            border-left-color: #ea4335;
+        }
+
+        .stat-card.registered {
+            border-left-color: #fbbc05;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* ACTION BUTTONS */
+        .action-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #34a853;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .action-btn:hover {
+            border-color: #34a853;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(52, 168, 83, 0.1);
+        }
+
+        .action-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #34a853 0%, #2e7d32 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+        }
+
+        .action-btn.topup .action-icon {
+            background: linear-gradient(135deg, #34a853 0%, #2e7d32 100%);
+        }
+
+        .action-btn.request .action-icon {
+            background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+        }
+
+        .action-btn.list .action-icon {
+            background: linear-gradient(135deg, #ea4335 0%, #c62828 100%);
+        }
+
+        .action-btn.alternative .action-icon {
+            background: linear-gradient(135deg, #fbbc05 0%, #f57c00 100%);
+        }
+
+        .action-btn h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .action-btn p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* USER PROFILE */
+        .profile-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .profile-info h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .profile-info p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .detail-item label {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-item .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* MODAL STYLES */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #34a853 0%, #2e7d32 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .modal-header h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .modal-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #34a853;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #34a853 0%, #2e7d32 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(52, 168, 83, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal-footer {
+            text-align: center;
+            padding: 20px 30px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .modal-footer a {
+            color: #34a853;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* REGISTER SECTION */
+        .register-section {
+            display: none; /* Sembunyikan register, muncul via JS */
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            font-size: 14px;
+            margin-top: 50px;
+            opacity: 0.8;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .user-menu {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .user-info {
+                text-align: center;
+            }
+            
+            .quick-stats,
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .dashboard {
+                padding: 20px;
+            }
+        }
+
+        /* ANIMATIONS */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease;
+        }
+
+        /* PREMIUM BADGE */
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #8B4513;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .premium-badge i {
+            font-size: 16px;
+        }
+
+        /* LOADING */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #34a853;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- MODAL LOGIN -->
+    <div id="loginModal" class="modal" style="display: flex;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login User</h2>
+                <p>Masuk ke akun Anda untuk mengakses sistem</p>
+            </div>
+            
+            <div class="modal-body">
+                <div id="loginAlert" class="alert error" style="display: none;"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username/Telegram ID</label>
+                        <input 
+                            type="text" 
+                            id="loginUsername" 
+                            class="form-control" 
+                            placeholder="Masukkan username atau Telegram ID"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginKey">Key</label>
+                        <input 
+                            type="password" 
+                            id="loginKey" 
+                            class="form-control" 
+                            placeholder="Masukkan key"
+                            required
+                        >
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="loginBtn">
+                        <span>Login</span>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                Belum punya akun? <a href="#" id="showRegister">Daftar di sini</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL REGISTER -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrasi User</h2>
+                <p>Daftarkan akun baru untuk akses sistem</p>
+            </div>
+            
+            <div class="modal-body">
+                <div id="registerAlert" class="alert error" style="display: none;"></div>
+                
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerNama">Nama Lengkap</label>
+                        <input 
+                            type="text" 
+                            id="registerNama" 
+                            class="form-control" 
+                            placeholder="Masukkan nama lengkap"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerUsername">Username (Telegram ID)</label>
+                        <input 
+                            type="text" 
+                            id="registerUsername" 
+                            class="form-control" 
+                            placeholder="Contoh: AnggaPutra, angga123, atau 628xxx"
+                            required
+                        >
+                        <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                            Username akan digunakan sebagai Telegram ID untuk login
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerKey">Key</label>
+                        <input 
+                            type="text" 
+                            id="registerKey" 
+                            class="form-control" 
+                            placeholder="Masukkan key unik"
+                            required
+                        >
+                        <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                            Simpan key ini baik-baik untuk login
+                        </small>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="registerBtn">
+                        <span>Daftar Sekarang</span>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                Sudah punya akun? <a href="#" id="showLogin">Login di sini</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP (Awalnya tersembunyi) -->
+    <div id="mainApp" style="display: none;">
+        <div class="container">
+            <!-- HEADER -->
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Dashboard</h1>
+                        <p>INDAPK - Profile Account</p>
+                    </div>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Loading...</div>
+                        <div class="user-balance" id="userBalance">Rp 0</div>
+                        <div class="user-status" id="userStatus">Reguler</div>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- DASHBOARD -->
+            <div class="main-content">
+                <!-- WELCOME SECTION -->
+                <div class="welcome-section">
+                    <h2>Selamat Datang, <span id="welcomeName">User</span>! 👋</h2>
+                    <p>Akses berbagai layanan top up game, request game, dan daftar game terbaru dengan mudah dan aman.</p>
+                </div>
+
+                <!-- QUICK STATS -->
+                <div class="quick-stats">
+                    <div class="stat-card balance">
+                        <h3>Saldo Anda</h3>
+                        <div class="value" id="statBalance">Rp 0</div>
+                        <div class="label">Siap untuk top up game favorit</div>
+                    </div>
+                    
+                    <div class="stat-card status">
+                        <h3>Status Akun</h3>
+                        <div class="value" id="statStatus">Reguler</div>
+                        <div class="label" id="statExpiry"></div>
+                    </div>
+                    
+                    <div class="stat-card id">
+                        <h3>Telegram ID</h3>
+                        <div class="value" id="statTelegram">-</div>
+                        <div class="label">Username untuk login</div>
+                    </div>
+                    
+                    <div class="stat-card registered">
+                        <h3>Terdaftar Sejak</h3>
+                        <div class="value" id="statRegistered">-</div>
+                        <div class="label">Member aktif</div>
+                    </div>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="action-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-rocket"></i> Layanan Tersedia
+                    </h2>
+                    
+                    <div class="action-buttons">
+                        <a href="https://indapk.com/topup.html" target="_blank" class="action-btn topup">
+                            <div class="action-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <h3>Top Up Game</h3>
+                            <p>Isi saldo untuk pembelian diamond, UC, dan item game lainnya</p>
+                        </a>
+                        
+                        <a href="https://indapk.com/requestgame.html" target="_blank" class="action-btn request">
+                            <div class="action-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <h3>Request Game</h3>
+                            <p>Request game yang belum tersedia di list kami</p>
+                        </a>
+                        
+                        <a href="https://indapk.com/listgame.html" target="_blank" class="action-btn list">
+                            <div class="action-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <h3>List Game</h3>
+                            <p>Lihat daftar game yang tersedia untuk top up</p>
+                        </a>
+                        
+                        <a href="https://indapk.github.io" target="_blank" class="action-btn alternative">
+                            <div class="action-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <h3>Alternatif Game</h3>
+                            <p>List game alternatif dari repository GitHub</p>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PROFILE SECTION -->
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-circle"></i> Profil User
+                    </h2>
+                    
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">
+                            A
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="profileName">Loading...</h3>
+                            <p>Telegram ID: <strong id="profileTelegram">-</strong></p>
+                            <div id="profileBadge"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <label>User ID</label>
+                            <div class="value" id="profileUserId">-</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <label>Saldo Saat Ini</label>
+                            <div class="value" id="profileBalance">Rp 0</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <label>Status Akun</label>
+                            <div class="value" id="profileStatus">Reguler</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <label>Tanggal Daftar</label>
+                            <div class="value" id="profileRegistered">-</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <label>Aktivitas Terakhir</label>
+                            <div class="value" id="profileLastActivity">-</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <label>Premium Expiry</label>
+                            <div class="value" id="profileExpiry">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <p>&copy; 2024 INDAPK - Dashboard. All rights reserved.</p>
+                <p>Powered by Google Apps Script</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec';
+        
+        // STATE MANAGEMENT
+        let currentUser = null;
+        let isLoggingIn = false;
+        let isRegistering = false;
+
+        // DOM ELEMENTS
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const mainApp = document.getElementById('mainApp');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginAlert = document.getElementById('loginAlert');
+        const registerAlert = document.getElementById('registerAlert');
+
+        // INITIALIZE
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAutoLogin();
+            setupEventListeners();
+        });
+
+        // CHECK IF USER IS ALREADY LOGGED IN
+        function checkAutoLogin() {
+            const savedUser = localStorage.getItem('topupUser');
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    // Cek validitas data user
+                    if (user && user.wa_number && user.nama_user) {
+                        currentUser = user;
+                        showDashboard();
+                        loadUserData();
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error parsing saved user:', e);
+                    localStorage.removeItem('topupUser');
+                }
+            }
+            // Jika tidak ada user, show login modal
+            loginModal.style.display = 'flex';
+        }
+
+        // SETUP EVENT LISTENERS
+        function setupEventListeners() {
+            // Login form
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            
+            // Register form
+            if (registerForm) {
+                registerForm.addEventListener('submit', handleRegister);
+            }
+            
+            // Modal switches
+            if (showRegister) {
+                showRegister.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginModal.style.display = 'none';
+                    registerModal.style.display = 'flex';
+                });
+            }
+            
+            if (showLogin) {
+                showLogin.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    registerModal.style.display = 'none';
+                    loginModal.style.display = 'flex';
+                });
+            }
+            
+            // Logout button
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+        }
+
+        // HANDLE LOGIN
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            if (isLoggingIn) return;
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const key = document.getElementById('loginKey').value.trim();
+            
+            if (!username || !key) {
+                showAlert(loginAlert, 'Username dan key harus diisi', true);
+                return;
+            }
+            
+            setLoginLoading(true);
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'action': 'loginUser',
+                        'wa_number': username,
+                        'key': key
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Simpan user data ke localStorage
+                    currentUser = result.data;
+                    localStorage.setItem('topupUser', JSON.stringify(currentUser));
+                    
+                    // Tampilkan dashboard
+                    showDashboard();
+                    loadUserData();
+                    
+                    // Reset form
+                    loginForm.reset();
+                    showAlert(loginAlert, '', false);
+                } else {
+                    showAlert(loginAlert, result.message || 'Login gagal', true);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert(loginAlert, 'Terjadi kesalahan. Coba lagi.', true);
+            } finally {
+                setLoginLoading(false);
+            }
+        }
+
+        // HANDLE REGISTER
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            if (isRegistering) return;
+            
+            const nama = document.getElementById('registerNama').value.trim();
+            const username = document.getElementById('registerUsername').value.trim();
+            const key = document.getElementById('registerKey').value.trim();
+            
+            // Validasi input
+            if (!nama || !username || !key) {
+                showAlert(registerAlert, 'Semua field harus diisi', true);
+                return;
+            }
+            
+            if (username.length < 3) {
+                showAlert(registerAlert, 'Username minimal 3 karakter', true);
+                return;
+            }
+            
+            if (key.length < 5) {
+                showAlert(registerAlert, 'Key minimal 5 karakter', true);
+                return;
+            }
+            
+            setRegisterLoading(true);
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'action': 'registerUser',
+                        'nama_user': nama,
+                        'wa_number': username,
+                        'key': key
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Auto login setelah register berhasil
+                    showAlert(registerAlert, '🎉 Registrasi berhasil! Mengarahkan ke dashboard...', false);
+                    
+                    // Tunggu 2 detik lalu auto login
+                    setTimeout(async () => {
+                        try {
+                            const loginResponse = await fetch(SCRIPT_URL, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: new URLSearchParams({
+                                    'action': 'loginUser',
+                                    'wa_number': username,
+                                    'key': key
+                                })
+                            });
+                            
+                            if (loginResponse.ok) {
+                                const loginResult = await loginResponse.json();
+                                if (loginResult.status === 'success') {
+                                    currentUser = loginResult.data;
+                                    localStorage.setItem('topupUser', JSON.stringify(currentUser));
+                                    showDashboard();
+                                    loadUserData();
+                                    registerForm.reset();
+                                    registerModal.style.display = 'none';
+                                }
+                            }
+                        } catch (loginError) {
+                            console.error('Auto login error:', loginError);
+                            showAlert(registerAlert, 'Registrasi berhasil, silakan login manual', true);
+                        }
+                    }, 2000);
+                } else {
+                    showAlert(registerAlert, result.message || 'Registrasi gagal', true);
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                showAlert(registerAlert, 'Terjadi kesalahan. Coba lagi.', true);
+            } finally {
+                setRegisterLoading(false);
+            }
+        }
+
+        // HANDLE LOGOUT
+        function handleLogout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                currentUser = null;
+                localStorage.removeItem('topupUser');
+                hideDashboard();
+                loginModal.style.display = 'flex';
+                loginForm.reset();
+                showAlert(loginAlert, '', false);
+            }
+        }
+
+        // LOAD USER DATA TO DASHBOARD
+        async function loadUserData() {
+            if (!currentUser || !currentUser.wa_number) return;
+            
+            try {
+                // Refresh user data from server
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'action': 'getUser',
+                        'wa_number': currentUser.wa_number
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        // Update current user data
+                        currentUser = result.data;
+                        localStorage.setItem('topupUser', JSON.stringify(currentUser));
+                    }
+                }
+            } catch (error) {
+                console.error('Error refreshing user data:', error);
+            }
+            
+            // Update UI dengan data user
+            updateDashboardUI();
+        }
+
+        // UPDATE DASHBOARD UI
+        function updateDashboardUI() {
+            if (!currentUser) return;
+            
+            // Header
+            document.getElementById('userName').textContent = currentUser.nama_user || 'User';
+            document.getElementById('userBalance').textContent = formatCurrency(currentUser.saldo || 0);
+            updateUserStatusBadge();
+            
+            // Welcome section
+            document.getElementById('welcomeName').textContent = currentUser.nama_user || 'User';
+            
+            // Quick stats
+            document.getElementById('statBalance').textContent = formatCurrency(currentUser.saldo || 0);
+            document.getElementById('statStatus').textContent = currentUser.status || 'Reguler';
+            document.getElementById('statTelegram').textContent = currentUser.wa_number || '-';
+            document.getElementById('statRegistered').textContent = currentUser.tanggal_daftar || '-';
+            
+            // Update expiry info
+            if (currentUser.status === 'Premium' && currentUser.premium_expiry) {
+                const expiryText = formatExpiryDate(currentUser.premium_expiry);
+                document.getElementById('statExpiry').textContent = expiryText;
+            } else {
+                document.getElementById('statExpiry').textContent = 'Tanpa batas waktu';
+            }
+            
+            // Profile section
+            document.getElementById('profileName').textContent = currentUser.nama_user || 'User';
+            document.getElementById('profileTelegram').textContent = currentUser.wa_number || '-';
+            document.getElementById('profileUserId').textContent = currentUser.user_id || '-';
+            document.getElementById('profileBalance').textContent = formatCurrency(currentUser.saldo || 0);
+            document.getElementById('profileStatus').textContent = currentUser.status || 'Reguler';
+            document.getElementById('profileRegistered').textContent = currentUser.tanggal_daftar || '-';
+            document.getElementById('profileLastActivity').textContent = currentUser.last_activity || '-';
+            
+            // Profile avatar (gunakan inisial nama)
+            const initials = getInitials(currentUser.nama_user || 'User');
+            document.getElementById('profileAvatar').textContent = initials;
+            
+            // Premium expiry
+            if (currentUser.status === 'Premium' && currentUser.premium_expiry) {
+                document.getElementById('profileExpiry').textContent = formatExpiryDate(currentUser.premium_expiry);
+            } else {
+                document.getElementById('profileExpiry').textContent = '-';
+            }
+            
+            // Profile badge
+            updateProfileBadge();
+        }
+
+        // UPDATE USER STATUS BADGE
+        function updateUserStatusBadge() {
+            const userStatusElement = document.getElementById('userStatus');
+            if (!userStatusElement) return;
+            
+            if (currentUser.status === 'Premium') {
+                userStatusElement.textContent = 'Premium';
+                userStatusElement.className = 'user-status status-premium';
+                
+                // Tambahkan badge premium di header
+                const badgeHtml = `<span class="premium-badge"><i class="fas fa-crown"></i> PREMIUM</span>`;
+                document.getElementById('profileBadge').innerHTML = badgeHtml;
+            } else {
+                userStatusElement.textContent = 'Reguler';
+                userStatusElement.className = 'user-status status-reguler';
+                document.getElementById('profileBadge').innerHTML = '';
+            }
+        }
+
+        // UPDATE PROFILE BADGE
+        function updateProfileBadge() {
+            const profileBadge = document.getElementById('profileBadge');
+            if (!profileBadge) return;
+            
+            if (currentUser.status === 'Premium') {
+                profileBadge.innerHTML = `
+                    <div class="premium-badge">
+                        <i class="fas fa-crown"></i> AKUN PREMIUM
+                    </div>
+                `;
+            } else {
+                profileBadge.innerHTML = `
+                    <div style="background: #e0e0e0; color: #666; padding: 8px 16px; border-radius: 20px; font-size: 14px;">
+                        <i class="fas fa-user"></i> AKUN REGULER
+                    </div>
+                `;
+            }
+        }
+
+        // SHOW DASHBOARD
+// SHOW DASHBOARD
+function showDashboard() {
+    mainApp.style.display = 'block';
+    loginModal.style.display = 'none';
+    registerModal.style.display = 'none';
+    
+    // TAMBAHKAN BARIS INI:
+    document.querySelector('.main-content').style.display = 'block';
+    
+    // Animate entrance
+    mainApp.classList.add('fade-in');
+}
+
+        // HIDE DASHBOARD
+        function hideDashboard() {
+            mainApp.style.display = 'none';
+            mainApp.classList.remove('fade-in');
+        }
+
+        // HELPER FUNCTIONS
+        function setLoginLoading(isLoading) {
+            isLoggingIn = isLoading;
+            const btnText = loginBtn.querySelector('span');
+            if (isLoading) {
+                loginBtn.disabled = true;
+                btnText.innerHTML = '<div class="loading"></div>';
+            } else {
+                loginBtn.disabled = false;
+                btnText.textContent = 'Login';
+            }
+        }
+
+        function setRegisterLoading(isLoading) {
+            isRegistering = isLoading;
+            const btnText = registerBtn.querySelector('span');
+            if (isLoading) {
+                registerBtn.disabled = true;
+                btnText.innerHTML = '<div class="loading"></div>';
+            } else {
+                registerBtn.disabled = false;
+                btnText.textContent = 'Daftar Sekarang';
+            }
+        }
+
+        function showAlert(alertElement, message, isError = false) {
+            if (!alertElement) return;
+            
+            alertElement.textContent = message;
+            alertElement.className = `alert ${isError ? 'error' : 'success'}`;
+            alertElement.style.display = message ? 'block' : 'none';
+            
+            if (message && !isError) {
+                setTimeout(() => {
+                    alertElement.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function formatCurrency(amount) {
+            if (!amount && amount !== 0) return 'Rp 0';
+            return 'Rp ' + parseInt(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function formatExpiryDate(dateString) {
+            if (!dateString) return '';
+            try {
+                // Coba parse berbagai format tanggal
+                let date;
+                if (dateString.includes('/')) {
+                    const parts = dateString.split(/[/ :]/);
+                    date = new Date(parts[2], parts[1] - 1, parts[0]);
+                } else {
+                    date = new Date(dateString);
+                }
+                
+                if (isNaN(date.getTime())) return dateString;
+                
+                return date.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function getInitials(name) {
+            if (!name) return 'U';
+            return name
+                .split(' ')
+                .map(word => word[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+        }
+
+        // AUTO REFRESH USER DATA SETIAP 30 DETIK
+        setInterval(() => {
+            if (currentUser) {
+                loadUserData();
+            }
+        }, 30000);
+
+        // TAMBAHKAN EVENT LISTENER UNTUK TOMBOL ACTION
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.action-btn')) {
+                // Optional: Tambahkan tracking untuk klik tombol
+                const btn = e.target.closest('.action-btn');
+                console.log('Navigating to:', btn.href);
+            }
+        });
+    </script>
+</body>
+</html>
