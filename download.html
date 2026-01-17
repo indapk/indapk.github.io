@@ -1343,6 +1343,167 @@
     .modal-shake .modal-content {
         animation: shakeModal 0.5s cubic-bezier(.36,.07,.19,.97) both;
     }
+.skeleton-loading {
+    padding: 20px;
+}
+
+.skeleton-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.skeleton-line {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+    /* Game Lainnya Section */
+    .other-games-section {
+        margin-top: 40px;
+        padding: 25px 0;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        animation: fadeInUp 1.2s ease;
+    }
+
+    .other-games-card {
+        background: var(--surface);
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 10px 30px var(--shadow);
+        border: 1px solid var(--border);
+        transition: all 0.4s ease;
+    }
+
+    .other-games-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .other-games-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .other-games-header h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: var(--text);
+    }
+
+    .other-games-header p {
+        color: var(--muted);
+        font-size: 1rem;
+    }
+
+    .platform-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .platform-card {
+        background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid var(--border);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .platform-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        transition: left 0.6s;
+    }
+
+    .platform-card:hover::before {
+        left: 100%;
+    }
+
+    .platform-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px var(--shadow);
+    }
+
+    .platform-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .platform-card:hover .platform-icon {
+        transform: scale(1.1);
+    }
+
+    .platform-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: var(--text);
+    }
+
+    .platform-count {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    /* Platform-specific colors */
+    .platform-card.ps2 {
+        border-left: 4px solid #0066cc;
+    }
+
+    .platform-card.switch {
+        border-left: 4px solid #e60012;
+    }
+
+    .platform-card.psp {
+        border-left: 4px solid #0070cc;
+    }
+
+    .platform-card.android {
+        border-left: 4px solid #3ddc84;
+    }
+
+    .platform-card.psvita {
+        border-left: 4px solid #003791;
+    }
+
+    .platform-card.other {
+        border-left: 4px solid #6c757d;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .platform-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        
+        .other-games-card {
+            padding: 20px 15px;
+        }
+    }
     </style>
 </head>
 <body>
@@ -1594,7 +1755,77 @@
 </div>
 
 
+<!-- Game Lainnya Section -->
+<div class="other-games-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="other-games-card">
+                    <div class="other-games-header">
+                        <h3>Game Lainnya</h3>
+                        <p id="otherGamesSubtitle">Temukan lebih banyak game dari berbagai platform</p>
+                    </div>
+                    
+                    <div class="platform-grid" id="platformGrid">
+                        <!-- Platform cards will be dynamically generated -->
+                        <div class="platform-card switch" onclick="goToPlatform('switch')">
+                            <div class="platform-icon">
+                                <i class="bi bi-nintendo-switch"></i>
+                            </div>
+                            <div class="platform-title">Nintendo Switch</div>
+                            <div class="platform-count">Koleksi Game Switch</div>
+                            <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                        </div>
 
+                        <div class="platform-card ps2" onclick="goToPlatform('ps2')">
+                            <div class="platform-icon">
+                                <i class="bi bi-playstation"></i>
+                            </div>
+                            <div class="platform-title">PlayStation 2</div>
+                            <div class="platform-count">Koleksi Game PS2</div>
+                            <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                        </div>
+                        
+                        <div class="platform-card psp" onclick="goToPlatform('psp')">
+                            <div class="platform-icon">
+                                <i class="bi bi-controller"></i>
+                            </div>
+                            <div class="platform-title">PSP</div>
+                            <div class="platform-count">Koleksi Game PSP</div>
+                            <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                        </div>
+                        
+                        
+                        <div class="platform-card psvita" onclick="goToPlatform('psvita')">
+                            <div class="platform-icon">
+                                <i class="bi bi-controller"></i>
+                            </div>
+                            <div class="platform-title">PS Vita</div>
+                            <div class="platform-count">Koleksi Game PS Vita</div>
+                            <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                        </div>
+
+                        <div class="platform-card android" onclick="goToPlatform('android')">
+                            <div class="platform-icon">
+                                <i class="bi bi-phone"></i>
+                            </div>
+                            <div class="platform-title">Android</div>
+                            <div class="platform-count">Koleksi Game Android</div>
+                            <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <div class="text-muted small">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Klik platform untuk melihat daftar game lengkap
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Pembatas/Sekat -->
 
     <!-- Komunitas INDapk - Enhanced Design -->
@@ -1816,6 +2047,7 @@
         let currentEmulator = null;
         const emulatorCache = {};
         let emulatorMasterList = null; 
+        const gameCache = {};
         
         // ====== UTILITY FUNCTIONS ======
 
@@ -2006,7 +2238,25 @@ function toggleTheme() {
                 updateUserUI(false);
             }
         }
-        
+
+
+function showSkeletonLoading(elementId, count = 3) {
+    const html = `
+        <div class="skeleton-loading">
+            ${Array.from({length: count}).map(() => `
+                <div class="skeleton-item mb-3">
+                    <div class="skeleton-line" style="width: 70%; height: 25px;"></div>
+                    <div class="skeleton-line" style="width: 100%; height: 60px;"></div>
+                    <div class="skeleton-line" style="width: 50%; height: 20px;"></div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    document.getElementById(elementId).innerHTML = html;
+}
+
+
+
 function showLoginSuccessToast() {
   try {
     const toastEl = document.getElementById('loginSuccessToast');
@@ -2047,6 +2297,44 @@ function openOriginalTab() {
   if (tabContent) tabContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// Function untuk menuju platform tertentu
+function goToPlatform(platform) {
+    const baseUrl = 'https://indapk.github.io';
+    
+    // URLs sesuai dengan contoh yang diberikan
+    const platformUrls = {
+        'ps2': `${baseUrl}/#ps2`,
+        'switch': `${baseUrl}/#switch`,
+        'psp': `${baseUrl}/#psp`,
+        'android': `${baseUrl}/#android`,
+        'psvita': `${baseUrl}/#psvita`
+    };
+    
+    const url = platformUrls[platform] || `${baseUrl}`;
+    window.open(url, '_blank');
+}
+
+// Function untuk update teks berdasarkan platform
+function updateOtherGamesSection(platform) {
+    const titleEl = document.getElementById('otherGamesTitle');
+    const subtitleEl = document.getElementById('otherGamesSubtitle');
+    
+    if (!titleEl || !subtitleEl) return;
+    
+    const platformNames = {
+        'ps2': 'PlayStation 2',
+        'switch': 'Nintendo Switch',
+        'psp': 'PSP',
+        'android': 'Android',
+        'psvita': 'PS Vita'
+    };
+    
+    const currentPlatformName = platformNames[platform] || 'Game';
+    
+    // Update title dan subtitle
+    titleEl.textContent = `Game ${currentPlatformName} Lainnya`;
+    subtitleEl.textContent = `Temukan lebih banyak game ${currentPlatformName} serupa`;
+}
 
         
 function updateUserUI(isLoggedIn) {
@@ -2237,12 +2525,43 @@ async function login(btn) {
                 saldoIntervalId = null;
             }
         }
-        
+
+function showErrorUI(message, retryFunction) {
+    return `
+        <div class="error-container text-center py-5">
+            <div class="error-icon mb-3">
+                <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+            </div>
+            <h4 class="mb-3">Oops! Terjadi Kesalahan</h4>
+            <p class="text-muted mb-4">${message}</p>
+            <div class="d-flex justify-content-center gap-3">
+                <button class="btn btn-primary" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh Halaman
+                </button>
+                ${retryFunction ? `
+                    <button class="btn btn-outline-primary" onclick="${retryFunction}">
+                        <i class="bi bi-arrow-repeat"></i> Coba Lagi
+                    </button>
+                ` : ''}
+            </div>
+        </div>
+    `;
+}
+
+
         // ====== LOAD GAME DETAIL ======
         async function loadGameDetail() {
             const gameId = getUrlParam('game');
             const platform = getUrlParam('platform');
             
+            const cacheKey = `${platform}_${gameId}`;
+            if (gameCache[cacheKey]) {
+                displayGameDetail(gameCache[cacheKey], platform);
+                return;
+            }
+            if (currentGame) {
+                gameCache[cacheKey] = currentGame;
+            }
             if (!gameId || !platform) {
                 document.getElementById('gameTitle').textContent = 'Game tidak ditemukan';
                 document.getElementById('tabDetails').innerHTML = '<p class="text-danger">Game tidak ditemukan. Silakan kembali ke halaman list game.</p>';
@@ -2435,7 +2754,8 @@ function displayGameDetail(game, platform) {
   document.getElementById('tabAdLinks').innerHTML = generateAdLinksHTML(game, platform);
   document.getElementById('tabOriginalLinks').innerHTML = generateOriginalLinksHTML(game, platform);
 
-  updateUserUI(!!currentUser);
+updateUserUI(!!currentUser);
+updateOtherGamesSection(platform);
 updateModalHeadersForPlatform(platform);
 loadEmulatorForPlatform(platform);
 }
@@ -2762,8 +3082,7 @@ function generateDetailsHTML(game, platform, platformName) {
     `
     : '';
 
-  // ========= FORMAT DETECTION (ini yang kamu minta) =========
-  // Switch: NSP, XCI, NSP PART, XCI PART
+  // ========= FORMAT DETECTION =========
   const hasNSP = isSwitch && hasAnyKey([
     'link_iklan_nsp', 'link_iklan2_nsp', 'link_asli_nsp',
     'cloud_nsp', 'ukuran_nsp'
@@ -2774,7 +3093,6 @@ function generateDetailsHTML(game, platform, platformName) {
     'cloud_xci', 'ukuran_xci'
   ]);
 
-  // Banyak orang beda penamaan. Kita buat beberapa kandidat.
   const hasNSPPart = isSwitch && hasAnyKey([
     'link_iklan_nsp_part', 'link_iklan2_nsp_part', 'link_asli_nsp_part',
     'link_iklan_nspPart',  'link_iklan2_nspPart',  'link_asli_nspPart',
@@ -2791,7 +3109,6 @@ function generateDetailsHTML(game, platform, platformName) {
     'ukuran_xci_part', 'ukuran_xciPart'
   ]);
 
-  // PS2/PSP: ISO/CHD (biar rapi juga)
   const hasISO = (platform === 'ps2' || platform === 'psp') && hasAnyKey([
     'link_iklan_iso', 'link_iklan2_iso', 'link_asli_iso',
     'cloud_iso', 'ukuran_iso'
@@ -2802,7 +3119,6 @@ function generateDetailsHTML(game, platform, platformName) {
     'cloud_chd', 'ukuran_chd'
   ]);
 
-  // Android: ORI/MOD
   const hasAndroidOri = isAndroid && (game.game_type !== 'only-mod') && hasAnyKey([
     'ori_original_links', 'ori_ad_links1', 'ori_ad_links2', 'ukuran_ori', 'ori_size_ori', 'ukuran_game'
   ]);
@@ -2811,7 +3127,6 @@ function generateDetailsHTML(game, platform, platformName) {
     'mod_original_links', 'mod_ad_links1', 'mod_ad_links2', 'ori_size_mod', 'mod_size', 'mod_description'
   ]);
 
-  // PSVita (opsional, kalau kamu punya field tertentu bisa tambah)
   const hasVitaLinks = (platform === 'psvita') && hasAnyKey([
     'link_iklan', 'link_iklan2', 'link_asli', 'cloud_types'
   ]);
@@ -2843,7 +3158,7 @@ function generateDetailsHTML(game, platform, platformName) {
     ? `<tr><th>Format:</th><td>${formatBadges}</td></tr>`
     : '';
 
-  // ========= Size rows (lebih detail untuk Switch) =========
+  // ========= Size rows =========
   let sizeRows = '';
 
   if (isSwitch) {
@@ -2865,7 +3180,6 @@ function generateDetailsHTML(game, platform, platformName) {
       sizeRows += `<tr><th>Ukuran XCI PART:</th><td>${escapeHTML(xciPartSize)}</td></tr>`;
     }
   } else {
-    // fallback umum (punya kamu sebelumnya)
     const sizeMain =
       game.ukuran_iso ||
       game.ukuran_nsp ||
@@ -2886,6 +3200,55 @@ function generateDetailsHTML(game, platform, platformName) {
     if (String(sizeAlt).trim()) {
       sizeRows += `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(sizeAlt)}</td></tr>`;
     }
+  }
+
+  // ========= Game Lainnya Section =========
+  let gameLainnyaSection = '';
+  
+  // Tentukan URL berdasarkan platform
+  let gameLainnyaUrl = '';
+  let platformLabel = '';
+  
+  switch(platform) {
+    case 'switch':
+      gameLainnyaUrl = 'https://indapk.github.io/#switch';
+      platformLabel = 'Switch';
+      break;
+    case 'ps2':
+      gameLainnyaUrl = 'https://indapk.github.io/#ps2';
+      platformLabel = 'PS2';
+      break;
+    case 'psp':
+      gameLainnyaUrl = 'https://indapk.github.io/#psp';
+      platformLabel = 'PSP';
+      break;
+    case 'android':
+      gameLainnyaUrl = 'https://indapk.github.io/#android';
+      platformLabel = 'Android';
+      break;
+    case 'psvita':
+      gameLainnyaUrl = 'https://indapk.github.io/#psvita';
+      platformLabel = 'PS Vita';
+      break;
+    default:
+      gameLainnyaUrl = 'https://indapk.github.io/';
+      platformLabel = 'Lainnya';
+  }
+  
+  if (gameLainnyaUrl) {
+    gameLainnyaSection = `
+      <div class="mt-4 pt-3 border-top">
+        <h5 class="mb-3">Game ${platformLabel} Lainnya</h5>
+        <p class="text-muted mb-3">
+          Lihat koleksi game ${platformLabel} lainnya yang tersedia di INDapk
+        </p>
+        <a href="${escapeHTML(gameLainnyaUrl)}" 
+           class="btn btn-outline-primary"
+           style="background: linear-gradient(135deg, var(--accent1, #0066cc), var(--accent2, #003366)); color: white; border: none;">
+          <i class="bi bi-controller me-2"></i> Lihat Semua Game ${platformLabel}
+        </a>
+      </div>
+    `;
   }
 
   // ========= Android MOD info =========
@@ -2915,20 +3278,23 @@ function generateDetailsHTML(game, platform, platformName) {
           ${emulatorRow}
           ${sumberRow}
         </table>
+    
+        ${gameLainnyaSection}
       </div>
+    </div>
+
     <div class="mt-3 text-center">
-      <a href="https://indapk.github.io" class="btn btn-success">
+      <a href="https://indapk.github.io" class="btn btn-success me-2">
         <i class="bi bi-controller"></i> List Game
       </a>
-            <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
-               class="btn btn-success">
-                <i class="bi bi-plus-circle me-2"></i> Request Game
-            </a>
+      <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
+         class="btn btn-success">
+        <i class="bi bi-plus-circle me-2"></i> Request Game
+      </a>
     </div>
-    </div>
+
 
     ${isAndroidModDetail ? buildAndroidModInfo(game) : ''}
-
   `;
 }
 
@@ -4143,6 +4509,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             document.querySelector(targetId).classList.add('show', 'active');
         });
+    });
+});
+document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+    tab.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-bs-target');
+        
+        // Auto-scroll untuk mobile
+        if (window.innerWidth < 768) {
+            setTimeout(() => {
+                document.querySelector(targetId).scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 100);
+        }
     });
 });
 
