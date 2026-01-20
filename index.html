@@ -263,6 +263,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
 .bg-danger {
   background: linear-gradient(135deg, var(--neon-pink), #dc2626) !important;
 }
+.badge-pc{background:linear-gradient(135deg,var(--pc-color),#0082c4);box-shadow:0 5px 20px var(--pc-glow),0 0 30px var(--pc-glow) inset}
 </style>
 </head>
 <body>
@@ -605,6 +606,7 @@ function isAdminUser() {
     const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
     const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
     const PINNEDGAME_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
+    const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
     const ADMIN_TELEGRAM_ID = "1172835542";
     // ====== GLOBAL STATE ======
     let currentUser = null;
@@ -1449,13 +1451,14 @@ async function loadAllGames({ useCache = true } = {}) {
   loadAbort = new AbortController();
   const { signal } = loadAbort;
 
-  const configs = [
+const configs = [
     { platform: 'ps2',     name: 'PlayStation 2',   url: GAMEPS2_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'switch',  name: 'Nintendo Switch', url: GAMESWITCH_API_URL,   accessAction: 'accessSwitchOriginalLink' },
     { platform: 'psvita',  name: 'PS Vita',         url: GAMEPSVITA_API_URL,   accessAction: 'accessOriginalLink' },
     { platform: 'psp',     name: 'PSP',             url: GAMEPSP_API_URL,      accessAction: 'accessOriginalLink' },
-    { platform: 'android', name: 'Android',         url: GAMEANDROID_API_URL,  accessAction: 'accessOriginalLink' }
-  ];
+    { platform: 'android', name: 'Android',         url: GAMEANDROID_API_URL,  accessAction: 'accessOriginalLink' },
+    { platform: 'pc',      name: 'PC',              url: PC_API_URL,           accessAction: 'accessOriginalLink' } // TAMBAHKAN INI
+];
 
   try {
     // 3) fetch paralel
@@ -2690,6 +2693,10 @@ function renderGameList() {
           case 'android':
             apiUrl = GAMEANDROID_API_URL;
             break;
+          case 'pc':
+              apiUrl = PC_API_URL;
+              break;
+
           default:
             throw new Error('Platform tidak didukung');
         }
@@ -2810,6 +2817,16 @@ function renderGameList() {
               thumbnail_url: '',
               telegram_id: currentUser.wa_number,
               key: currentUser.key
+            };
+            break;
+        case 'pc':
+            apiUrl = PC_API_URL;
+            payload = {
+                action: 'updateThumbnail',
+                download_id: downloadId,
+                thumbnail_url: '',
+                telegram_id: currentUser.wa_number,
+                key: currentUser.key
             };
             break;
           default:
