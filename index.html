@@ -1195,87 +1195,296 @@ async function loadPinnedRules() {
       });
     });
     // ====== EVENT LISTENERS SETUP ======
-    function setupEventListeners() {
-      document.getElementById('searchInput').addEventListener('input', function (e) {
-        const raw = e.target.value || '';
-        searchQuery = raw.trim().toLowerCase();
+function setupEventListeners() {
+  // 1. ELEMEN UTAMA
+  const searchInput = document.getElementById('searchInput');
+  const searchReveal = document.getElementById('searchReveal');
+  const searchIconBtn = document.getElementById('searchIconBtn');
+  const platformDropdownItems = document.querySelectorAll('[data-platform]');
+  const categoryDropdown = document.getElementById('categoryList');
+  const refreshBtn = document.getElementById('btnRefreshGames');
+  const paginationContainer = document.getElementById('paginationContainer');
 
-        clearTimeout(searchTypingTimer);
-        searchTypingTimer = setTimeout(() => {
-          setUrlParam('q', raw.trim(), { push: false });
-          setUrlParam('page', '');
-        }, 250);
+  // 2. SEARCH FUNCTIONALITY
+  if (searchIconBtn && searchReveal && searchInput) {
+    // Toggle search input visibility
+    searchIconBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      searchReveal.classList.toggle('is-open');
+      
+      if (searchReveal.classList.contains('is-open')) {
+        setTimeout(() => {
+          searchInput.focus();
+        }, 10);
+      } else {
+        searchInput.blur();
+        // Reset search jika input kosong
+        if (!searchInput.value.trim()) {
+          searchQuery = '';
+          setUrlParam('q', '', { push: false });
+          filterGames({ resetPage: true });
+        }
+      }
+    });
 
+    // Real-time search input
+    searchInput.addEventListener('input', function (e) {
+      const raw = e.target.value || '';
+      searchQuery = raw.trim().toLowerCase();
+
+      // Clear existing timer
+      clearTimeout(searchTypingTimer);
+      
+      // Set new timer for debouncing
+      searchTypingTimer = setTimeout(() => {
+        setUrlParam('q', raw.trim(), { push: false });
+        setUrlParam('page', '', { push: false });
         filterGames({ resetPage: true });
-      });
-      const searchReveal = document.getElementById('searchReveal');
-      const searchIconBtn = document.getElementById('searchIconBtn');
-      const searchInput = document.getElementById('searchInput');
+      }, 300); // 300ms delay
+    });
 
-      searchIconBtn?.addEventListener('click', () => {
-        // toggle open
-        searchReveal?.classList.toggle('is-open');
+    // Search on Enter key
+    searchInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        clearTimeout(searchTypingTimer);
+        const raw = this.value || '';
+        searchQuery = raw.trim().toLowerCase();
+        setUrlParam('q', raw.trim(), { push: false });
+        setUrlParam('page', '', { push: false });
+        filterGames({ resetPage: true });
+      }
+    });
 
-        // kalau sudah open, fokus ke input
-        if (searchReveal?.classList.contains('is-open')) {
-          setTimeout(() => searchInput?.focus(), 0);
-        } else {
-          searchInput?.blur();
+    // Close search when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!searchReveal.contains(e.target)) {
+        // Hanya tutup jika tidak ada input
+        if (!searchInput.value.trim()) {
+          searchReveal.classList.remove('is-open');
         }
-      });
+      }
+    });
 
-      // kalau klik di luar, tutup (opsional biar rapi)
-      document.addEventListener('click', (e) => {
-        if (!searchReveal) return;
-        if (!searchReveal.contains(e.target)) {
-          // tutup kalau input kosong
-          if (!searchInput?.value?.trim()) searchReveal.classList.remove('is-open');
-        }
-      }); 
-      document.getElementById('paginationContainer')?.addEventListener('click', function (e) {
-        const btn = e.target.closest('[data-page]');
-        if (!btn) return;
+    // Keep search open if there's content
+    searchInput.addEventListener('focus', () => {
+      searchReveal.classList.add('is-open');
+    });
+  }
 
-        e.preventDefault();
-        const page = parseInt(btn.dataset.page, 10);
-        if (!Number.isFinite(page)) return;
+  // 3. PLATFORM FILTER
+  platformDropdownItems.forEach(item => {
+    item.addEventListener('click', function (e) {
+      e.preventDefault();
+      const platform = this.dataset.platform;
+      const platformText = this.textContent || getPlatformLabel(platform);
+      
+      currentPlatform = platform;
+      document.getElementById('platformText').textContent = platformText;
 
-        goToPage(page);
-      });
+      // Update URL hash
+      setHashFromPlatform(currentPlatform);
+      
+      // Reset search jika ada
+      if (searchInput) {
+        searchInput.value = '';
+        searchQuery = '';
+        setUrlParam('q', '', { push: false });
+      }
+      
+      filterGames({ resetPage: true });
+    });
+  });
 
-      document.querySelectorAll('[data-platform]').forEach(item => {
-        item.addEventListener('click', function (e) {
-          e.preventDefault();
-          currentPlatform = this.dataset.platform;
-          document.getElementById('platformText').textContent = this.textContent;
-
-          setHashFromPlatform(currentPlatform);
-          filterGames();
+  // 4. CATEGORY FILTER (Dynamic)
+  if (categoryDropdown) {
+    // Category search functionality
+    const categorySearchInput = document.getElementById('categorySearch');
+    if (categorySearchInput) {
+      categorySearchInput.addEventListener('input', function () {
+        const query = this.value.trim().toLowerCase();
+        
+        categoryDropdown.querySelectorAll('li[data-cat-item="1"]').forEach(li => {
+          const link = li.querySelector('a');
+          const text = (link?.textContent || '').toLowerCase();
+          li.style.display = text.includes(query) ? 'block' : 'none';
         });
       });
-      document.getElementById('btnRefreshGames')?.addEventListener('click', async function () {
-        const btn = this;
-        if (btn.dataset.loading === '1') return;
 
-        setButtonLoading(btn, true, 'Refreshing...');
-
-        const container = document.getElementById('gameListContainer');
-        if (container) {
-          container.innerHTML = `
-            <div class="spinner-container">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          `;
-        }
-        try {
-          await loadAllGames();
-        } finally {
-          setButtonLoading(btn, false);
-        }
+      // Prevent category search from closing dropdown
+      categorySearchInput.addEventListener('click', (e) => {
+        e.stopPropagation();
       });
     }
+
+    // Handle click on category items
+    categoryDropdown.addEventListener('click', function (e) {
+      const categoryItem = e.target.closest('[data-category]');
+      if (categoryItem) {
+        e.preventDefault();
+        const category = categoryItem.dataset.category;
+        
+        if (category === 'all') {
+          currentCategory = 'all';
+          document.getElementById('categoryText').textContent = 'Semua';
+        } else {
+          currentCategory = category;
+          document.getElementById('categoryText').textContent = category;
+        }
+        
+        // Reset search jika ada
+        if (searchInput) {
+          searchInput.value = '';
+          searchQuery = '';
+          setUrlParam('q', '', { push: false });
+        }
+        
+        filterGames({ resetPage: true });
+        
+        // Close dropdown
+        const dropdown = bootstrap.Dropdown.getInstance(
+          document.querySelector('.dropdown-category')
+        );
+        if (dropdown) dropdown.hide();
+      }
+    });
+  }
+
+  // 5. REFRESH BUTTON
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', async function () {
+      const btn = this;
+      if (btn.dataset.loading === '1') return;
+
+      setButtonLoading(btn, true, 'Refreshing...');
+
+      const container = document.getElementById('gameListContainer');
+      if (container) {
+        container.innerHTML = `
+          <div class="spinner-container">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        `;
+      }
+      
+      try {
+        await loadAllGames({ useCache: false });
+        
+        // Reset UI setelah refresh
+        if (searchInput) {
+          searchInput.value = '';
+          searchQuery = '';
+          setUrlParam('q', '', { push: false });
+        }
+        
+        currentCategory = 'all';
+        document.getElementById('categoryText').textContent = 'Semua';
+        
+        // Show success message
+        showTempMessage('✅ Game list refreshed successfully!', 'success');
+      } catch (error) {
+        console.error('Refresh error:', error);
+        showTempMessage('❌ Failed to refresh games', 'danger');
+      } finally {
+        setButtonLoading(btn, false);
+      }
+    });
+  }
+
+  // 6. PAGINATION
+  if (paginationContainer) {
+    paginationContainer.addEventListener('click', function (e) {
+      const pageBtn = e.target.closest('[data-page]');
+      if (!pageBtn) return;
+
+      e.preventDefault();
+      const page = parseInt(pageBtn.dataset.page, 10);
+      if (!Number.isFinite(page) || page < 1) return;
+
+      goToPage(page);
+    });
+  }
+
+  // 7. WINDOW EVENTS
+  // Handle hash changes for platform filter
+  window.addEventListener('hashchange', applyHashPlatform);
+  
+  // Handle browser back/forward
+  window.addEventListener('popstate', () => {
+    applySearchFromUrl();
+    applyHashPlatform();
+  });
+
+  // 8. DOCUMENT CLICK HANDLERS (Global)
+  document.addEventListener('click', function (e) {
+    // Handle category badges click
+    const categoryBadge = e.target.closest('.category-badge');
+    if (categoryBadge && categoryBadge.textContent) {
+      e.stopPropagation();
+      const category = categoryBadge.textContent.trim();
+      selectCategory(category);
+    }
+
+    // Handle platform badges click
+    const platformBadge = e.target.closest('.platform-badge');
+    if (platformBadge) {
+      e.stopPropagation();
+      const platformClass = Array.from(platformBadge.classList).find(cls => 
+        cls.startsWith('badge-') && cls !== 'badge'
+      );
+      if (platformClass) {
+        const platform = platformClass.replace('badge-', '');
+        if (platform && platform !== currentPlatform) {
+          currentPlatform = platform;
+          document.getElementById('platformText').textContent = getPlatformLabel(platform);
+          setHashFromPlatform(platform);
+          filterGames({ resetPage: true });
+        }
+      }
+    }
+  });
+
+  // 9. KEYBOARD SHORTCUTS
+  document.addEventListener('keydown', function (e) {
+    // Ctrl/Cmd + F untuk focus search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+      e.preventDefault();
+      if (searchInput) {
+        searchReveal?.classList.add('is-open');
+        setTimeout(() => searchInput.focus(), 10);
+      }
+    }
+    
+    // Escape untuk clear search
+    if (e.key === 'Escape') {
+      if (searchInput && document.activeElement === searchInput) {
+        if (!searchInput.value.trim()) {
+          searchReveal?.classList.remove('is-open');
+        }
+        searchInput.blur();
+      }
+    }
+  });
+
+  // 10. RESIZE HANDLER (Optional)
+  let resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      // Re-calculate layout jika perlu
+      if (window.innerWidth < 768) {
+        // Mobile adjustments
+        if (searchReveal?.classList.contains('is-open') && !searchInput?.value.trim()) {
+          searchReveal.classList.remove('is-open');
+        }
+      }
+    }, 250);
+  });
+
+  console.log('✅ Event listeners setup completed');
+}
+    
     // ====== LOGIN SYSTEM ======
     function checkLoginStatus() {
       const savedUser = localStorage.getItem(LS_USER_KEY);
