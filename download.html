@@ -1505,6 +1505,145 @@
             padding: 20px 15px;
         }
     }
+    .pc-badge { background: linear-gradient(135deg, #00a4ef 0%, #0082c4 100%); }
+    .pc-tabs .nav-link.active {
+        background: linear-gradient(135deg, #00a4ef 0%, #0082c4 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 8px 25px rgba(0, 164, 239, 0.4);
+    }
+    /* System Requirements untuk PC */
+    .system-requirements-card {
+        background: linear-gradient(135deg, rgba(0, 164, 239, 0.1) 0%, rgba(0, 130, 196, 0.1) 100%);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 20px 0;
+        border-left: 5px solid #00a4ef;
+        box-shadow: 0 8px 30px rgba(0, 164, 239, 0.15);
+        animation: fadeInUp 0.8s ease;
+    }
+
+    .system-requirements-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(0, 164, 239, 0.2);
+    }
+
+    .system-requirements-header i {
+        font-size: 2rem;
+        color: #00a4ef;
+        background: rgba(0, 164, 239, 0.1);
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .system-requirements-header h4 {
+        margin: 0;
+        color: #00a4ef;
+        font-weight: 700;
+    }
+
+    .system-requirements-content {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 15px;
+        border: 1px solid rgba(0, 164, 239, 0.2);
+    }
+
+    .sys-req-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .sys-req-table tr {
+        transition: all 0.2s ease;
+    }
+
+    .sys-req-table tr:hover {
+        background: rgba(0, 164, 239, 0.05);
+    }
+
+    .sys-req-table th {
+        background: rgba(0, 164, 239, 0.1);
+        color: #007bbd;
+        font-weight: 700;
+        padding: 14px 16px;
+        text-align: left;
+        border-bottom: 2px solid rgba(0, 164, 239, 0.3);
+        white-space: nowrap;
+        width: 180px;
+    }
+
+    .sys-req-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(0, 164, 239, 0.1);
+        color: #333;
+        word-break: break-word;
+    }
+
+    .sys-req-table tr:last-child th,
+    .sys-req-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .sys-req-badge {
+        background: linear-gradient(135deg, #00a4ef 0%, #0082c4 100%);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-right: 8px;
+        margin-bottom: 6px;
+    }
+
+    .sys-req-notes {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(255, 193, 7, 0.1);
+        border-radius: 10px;
+        border-left: 4px solid #ffc107;
+    }
+
+    .sys-req-notes .note-title {
+        font-weight: 700;
+        color: #ff9800;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Dark mode support */
+    body.theme-dark .system-requirements-card {
+        background: linear-gradient(135deg, rgba(0, 164, 239, 0.15) 0%, rgba(0, 130, 196, 0.1) 100%);
+        border-left-color: #00a4ef;
+    }
+
+    body.theme-dark .system-requirements-content {
+        background: rgba(30, 41, 59, 0.95);
+        border-color: rgba(0, 164, 239, 0.3);
+    }
+
+    body.theme-dark .sys-req-table th {
+        background: rgba(0, 164, 239, 0.2);
+        color: #66b3ff;
+    }
+
+    body.theme-dark .sys-req-table td {
+        color: #e5e7eb;
+        border-bottom-color: rgba(0, 164, 239, 0.2);
+    }
+
+    body.theme-dark .sys-req-notes {
+        background: rgba(255, 193, 7, 0.15);
+        border-left-color: #ffc107;
+    }
     </style>
 </head>
 <body>
@@ -2036,10 +2175,10 @@
         const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
         const EMULATOR_API_URL = "https://script.google.com/macros/s/AKfycbwsXDL0iknPvS-KhQXEzODz_fcBkNm_aieq3eTSN33di7A7mqlX2y0O0XhMAbgBY8DV/exec";
         const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
+        const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
         
         const LS_USER_KEY = 'indapkGameUser';
         const LS_LOGOUT_AT_KEY = 'indapkGameLogoutAt';
-        const COST_PER_LINK = 2000;
         
         let currentUser = null;
         let currentGame = null;
@@ -2061,6 +2200,22 @@ function getSystemTheme() {
     ? 'dark'
     : 'light';
 }
+
+function getCostPerLink(platform) {
+    switch(platform) {
+        case 'ps2':
+        case 'psp':
+        case 'psvita':
+        case 'android':
+        case 'pc':
+            return 1000; // Rp 1.000
+        case 'switch':
+            return 2000; // Rp 2.000
+        default:
+            return 2000; // Default
+    }
+}
+
 
 function applyTheme(theme) {
   const isDark = theme === 'dark';
@@ -2308,13 +2463,13 @@ function openOriginalTab() {
 function goToPlatform(platform) {
     const baseUrl = 'https://indapk.github.io';
     
-    // URLs sesuai dengan contoh yang diberikan
     const platformUrls = {
         'ps2': `${baseUrl}/#ps2`,
         'switch': `${baseUrl}/#switch`,
         'psp': `${baseUrl}/#psp`,
         'android': `${baseUrl}/#android`,
-        'psvita': `${baseUrl}/#psvita`
+        'psvita': `${baseUrl}/#psvita`,
+        'pc': `${baseUrl}/#pc`
     };
     
     const url = platformUrls[platform] || `${baseUrl}`;
@@ -2333,7 +2488,8 @@ function updateOtherGamesSection(platform) {
         'switch': 'Nintendo Switch',
         'psp': 'PSP',
         'android': 'Android',
-        'psvita': 'PS Vita'
+        'psvita': 'PS Vita',
+        'pc': 'PC'
     };
     
     const currentPlatformName = platformNames[platform] || 'Game';
@@ -2546,87 +2702,89 @@ function showErrorUI(message, retryFunction) {
 
 
         // ====== LOAD GAME DETAIL ======
-        async function loadGameDetail() {
-            const gameId = getUrlParam('game');
-            const platform = getUrlParam('platform');
-            
-            const cacheKey = `${platform}_${gameId}`;
-            if (gameCache[cacheKey]) {
-                displayGameDetail(gameCache[cacheKey], platform);
+async function loadGameDetail() {
+    const gameId = getUrlParam('game');
+    const platform = getUrlParam('platform');
+    
+    const cacheKey = `${platform}_${gameId}`;
+    if (gameCache[cacheKey]) {
+        displayGameDetail(gameCache[cacheKey], platform);
+        return;
+    }
+    
+    if (!gameId || !platform) {
+        document.getElementById('gameTitle').textContent = 'Game tidak ditemukan';
+        document.getElementById('tabDetails').innerHTML = '<p class="text-danger">Game tidak ditemukan. Silakan kembali ke halaman list game.</p>';
+        return;
+    }
+    
+    currentPlatform = platform;
+    
+    // Set platform-specific styling
+    setPlatformTheme(platform);
+    
+    try {
+        let apiUrl, action;
+        switch(platform) {
+            case 'ps2':
+                apiUrl = GAMEPS2_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+            case 'switch':
+                apiUrl = GAMESWITCH_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+            case 'psp':
+                apiUrl = GAMEPSP_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+            case 'android':
+                apiUrl = GAMEANDROID_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+            case 'psvita':
+                apiUrl = GAMEPSVITA_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+            case 'pc':
+                apiUrl = PC_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+            default:
+                alert('Platform tidak didukung');
                 return;
-            }
-            if (currentGame) {
-                gameCache[cacheKey] = currentGame;
-            }
-            if (!gameId || !platform) {
-                document.getElementById('gameTitle').textContent = 'Game tidak ditemukan';
-                document.getElementById('tabDetails').innerHTML = '<p class="text-danger">Game tidak ditemukan. Silakan kembali ke halaman list game.</p>';
-                return;
-            }
-            
-            currentPlatform = platform;
-            
-            // Set platform-specific styling
-            setPlatformTheme(platform);
-            
-            try {
-                let apiUrl, action;
-                switch(platform) {
-                    case 'ps2':
-                        apiUrl = GAMEPS2_API_URL;
-                        action = 'getGameByDownloadId';
-                        break;
-                    case 'switch':
-                        apiUrl = GAMESWITCH_API_URL;
-                        action = 'getGameByDownloadId';
-                        break;
-                    case 'psp':
-                        apiUrl = GAMEPSP_API_URL;
-                        action = 'getGameByDownloadId';
-                        break;
-                    case 'android':
-                        apiUrl = GAMEANDROID_API_URL;
-                        action = 'getGameByDownloadId';
-                        break;
-                    case 'psvita':
-                        apiUrl = GAMEPSVITA_API_URL;
-                        action = 'getGameByDownloadId';
-                        break;
-                    default:
-                        alert('Platform tidak didukung');
-                        return;
-                }
-                
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Accept': 'application/json'
-                    },
-                    body: `action=${action}&download_id=${encodeURIComponent(gameId)}`
-                });
-                
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                
-                const result = await response.json();
-                if (result.status !== 'success') {
-                    throw new Error('Game tidak ditemukan');
-                }
-                
-                currentGame = Array.isArray(result.data) ? result.data[0] : result.data;
-                displayGameDetail(currentGame, platform);
-
-            } catch (error) {
-                console.error('Error loading game details:', error);
-                document.getElementById('gameTitle').textContent = 'Error';
-                document.getElementById('tabDetails').innerHTML = `
-                    <div class="alert alert-danger">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        Gagal memuat detail game: ${error.message}
-                    </div>
-                `;
-            }
         }
+        
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+            },
+            body: `action=${action}&download_id=${encodeURIComponent(gameId)}`
+        });
+        
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        
+        const result = await response.json();
+        if (result.status !== 'success') {
+            throw new Error('Game tidak ditemukan');
+        }
+        
+        currentGame = Array.isArray(result.data) ? result.data[0] : result.data;
+        displayGameDetail(currentGame, platform);
+
+    } catch (error) {
+        console.error('Error loading game details:', error);
+        document.getElementById('gameTitle').textContent = 'Error';
+        document.getElementById('tabDetails').innerHTML = `
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Gagal memuat detail game: ${error.message}
+            </div>
+        `;
+    }
+}
         
 
 function getGameName(game) {
@@ -2708,6 +2866,16 @@ function setPlatformTheme(platform) {
       c1 = '#003791'; c2 = '#001f4d';
       shadow = 'rgba(0, 55, 145, 0.4)';
       shadowHover = 'rgba(0, 55, 145, 0.6)';
+      break;
+
+    case 'pc':
+      gradient = 'linear-gradient(135deg, #00a4ef 0%, #0082c4 100%)';
+      badgeClass = 'pc-badge';
+      platformName = 'PC';
+      tabs.className = 'nav nav-tabs ps2-tabs pc-tabs';
+      c1 = '#00a4ef'; c2 = '#0082c4';
+      shadow = 'rgba(0, 164, 239, 0.4)';
+      shadowHover = 'rgba(0, 164, 239, 0.6)';
       break;
 
     default:
@@ -2949,7 +3117,34 @@ function showEmulatorDetailModal() {
 }
 
 
+function getPriceText(platform) {
+    const price = getCostPerLink(platform);
+    return `Rp ${rupiah(price)}`;
+}
 
+// Gunakan dalam template:
+function generateLinkSectionHTML(game, platform, title, links, cloudArr, linkType) {
+    const priceText = getPriceText(platform);
+    
+    return `
+        <div class="link-section original-link">
+            <h6>${escapeHTML(title)}</h6>
+            <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+            ${links.map((link, index) => `
+                <div class="link-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>${escapeHTML(cloudArr?.[index] || `Cloud ${index + 1}`)}</span>
+                        <button class="btn btn-sm btn-success"
+                            onclick="requestOriginalLink(this, '${game.download_id}', '${linkType}', ${index}, '${cloudArr?.[index] || `Cloud ${index + 1}`}', '${platform}')"
+                            ${!currentUser ? 'disabled' : ''}>
+                            <i class="bi bi-unlock"></i> ${priceText}
+                        </button>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
 function splitModFeatures(desc) {
   if (!desc) return [];
   return String(desc)
@@ -3020,304 +3215,576 @@ function buildAndroidModInfo(game) {
 }
 
 
+// Fungsi baru untuk generate System Requirements HTML
+function generateSystemRequirementsHTML(requirementsText) {
+    if (!requirementsText || requirementsText.trim() === '') {
+        return '';
+    }
+
+    // Parse system requirements dari teks
+    const lines = requirementsText.split('\n').filter(line => line.trim() !== '');
+    const parsedRequirements = [];
+
+    lines.forEach(line => {
+        const trimmedLine = line.trim();
+        if (trimmedLine.includes(':')) {
+            const [key, ...valueParts] = trimmedLine.split(':');
+            parsedRequirements.push({
+                key: key.trim(),
+                value: valueParts.join(':').trim()
+            });
+        } else {
+            parsedRequirements.push({
+                key: 'Info',
+                value: trimmedLine
+            });
+        }
+    });
+
+    // Generate HTML
+    let requirementsHTML = `
+        <div class="system-requirements-card">
+            <div class="system-requirements-header">
+                <i class="bi bi-cpu-fill"></i>
+                <h4>System Requirements</h4>
+            </div>
+
+            <div class="system-requirements-content">
+                <table class="sys-req-table">
+    `;
+
+    parsedRequirements.forEach(req => {
+        const icon = getRequirementIcon(req.key);
+        const displayKey = formatRequirementKey(req.key);
+        
+        requirementsHTML += `
+            <tr>
+                <th>
+                    <i class="bi ${icon} me-2"></i>
+                    ${escapeHTML(displayKey)}
+                </th>
+                <td>${escapeHTML(req.value)}</td>
+            </tr>
+        `;
+    });
+
+    requirementsHTML += `
+                </table>
+
+                <div class="sys-req-notes">
+                    <div class="note-title">
+                        <i class="bi bi-info-circle-fill"></i>
+                        Informasi Penting
+                    </div>
+                    <div class="small text-muted">
+                        • Pastikan spesifikasi sistem Anda memenuhi atau melebihi requirements minimum untuk pengalaman bermain optimal.<br>
+                        • System requirements ini berdasarkan pengujian standar dan bisa berbeda tergantung konfigurasi sistem.<br>
+                        • Update driver graphics card ke versi terbaru untuk performa terbaik.
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <span class="sys-req-badge"><i class="bi bi-windows"></i> Windows</span>
+                    <span class="sys-req-badge"><i class="bi bi-pc-display"></i> PC Gaming</span>
+                    <span class="sys-req-badge"><i class="bi bi-memory"></i> RAM</span>
+                    <span class="sys-req-badge"><i class="bi bi-gpu-card"></i> Graphics</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return requirementsHTML;
+}
+
+// Helper function untuk icon requirements
+function getRequirementIcon(key) {
+    const keyLower = key.toLowerCase();
+    
+    if (keyLower.includes('os') || keyLower.includes('operating') || keyLower.includes('windows')) {
+        return 'bi-windows';
+    } else if (keyLower.includes('processor') || keyLower.includes('cpu') || keyLower.includes('intel') || keyLower.includes('amd')) {
+        return 'bi-cpu-fill';
+    } else if (keyLower.includes('memory') || keyLower.includes('ram')) {
+        return 'bi-memory';
+    } else if (keyLower.includes('graphics') || keyLower.includes('gpu') || keyLower.includes('nvidia') || keyLower.includes('radeon')) {
+        return 'bi-gpu-card';
+    } else if (keyLower.includes('directx')) {
+        return 'bi-controller';
+    } else if (keyLower.includes('storage') || keyLower.includes('hard drive') || keyLower.includes('space')) {
+        return 'bi-hdd-fill';
+    } else if (keyLower.includes('sound') || keyLower.includes('audio')) {
+        return 'bi-volume-up-fill';
+    } else if (keyLower.includes('network') || keyLower.includes('internet') || keyLower.includes('online')) {
+        return 'bi-wifi';
+    } else {
+        return 'bi-info-circle';
+    }
+}
+
+// Helper function untuk format key
+function formatRequirementKey(key) {
+    const keyLower = key.toLowerCase();
+    
+    if (keyLower.includes('os')) return 'Operating System';
+    if (keyLower.includes('processor')) return 'Processor';
+    if (keyLower.includes('memory')) return 'Memory (RAM)';
+    if (keyLower.includes('graphics')) return 'Graphics Card';
+    if (keyLower.includes('directx')) return 'DirectX';
+    if (keyLower.includes('storage') || keyLower.includes('hard drive')) return 'Storage';
+    if (keyLower.includes('sound')) return 'Sound Card';
+    if (keyLower.includes('network')) return 'Network';
+    
+    return key;
+}
 
 function generateDetailsHTML(game, platform, platformName) {
-  const isAndroid = platform === 'android';
-  const isSwitch  = platform === 'switch';
+    const isAndroid = platform === 'android';
+    const isSwitch  = platform === 'switch';
+    const isPC      = platform === 'pc';
 
-  const gameName = getGameName(game);
-  const category = game.category || game.ori_category || '-';
-  const totalDownloads = game.total_downloads || 0;
+    const gameName = getGameName(game);
+    const category = game.category || game.ori_category || '-';
+    const totalDownloads = game.total_downloads || 0;
 
-  // ========= Helpers (khusus buat function ini) =========
-  function hasArr(v) {
-    return Array.isArray(v) && v.filter(Boolean).length > 0;
-  }
-
-  function hasAnyKey(keys) {
-    return keys.some(k => hasArr(game?.[k]) || String(game?.[k] || '').trim().length > 0);
-  }
-
-  function badge(text, cls = 'ps2-badge') {
-    return `<span class="platform-badge ${cls}" style="font-size:.75rem; padding:6px 12px; margin:2px;">${escapeHTML(text)}</span>`;
-  }
-
-  // ========= Thumbnail =========
-  const thumbnailUrl = getThumbnailUrl(game);
-  const thumbHtml = `
-    <div class="game-thumb-wrap">
-      <img
-        class="game-thumb"
-        src="${escapeHTML(thumbnailUrl || 'https://placehold.co/900x450?text=No+Thumbnail')}"
-        alt="${escapeHTML(gameName)}"
-        loading="lazy"
-        referrerpolicy="no-referrer"
-        onerror="this.onerror=null;this.src='https://placehold.co/900x450?text=No+Thumbnail';"
-      />
-    </div>
-  `;
-
-  // ========= Emulator row (non-android) =========
-  const emulatorRow = !isAndroid
-    ? `
-      <tr id="emulatorRow" style="display:none;">
-        <th>Emulator:</th>
-        <td>
-          <a href="#" id="emulatorNameLink" class="text-decoration-none"
-             onclick="showEmulatorDetailModal(); return false;">
-            <span id="emulatorNameText">-</span> <i class="bi bi-info-circle"></i>
-          </a>
-          <span id="emulatorHint" class="small text-muted ms-2"></span>
-        </td>
-      </tr>
-    `
-    : '';
-
-  // ========= Basic rows =========
-  const languageRow = !isAndroid && game.language
-    ? `<tr><th>Bahasa:</th><td>${escapeHTML(game.language || '-')}</td></tr>`
-    : '';
-
-  const regionRow = !isAndroid && game.region
-    ? `<tr><th>Region:</th><td>${escapeHTML(game.region || '-')}</td></tr>`
-    : '';
-
-  const gameIdRow = !isAndroid && game.game_id
-    ? `<tr><th>Game ID:</th><td>${escapeHTML(game.game_id || '-')}</td></tr>`
-    : '';
-
-  const versionRow = (game.versi_game || game.ori_version)
-    ? `<tr><th>Versi:</th><td>${escapeHTML(game.versi_game || game.ori_version || '-')}</td></tr>`
-    : '';
-
-  const sumberUrl = buildSumberLinkUrl(game);
-  const sumberRow = sumberUrl
-    ? `
-      <tr>
-        <th>Sumber Link:</th>
-        <td>
-          <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener" style="word-break: break-word;">
-            ${escapeHTML(sumberUrl)}
-          </a>
-        </td>
-      </tr>
-    `
-    : '';
-
-  // ========= FORMAT DETECTION =========
-  const hasNSP = isSwitch && hasAnyKey([
-    'link_iklan_nsp', 'link_iklan2_nsp', 'link_asli_nsp',
-    'cloud_nsp', 'ukuran_nsp'
-  ]);
-
-  const hasXCI = isSwitch && hasAnyKey([
-    'link_iklan_xci', 'link_iklan2_xci', 'link_asli_xci',
-    'cloud_xci', 'ukuran_xci'
-  ]);
-
-  const hasNSPPart = isSwitch && hasAnyKey([
-    'link_iklan_nsp_part', 'link_iklan2_nsp_part', 'link_asli_nsp_part',
-    'link_iklan_nspPart',  'link_iklan2_nspPart',  'link_asli_nspPart',
-    'link_nsp_part', 'link_nspPart',
-    'cloud_nsp_part', 'cloud_nspPart',
-    'ukuran_nsp_part', 'ukuran_nspPart'
-  ]);
-
-  const hasXCIPart = isSwitch && hasAnyKey([
-    'link_iklan_xci_part', 'link_iklan2_xci_part', 'link_asli_xci_part',
-    'link_iklan_xciPart',  'link_iklan2_xciPart',  'link_asli_xciPart',
-    'link_xci_part', 'link_xciPart',
-    'cloud_xci_part', 'cloud_xciPart',
-    'ukuran_xci_part', 'ukuran_xciPart'
-  ]);
-
-  const hasISO = (platform === 'ps2' || platform === 'psp') && hasAnyKey([
-    'link_iklan_iso', 'link_iklan2_iso', 'link_asli_iso',
-    'cloud_iso', 'ukuran_iso'
-  ]);
-
-  const hasCHD = (platform === 'ps2' || platform === 'psp') && hasAnyKey([
-    'link_iklan_chd', 'link_iklan2_chd', 'link_asli_chd',
-    'cloud_chd', 'ukuran_chd'
-  ]);
-
-  const hasAndroidOri = isAndroid && (game.game_type !== 'only-mod') && hasAnyKey([
-    'ori_original_links', 'ori_ad_links1', 'ori_ad_links2', 'ukuran_ori', 'ori_size_ori', 'ukuran_game'
-  ]);
-
-  const hasAndroidMod = isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod') && hasAnyKey([
-    'mod_original_links', 'mod_ad_links1', 'mod_ad_links2', 'ori_size_mod', 'mod_size', 'mod_description'
-  ]);
-
-  const hasVitaLinks = (platform === 'psvita') && hasAnyKey([
-    'link_iklan', 'link_iklan2', 'link_asli', 'cloud_types'
-  ]);
-
-  // ========= Build format badges =========
-  let formatBadges = '';
-
-  if (isSwitch) {
-    if (hasNSP)     formatBadges += badge('NSP', 'switch-badge');
-    if (hasXCI)     formatBadges += badge('XCI', 'switch-badge');
-    if (hasNSPPart) formatBadges += badge('NSP PART', 'switch-badge');
-    if (hasXCIPart) formatBadges += badge('XCI PART', 'switch-badge');
-
-    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
-  } else if (platform === 'ps2' || platform === 'psp') {
-    if (hasISO) formatBadges += badge('ISO', 'ps2-badge');
-    if (hasCHD) formatBadges += badge('CHD', 'ps2-badge');
-    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
-  } else if (isAndroid) {
-    if (hasAndroidOri) formatBadges += badge('Ori', 'android-badge');
-    if (hasAndroidMod) formatBadges += badge('Mod', 'android-badge');
-    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
-  } else if (platform === 'psvita') {
-    if (hasVitaLinks) formatBadges += badge('NoNpDRM', 'psvita-badge');
-    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
-  }
-
-  const formatRow = formatBadges
-    ? `<tr><th>Format:</th><td>${formatBadges}</td></tr>`
-    : '';
-
-  // ========= Size rows =========
-  let sizeRows = '';
-
-  if (isSwitch) {
-    const nspSize = game.ukuran_nsp || '';
-    const xciSize = game.ukuran_xci || '';
-    const nspPartSize = game.ukuran_nsp_part || game.ukuran_nspPart || '';
-    const xciPartSize = game.ukuran_xci_part || game.ukuran_xciPart || '';
-
-    if (hasNSP && String(nspSize).trim()) {
-      sizeRows += `<tr><th>Ukuran NSP:</th><td>${escapeHTML(nspSize)}</td></tr>`;
+    // ========= Helpers (khusus buat function ini) =========
+    function hasArr(v) {
+        return Array.isArray(v) && v.filter(Boolean).length > 0;
     }
-    if (hasXCI && String(xciSize).trim()) {
-      sizeRows += `<tr><th>Ukuran XCI:</th><td>${escapeHTML(xciSize)}</td></tr>`;
-    }
-    if (hasNSPPart && String(nspPartSize).trim()) {
-      sizeRows += `<tr><th>Ukuran NSP PART:</th><td>${escapeHTML(nspPartSize)}</td></tr>`;
-    }
-    if (hasXCIPart && String(xciPartSize).trim()) {
-      sizeRows += `<tr><th>Ukuran XCI PART:</th><td>${escapeHTML(xciPartSize)}</td></tr>`;
-    }
-  } else {
-    const sizeMain =
-      game.ukuran_iso ||
-      game.ukuran_nsp ||
-      game.ori_size_ori ||
-      game.ukuran_ori ||
-      game.ukuran_game ||
-      '';
 
-    const sizeAlt =
-      game.ukuran_chd ||
-      game.ukuran_xci ||
-      game.ori_size_mod ||
-      '';
-
-    if (String(sizeMain).trim()) {
-      sizeRows += `<tr><th>Ukuran:</th><td>${escapeHTML(sizeMain)}</td></tr>`;
+    function hasAnyKey(keys) {
+        return keys.some(k => hasArr(game?.[k]) || String(game?.[k] || '').trim().length > 0);
     }
-    if (String(sizeAlt).trim()) {
-      sizeRows += `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(sizeAlt)}</td></tr>`;
-    }
-  }
 
-  // ========= Game Lainnya Section =========
-  let gameLainnyaSection = '';
-  
-  // Tentukan URL berdasarkan platform
-  let gameLainnyaUrl = '';
-  let platformLabel = '';
-  
-  switch(platform) {
-    case 'switch':
-      gameLainnyaUrl = 'https://indapk.github.io/#switch';
-      platformLabel = 'Switch';
-      break;
-    case 'ps2':
-      gameLainnyaUrl = 'https://indapk.github.io/#ps2';
-      platformLabel = 'PS2';
-      break;
-    case 'psp':
-      gameLainnyaUrl = 'https://indapk.github.io/#psp';
-      platformLabel = 'PSP';
-      break;
-    case 'android':
-      gameLainnyaUrl = 'https://indapk.github.io/#android';
-      platformLabel = 'Android';
-      break;
-    case 'psvita':
-      gameLainnyaUrl = 'https://indapk.github.io/#psvita';
-      platformLabel = 'PS Vita';
-      break;
-    default:
-      gameLainnyaUrl = 'https://indapk.github.io/';
-      platformLabel = 'Lainnya';
-  }
-  
-  if (gameLainnyaUrl) {
-    gameLainnyaSection = `
-      <div class="mt-4 pt-3 border-top">
-        <h5 class="mb-3">Game ${platformLabel} Lainnya</h5>
-        <p class="text-muted mb-3">
-          Lihat koleksi game ${platformLabel} lainnya yang tersedia di INDapk
-        </p>
-        <a href="${escapeHTML(gameLainnyaUrl)}" 
-           class="btn btn-outline-primary"
-           style="background: linear-gradient(135deg, var(--accent1, #0066cc), var(--accent2, #003366)); color: white; border: none;">
-          <i class="bi bi-controller me-2"></i> Lihat Semua Game ${platformLabel}
-        </a>
-      </div>
+    function badge(text, cls = 'ps2-badge') {
+        return `<span class="platform-badge ${cls}" style="font-size:.75rem; padding:6px 12px; margin:2px;">${escapeHTML(text)}</span>`;
+    }
+
+    // ========= Thumbnail =========
+    const thumbnailUrl = getThumbnailUrl(game);
+    const thumbHtml = `
+        <div class="game-thumb-wrap">
+            <img
+                class="game-thumb"
+                src="${escapeHTML(thumbnailUrl || 'https://placehold.co/900x450?text=No+Thumbnail')}"
+                alt="${escapeHTML(gameName)}"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                onerror="this.onerror=null;this.src='https://placehold.co/900x450?text=No+Thumbnail';"
+            />
+        </div>
     `;
-  }
 
-  // ========= Android MOD info =========
-  const isAndroidModDetail =
-    isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod');
+    // ========= System Requirements untuk PC =========
+    const systemRequirementsHTML = (isPC && game.system_requirements) 
+        ? generateSystemRequirementsHTML(game.system_requirements)
+        : '';
 
-  return `
-    <h3>Detail Game ${escapeHTML(gameName)}</h3>
-    ${thumbHtml}
+    // Fungsi untuk generate System Requirements HTML
+    function generateSystemRequirementsHTML(requirementsText) {
+        if (!requirementsText || requirementsText.trim() === '') {
+            return '';
+        }
 
-    <div class="row">
-      <div class="col-md-6">
-        <table class="table">
-          <tr><th>Nama Game:</th><td>${escapeHTML(gameName)}</td></tr>
-          <tr><th>Kategori:</th><td>${escapeHTML(category)}</td></tr>
-          ${languageRow}
-          ${regionRow}
-          ${gameIdRow}
-        </table>
-      </div>
+        // Parse system requirements dari teks
+        const lines = requirementsText.split('\n').filter(line => line.trim() !== '');
+        const parsedRequirements = [];
 
-      <div class="col-md-6">
-        <table class="table">
-          ${formatRow}
-          ${sizeRows}
-          ${versionRow}
-          ${emulatorRow}
-          ${sumberRow}
-        </table>
+        lines.forEach(line => {
+            const trimmedLine = line.trim();
+            if (trimmedLine.includes(':')) {
+                const [key, ...valueParts] = trimmedLine.split(':');
+                parsedRequirements.push({
+                    key: key.trim(),
+                    value: valueParts.join(':').trim()
+                });
+            } else {
+                parsedRequirements.push({
+                    key: 'Info',
+                    value: trimmedLine
+                });
+            }
+        });
 
-        ${gameLainnyaSection}
-      </div>
-    </div>
+        // Generate HTML
+        let requirementsHTML = `
+            <div class="system-requirements-card">
+                <div class="system-requirements-header">
+                    <i class="bi bi-cpu-fill"></i>
+                    <h4>System Requirements</h4>
+                </div>
 
-    <div class="mt-3 text-center">
-      <a href="https://indapk.github.io" class="btn btn-success me-2">
-        <i class="bi bi-controller"></i> List Game
-      </a>
-      <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
-         class="btn btn-success">
-        <i class="bi bi-plus-circle me-2"></i> Request Game
-      </a>
-    </div>
+                <div class="system-requirements-content">
+                    <table class="sys-req-table">
+        `;
 
+        parsedRequirements.forEach(req => {
+            const icon = getRequirementIcon(req.key);
+            const displayKey = formatRequirementKey(req.key);
+            
+            requirementsHTML += `
+                <tr>
+                    <th>
+                        <i class="bi ${icon} me-2"></i>
+                        ${escapeHTML(displayKey)}
+                    </th>
+                    <td>${escapeHTML(req.value)}</td>
+                </tr>
+            `;
+        });
 
-    ${isAndroidModDetail ? buildAndroidModInfo(game) : ''}
-  `;
+        requirementsHTML += `
+                    </table>
+
+                    <div class="sys-req-notes">
+                        <div class="note-title">
+                            <i class="bi bi-info-circle-fill"></i>
+                            Informasi Penting
+                        </div>
+                        <div class="small text-muted">
+                            • Pastikan spesifikasi sistem Anda memenuhi atau melebihi requirements minimum untuk pengalaman bermain optimal.<br>
+                            • System requirements ini berdasarkan pengujian standar dan bisa berbeda tergantung konfigurasi sistem.<br>
+                            • Update driver graphics card ke versi terbaru untuk performa terbaik.
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <span class="sys-req-badge"><i class="bi bi-windows"></i> Windows</span>
+                        <span class="sys-req-badge"><i class="bi bi-pc-display"></i> PC Gaming</span>
+                        <span class="sys-req-badge"><i class="bi bi-memory"></i> RAM</span>
+                        <span class="sys-req-badge"><i class="bi bi-gpu-card"></i> Graphics</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return requirementsHTML;
+    }
+
+    // Helper function untuk icon requirements
+    function getRequirementIcon(key) {
+        const keyLower = key.toLowerCase();
+        
+        if (keyLower.includes('os') || keyLower.includes('operating') || keyLower.includes('windows')) {
+            return 'bi-windows';
+        } else if (keyLower.includes('processor') || keyLower.includes('cpu') || keyLower.includes('intel') || keyLower.includes('amd')) {
+            return 'bi-cpu-fill';
+        } else if (keyLower.includes('memory') || keyLower.includes('ram')) {
+            return 'bi-memory';
+        } else if (keyLower.includes('graphics') || keyLower.includes('gpu') || keyLower.includes('nvidia') || keyLower.includes('radeon')) {
+            return 'bi-gpu-card';
+        } else if (keyLower.includes('directx')) {
+            return 'bi-controller';
+        } else if (keyLower.includes('storage') || keyLower.includes('hard drive') || keyLower.includes('space')) {
+            return 'bi-hdd-fill';
+        } else if (keyLower.includes('sound') || keyLower.includes('audio')) {
+            return 'bi-volume-up-fill';
+        } else if (keyLower.includes('network') || keyLower.includes('internet') || keyLower.includes('online')) {
+            return 'bi-wifi';
+        } else {
+            return 'bi-info-circle';
+        }
+    }
+
+    // Helper function untuk format key
+    function formatRequirementKey(key) {
+        const keyLower = key.toLowerCase();
+        
+        if (keyLower.includes('os')) return 'Operating System';
+        if (keyLower.includes('processor')) return 'Processor';
+        if (keyLower.includes('memory')) return 'Memory (RAM)';
+        if (keyLower.includes('graphics')) return 'Graphics Card';
+        if (keyLower.includes('directx')) return 'DirectX';
+        if (keyLower.includes('storage') || keyLower.includes('hard drive')) return 'Storage';
+        if (keyLower.includes('sound')) return 'Sound Card';
+        if (keyLower.includes('network')) return 'Network';
+        
+        return key;
+    }
+
+    // ========= Emulator row (non-android, non-pc) =========
+    const emulatorRow = !isAndroid && !isPC
+        ? `
+            <tr id="emulatorRow" style="display:none;">
+                <th>Emulator:</th>
+                <td>
+                    <a href="#" id="emulatorNameLink" class="text-decoration-none"
+                       onclick="showEmulatorDetailModal(); return false;">
+                        <span id="emulatorNameText">-</span> <i class="bi bi-info-circle"></i>
+                    </a>
+                    <span id="emulatorHint" class="small text-muted ms-2"></span>
+                </td>
+            </tr>
+        `
+        : '';
+
+    // ========= Basic rows =========
+    const languageRow = !isAndroid && game.language
+        ? `<tr><th>Bahasa:</th><td>${escapeHTML(game.language || '-')}</td></tr>`
+        : '';
+
+    const regionRow = !isAndroid && game.region
+        ? `<tr><th>Region:</th><td>${escapeHTML(game.region || '-')}</td></tr>`
+        : '';
+
+    const gameIdRow = !isAndroid && game.game_id
+        ? `<tr><th>Game ID:</th><td>${escapeHTML(game.game_id || '-')}</td></tr>`
+        : '';
+
+    const versionRow = (game.versi_game || game.ori_version)
+        ? `<tr><th>Versi:</th><td>${escapeHTML(game.versi_game || game.ori_version || '-')}</td></tr>`
+        : '';
+
+    const developerRow = isPC && game.developer
+        ? `<tr><th>Developer:</th><td>${escapeHTML(game.developer || '-')}</td></tr>`
+        : '';
+
+    const sumberUrl = buildSumberLinkUrl(game);
+    const sumberRow = sumberUrl
+        ? `
+            <tr>
+                <th>Sumber Link:</th>
+                <td>
+                    <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener" style="word-break: break-word;">
+                        ${escapeHTML(sumberUrl)}
+                    </a>
+                </td>
+            </tr>
+        `
+        : '';
+
+    // ========= FORMAT DETECTION =========
+    const hasNSP = isSwitch && hasAnyKey([
+        'link_iklan_nsp', 'link_iklan2_nsp', 'link_asli_nsp',
+        'cloud_nsp', 'ukuran_nsp'
+    ]);
+
+    const hasXCI = isSwitch && hasAnyKey([
+        'link_iklan_xci', 'link_iklan2_xci', 'link_asli_xci',
+        'cloud_xci', 'ukuran_xci'
+    ]);
+
+    const hasNSPPart = isSwitch && hasAnyKey([
+        'link_iklan_nsp_part', 'link_iklan2_nsp_part', 'link_asli_nsp_part',
+        'link_iklan_nspPart',  'link_iklan2_nspPart',  'link_asli_nspPart',
+        'link_nsp_part', 'link_nspPart',
+        'cloud_nsp_part', 'cloud_nspPart',
+        'ukuran_nsp_part', 'ukuran_nspPart'
+    ]);
+
+    const hasXCIPart = isSwitch && hasAnyKey([
+        'link_iklan_xci_part', 'link_iklan2_xci_part', 'link_asli_xci_part',
+        'link_iklan_xciPart',  'link_iklan2_xciPart',  'link_asli_xciPart',
+        'link_xci_part', 'link_xciPart',
+        'cloud_xci_part', 'cloud_xciPart',
+        'ukuran_xci_part', 'ukuran_xciPart'
+    ]);
+
+    const hasISO = (platform === 'ps2' || platform === 'psp') && hasAnyKey([
+        'link_iklan_iso', 'link_iklan2_iso', 'link_asli_iso',
+        'cloud_iso', 'ukuran_iso'
+    ]);
+
+    const hasCHD = (platform === 'ps2' || platform === 'psp') && hasAnyKey([
+        'link_iklan_chd', 'link_iklan2_chd', 'link_asli_chd',
+        'cloud_chd', 'ukuran_chd'
+    ]);
+
+    const hasAndroidOri = isAndroid && (game.game_type !== 'only-mod') && hasAnyKey([
+        'ori_original_links', 'ori_ad_links1', 'ori_ad_links2', 'ukuran_ori', 'ori_size_ori', 'ukuran_game'
+    ]);
+
+    const hasAndroidMod = isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod') && hasAnyKey([
+        'mod_original_links', 'mod_ad_links1', 'mod_ad_links2', 'ori_size_mod', 'mod_size', 'mod_description'
+    ]);
+
+    const hasVitaLinks = (platform === 'psvita') && hasAnyKey([
+        'link_iklan', 'link_iklan2', 'link_asli', 'cloud_types'
+    ]);
+
+    const hasPCLinks = isPC && hasAnyKey([
+        'link_iklan', 'link_iklan2', 'link_asli', 'cloud_types'
+    ]);
+
+    // ========= Build format badges =========
+    let formatBadges = '';
+
+    if (isSwitch) {
+        if (hasNSP)     formatBadges += badge('NSP', 'switch-badge');
+        if (hasXCI)     formatBadges += badge('XCI', 'switch-badge');
+        if (hasNSPPart) formatBadges += badge('NSP PART', 'switch-badge');
+        if (hasXCIPart) formatBadges += badge('XCI PART', 'switch-badge');
+
+        if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+    } else if (platform === 'ps2' || platform === 'psp') {
+        if (hasISO) formatBadges += badge('ISO', 'ps2-badge');
+        if (hasCHD) formatBadges += badge('CHD', 'ps2-badge');
+        if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+    } else if (isAndroid) {
+        if (hasAndroidOri) formatBadges += badge('Ori', 'android-badge');
+        if (hasAndroidMod) formatBadges += badge('Mod', 'android-badge');
+        if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+    } else if (platform === 'psvita') {
+        if (hasVitaLinks) formatBadges += badge('NoNpDRM', 'psvita-badge');
+        if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+    } else if (isPC) {
+        if (hasPCLinks) formatBadges += badge('PC Game', 'pc-badge');
+        if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+    }
+
+    const formatRow = formatBadges
+        ? `<tr><th>Format:</th><td>${formatBadges}</td></tr>`
+        : '';
+
+    // ========= Size rows =========
+    let sizeRows = '';
+
+    if (isSwitch) {
+        const nspSize = game.ukuran_nsp || '';
+        const xciSize = game.ukuran_xci || '';
+        const nspPartSize = game.ukuran_nsp_part || game.ukuran_nspPart || '';
+        const xciPartSize = game.ukuran_xci_part || game.ukuran_xciPart || '';
+
+        if (hasNSP && String(nspSize).trim()) {
+            sizeRows += `<tr><th>Ukuran NSP:</th><td>${escapeHTML(nspSize)}</td></tr>`;
+        }
+        if (hasXCI && String(xciSize).trim()) {
+            sizeRows += `<tr><th>Ukuran XCI:</th><td>${escapeHTML(xciSize)}</td></tr>`;
+        }
+        if (hasNSPPart && String(nspPartSize).trim()) {
+            sizeRows += `<tr><th>Ukuran NSP PART:</th><td>${escapeHTML(nspPartSize)}</td></tr>`;
+        }
+        if (hasXCIPart && String(xciPartSize).trim()) {
+            sizeRows += `<tr><th>Ukuran XCI PART:</th><td>${escapeHTML(xciPartSize)}</td></tr>`;
+        }
+    } else {
+        const sizeMain =
+            game.ukuran_iso ||
+            game.ukuran_nsp ||
+            game.ori_size_ori ||
+            game.ukuran_ori ||
+            game.ukuran_game ||
+            game.size ||
+            '';
+
+        const sizeAlt =
+            game.ukuran_chd ||
+            game.ukuran_xci ||
+            game.ori_size_mod ||
+            '';
+
+        if (String(sizeMain).trim()) {
+            sizeRows += `<tr><th>Ukuran:</th><td>${escapeHTML(sizeMain)}</td></tr>`;
+        }
+        if (String(sizeAlt).trim()) {
+            sizeRows += `<tr><th>Ukuran Alternatif:</th><td>${escapeHTML(sizeAlt)}</td></tr>`;
+        }
+    }
+
+    // ========= Game Lainnya Section =========
+    let gameLainnyaSection = '';
+    
+    // Tentukan URL berdasarkan platform
+    let gameLainnyaUrl = '';
+    let platformLabel = '';
+    
+    switch(platform) {
+        case 'switch':
+            gameLainnyaUrl = 'https://indapk.github.io/#switch';
+            platformLabel = 'Switch';
+            break;
+        case 'ps2':
+            gameLainnyaUrl = 'https://indapk.github.io/#ps2';
+            platformLabel = 'PS2';
+            break;
+        case 'psp':
+            gameLainnyaUrl = 'https://indapk.github.io/#psp';
+            platformLabel = 'PSP';
+            break;
+        case 'android':
+            gameLainnyaUrl = 'https://indapk.github.io/#android';
+            platformLabel = 'Android';
+            break;
+        case 'psvita':
+            gameLainnyaUrl = 'https://indapk.github.io/#psvita';
+            platformLabel = 'PS Vita';
+            break;
+        case 'pc':
+            gameLainnyaUrl = 'https://indapk.github.io/#pc';
+            platformLabel = 'PC';
+            break;
+        default:
+            gameLainnyaUrl = 'https://indapk.github.io/';
+            platformLabel = 'Lainnya';
+    }
+    
+    if (gameLainnyaUrl) {
+        gameLainnyaSection = `
+            <div class="mt-4 pt-3 border-top">
+                <h5 class="mb-3">Game ${platformLabel} Lainnya</h5>
+                <p class="text-muted mb-3">
+                    Lihat koleksi game ${platformLabel} lainnya yang tersedia di INDapk
+                </p>
+                <a href="${escapeHTML(gameLainnyaUrl)}" 
+                   class="btn btn-outline-primary"
+                   style="background: linear-gradient(135deg, var(--accent1, #0066cc), var(--accent2, #003366)); color: white; border: none;">
+                    <i class="bi bi-controller me-2"></i> Lihat Semua Game ${platformLabel}
+                </a>
+            </div>
+        `;
+    }
+
+    // ========= Android MOD info =========
+    const isAndroidModDetail =
+        isAndroid && (game.game_type === 'ori-mod' || game.game_type === 'only-mod');
+
+    const androidModInfo = isAndroidModDetail ? buildAndroidModInfo(game) : '';
+
+    // ========= BUILD FINAL HTML =========
+    return `
+        <h3>Detail Game ${escapeHTML(gameName)}</h3>
+        ${thumbHtml}
+
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table">
+                    <tr><th>Nama Game:</th><td>${escapeHTML(gameName)}</td></tr>
+                    <tr><th>Kategori:</th><td>${escapeHTML(category)}</td></tr>
+                    ${isPC ? '' : languageRow}
+                    ${regionRow}
+                    ${gameIdRow}
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <table class="table">
+                    ${formatRow}
+                    ${sizeRows}
+                    ${versionRow}
+                    ${isPC ? developerRow : ''}
+                    ${emulatorRow}
+                    ${sumberRow}
+                </table>
+
+                ${gameLainnyaSection}
+            </div>
+        </div>
+
+        <!-- System Requirements Section (Hanya untuk PC) -->
+        ${systemRequirementsHTML}
+
+        <!-- Android MOD Info Section -->
+        ${androidModInfo}
+
+        <div class="mt-3 text-center">
+            <a href="https://indapk.github.io" class="btn btn-success me-2">
+                <i class="bi bi-controller"></i> List Game
+            </a>
+            <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
+               class="btn btn-success">
+                <i class="bi bi-plus-circle me-2"></i> Request Game
+            </a>
+        </div>
+    `;
 }
 
 
@@ -3359,57 +3826,59 @@ function generateSemawurTutorialVideoHTML() {
 }
 
 
-
-        function generateAdLinksHTML(game, platform) {
-            let html = `<h3>Link Dengan Iklan ! (Link With Ads !)</h3>`;
-            
-            // NOTE Banner
-            html += `
-                <div class="ad-note-banner mb-3">
-                    <div class="content">
-                        <div class="ad-note-pill">
-                            <i class="bi bi-lightbulb"></i> Tips
-                        </div>
-                        <div class="ad-note-grid">
-                            <div class="ad-note-box">
-                                <div class="fw-bold mb-1">Indonesia</div>
-                                <div>Gunakan Semawur jika susah lewati INDapk Short.</div>
-                            </div>
-                            <div class="ad-note-box">
-                                <div class="fw-bold mb-1">English</div>
-                                <div>Use Ad Semawur if you have trouble getting past INDapk Short.</div>
-                            </div>
-                        </div>
+function generateAdLinksHTML(game, platform) {
+    let html = `<h3>Link Dengan Iklan ! (Link With Ads !)</h3>`;
+    
+    // NOTE Banner
+    html += `
+        <div class="ad-note-banner mb-3">
+            <div class="content">
+                <div class="ad-note-pill">
+                    <i class="bi bi-lightbulb"></i> Tips
+                </div>
+                <div class="ad-note-grid">
+                    <div class="ad-note-box">
+                        <div class="fw-bold mb-1">Indonesia</div>
+                        <div>Gunakan Semawur jika susah lewati INDapk Short.</div>
+                    </div>
+                    <div class="ad-note-box">
+                        <div class="fw-bold mb-1">English</div>
+                        <div>Use Ad Semawur if you have trouble getting past INDapk Short.</div>
                     </div>
                 </div>
-            `;
-            
-
-  // ✅ VIDEO TUTORIAL SEMAWUR
-  html += generateSemawurTutorialVideoHTML();
-            // Generate platform-specific ad links
-            switch(platform) {
-                case 'ps2':
-                    html += generatePS2AdLinks(game);
-                    break;
-                case 'switch':
-                    html += generateSwitchAdLinks(game);
-                    break;
-                case 'psp':
-                    html += generatePSPAdLinks(game);
-                    break;
-                case 'android':
-                    html += generateAndroidAdLinks(game);
-                    break;
-                case 'psvita':
-                    html += generatePSVitaAdLinks(game);
-                    break;
-                default:
-                    html += '<p>Link iklan tidak tersedia untuk platform ini.</p>';
-            }
-            
-            return html;
-        }
+            </div>
+        </div>
+    `;
+    
+    // ✅ VIDEO TUTORIAL SEMAWUR
+    html += generateSemawurTutorialVideoHTML();
+    
+    // Generate platform-specific ad links
+    switch(platform) {
+        case 'ps2':
+            html += generatePS2AdLinks(game);
+            break;
+        case 'switch':
+            html += generateSwitchAdLinks(game);
+            break;
+        case 'psp':
+            html += generatePSPAdLinks(game);
+            break;
+        case 'android':
+            html += generateAndroidAdLinks(game);
+            break;
+        case 'psvita':
+            html += generatePSVitaAdLinks(game);
+            break;
+        case 'pc':
+            html += generatePCAdLinks(game);
+            break;
+        default:
+            html += '<p>Link iklan tidak tersedia untuk platform ini.</p>';
+    }
+    
+    return html;
+}
         
         function generatePS2AdLinks(game) {
             let html = '';
@@ -3905,68 +4374,163 @@ function generateSwitchAdLinks(game) {
             return html;
         }
         
+
 function generateOriginalLinksHTML(game, platform) {
-  let html = `<h3>Link Download Tanpa Iklan (Download Link Without Ads)</h3>`;
-
-  // Selalu render loginPrompt, cuma tampil/sembunyi via style
-  html += `
-                <div class="login-prompt mb-3" id="loginPrompt">
-                    <p class="mb-2">
-                        <strong>⚠️ Perhatian:</strong>
-                        Untuk mengakses link download tanpa iklan, Anda perlu login dengan Telegram.
-                        Daftar melalui bot Telegram <strong><a href="https://t.me/INDapkBot" target="_blank">@INDapkBot</a></strong>.
-                        Lalu ketik command <strong>/profile</strong> di bot telegram untuk mendapatkan ID Telegram Anda  atau bisa register disini  <a href="https://indapk.github.io/dashboard.html" target="_blank">Register</a>.
-                    </p>
-
-                    <p class="mb-3 text-muted">
-                        <strong>⚠️ Notice:</strong>
-                        To access the ad-free download links, you must log in with Telegram.
-                        Register via the Telegram bot <strong><a href="https://t.me/INDapkBot" target="_blank">@INDapkBot</a></strong>.
-                        Then type <strong>/profile</strong> in the bot to get your Telegram ID or you can register here <a href="https://indapk.github.io/dashboard.html" target="_blank">Register</a>.
-                    </p>
-
-                    <button class="btn btn-primary" onclick="openLoginModal()"<i class="fa fa-sign-in-alt"></i> Login</button>
-                </div>
-  `;
-
-  // Container link asli
-  html += `<div id="originalLinksContent" style="display:${currentUser ? 'block' : 'none'}">`;
-
-  switch(platform) {
-    case 'ps2':
-      html += generatePS2OriginalLinks(game);
-      break;
-    case 'switch':
-      html += generateSwitchOriginalLinks(game);
-      break;
-    case 'psp':
-      html += generatePSPOriginalLinks(game);
-      break;
-    case 'android':
-      html += generateAndroidOriginalLinks(game);
-      break;
-    case 'psvita':
-      html += generatePSVitaOriginalLinks(game);
-      break;
-    default:
-      html += '<p>Link asli tidak tersedia untuk platform ini.</p>';
-  }
-
-  html += `</div>`;
-  return html;
+    let html = `<h3>Link Download Tanpa Iklan (Download Link Without Ads)</h3>`;
+    
+    // Selalu render loginPrompt, cuma tampil/sembunyi via style
+    html += `
+        <div class="login-prompt mb-3" id="loginPrompt">
+            <p class="mb-2">
+                <strong>⚠️ Perhatian:</strong>
+                Untuk mengakses link download tanpa iklan, Anda perlu login dengan Telegram.
+                Daftar melalui bot Telegram <strong><a href="https://t.me/INDapkBot" target="_blank">@INDapkBot</a></strong>.
+                Lalu ketik command <strong>/profile</strong> di bot telegram untuk mendapatkan ID Telegram Anda  atau bisa register disini  <a href="https://indapk.github.io/dashboard.html" target="_blank">Register</a>.
+            </p>
+            <p class="mb-3 text-muted">
+                <strong>⚠️ Notice:</strong>
+                To access the ad-free download links, you must log in with Telegram.
+                Register via the Telegram bot <strong><a href="https://t.me/INDapkBot" target="_blank">@INDapkBot</a></strong>.
+                Then type <strong>/profile</strong> in the bot to get your Telegram ID or you can register here <a href="https://indapk.github.io/dashboard.html" target="_blank">Register</a>.
+            </p>
+            <button class="btn btn-primary" onclick="openLoginModal()">
+                <i class="fa fa-sign-in-alt"></i> Login
+            </button>
+        </div>
+    `;
+    
+    // Container link asli
+    html += `<div id="originalLinksContent" style="display:${currentUser ? 'block' : 'none'}">`;
+    
+    switch(platform) {
+        case 'ps2':
+            html += generatePS2OriginalLinks(game);
+            break;
+        case 'switch':
+            html += generateSwitchOriginalLinks(game);
+            break;
+        case 'psp':
+            html += generatePSPOriginalLinks(game);
+            break;
+        case 'android':
+            html += generateAndroidOriginalLinks(game);
+            break;
+        case 'psvita':
+            html += generatePSVitaOriginalLinks(game);
+            break;
+        case 'pc':
+            html += generatePCOriginalLinks(game);
+            break;
+        default:
+            html += '<p>Link asli tidak tersedia untuk platform ini.</p>';
+    }
+    
+    html += `</div>`;
+    return html;
 }
 
-
+function generatePCAdLinks(game) {
+    let html = '';
+    const gameName = getGameName(game);
+    
+    // Link Iklan 1 (INDapk Short) - PC Games
+    if (game.link_iklan && Array.isArray(game.link_iklan) && game.link_iklan.length > 0) {
+        html += `
+            <div class="card border-primary mb-4" style="border-width: 2px;">
+                <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                    <span><i class="bi bi-star-fill"></i> INDapk Short</span>
+                    <span class="badge bg-light text-dark">Utama</span>
+                </div>
+                <div class="card-body">
+                    <div class="text-muted mb-2">
+                        Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
+                    </div>
+                    <h4>${escapeHTML(gameName)}</h4>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+        `;
         
+        game.link_iklan.forEach((link, index) => {
+            const cloud = game.cloud_types && game.cloud_types[index] ? game.cloud_types[index] : `Cloud ${index + 1}`;
+            if (link) {
+                html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
+            }
+        });
+        
+        html += `</div></div></div>`;
+    }
+    
+    // Link Iklan 2 (Semawur) - PC Games
+    if (game.link_iklan2 && Array.isArray(game.link_iklan2) && game.link_iklan2.length > 0) {
+        html += `
+            <div class="card border-secondary mb-3">
+                <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                    <span><i class="bi bi-link-45deg"></i> Semawur Short</span>
+                    <span class="badge bg-light text-dark">Alternatif</span>
+                </div>
+                <div class="card-body">
+                    <div class="text-muted mb-2">
+                        Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
+                    </div>
+                    <h4>${escapeHTML(gameName)}</h4>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+        `;
+        
+        game.link_iklan2.forEach((link, index) => {
+            const cloud = game.cloud_types && game.cloud_types[index] ? game.cloud_types[index] : `Cloud ${index + 1}`;
+            if (link) {
+                html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+            }
+        });
+        
+        html += `</div></div></div>`;
+    }
+    
+    return html;
+}
+
+function generatePCOriginalLinks(game) {
+    let html = '';
+    
+    // Link Asli Tanpa Iklan - PC
+    if (game.link_asli && Array.isArray(game.link_asli) && game.link_asli.length > 0) {
+        html += `
+            <div class="link-section original-link">
+                <h6>Link Asli Tanpa Iklan - PC Game</h6>
+                <p class="small text-muted">Rp 1.000 per link. Bebas iklan dan langsung download</p>
+        `;
+        
+        game.link_asli.forEach((link, index) => {
+            const cloud = game.cloud_types && game.cloud_types[index] ? game.cloud_types[index] : `Cloud ${index + 1}`;
+            html += `
+                <div class="link-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>${escapeHTML(cloud)}</span>
+                        <button class="btn btn-sm btn-success"
+                            onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'pc')"
+                            ${!currentUser ? 'disabled' : ''}>
+                            <i class="bi bi-unlock"></i> Rp 1.000
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+    }
+    
+    return html;
+}
+
         function generatePS2OriginalLinks(game) {
             let html = '';
+            const priceText = getPriceText('ps2'); // Rp 1.000
             
             // LINK ASLI TANPA IKLAN - ISO
             if (game.link_asli_iso && Array.isArray(game.link_asli_iso) && game.link_asli_iso.length > 0) {
                 html += `
                     <div class="link-section original-link">
                         <h6>Link Asli Tanpa Iklan - ISO</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+                        <p class="small text-muted">Rp 1.000 per link. Bebas iklan dan langsung download</p>
                 `;
                 
                 game.link_asli_iso.forEach((link, index) => {
@@ -3978,7 +4542,7 @@ function generateOriginalLinksHTML(game, platform) {
                                 <button class="btn btn-sm btn-success"
                                     onclick="requestOriginalLink(this, '${game.download_id}', 'iso', ${index}, '${cloud}', 'ps2')"
                                     ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
+                                    <i class="bi bi-unlock"></i> Rp 1.000
                                 </button>
                             </div>
                         </div>
@@ -3993,7 +4557,7 @@ function generateOriginalLinksHTML(game, platform) {
                 html += `
                     <div class="link-section original-link">
                         <h6>Link Asli Tanpa Iklan - CHD</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+                        <p class="small text-muted">Rp 1.000 per link. Bebas iklan dan langsung download</p>
                 `;
                 
                 game.link_asli_chd.forEach((link, index) => {
@@ -4005,7 +4569,7 @@ function generateOriginalLinksHTML(game, platform) {
                                 <button class="btn btn-sm btn-success"
                                     onclick="requestOriginalLink(this, '${game.download_id}', 'chd', ${index}, '${cloud}', 'ps2')"
                                     ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
+                                    <i class="bi bi-unlock"></i> Rp 1.000
                                 </button>
                             </div>
                         </div>
@@ -4081,7 +4645,7 @@ function generateSwitchOriginalLinks(game) {
                 html += `
                     <div class="link-section original-link">
                         <h6>Link Asli Tanpa Iklan - ISO</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+                        <p class="small text-muted">Rp 1.000 per link. Bebas iklan dan langsung download</p>
                 `;
                 
                 game.link_asli_iso.forEach((link, index) => {
@@ -4093,7 +4657,7 @@ function generateSwitchOriginalLinks(game) {
                                 <button class="btn btn-sm btn-success"
                                     onclick="requestOriginalLink(this, '${game.download_id}', 'iso', ${index}, '${cloud}', 'psp')"
                                     ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
+                                    <i class="bi bi-unlock"></i> Rp 1.000
                                 </button>
                             </div>
                         </div>
@@ -4108,7 +4672,7 @@ function generateSwitchOriginalLinks(game) {
                 html += `
                     <div class="link-section original-link">
                         <h6>Link Asli Tanpa Iklan - CHD</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+                        <p class="small text-muted">Rp 1.000 per link. Bebas iklan dan langsung download</p>
                 `;
                 
                 game.link_asli_chd.forEach((link, index) => {
@@ -4120,7 +4684,7 @@ function generateSwitchOriginalLinks(game) {
                                 <button class="btn btn-sm btn-success"
                                     onclick="requestOriginalLink(this, '${game.download_id}', 'chd', ${index}, '${cloud}', 'psp')"
                                     ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
+                                    <i class="bi bi-unlock"></i> Rp 1.000
                                 </button>
                             </div>
                         </div>
@@ -4144,7 +4708,7 @@ function generateSwitchOriginalLinks(game) {
                 html += `
                     <div class="link-section original-link">
                         <h6>Link Asli Tanpa Iklan - Game Original</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+                        <p class="small text-muted">Rp 1.000 per link. Bebas iklan dan langsung download</p>
                 `;
                 
                 game.ori_original_links.forEach((link, index) => {
@@ -4156,7 +4720,7 @@ function generateSwitchOriginalLinks(game) {
                                 <button class="btn btn-sm btn-success"
                                     onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'android')"
                                     ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
+                                    <i class="bi bi-unlock"></i> Rp 1.000
                                 </button>
                             </div>
                         </div>
@@ -4171,7 +4735,7 @@ function generateSwitchOriginalLinks(game) {
                 html += `
                     <div class="link-section original-link">
                         <h6>Link Asli Tanpa Iklan - Game MOD</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+                        <p class="small text-muted">Rp 1.000 per link. Bebas iklan dan langsung download</p>
                 `;
                 
                 game.mod_original_links.forEach((link, index) => {
@@ -4183,7 +4747,7 @@ function generateSwitchOriginalLinks(game) {
                                 <button class="btn btn-sm btn-success"
                                     onclick="requestOriginalLink(this, '${game.download_id}', 'mod', ${index}, '${cloud}', 'android')"
                                     ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
+                                    <i class="bi bi-unlock"></i> Rp 1.000
                                 </button>
                             </div>
                         </div>
@@ -4204,7 +4768,7 @@ function generateSwitchOriginalLinks(game) {
                 html += `
                     <div class="link-section original-link">
                         <h6>Link Asli Tanpa Iklan</h6>
-                        <p class="small text-muted">Rp 2.000 per link. Bebas iklan dan langsung download</p>
+                        <p class="small text-muted">Rp 1.000 per link. Bebas iklan dan langsung download</p>
                 `;
                 
                 game.link_asli.forEach((link, index) => {
@@ -4216,7 +4780,7 @@ function generateSwitchOriginalLinks(game) {
                                 <button class="btn btn-sm btn-success"
                                     onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'psvita')"
                                     ${!currentUser ? 'disabled' : ''}>
-                                    <i class="bi bi-unlock"></i> Rp 2.000
+                                    <i class="bi bi-unlock"></i> Rp 1.000
                                 </button>
                             </div>
                         </div>
@@ -4237,16 +4801,15 @@ function requestOriginalLink(btn, downloadId, linkType, index, cloudName, platfo
     }
     
     const saldo = Number(currentUser.saldo || 0);
-    const requiredAmount = COST_PER_LINK;
+    const requiredAmount = getCostPerLink(platform); // Gunakan fungsi baru
     
     if (saldo < requiredAmount) {
-        // Tampilkan modal saldo tidak cukup
         showInsufficientBalanceModal(saldo, requiredAmount, platform);
         return;
     }
     
     pendingAccess = { downloadId, linkType, index, cloudName, platform };
-    openPayConfirmModal(cloudName, saldo);
+    openPayConfirmModal(cloudName, saldo, requiredAmount); // Tambah parameter requiredAmount
 }
 
 // Function untuk menampilkan modal saldo tidak cukup
@@ -4256,6 +4819,12 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
     
     const shortage = requiredAmount - currentBalance;
     document.getElementById('shortageAmount').textContent = `Rp ${rupiah(shortage)}`;
+    
+    // Update teks harga
+    const costText = document.querySelector('#insufficientBalanceModal .text-muted strong');
+    if (costText) {
+        costText.textContent = `Rp ${rupiah(requiredAmount)}`;
+    }
     
     // Set warna header sesuai platform
     const modalHeader = document.getElementById('insufficientBalanceHeader');
@@ -4366,6 +4935,9 @@ function updateModalHeadersForPlatform(platform) {
         case 'psvita':
             gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
             break;
+        case 'pc':
+            gradient = 'linear-gradient(135deg, #00a4ef 0%, #0082c4 100%)';
+            break;
         default:
             gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
     }
@@ -4377,15 +4949,15 @@ function updateModalHeadersForPlatform(platform) {
     });
 }
 
-        function openPayConfirmModal(cloudName, saldo) {
-            document.getElementById('payCloudName').textContent = cloudName || '-';
-            document.getElementById('payCost').textContent = rupiah(COST_PER_LINK);
-            document.getElementById('payBalance').textContent = rupiah(saldo);
-            document.getElementById('payAfter').textContent = rupiah(Number(saldo || 0) - COST_PER_LINK);
-            
-            const el = document.getElementById('payConfirmModal');
-            new bootstrap.Modal(el).show();
-        }
+function openPayConfirmModal(cloudName, saldo, requiredAmount) {
+    document.getElementById('payCloudName').textContent = cloudName || '-';
+    document.getElementById('payCost').textContent = rupiah(requiredAmount); // Gunakan requiredAmount
+    document.getElementById('payBalance').textContent = rupiah(saldo);
+    document.getElementById('payAfter').textContent = rupiah(Number(saldo || 0) - requiredAmount);
+    
+    const el = document.getElementById('payConfirmModal');
+    new bootstrap.Modal(el).show();
+}
         
         function openLinkReadyModal(link) {
             const input = document.getElementById('readyLinkInput');
@@ -4413,108 +4985,118 @@ function updateModalHeadersForPlatform(platform) {
         }
         
         // Event listener untuk tombol konfirmasi pembayaran
-        document.addEventListener('DOMContentLoaded', function() {
-            const btnYes = document.getElementById('btnPayYes');
-            if (!btnYes) return;
+// Event listener untuk tombol konfirmasi pembayaran
+document.addEventListener('DOMContentLoaded', function() {
+    const btnYes = document.getElementById('btnPayYes');
+    if (!btnYes) return;
+    
+    btnYes.addEventListener('click', async function() {
+        if (!pendingAccess || !currentUser) return;
+        
+        const btn = this;
+        const originalHtml = btn.innerHTML;
+        
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...';
+        
+        const { downloadId, linkType, index, platform } = pendingAccess;
+        
+        try {
+            let apiUrl, action;
+            switch(platform) {
+                case 'ps2':
+                    apiUrl = GAMEPS2_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
+                case 'switch':
+                    apiUrl = GAMESWITCH_API_URL;
+                    action = 'accessSwitchOriginalLink';
+                    break;
+                case 'psp':
+                    apiUrl = GAMEPSP_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
+                case 'android':
+                    apiUrl = GAMEANDROID_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
+                case 'psvita':
+                    apiUrl = GAMEPSVITA_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
+                case 'pc':
+                    apiUrl = PC_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
+                default:
+                    throw new Error('Platform tidak didukung');
+            }
             
-            btnYes.addEventListener('click', async function() {
-                if (!pendingAccess || !currentUser) return;
-                
-                const btn = this;
-                const originalHtml = btn.innerHTML;
-                
-                btn.disabled = true;
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...';
-                
-                const { downloadId, linkType, index, platform } = pendingAccess;
-                
-                try {
-                    let apiUrl, action;
-                    switch(platform) {
-                        case 'ps2':
-                            apiUrl = GAMEPS2_API_URL;
-                            action = 'accessOriginalLink';
-                            break;
-                        case 'switch':
-                            apiUrl = GAMESWITCH_API_URL;
-                            action = 'accessSwitchOriginalLink';
-                            break;
-                        case 'psp':
-                            apiUrl = GAMEPSP_API_URL;
-                            action = 'accessOriginalLink';
-                            break;
-                        case 'android':
-                            apiUrl = GAMEANDROID_API_URL;
-                            action = 'accessOriginalLink';
-                            break;
-                        case 'psvita':
-                            apiUrl = GAMEPSVITA_API_URL;
-                            action = 'accessOriginalLink';
-                            break;
-                        default:
-                            throw new Error('Platform tidak didukung');
-                    }
-                    
-                    let body;
-                    if (platform === 'android') {
-                        body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
-                               `&game_type=${encodeURIComponent(linkType)}&link_index=${encodeURIComponent(index)}` +
-                               `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
-                               `&key=${encodeURIComponent(currentUser.key)}`;
-                    } else if (platform === 'psvita') {
-                        body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
-                               `&index=${encodeURIComponent(index)}` +
-                               `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
-                               `&key=${encodeURIComponent(currentUser.key)}`;
-                    } else {
-                        body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
-                               `&link_type=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
-                               `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
-                               `&key=${encodeURIComponent(currentUser.key)}`;
-                    }
-                    
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'Accept': 'application/json'
-                        },
-                        body: body
-                    });
-                    
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    
-                    const result = await response.json();
-                    if (result.status !== 'success') {
-                        throw new Error(result.message || 'Gagal mengakses link');
-                    }
-                    
-                    const newBalance = Number(result.data.new_balance || 0);
-                    currentUser.saldo = newBalance;
-                    localStorage.setItem(LS_USER_KEY, JSON.stringify(currentUser));
-                    updateUserBalanceUI();
-                    startSaldoAutoRefresh();
-                    
-                    // Tutup modal konfirmasi
-                    const confirmEl = document.getElementById('payConfirmModal');
-                    const confirmModal = bootstrap.Modal.getInstance(confirmEl);
-                    if (confirmModal) confirmModal.hide();
-                    
-                    // Ambil link dari server
-                    const finalLink = result.data.link || '';
-                    
-                    // Tampilkan modal sukses
-                    openLinkReadyModal(finalLink);
-                    
-                    pendingAccess = null;
-                } catch (err) {
-                    alert('Gagal mengakses link: ' + err.message);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = originalHtml;
-                }
+            let body;
+            if (platform === 'android') {
+                body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                       `&game_type=${encodeURIComponent(linkType)}&link_index=${encodeURIComponent(index)}` +
+                       `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                       `&key=${encodeURIComponent(currentUser.key)}`;
+            } else if (platform === 'psvita') {
+                body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                       `&index=${encodeURIComponent(index)}` +
+                       `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                       `&key=${encodeURIComponent(currentUser.key)}`;
+            } else if (platform === 'pc') {
+                body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                       `&index=${encodeURIComponent(index)}` +
+                       `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                       `&user_key=${encodeURIComponent(currentUser.key)}`;
+            } else {
+                body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                       `&link_type=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
+                       `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                       `&key=${encodeURIComponent(currentUser.key)}`;
+            }
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json'
+                },
+                body: body
             });
-        });
+            
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            
+            const result = await response.json();
+            if (result.status !== 'success') {
+                throw new Error(result.message || 'Gagal mengakses link');
+            }
+            
+            const newBalance = Number(result.data.new_balance || 0);
+            currentUser.saldo = newBalance;
+            localStorage.setItem(LS_USER_KEY, JSON.stringify(currentUser));
+            updateUserBalanceUI();
+            startSaldoAutoRefresh();
+            
+            // Tutup modal konfirmasi
+            const confirmEl = document.getElementById('payConfirmModal');
+            const confirmModal = bootstrap.Modal.getInstance(confirmEl);
+            if (confirmModal) confirmModal.hide();
+            
+            // Ambil link dari server
+            const finalLink = result.data.link || '';
+            
+            // Tampilkan modal sukses
+            openLinkReadyModal(finalLink);
+            
+            pendingAccess = null;
+        } catch (err) {
+            alert('Gagal mengakses link: ' + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+    });
+});
         
         // ====== INITIALIZE ======
 document.addEventListener('DOMContentLoaded', function() {
