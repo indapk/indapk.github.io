@@ -590,20 +590,14 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
 </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-function isAdminUser() {
-  // Admin kalau sudah login dan wa_number sama dengan ADMIN_TELEGRAM_ID
-  if (!currentUser) return false;
-  const wa = String(currentUser.wa_number || '').trim();
-  const adminId = String(ADMIN_TELEGRAM_ID || '').trim();
-  if (!wa || !adminId) return false;
-  return wa === adminId;
-}
-    // ====== CONFIGURATION ======
+    // ====== KONFIGURASI URL API ======
     const GAMEPS2_API_URL = "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec";
     const GAMESWITCH_API_URL = "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec";
     const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec"; 
     const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
     const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
+    const GAMEWII_API_URL = "https://script.google.com/macros/s/AKfycbz8uhfQtYxyUmZSVloZlY0UDxkQayeYAemS6zDXS4zDKKJ-DYuq16pqFJLkNCYXg18a/exec";
+    const GAME3DS_API_URL = "https://script.google.com/macros/s/AKfycby6F_9WvxrFrxbLF6HVh-bVU7_TvV2uBv8x9eNZOSxwH42sUedXVhPlz4y9YitcZWuX/exec";
     const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
     const PINNEDGAME_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
@@ -634,6 +628,15 @@ function isAdminUser() {
     let deferredPrompt = null;
     let PINNED_GAMES_RULES = [];
     let currentPinSlot = null;
+
+function isAdminUser() {
+  // Admin kalau sudah login dan wa_number sama dengan ADMIN_TELEGRAM_ID
+  if (!currentUser) return false;
+  const wa = String(currentUser.wa_number || '').trim();
+  const adminId = String(ADMIN_TELEGRAM_ID || '').trim();
+  if (!wa || !adminId) return false;
+  return wa === adminId;
+}
 
 function openPinnedChangeModal(slot) {
   if (!isAdminUser()) {
@@ -1666,7 +1669,9 @@ const configs = [
     { platform: 'psvita',  name: 'PS Vita',         url: GAMEPSVITA_API_URL,   accessAction: 'accessOriginalLink' },
     { platform: 'psp',     name: 'PSP',             url: GAMEPSP_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'android', name: 'Android',         url: GAMEANDROID_API_URL,  accessAction: 'accessOriginalLink' },
-    { platform: 'pc',      name: 'PC',              url: PC_API_URL,           accessAction: 'accessOriginalLink' } // TAMBAHKAN INI
+    { platform: 'pc',      name: 'PC',              url: PC_API_URL,           accessAction: 'accessOriginalLink' },
+    { platform: 'wii',     name: 'Wii',             url: GAMEWII_API_URL,      accessAction: 'accessOriginalLink' },
+    { platform: '3ds',     name: '3DS',             url: GAME3DS_API_URL,      accessAction: 'accessOriginalLink' }
 ];
 
   try {
@@ -2728,7 +2733,7 @@ function renderGameList() {
   let target = window.scrollY;
   let rafId = null;
 
-  // Angka lebih besar = lebih responsif, lebih kecil = lebih “mengambang”
+  // Angka lebih besar = lebih responsif, lebih kecil = lebih "mengambang"
   const ease = 0.14;
 
   function clampTarget() {
@@ -2905,6 +2910,12 @@ function renderGameList() {
           case 'pc':
               apiUrl = PC_API_URL;
               break;
+          case 'wii':
+              apiUrl = GAMEWII_API_URL;
+              break;
+          case '3ds':
+              apiUrl = GAME3DS_API_URL;
+              break;
 
           default:
             throw new Error('Platform tidak didukung');
@@ -3030,6 +3041,26 @@ function renderGameList() {
             break;
         case 'pc':
             apiUrl = PC_API_URL;
+            payload = {
+                action: 'updateThumbnail',
+                download_id: downloadId,
+                thumbnail_url: '',
+                telegram_id: currentUser.wa_number,
+                key: currentUser.key
+            };
+            break;
+        case 'wii':
+            apiUrl = GAMEWII_API_URL;
+            payload = {
+                action: 'updateThumbnail',
+                download_id: downloadId,
+                thumbnail_url: '',
+                telegram_id: currentUser.wa_number,
+                key: currentUser.key
+            };
+            break;
+        case '3ds':
+            apiUrl = GAME3DS_API_URL;
             payload = {
                 action: 'updateThumbnail',
                 download_id: downloadId,
