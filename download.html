@@ -2001,7 +2001,7 @@
                         <div class="platform-count">Koleksi Game PC</div>
                         <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                     </div>
-                    
+
                     </div>
                     
                     <div class="text-center mt-4">
@@ -4400,7 +4400,7 @@ function generateSwitchAdLinks(game) {
                             <div class="text-muted mb-2">
                                 Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
                             </div>
-                            <h4>${escapeHTML(gameName)})</h4>
+                            <h4>${escapeHTML(gameName)}</h4>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                 `;
                 
@@ -4549,6 +4549,8 @@ function generateOriginalLinksHTML(game, platform) {
             </p>
             <button class="btn btn-primary" onclick="openLoginModal()">
                 <i class="fa fa-sign-in-alt"></i> Login
+            </button>
+            <button class="btn btn-secondary flex-fill" onclick="register()"><i class="fa fa-user-plus"></i>Register
             </button>
         </div>
     `;
