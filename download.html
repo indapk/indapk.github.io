@@ -16,6 +16,7 @@
             --switch-gradient: linear-gradient(135deg, #e60012 0%, #8b0000 100%);
             --psp-gradient: linear-gradient(135deg, #0070cc 0%, #004080 100%);
             --android-gradient: linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%);
+            --wii-gradient: linear-gradient(135deg, #0099ff 0%, #0055cc 100%);
             --psvita-gradient: linear-gradient(135deg, #003791 0%, #001f4d 100%);
               --community-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
               --community-bar: linear-gradient(90deg, #667eea, #764ba2, #667eea);
@@ -23,6 +24,16 @@
               --community-shadow-hover: rgba(102, 126, 234, 0.6);
         }
         
+        /* Tambahkan class untuk Wii badge */
+        .wii-badge { 
+            background: var(--wii-gradient); 
+        }
+        /* Tambahkan class untuk tabs Wii */
+        .wii-tabs .nav-link.active {
+            background: var(--wii-gradient) !important;
+            color: #fff !important;
+            box-shadow: 0 8px 25px rgba(0, 153, 204, 0.4);
+        }
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1644,6 +1655,24 @@
         background: rgba(255, 193, 7, 0.15);
         border-left-color: #ffc107;
     }
+    .pc-badge { background: linear-gradient(135deg, #00a4ef 0%, #0082c4 100%); }
+    .pc-tabs .nav-link.active {
+        background: linear-gradient(135deg, #00a4ef 0%, #0082c4 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 8px 25px rgba(0, 164, 239, 0.4);
+    }
+    .platform-card.wii {
+        border-left: 4px solid #0099ff;
+    }
+    .system-requirements-card {
+        background: linear-gradient(135deg, rgba(0, 164, 239, 0.1) 0%, rgba(0, 130, 196, 0.1) 100%);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 20px 0;
+        border-left: 5px solid #00a4ef;
+        box-shadow: 0 8px 30px rgba(0, 164, 239, 0.15);
+        animation: fadeInUp 0.8s ease;
+    }
     </style>
 </head>
 <body>
@@ -1946,6 +1975,15 @@
                             <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                         </div>
 
+                      <div class="platform-card wii" onclick="goToPlatform('wii')">
+                        <div class="platform-icon">
+                          <i class="bi bi-controller"></i>
+                        </div>
+                        <div class="platform-title">Nintendo Wii</div>
+                        <div class="platform-count">Koleksi Game Wii</div>
+                        <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                      </div>
+
                         <div class="platform-card android" onclick="goToPlatform('android')">
                             <div class="platform-icon">
                                 <i class="bi bi-phone"></i>
@@ -1954,6 +1992,16 @@
                             <div class="platform-count">Koleksi Game Android</div>
                             <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                         </div>
+
+                        <div class="platform-card pc" onclick="goToPlatform('pc')">
+                        <div class="platform-icon">
+                            <i class="bi bi-pc-display"></i>
+                        </div>
+                        <div class="platform-title">PC</div>
+                        <div class="platform-count">Koleksi Game PC</div>
+                        <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                    </div>
+                    
                     </div>
                     
                     <div class="text-center mt-4">
@@ -2172,6 +2220,7 @@
         const GAMESWITCH_API_URL = "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec";
         const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec";
         const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
+        const GAMEWII_API_URL = "https://script.google.com/macros/s/AKfycbz8uhfQtYxyUmZSVloZlY0UDxkQayeYAemS6zDXS4zDKKJ-DYuq16pqFJLkNCYXg18a/exec";
         const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
         const EMULATOR_API_URL = "https://script.google.com/macros/s/AKfycbwsXDL0iknPvS-KhQXEzODz_fcBkNm_aieq3eTSN33di7A7mqlX2y0O0XhMAbgBY8DV/exec";
         const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
@@ -2208,9 +2257,10 @@ function getCostPerLink(platform) {
         case 'psvita':
         case 'android':
         case 'pc':
-            return 1000; // Rp 1.000
+        case 'wii':
+            return 1000;
         case 'switch':
-            return 2000; // Rp 2.000
+            return 2000;
         default:
             return 2000; // Default
     }
@@ -2469,7 +2519,8 @@ function goToPlatform(platform) {
         'psp': `${baseUrl}/#psp`,
         'android': `${baseUrl}/#android`,
         'psvita': `${baseUrl}/#psvita`,
-        'pc': `${baseUrl}/#pc`
+        'pc': `${baseUrl}/#pc`,
+        'wii': `${baseUrl}/#wii`
     };
     
     const url = platformUrls[platform] || `${baseUrl}`;
@@ -2489,7 +2540,8 @@ function updateOtherGamesSection(platform) {
         'psp': 'PSP',
         'android': 'Android',
         'psvita': 'PS Vita',
-        'pc': 'PC'
+        'pc': 'PC',
+        'wii': 'Wii'
     };
     
     const currentPlatformName = platformNames[platform] || 'Game';
@@ -2750,6 +2802,11 @@ async function loadGameDetail() {
                 apiUrl = PC_API_URL;
                 action = 'getGameByDownloadId';
                 break;
+            case 'wii':
+                apiUrl = GAMEWII_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+
             default:
                 alert('Platform tidak didukung');
                 return;
@@ -2877,6 +2934,17 @@ function setPlatformTheme(platform) {
       shadow = 'rgba(0, 164, 239, 0.4)';
       shadowHover = 'rgba(0, 164, 239, 0.6)';
       break;
+    
+    case 'wii':
+      gradient = 'linear-gradient(135deg, #0099ff 0%, #0055cc 100%)';
+      badgeClass = 'wii-badge';
+      platformName = 'Wii';
+      tabs.className = 'nav nav-tabs ps2-tabs wii-tabs';
+      c1 = '#0099ff'; c2 = '#0055cc';
+      shadow = 'rgba(0, 153, 255, 0.4)';
+      shadowHover = 'rgba(0, 153, 255, 0.6)';
+      break;
+      
 
     default:
       gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
@@ -2971,7 +3039,9 @@ function getEmulatorPlatformKey(platform) {
     case 'ps2': return 'ps2';
     case 'psp': return 'psp';
     case 'switch': return 'switch';
+    case 'pc': return 'pc';
     case 'psvita': return 'psvita';
+    case 'wii': return 'wii';
     default: return '';
   }
 }
@@ -3341,11 +3411,13 @@ function generateDetailsHTML(game, platform, platformName) {
     const isAndroid = platform === 'android';
     const isSwitch  = platform === 'switch';
     const isPC      = platform === 'pc';
+    const isWii = platform === 'wii';
 
     const gameName = getGameName(game);
     const category = game.category || game.ori_category || '-';
     const totalDownloads = game.total_downloads || 0;
 
+const hasWiiFormats = isWii && game.formats && Array.isArray(game.formats) && game.formats.length > 0;
     // ========= Helpers (khusus buat function ini) =========
     function hasArr(v) {
         return Array.isArray(v) && v.filter(Boolean).length > 0;
@@ -3629,7 +3701,17 @@ function generateDetailsHTML(game, platform, platformName) {
     } else if (isPC) {
         if (hasPCLinks) formatBadges += badge('PC Game', 'pc-badge');
         if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+    } else if (isWii) {
+    // TAMBAHKAN FORMAT BADGES UNTUK WII
+    if (hasWiiFormats) {
+        game.formats.forEach(format => {
+            // Gunakan wii-badge yang sudah didefinisikan di CSS
+            formatBadges += badge(format.toUpperCase(), 'wii-badge');
+        });
     }
+    if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+}
+
 
     const formatRow = formatBadges
         ? `<tr><th>Format:</th><td>${formatBadges}</td></tr>`
@@ -3873,13 +3955,85 @@ function generateAdLinksHTML(game, platform) {
         case 'pc':
             html += generatePCAdLinks(game);
             break;
+        case 'wii':
+            html += generateWiiAdLinks(game);
+            break;
         default:
             html += '<p>Link iklan tidak tersedia untuk platform ini.</p>';
     }
     
     return html;
 }
+
+
+function generateWiiAdLinks(game) {
+    let html = '';
+    const gameName = getGameName(game);
+    
+    // Format detection untuk Wii
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    
+    formats.forEach(format => {
+        const formatKey = format.toLowerCase().replace(/\s+/g, '_');
         
+        // Link Iklan 1 (INDapk Short)
+        const linksIklan1 = game.link_iklan_formats?.[format] || [];
+        if (linksIklan1.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-star-fill"></i> INDapk Short</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan1.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || `Cloud ${index + 1}`;
+                if (link) {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur)
+        const linksIklan2 = game.link_iklan2_formats?.[format] || [];
+        if (linksIklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-link-45deg"></i> Semawur Short</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan2.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || `Cloud ${index + 1}`;
+                if (link) {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    });
+    
+    return html || '<p>Link iklan tidak tersedia untuk game Wii ini.</p>';
+}
+
         function generatePS2AdLinks(game) {
             let html = '';
             const gameName = getGameName(game);
@@ -4421,12 +4575,53 @@ function generateOriginalLinksHTML(game, platform) {
         case 'pc':
             html += generatePCOriginalLinks(game);
             break;
+        case 'wii':
+            html += generateWiiOriginalLinks(game);
+            break;
         default:
             html += '<p>Link asli tidak tersedia untuk platform ini.</p>';
     }
     
     html += `</div>`;
     return html;
+}
+
+function generateWiiOriginalLinks(game) {
+    let html = '';
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    
+    formats.forEach(format => {
+        const linksAsli = game.link_asli_formats?.[format] || [];
+        if (linksAsli.length > 0) {
+            const priceText = getPriceText('wii'); // untuk Wii
+            
+            html += `
+                <div class="link-section original-link">
+                    <h6>Link Asli Tanpa Iklan - ${escapeHTML(format)}</h6>
+                    <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+            `;
+            
+            linksAsli.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || `Cloud ${index + 1}`;
+                html += `
+                    <div class="link-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${escapeHTML(cloud)}</span>
+                            <button class="btn btn-sm btn-success"
+                                onclick="requestOriginalLink(this, '${game.download_id}', '${format}', ${index}, '${cloud}', 'wii')"
+                                ${!currentUser ? 'disabled' : ''}>
+                                <i class="bi bi-unlock"></i> ${priceText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        }
+    });
+    
+    return html || '<p class="text-muted">Link asli belum tersedia untuk game Wii ini.</p>';
 }
 
 function generatePCAdLinks(game) {
@@ -4523,7 +4718,7 @@ function generatePCOriginalLinks(game) {
 
         function generatePS2OriginalLinks(game) {
             let html = '';
-            const priceText = getPriceText('ps2'); // Rp 1.000
+            const priceText = getPriceText('ps2');
             
             // LINK ASLI TANPA IKLAN - ISO
             if (game.link_asli_iso && Array.isArray(game.link_asli_iso) && game.link_asli_iso.length > 0) {
@@ -4801,7 +4996,7 @@ function requestOriginalLink(btn, downloadId, linkType, index, cloudName, platfo
     }
     
     const saldo = Number(currentUser.saldo || 0);
-    const requiredAmount = getCostPerLink(platform); // Gunakan fungsi baru
+    const requiredAmount = getCostPerLink(platform);
     
     if (saldo < requiredAmount) {
         showInsufficientBalanceModal(saldo, requiredAmount, platform);
@@ -4809,7 +5004,7 @@ function requestOriginalLink(btn, downloadId, linkType, index, cloudName, platfo
     }
     
     pendingAccess = { downloadId, linkType, index, cloudName, platform };
-    openPayConfirmModal(cloudName, saldo, requiredAmount); // Tambah parameter requiredAmount
+    openPayConfirmModal(cloudName, saldo, requiredAmount);
 }
 
 // Function untuk menampilkan modal saldo tidak cukup
@@ -4845,6 +5040,9 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
                 break;
             case 'psvita':
                 gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
+                break;
+            case 'wii':
+                gradient = 'linear-gradient(135deg, #0099ff 0%, #0055cc 100%)';
                 break;
             default:
                 gradient = 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)';
@@ -4938,6 +5136,9 @@ function updateModalHeadersForPlatform(platform) {
         case 'pc':
             gradient = 'linear-gradient(135deg, #00a4ef 0%, #0082c4 100%)';
             break;
+        case 'wii':
+            gradient = 'linear-gradient(135deg, #0099ff 0%, #0055cc 100%)';
+            break;
         default:
             gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
     }
@@ -4984,7 +5185,6 @@ function openPayConfirmModal(cloudName, saldo, requiredAmount) {
             new bootstrap.Modal(el).show();
         }
         
-        // Event listener untuk tombol konfirmasi pembayaran
 // Event listener untuk tombol konfirmasi pembayaran
 document.addEventListener('DOMContentLoaded', function() {
     const btnYes = document.getElementById('btnPayYes');
@@ -5028,12 +5228,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     apiUrl = PC_API_URL;
                     action = 'accessOriginalLink';
                     break;
+                case 'wii':
+                    apiUrl = GAMEWII_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
                 default:
                     throw new Error('Platform tidak didukung');
             }
             
             let body;
-            if (platform === 'android') {
+
+            if (platform === 'wii') {
+                body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                       `&format=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
+                       `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                       `&key=${encodeURIComponent(currentUser.key)}`;
+            } else if (platform === 'android') {
                 body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
                        `&game_type=${encodeURIComponent(linkType)}&link_index=${encodeURIComponent(index)}` +
                        `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
