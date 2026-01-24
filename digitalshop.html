@@ -47,6 +47,57 @@
         }
 
         /* Navbar Modern */
+        /* FIX: warna icon dropdown/hamburger navbar jadi gelap */
+    .navbar .navbar-toggler{
+      border: 2px solid rgba(15,23,42,.15) !important;
+      border-radius: 12px;
+      padding: .6rem .75rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    }
+
+    .navbar .navbar-toggler:focus{
+      box-shadow: 0 0 0 4px rgba(99,102,241,.18);
+    }
+
+    /* HAPUS icon default bootstrap (yang putih) */
+    .navbar .navbar-toggler-icon{
+      background-image: none !important;
+      width: 28px;
+      height: 20px;
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Buat 3 garis (hamburger) warna gelap */
+    .navbar .navbar-toggler-icon::before,
+    .navbar .navbar-toggler-icon::after,
+    .navbar .navbar-toggler-icon span{
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--gray-900);
+      border-radius: 999px;
+      transition: all .25s ease;
+    }
+
+    /* garis tengah */
+    .navbar .navbar-toggler-icon span{
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* garis atas & bawah */
+    .navbar .navbar-toggler-icon::before{ top: 0; }
+    .navbar .navbar-toggler-icon::after{ bottom: 0; }
+
+    /* Hover lebih jelas */
+    .navbar .navbar-toggler:hover{
+      border-color: rgba(99,102,241,.45) !important;
+      transform: translateY(-1px);
+    }
+
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -963,7 +1014,7 @@
                 <i class="fas fa-gem me-2"></i>Digital Shop INDapk
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+              <span class="navbar-toggler-icon"><span></span></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
