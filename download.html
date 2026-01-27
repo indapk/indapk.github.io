@@ -68,6 +68,12 @@
             <i class="bi bi-flag-fill"></i> Laporkan Masalah
         </button>
         
+        <!-- TOMBOL BARU: Digital Shop INDapk -->
+        <a href="https://indapk.github.io/digitalshop.html" target="_blank" rel="noopener"
+           class="btn btn-success">
+            <i class="bi bi-shop me-1"></i> Digital Shop INDapk
+        </a>
+        
         <button id="themeToggle" class="btn btn-outline-secondary" type="button" onclick="toggleTheme()">
             <i class="bi bi-moon-stars-fill me-1"></i>
             <span>Dark</span>
@@ -751,7 +757,11 @@ function openReportModal() {
 function getAvailableFormats(game, platform) {
     const formats = new Set();
     
-    console.log('Getting formats for platform:', platform, 'Game data:', game); // Debug log
+    // HAPUS console.log ini:
+    // console.log('Getting formats for platform:', platform, 'Game data:', game);
+    
+    // Ganti dengan log sederhana jika perlu debug:
+    // console.log('Getting formats for platform:', platform);
     
     switch(platform) {
         case 'ps2':
@@ -777,25 +787,17 @@ function getAvailableFormats(game, platform) {
             break;
             
         case 'android':
-            console.log('Android game details:', {
+            // Log sederhana saja untuk Android
+            console.log('Android game details (simplified):', {
                 game_type: game.game_type,
-                ori_only: game.game_type === 'ori-only',
-                ori_mod: game.game_type === 'ori-mod',
-                only_mod: game.game_type === 'only-mod',
-                ori_ad_links1: game.ori_ad_links1?.length,
-                ori_ad_links2: game.ori_ad_links2?.length,
-                ori_original_links: game.ori_original_links?.length,
-                mod_ad_links1: game.mod_ad_links1?.length,
-                mod_ad_links2: game.mod_ad_links2?.length,
-                mod_original_links: game.mod_original_links?.length
+                has_original: hasArr(game.ori_original_links) || hasArr(game.link_iklan) || hasArr(game.link_asli),
+                has_mod: hasArr(game.mod_original_links)
             });
             
-            // Logika yang lebih robust untuk Android
             if (game.game_type === 'ori-only' || game.game_type === 'ori-mod') {
-                // Cek ada link original
-                if (hasArr(game.ori_ad_links1) || 
-                    hasArr(game.ori_ad_links2) || 
-                    hasArr(game.ori_original_links) ||
+                if (hasArr(game.ori_original_links) || 
+                    hasArr(game.ori_ad_links1) || 
+                    hasArr(game.ori_ad_links2) ||
                     hasArr(game.link_iklan) ||
                     hasArr(game.link_asli)) {
                     formats.add('Original');
@@ -803,31 +805,18 @@ function getAvailableFormats(game, platform) {
             }
             
             if (game.game_type === 'ori-mod' || game.game_type === 'only-mod') {
-                // Cek ada link mod
-                if (hasArr(game.mod_ad_links1) || 
-                    hasArr(game.mod_ad_links2) || 
-                    hasArr(game.mod_original_links)) {
+                if (hasArr(game.mod_original_links) || 
+                    hasArr(game.mod_ad_links1) || 
+                    hasArr(game.mod_ad_links2)) {
                     formats.add('MOD');
                 }
             }
             
-            // Fallback: jika tidak ada game_type tapi ada link
             if (formats.size === 0) {
                 if (hasArr(game.link_iklan) || hasArr(game.link_asli)) {
                     formats.add('Original');
                 }
                 if (hasArr(game.mod_ad_links1) || hasArr(game.mod_original_links)) {
-                    formats.add('MOD');
-                }
-            }
-            
-            // Tambahan: jika masih kosong tapi ada data game_data
-            if (formats.size === 0 && game.game_data) {
-                const gameData = game.game_data;
-                if (gameData.type === 'ori-only' || gameData.type === 'ori-mod') {
-                    formats.add('Original');
-                }
-                if (gameData.type === 'ori-mod' || gameData.type === 'only-mod') {
                     formats.add('MOD');
                 }
             }
@@ -845,13 +834,13 @@ function getAvailableFormats(game, platform) {
             break;
             
         default:
-            // Default format untuk platform lain
             if (hasArr(game.link_iklan) || hasArr(game.link_asli)) {
                 formats.add('Original');
             }
     }
     
-    console.log('Formats found:', Array.from(formats)); // Debug log
+    // Tampilkan hanya format yang ditemukan, bukan data lengkap game
+    console.log('Formats found for', platform, ':', Array.from(formats));
     return Array.from(formats);
 }
 
