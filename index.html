@@ -336,7 +336,8 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
           </button>
 
           <div class="search-reveal-input">
-            <input type="text" id="searchInput" class="form-control" placeholder="Cari game..." />
+            <input type="text" id="searchInput" class="form-control" placeholder="Cari game..." 
+             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
           </div>
         </div>
 
@@ -418,11 +419,11 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
           </div>
           <div class="mb-3">
             <label class="form-label">Telegram ID / Username</label>
-            <input type="text" id="telegramId" class="form-control" placeholder="Contoh: 123456789" />
+            <input type="text" id="telegramIdInput" class="form-control" placeholder="Contoh: 123456789" />
           </div>
           <div class="mb-3">
             <label class="form-label">Key / Password</label>
-            <input type="password" id="telegramKey" class="form-control" placeholder="Masukkan key dari bot" />
+            <input type="password" id="telegramKeyInput" class="form-control" placeholder="Masukkan key dari bot" />
           </div>
           <div class="d-grid gap-2">
             <button class="btn btn-telegram" onclick="login(this)">
@@ -1213,9 +1214,8 @@ function setupEventListeners() {
   const refreshBtn = document.getElementById('btnRefreshGames');
   const paginationContainer = document.getElementById('paginationContainer');
 
-  // 2. SEARCH FUNCTIONALITY
+  // 2. SEARCH FUNCTIONALITY - FIXED
   if (searchIconBtn && searchReveal && searchInput) {
-    // Toggle search input visibility
     searchIconBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       searchReveal.classList.toggle('is-open');
@@ -1226,7 +1226,6 @@ function setupEventListeners() {
         }, 10);
       } else {
         searchInput.blur();
-        // Reset search jika input kosong
         if (!searchInput.value.trim()) {
           searchQuery = '';
           setUrlParam('q', '', { push: false });
@@ -1235,25 +1234,35 @@ function setupEventListeners() {
       }
     });
 
-    // Real-time search input
     searchInput.addEventListener('input', function (e) {
+      const loginModal = document.getElementById('loginModal');
+      const modal = bootstrap.Modal.getInstance(loginModal);
+      
+      if (modal && modal._isShown) {
+        return;
+      }
+      
       const raw = e.target.value || '';
       searchQuery = raw.trim().toLowerCase();
 
-      // Clear existing timer
       clearTimeout(searchTypingTimer);
       
-      // Set new timer for debouncing
       searchTypingTimer = setTimeout(() => {
         setUrlParam('q', raw.trim(), { push: false });
         setUrlParam('page', '', { push: false });
         filterGames({ resetPage: true });
-      }, 300); // 300ms delay
+      }, 300);
     });
 
-    // Search on Enter key
     searchInput.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
+        const loginModal = document.getElementById('loginModal');
+        const modal = bootstrap.Modal.getInstance(loginModal);
+        
+        if (modal && modal._isShown) {
+          return;
+        }
+        
         clearTimeout(searchTypingTimer);
         const raw = this.value || '';
         searchQuery = raw.trim().toLowerCase();
@@ -1263,17 +1272,14 @@ function setupEventListeners() {
       }
     });
 
-    // Close search when clicking outside
     document.addEventListener('click', (e) => {
       if (!searchReveal.contains(e.target)) {
-        // Hanya tutup jika tidak ada input
         if (!searchInput.value.trim()) {
           searchReveal.classList.remove('is-open');
         }
       }
     });
 
-    // Keep search open if there's content
     searchInput.addEventListener('focus', () => {
       searchReveal.classList.add('is-open');
     });
@@ -1289,10 +1295,8 @@ function setupEventListeners() {
       currentPlatform = platform;
       document.getElementById('platformText').textContent = platformText;
 
-      // Update URL hash
       setHashFromPlatform(currentPlatform);
       
-      // Reset search jika ada
       if (searchInput) {
         searchInput.value = '';
         searchQuery = '';
@@ -1303,9 +1307,8 @@ function setupEventListeners() {
     });
   });
 
-  // 4. CATEGORY FILTER (Dynamic)
+  // 4. CATEGORY FILTER
   if (categoryDropdown) {
-    // Category search functionality
     const categorySearchInput = document.getElementById('categorySearch');
     if (categorySearchInput) {
       categorySearchInput.addEventListener('input', function () {
@@ -1318,13 +1321,11 @@ function setupEventListeners() {
         });
       });
 
-      // Prevent category search from closing dropdown
       categorySearchInput.addEventListener('click', (e) => {
         e.stopPropagation();
       });
     }
 
-    // Handle click on category items
     categoryDropdown.addEventListener('click', function (e) {
       const categoryItem = e.target.closest('[data-category]');
       if (categoryItem) {
@@ -1339,7 +1340,6 @@ function setupEventListeners() {
           document.getElementById('categoryText').textContent = category;
         }
         
-        // Reset search jika ada
         if (searchInput) {
           searchInput.value = '';
           searchQuery = '';
@@ -1348,7 +1348,6 @@ function setupEventListeners() {
         
         filterGames({ resetPage: true });
         
-        // Close dropdown
         const dropdown = bootstrap.Dropdown.getInstance(
           document.querySelector('.dropdown-category')
         );
@@ -1379,7 +1378,6 @@ function setupEventListeners() {
       try {
         await loadAllGames({ useCache: false });
         
-        // Reset UI setelah refresh
         if (searchInput) {
           searchInput.value = '';
           searchQuery = '';
@@ -1389,7 +1387,6 @@ function setupEventListeners() {
         currentCategory = 'all';
         document.getElementById('categoryText').textContent = 'Semua';
         
-        // Show success message
         showTempMessage('✅ Game list refreshed successfully!', 'success');
       } catch (error) {
         console.error('Refresh error:', error);
@@ -1415,18 +1412,15 @@ function setupEventListeners() {
   }
 
   // 7. WINDOW EVENTS
-  // Handle hash changes for platform filter
   window.addEventListener('hashchange', applyHashPlatform);
   
-  // Handle browser back/forward
   window.addEventListener('popstate', () => {
     applySearchFromUrl();
     applyHashPlatform();
   });
 
-  // 8. DOCUMENT CLICK HANDLERS (Global)
+  // 8. DOCUMENT CLICK HANDLERS
   document.addEventListener('click', function (e) {
-    // Handle category badges click
     const categoryBadge = e.target.closest('.category-badge');
     if (categoryBadge && categoryBadge.textContent) {
       e.stopPropagation();
@@ -1434,7 +1428,6 @@ function setupEventListeners() {
       selectCategory(category);
     }
 
-    // Handle platform badges click
     const platformBadge = e.target.closest('.platform-badge');
     if (platformBadge) {
       e.stopPropagation();
@@ -1455,7 +1448,6 @@ function setupEventListeners() {
 
   // 9. KEYBOARD SHORTCUTS
   document.addEventListener('keydown', function (e) {
-    // Ctrl/Cmd + F untuk focus search
     if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
       e.preventDefault();
       if (searchInput) {
@@ -1464,7 +1456,6 @@ function setupEventListeners() {
       }
     }
     
-    // Escape untuk clear search
     if (e.key === 'Escape') {
       if (searchInput && document.activeElement === searchInput) {
         if (!searchInput.value.trim()) {
@@ -1475,14 +1466,12 @@ function setupEventListeners() {
     }
   });
 
-  // 10. RESIZE HANDLER (Optional)
+  // 10. RESIZE HANDLER
   let resizeTimer;
   window.addEventListener('resize', function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      // Re-calculate layout jika perlu
       if (window.innerWidth < 768) {
-        // Mobile adjustments
         if (searchReveal?.classList.contains('is-open') && !searchInput?.value.trim()) {
           searchReveal.classList.remove('is-open');
         }
@@ -1583,14 +1572,22 @@ async function loadPinnedGamesForAdmin() {
   }
 }
 
-    function openLoginModal() {
-      const modal = new bootstrap.Modal(document.getElementById('loginModal'));
-      modal.show();
-    }
+function openLoginModal() {
+  const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+  
+  // Blur input pencarian saat modal login terbuka
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.blur();
+    searchInput.value = ''; // Opsional: kosongkan pencarian
+  }
+  
+  modal.show();
+}
 
     async function login(btn) {
-      const telegramId = document.getElementById('telegramId').value.trim();
-      const key = document.getElementById('telegramKey').value.trim();
+  const telegramId = document.getElementById('telegramIdInput').value.trim();
+  const key = document.getElementById('telegramKeyInput').value.trim();
 
       if (!telegramId || !key) {
         alert('Masukkan Telegram ID atau Username dan Key!');
