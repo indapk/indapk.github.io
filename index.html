@@ -268,46 +268,51 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
 </head>
 <body>
   <!-- ===== NAVIGATION ===== -->
-  <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
-    <div class="container">
-      <a class="navbar-brand" href="https://indapk.github.io">
-        <i class="bi bi-controller me-2"></i>INDapk
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="https://indapk.github.io">
+      <i class="bi bi-controller me-2"></i>INDapk
+    </a>
+    <div class="nav-actions">
+      <a href="https://apksgi.github.io" target="_blank" rel="noopener"
+         class="btn btn-neon-outline btn-sm">
+        <i class="bi bi-play-circle me-1"></i> Video & Game (Only 18+)
       </a>
-      <div class="nav-actions">
-        <a href="https://apksgi.github.io" target="_blank" rel="noopener"
-           class="btn btn-neon-outline btn-sm">
-          <i class="bi bi-play-circle me-1"></i> Video & Game (Only 18+)
-        </a>
-        <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
-           class="btn btn-neon-outline btn-sm">
-          <i class="bi bi-plus-circle me-1"></i> Request Game
-        </a>
-        <a href="https://indapk.com/topup.html" target="_blank" rel="noopener"
-           class="btn btn-neon btn-sm">
-          <i class="bi bi-wallet2 me-1"></i> Top Up
-        </a>
-        <div id="userHeader" class="d-none">
-          <span class="badge me-2">
-            <i class="bi bi-person me-1"></i>
-            <span id="loggedUserName">-</span>
-          </span>
-          <span class="badge me-2">
-            <i class="bi bi-coin me-1"></i>
-            Rp <span id="loggedUserBalance">0</span>
-          </span>
-          <button class="btn btn-danger btn-sm" onclick="logout()">
-            <i class="bi bi-box-arrow-right me-1"></i> Logout
-          </button>
-        </div>
-        <button id="loginButton" class="btn btn-telegram" onclick="openLoginModal()">
-          <i class="fa fa-sign-in-alt"></i> Login
+      <a href="https://indapk.com/requestgame.html" target="_blank" rel="noopener"
+         class="btn btn-neon-outline btn-sm">
+        <i class="bi bi-plus-circle me-1"></i> Request Game
+      </a>
+      <a href="https://indapk.com/topup.html" target="_blank" rel="noopener"
+         class="btn btn-neon btn-sm">
+        <i class="bi bi-wallet2 me-1"></i> Top Up
+      </a>
+      <!-- TOMBOL BARU: Digital Shop INDapk -->
+      <a href="https://indapk.github.io/digitalshop.html" target="_blank" rel="noopener"
+         class="btn btn-neon-outline btn-sm">
+        <i class="bi bi-shop me-1"></i> Digital Shop INDapk
+      </a>
+      <div id="userHeader" class="d-none">
+        <span class="badge me-2">
+          <i class="bi bi-person me-1"></i>
+          <span id="loggedUserName">-</span>
+        </span>
+        <span class="badge me-2">
+          <i class="bi bi-coin me-1"></i>
+          Rp <span id="loggedUserBalance">0</span>
+        </span>
+        <button class="btn btn-danger btn-sm" onclick="logout()">
+          <i class="bi bi-box-arrow-right me-1"></i> Logout
         </button>
       </div>
+      <button id="loginButton" class="btn btn-telegram" onclick="openLoginModal()">
+        <i class="fa fa-sign-in-alt"></i> Login
+      </button>
+    </div>
     <button id="adminPinnedBtn" class="btn btn-warning btn-sm d-none" onclick="openManagePinnedModal()">
       <i class="bi bi-pin-angle-fill me-1"></i>Manage Pinned
     </button>
-    </div>
-  </nav>
+  </div>
+</nav>
   <!-- ===== MAIN CONTENT ===== -->
   <div class="header-banner">
     <div class="banner-container">
