@@ -264,6 +264,165 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
   background: linear-gradient(135deg, var(--neon-pink), #dc2626) !important;
 }
 .badge-pc{background:linear-gradient(135deg,var(--pc-color),#0082c4);box-shadow:0 5px 20px var(--pc-glow),0 0 30px var(--pc-glow) inset}
+
+.game-click-count {
+  background: linear-gradient(135deg, #ff4757, #ff3838) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.game-card:hover .game-click-count {
+  animation: none;
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Popular games highlight */
+.game-card.high-popularity {
+  border: 2px solid #ff4757 !important;
+  box-shadow: 0 0 20px rgba(255, 71, 87, 0.3) !important;
+}
+
+.game-card.medium-popularity {
+  border: 1px solid #ffa502 !important;
+}
+
+.platform-badge.thumbnail-badge {
+      position: absolute !important;
+      top: 10px !important;
+      left: 10px !important;
+      z-index: 5 !important;
+      background: rgba(0, 0, 0, 0.7) !important;
+      backdrop-filter: blur(4px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border-radius: 20px !important;
+      padding: 4px 10px !important;
+      font-size: 0.75rem !important;
+      font-weight: 600 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      max-width: 120px !important;
+    }
+    
+    /* STYLE UNTUK CLICK COUNT BADGE (POJOK KANAN ATAS) */
+    .click-count-badge {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52) !important;
+      border: 2px solid rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5) !important;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      padding: 5px 10px !important;
+      border-radius: 20px !important;
+      animation: countPulse 3s infinite !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 4px !important;
+      min-width: 50px !important;
+      height: 28px !important;
+    }
+    
+    .click-count-badge i {
+      font-size: 0.8rem !important;
+    }
+    
+    @keyframes countPulse {
+      0% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5); }
+      50% { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.8); }
+      100% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5); }
+    }
+    
+    .game-card:hover .click-count-badge {
+      animation: none !important;
+      transform: scale(1.1) !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 6px 25px rgba(255, 107, 107, 0.9) !important;
+    }
+    
+    /* Popular games highlight */
+    .game-card.high-popularity {
+      border: 2px solid #ff6b6b !important;
+      box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4) !important;
+    }
+    
+    .game-card.medium-popularity {
+      border: 1px solid #ffa502 !important;
+      box-shadow: 0 4px 20px rgba(255, 165, 2, 0.3) !important;
+    }
+    
+    /* Pastikan thumbnail container bisa menampung badge */
+    .thumbnail-container {
+      position: relative !important;
+      overflow: hidden !important;
+    }
+    
+    /* Styling untuk platform badge khusus */
+    .platform-badge.badge-ps2 {
+      background: rgba(0, 100, 255, 0.8) !important;
+      border-color: rgba(0, 150, 255, 0.5) !important;
+    }
+    
+    .platform-badge.badge-switch {
+      background: rgba(230, 0, 0, 0.8) !important;
+      border-color: rgba(255, 50, 50, 0.5) !important;
+    }
+    
+    .platform-badge.badge-android {
+      background: rgba(60, 180, 75, 0.8) !important;
+      border-color: rgba(100, 220, 100, 0.5) !important;
+    }
+    
+    .platform-badge.badge-pc {
+      background: rgba(100, 100, 100, 0.8) !important;
+      border-color: rgba(150, 150, 150, 0.5) !important;
+    }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+      .platform-badge.thumbnail-badge {
+        font-size: 0.7rem !important;
+        padding: 3px 8px !important;
+        max-width: 100px !important;
+      }
+      
+      .click-count-badge {
+        font-size: 0.7rem !important;
+        padding: 4px 8px !important;
+        min-width: 45px !important;
+        height: 26px !important;
+      }
+    }
+    
+    /* Efek hover untuk card */
+    .game-card:hover {
+      transform: translateY(-5px) !important;
+      transition: transform 0.3s ease !important;
+    }
+    
+    /* Styling untuk icon eye */
+    .click-count-badge i.bi-eye-fill {
+      color: white !important;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)) !important;
+    }
+    
+    /* Jika count tinggi, beri efek glow */
+    .click-count-badge.high-count {
+      background: linear-gradient(135deg, #ff3838, #ff0000) !important;
+      box-shadow: 0 4px 20px rgba(255, 56, 56, 0.7) !important;
+    }
+
 </style>
 </head>
 <body>
@@ -311,7 +470,8 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     <button id="adminPinnedBtn" class="btn btn-warning btn-sm d-none" onclick="openManagePinnedModal()">
       <i class="bi bi-pin-angle-fill me-1"></i>Manage Pinned
     </button>
-  </div>
+<button id="adminStatsBtn" class="btn btn-info btn-sm d-none ms-2" onclick="openStatsDashboard()">
+ <i class="bi bi-bar-chart me-1"></i>View Stats</button>
 </nav>
   <!-- ===== MAIN CONTENT ===== -->
   <div class="header-banner">
@@ -606,6 +766,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     const GAME3DS_API_URL = "https://script.google.com/macros/s/AKfycby6F_9WvxrFrxbLF6HVh-bVU7_TvV2uBv8x9eNZOSxwH42sUedXVhPlz4y9YitcZWuX/exec";
     const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
     const PINNEDGAME_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
+    const TRACKING_API_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
     const ADMIN_TELEGRAM_ID = "1172835542";
     // ====== GLOBAL STATE ======
@@ -634,6 +795,277 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     let deferredPrompt = null;
     let PINNED_GAMES_RULES = [];
     let currentPinSlot = null;
+
+
+
+// ====== FUNGSI TRACKING KLIK GAME ======
+async function trackGameClick(gameId, platform, gameName) {
+  try {
+    const payload = {
+      action: 'trackGameClick',
+      game_id: gameId,
+      platform: platform,
+      game_name: gameName
+    };
+
+    // Kirim request tracking (tanpa menunggu response lama)
+    fetch(TRACKING_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams(payload),
+      mode: 'no-cors' // Agar tidak blocked oleh CORS
+    }).catch(err => {
+      console.log('Tracking sent (background)', err);
+    });
+
+    // Update UI count secara lokal (optimistic update)
+    updateGameCountInUI(gameId, platform);
+
+  } catch (error) {
+    console.error('Error tracking click:', error);
+  }
+}
+
+// ====== FUNGSI UNTUK MENDAPATKAN STATS GAME ======
+async function getGameStats(gameId, platform) {
+  try {
+    const response = await fetch(TRACKING_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        action: 'getGameStats',
+        game_id: gameId,
+        platform: platform
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success') {
+      return result.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting game stats:', error);
+    return null;
+  }
+}
+
+// ====== UPDATE UI DENGAN COUNT ======
+function updateGameCountInUI(gameId, platform) {
+  // Cari card game yang sesuai
+  const gameCards = document.querySelectorAll('.game-card');
+  gameCards.forEach(card => {
+    const cardGameId = card.getAttribute('data-game-id');
+    const cardPlatform = card.getAttribute('data-platform');
+    
+    if (cardGameId === gameId && cardPlatform === platform) {
+      // Update count di card
+      const badge = card.querySelector('.click-count-badge');
+      
+      if (badge) {
+        // Badge sudah ada, update count
+        const countText = badge.textContent.trim();
+        const currentCount = parseInt(countText.replace('👁️', '').trim()) || 0;
+        badge.innerHTML = `<i class="bi bi-eye-fill me-1"></i>${currentCount + 1}`;
+      } else {
+        // Badge belum ada, buat baru
+        const newBadge = document.createElement('span');
+        newBadge.className = 'click-count-badge badge bg-danger position-absolute';
+        newBadge.style.cssText = 'top: 10px; right: 10px; z-index: 3;';
+        newBadge.innerHTML = '<i class="bi bi-eye-fill me-1"></i>1';
+        
+        const thumbnailContainer = card.querySelector('.thumbnail-container');
+        if (thumbnailContainer) {
+          thumbnailContainer.appendChild(newBadge);
+        }
+      }
+      
+      // Update kelas popularitas
+      const badgeElement = card.querySelector('.click-count-badge');
+      const currentCount = parseInt(badgeElement?.textContent?.replace('👁️', '').trim()) || 1;
+      card.classList.remove('high-popularity', 'medium-popularity');
+      
+      if (currentCount >= 100) {
+        card.classList.add('high-popularity');
+      } else if (currentCount >= 50) {
+        card.classList.add('medium-popularity');
+      }
+      
+      // Tambahkan efek visual
+      const countBadge = card.querySelector('.click-count-badge');
+      if (countBadge) {
+        countBadge.style.transform = 'scale(1.2)';
+        setTimeout(() => {
+          countBadge.style.transform = '';
+        }, 300);
+      }
+    }
+  });
+}
+
+
+
+// ====== LOAD GAME STATS UNTUK SEMUA GAME ======
+async function loadAllGameStats() {
+  try {
+    const response = await fetch(TRACKING_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        action: 'getTopGames',
+        limit: 500 // Ambil lebih banyak data
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    
+    if (result.status === 'success' && Array.isArray(result.data)) {
+      console.log('Stats loaded:', result.data.length, 'games');
+      
+      // Simpan stats di localStorage untuk cache (5 menit)
+      localStorage.setItem('game_stats_cache', JSON.stringify({
+        data: result.data,
+        timestamp: Date.now()
+      }));
+      
+      // Update UI dengan stats
+      updateGameCardsWithStats(result.data);
+      
+      // Update juga untuk pinned games jika ada
+      updatePinnedGamesWithStats(result.data);
+    } else {
+      console.error('Failed to load stats:', result.message);
+    }
+  } catch (error) {
+    console.error('Error loading game stats:', error);
+    // Fallback ke cache lama jika ada
+    try {
+      const cache = localStorage.getItem('game_stats_cache');
+      if (cache) {
+        const { data, timestamp } = JSON.parse(cache);
+        updateGameCardsWithStats(data);
+      }
+    } catch (cacheError) {
+      console.error('Cache error:', cacheError);
+    }
+  }
+}
+
+// ====== UPDATE PINNED GAMES DENGAN STATS ======
+function updatePinnedGamesWithStats(statsArray) {
+  const statsMap = new Map();
+  statsArray.forEach(stat => {
+    const key = `${stat.game_id}|${stat.platform}`;
+    statsMap.set(key, stat.total_clicks);
+  });
+  
+  // Update pinned games
+  const pinnedCards = document.querySelectorAll('.pinned-section .game-card');
+  pinnedCards.forEach(card => {
+    const gameId = card.getAttribute('data-game-id');
+    const platform = card.getAttribute('data-platform');
+    
+    if (gameId && platform) {
+      const key = `${gameId}|${platform}`;
+      const clickCount = statsMap.get(key) || 0;
+      
+      if (clickCount > 0) {
+        let badge = card.querySelector('.game-click-count');
+        
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'game-click-count badge bg-danger position-absolute';
+          badge.style.cssText = 'top: 10px; left: 10px; z-index: 3;';
+          
+          const thumbnailContainer = card.querySelector('.thumbnail-container');
+          if (thumbnailContainer) {
+            thumbnailContainer.appendChild(badge);
+          }
+        }
+        
+        badge.innerHTML = `<i class="bi bi-eye me-1"></i>${clickCount}`;
+      }
+    }
+  });
+}
+// ====== UPDATE DENGAN CACHE STATS ======
+function updateGameCardsWithCachedStats() {
+  try {
+    const cache = localStorage.getItem('game_stats_cache');
+    if (cache) {
+      const { data, timestamp } = JSON.parse(cache);
+      
+      // Cache valid selama 5 menit
+      if (Date.now() - timestamp < 5 * 60 * 1000) {
+        updateGameCardsWithStats(data);
+      }
+    }
+  } catch (error) {
+    console.error('Error updating with cached stats:', error);
+  }
+}
+function updateGameCardsWithStats(statsArray) {
+  // Buat map untuk akses cepat
+  const statsMap = new Map();
+  statsArray.forEach(stat => {
+    const key = `${stat.game_id}|${stat.platform}`;
+    statsMap.set(key, {
+      total_clicks: stat.total_clicks,
+      game_name: stat.game_name
+    });
+  });
+  
+  // Update semua game card
+  const gameCards = document.querySelectorAll('.game-card');
+  gameCards.forEach(card => {
+    const gameId = card.getAttribute('data-game-id');
+    const platform = card.getAttribute('data-platform');
+    
+    if (gameId && platform) {
+      const key = `${gameId}|${platform}`;
+      const stats = statsMap.get(key);
+      const clickCount = stats?.total_clicks || 0;
+      
+      if (clickCount > 0) {
+        let badge = card.querySelector('.click-count-badge');
+        
+        if (!badge) {
+          // Buat badge baru
+          badge = document.createElement('span');
+          badge.className = 'click-count-badge badge bg-danger position-absolute';
+          badge.style.cssText = 'top: 10px; right: 10px; z-index: 3;';
+          
+          const thumbnailContainer = card.querySelector('.thumbnail-container');
+          if (thumbnailContainer) {
+            thumbnailContainer.appendChild(badge);
+          }
+        }
+        
+        // Update count
+        badge.innerHTML = `<i class="bi bi-eye-fill me-1"></i>${clickCount}`;
+        
+        // Update kelas popularitas
+        card.classList.remove('high-popularity', 'medium-popularity');
+        if (clickCount >= 100) {
+          card.classList.add('high-popularity');
+        } else if (clickCount >= 50) {
+          card.classList.add('medium-popularity');
+        }
+      }
+    }
+  });
+}
 
 function isAdminUser() {
   // Admin kalau sudah login dan wa_number sama dengan ADMIN_TELEGRAM_ID
@@ -867,11 +1299,39 @@ async function loadPinnedRules() {
 }
 
     // Fungsi untuk redirect ke halaman detail game
-    function goToGameDetail(downloadId, platform) {
-      // Redirect ke halaman detail dengan format: download.html?game=downloadId&platform=platform
-      window.location.href = `download.html?game=${downloadId}&platform=${platform}`;
+function goToGameDetail(downloadId, platform, gameName = '') {
+  // Dapatkan event dari parameter atau global
+  const event = window.event || arguments.callee.caller.arguments[0];
+  
+  // Dapatkan nama game jika tidak diberikan
+  if (!gameName && event) {
+    const card = event.currentTarget || event.target.closest('.game-card');
+    if (card) {
+      const titleElement = card.querySelector('.card-title');
+      if (titleElement) {
+        gameName = titleElement.textContent.trim();
+      }
     }
-
+  }
+  
+  // Jika masih tidak ada nama, coba dapatkan dari filteredGames
+  if (!gameName) {
+    const game = allGames.find(g => 
+      g.download_id === downloadId && g.platform === platform
+    );
+    if (game) {
+      gameName = game.nama_game || game.ori_name || '';
+    }
+  }
+  
+  // Track klik game
+  if (downloadId && platform && gameName) {
+    trackGameClick(downloadId, platform, gameName);
+  }
+  
+  // Redirect ke halaman detail
+  window.location.href = `download.html?game=${downloadId}&platform=${platform}`;
+}
     // Fungsi untuk membuat URL sumber (INDapk search)
     function buildSumberLinkUrl(game) {
       const nameRaw = (game?.nama_game || game?.ori_name || '').trim();
@@ -1503,6 +1963,8 @@ function setupEventListeners() {
 function updateAdminUI() {
   const isAdmin = isAdminUser();
   const adminBtn = document.getElementById('adminPinnedBtn');
+  const statsBtn = document.getElementById('adminStatsBtn');
+  
   if (adminBtn) {
     if (isAdmin) {
       adminBtn.classList.remove('d-none');
@@ -1510,6 +1972,121 @@ function updateAdminUI() {
       adminBtn.classList.add('d-none');
     }
   }
+  
+  if (statsBtn) {
+    if (isAdmin) {
+      statsBtn.classList.remove('d-none');
+    } else {
+      statsBtn.classList.add('d-none');
+    }
+  }
+}
+
+// ====== ADMIN STATS DASHBOARD ======
+function openStatsDashboard() {
+  if (!isAdminUser()) {
+    alert('Hanya admin yang bisa melihat dashboard stats');
+    return;
+  }
+  
+  showGameStatsModal();
+}
+
+async function showGameStatsModal() {
+  try {
+    const response = await fetch(TRACKING_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        action: 'getTopGames',
+        limit: 50
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success') {
+      renderStatsDashboard(result.data);
+    }
+  } catch (error) {
+    console.error('Error loading stats:', error);
+    alert('Gagal memuat statistik');
+  }
+}
+
+
+function renderStatsDashboard(stats) {
+  // Buat modal untuk menampilkan stats
+  const modalHtml = `
+    <div class="modal fade" id="statsModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header detail-modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-bar-chart me-2"></i>Game Statistics Dashboard
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th width="50">Rank</th>
+                    <th>Game Name</th>
+                    <th width="100">Platform</th>
+                    <th width="100">Total Clicks</th>
+                    <th width="150">Last Click</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${stats.map((stat, index) => `
+                    <tr>
+                      <td>
+                        <span class="badge ${index < 3 ? 'bg-danger' : 'bg-secondary'}">
+                          ${index + 1}
+                        </span>
+                      </td>
+                      <td>${escapeHTML(stat.game_name)}</td>
+                      <td>
+                        <span class="badge badge-${stat.platform}">
+                          ${getPlatformLabel(stat.platform)}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge bg-warning">
+                          <i class="bi bi-eye me-1"></i>${stat.total_clicks}
+                        </span>
+                      </td>
+                      <td>
+                        <small>${stat.last_click_date || '-'} ${stat.last_click_time || ''}</small>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Tambahkan modal ke body jika belum ada
+  if (!document.getElementById('statsModal')) {
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    document.body.appendChild(modalContainer);
+  }
+  
+  // Tampilkan modal
+  const modal = new bootstrap.Modal(document.getElementById('statsModal'));
+  modal.show();
 }
 
 // Panggil fungsi ini setelah login/logout
@@ -1647,9 +2224,8 @@ function openLoginModal() {
     }
 
     // ====== GAME LOADING AND FILTERING ======
-// ====== GAME LOADING AND FILTERING ======
 async function loadAllGames({ useCache = true } = {}) {
-  // 1) tampilkan cache dulu (biar halaman tidak kosong)
+  // 1) Tampilkan cache dulu
   if (useCache) {
     const cached = readGamesCache();
     if (cached?.length) {
@@ -1657,15 +2233,20 @@ async function loadAllGames({ useCache = true } = {}) {
       rebuildCategoriesFromAllGames();
       isGamesLoaded = true;
       filterGames({ resetPage: false });
+      
+      // Load game stats setelah games dimuat
+      setTimeout(() => {
+        loadAllGameStats();
+      }, 500);
     }
   }
 
-  // 2) abort request lama kalau ada
+  // 2) Abort request lama
   if (loadAbort) loadAbort.abort();
   loadAbort = new AbortController();
   const { signal } = loadAbort;
 
-const configs = [
+  const configs = [
     { platform: 'ps2',     name: 'PlayStation 2',   url: GAMEPS2_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'switch',  name: 'Nintendo Switch', url: GAMESWITCH_API_URL,   accessAction: 'accessSwitchOriginalLink' },
     { platform: 'psvita',  name: 'PS Vita',         url: GAMEPSVITA_API_URL,   accessAction: 'accessOriginalLink' },
@@ -1674,19 +2255,19 @@ const configs = [
     { platform: 'pc',      name: 'PC',              url: PC_API_URL,           accessAction: 'accessOriginalLink' },
     { platform: 'wii',     name: 'Wii',             url: GAMEWII_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: '3ds',     name: '3DS',             url: GAME3DS_API_URL,      accessAction: 'accessOriginalLink' }
-];
+  ];
 
   try {
-    // 3) fetch paralel
+    // 3) Fetch paralel
     const settled = await Promise.allSettled(
       configs.map(cfg => fetchPlatformGames(cfg, signal))
     );
 
-    // 4) gabungkan semua hasil
+    // 4) Gabungkan semua hasil
     let merged = settled.flatMap(x => (x.status === 'fulfilled' ? x.value : []));
     if (!merged.length) throw new Error('Data kosong');
 
-    // 5) sorting terbaru dulu (butuh ts_num dari normalizeGame)
+    // 5) Sorting terbaru dulu
     merged.sort((a, b) => (b.ts_num || 0) - (a.ts_num || 0));
     await loadPinnedRules(signal);
 
@@ -1694,24 +2275,27 @@ const configs = [
     pinnedGames = resultPin.pinned || [];
     merged = resultPin.cleaned || merged;
 
-    // 7) simpan ke global state
+    // 7) Simpan ke global state
     allGames = merged;
 
-    // 8) simpan cache
+    // 8) Simpan cache
     writeGamesCache(merged);
 
-    // 9) rebuild kategori + render
+    // 9) Rebuild kategori + render
     rebuildCategoriesFromAllGames();
     isGamesLoaded = true;
     filterGames({ resetPage: false });
 
+    // 10) Load game stats setelah semua game dimuat
+    setTimeout(() => {
+      loadAllGameStats();
+    }, 1000);
+
   } catch (error) {
-    // kalau abort, diamkan
     if (error?.name === 'AbortError') return;
 
     console.error('Error loading games:', error?.message || error);
 
-    // kalau belum pernah loaded sama sekali, tampilkan error di UI
     if (!isGamesLoaded) {
       const el = document.getElementById('gameListContainer');
       if (el) {
@@ -2575,6 +3159,17 @@ async function removePinnedGame(slot) {
       `;
     }
 
+
+// ====== INISIALISASI SETELAH LOAD GAMES ======
+async function initGameTracking() {
+  // Load stats saat halaman pertama kali dimuat
+  await loadAllGameStats();
+  
+  // Refresh stats setiap 2 menit
+  setInterval(loadAllGameStats, 120000);
+}
+
+
 function renderGameList() {
   const container = document.getElementById('gameListContainer');
 
@@ -2598,128 +3193,166 @@ function renderGameList() {
 
   let html = pinnedHtml + '<div class="row g-4">';
 
-      const totalItems = filteredGames.length;
-      const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
-      currentPage = clampPage(currentPage, totalPages);
+  const totalItems = filteredGames.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
+  currentPage = clampPage(currentPage, totalPages);
 
-      const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
-      const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+  const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
+  const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
 
-      pageGames.forEach(game => {
-        const platformClass = `badge-${game.platform}`;
-        const platformIconClass = `platform-${game.platform}`;
+  // Ambil data stats dari cache untuk render awal
+  let cachedStats = {};
+  try {
+    const cache = localStorage.getItem('game_stats_cache');
+    if (cache) {
+      const { data, timestamp } = JSON.parse(cache);
+      if (Date.now() - timestamp < 5 * 60 * 1000) { // 5 menit
+        data.forEach(stat => {
+          const key = `${stat.game_id}|${stat.platform}`;
+          cachedStats[key] = stat.total_clicks;
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error reading cache:', error);
+  }
 
-        const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
+  pageGames.forEach(game => {
+    const platformClass = `badge-${game.platform}`;
+    const platformIconClass = `platform-${game.platform}`;
 
-      const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
-        .map(cat => `
-          <button type="button"
-            class="category-badge"
-            onclick="event.stopPropagation(); selectCategory('${escapeHTML(cat).replace(/'/g, "\\'")}')">
-            ${escapeHTML(cat)}
-          </button>
-        `)
-        .join('');
+    const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
 
+    // Cek click count dari cache
+    const cacheKey = `${game.download_id}|${game.platform}`;
+    const clickCount = cachedStats[cacheKey] || 0;
+    const showBadge = clickCount > 0;
 
-        const langHtml = game.language
-          ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
-          : '';
+    const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
+      .map(cat => `
+        <button type="button"
+          class="category-badge"
+          onclick="event.stopPropagation(); selectCategory('${escapeHTML(cat).replace(/'/g, "\\'")}')">
+          ${escapeHTML(cat)}
+        </button>
+      `)
+      .join('');
 
-        const regionHtml = game.region
-          ? `<span class="category-badge">${escapeHTML(game.region)}</span>`
-          : '';
+    const langHtml = game.language
+      ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
+      : '';
 
-        const modHtml = game.game_type === 'ori-mod' || game.game_type === 'only-mod'
-          ? `<span class="category-badge">MOD</span>`
-          : '';
+    const regionHtml = game.region
+      ? `<span class="category-badge">${escapeHTML(game.region)}</span>`
+      : '';
 
-        const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
+    const modHtml = game.game_type === 'ori-mod' || game.game_type === 'only-mod'
+      ? `<span class="category-badge">MOD</span>`
+      : '';
 
-        const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
+    const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
 
-        const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
+    const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
 
-        html += `
-          <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="game-card card h-100 platform-${game.platform}"
-  onclick="goToGameDetail('${game.download_id}', '${game.platform}')">
+    const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
 
+    // Tentukan kelas popularitas
+    let popularityClass = '';
+    if (clickCount >= 100) {
+      popularityClass = 'high-popularity';
+    } else if (clickCount >= 50) {
+      popularityClass = 'medium-popularity';
+    }
 
-              <!-- THUMBNAIL SECTION -->
-              <div class="thumbnail-container position-relative">
-                <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
-                     class="card-img-top game-thumbnail" 
-                     alt="${escapeHTML(gameName)}"
-                     loading="lazy">
+    html += `
+      <div class="col-md-6 col-lg-4 col-xl-3">
+        <div class="game-card card h-100 platform-${game.platform} ${popularityClass}"
+             onclick="goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')"
+             data-game-id="${game.download_id}"
+             data-platform="${game.platform}">
 
-                <!-- BADGE PLATFORM DI ATAS THUMBNAIL -->
-                <span class="platform-badge ${platformClass} thumbnail-badge">
-                  <span class="platform-icon ${platformIconClass}">
-                    <i class="bi ${getPlatformIcon(game.platform)}"></i>
-                  </span>
-                  ${escapeHTML(game.platform_name || '')}
-                </span>
+          <!-- THUMBNAIL SECTION -->
+          <div class="thumbnail-container position-relative">
+            <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
+                 class="card-img-top game-thumbnail" 
+                 alt="${escapeHTML(gameName)}"
+                 loading="lazy">
 
-                <!-- ADMIN THUMBNAIL CONTROLS -->
-                ${isAdminUser() ? `
-                  <div class="thumbnail-admin-overlay">
-                    <button class="btn btn-sm btn-outline-light" 
-                            onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
-                            title="Kelola Thumbnail">
-                      <i class="bi bi-image"></i>
-                    </button>
-                  </div>
+            <!-- BADGE PLATFORM DI ATAS THUMBNAIL (POJOK KIRI ATAS) -->
+            <span class="platform-badge ${platformClass} thumbnail-badge"
+                  style="top: 10px; left: 10px;">
+              <span class="platform-icon ${platformIconClass}">
+                <i class="bi ${getPlatformIcon(game.platform)}"></i>
+              </span>
+              ${escapeHTML(game.platform_name || '')}
+            </span>
+
+            <!-- BADGE CLICK COUNT (POJOK KANAN ATAS) -->
+            ${showBadge ? `
+              <span class="click-count-badge badge bg-danger position-absolute"
+                    style="top: 10px; right: 10px; z-index: 3;">
+                <i class="bi bi-eye-fill me-1"></i>${clickCount}
+              </span>
+            ` : ''}
+
+            <!-- ADMIN THUMBNAIL CONTROLS -->
+            ${isAdminUser() ? `
+              <div class="thumbnail-admin-overlay">
+                <button class="btn btn-sm btn-outline-light" 
+                        onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
+                        title="Kelola Thumbnail">
+                  <i class="bi bi-image"></i>
+                </button>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
+              <small class="text-muted">${dateHtml}</small>
+            </div>
+
+            <p class="card-text small mb-3">
+              ${categoriesHtml}
+            <br><br>
+              ${regionHtml}
+              ${modHtml}
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div>
+                ${sumberUrl ? `
+                  <small class="text-muted d-block mt-1">
+                    <i class="bi bi-link-45deg me-1"></i>
+                    <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
+                       style="color: rgba(231,234,242,0.85); text-decoration: none;"
+                       onclick="event.stopPropagation()">
+                      Source Link
+                    </a>
+                  </small>
                 ` : ''}
+
+                ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
               </div>
 
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                  <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
-                  <small class="text-muted">${dateHtml}</small>
-                </div>
-
-                <p class="card-text small mb-3">
-                  ${categoriesHtml}
-                <br><br>
-                  ${regionHtml}
-                  ${modHtml}
-                </p>
-
-                <div class="d-flex justify-content-between align-items-center mt-auto">
-                  <div>
-
-                    ${sumberUrl ? `
-                      <small class="text-muted d-block mt-1">
-                        <i class="bi bi-link-45deg me-1"></i>
-                        <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
-                           style="color: rgba(231,234,242,0.85); text-decoration: none;"
-                           onclick="event.stopPropagation()">
-                          Source Link
-                        </a>
-                      </small>
-                    ` : ''}
-
-                    ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
-                  </div>
-
-                  <button class="btn btn-sm btn-outline-primary"
-                    onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}')">
-                    Download
-                  </button>
-                </div>
-              </div>
+              <button class="btn btn-sm btn-outline-primary"
+                onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')">
+                Download
+              </button>
             </div>
           </div>
-        `;
-      });
+        </div>
+      </div>
+    `;
+  });
 
-      html += '</div>';
-      container.innerHTML = html;
+  html += '</div>';
+  container.innerHTML = html;
 
-      renderPagination(filteredGames.length);
-      animateCardReveal();
-    }
+  renderPagination(filteredGames.length);
+  animateCardReveal();
+}
 
 
 /* ===== SMOOTH SCROLLING (DESKTOP WHEEL INERTIA) ===== */
