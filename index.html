@@ -19,7 +19,9 @@
   <link rel="icon" href="favicon.png" sizes="32x32" type="image/png">
   <link rel="icon" href="favicon.png" sizes="16x16" type="image/png">
   <style>
-:root{--ps2-color:#06c;--ps2-glow:rgba(0,102,204,.5);--switch-color:#e60012;--switch-glow:rgba(230,0,18,.5);--psp-color:#0070cc;--psp-glow:rgba(0,112,204,.5);--psvita-color:#003791;--psvita-glow:rgba(0,55,145,.5);--wii-color:#009ac7;--wii-glow:rgba(0,154,199,.5);--3ds-color:#d12229;--3ds-glow:rgba(209,34,41,.5);--android-color:#3ddc84;--android-glow:rgba(61,220,132,.5);--pc-color:#00a4ef;--pc-glow:rgba(0,164,239,.5);--bg-dark:#0a0e1a;--bg-darker:#050812;--card-bg:rgba(255,255,255,.03);--card-border:rgba(255,255,255,.08);--text:#fff;--text-muted:rgba(255,255,255,.6);--neon-cyan:#00f0ff;--neon-purple:#b537f2;--neon-pink:#ff2e97;--glass-blur:blur(20px);--transition-smooth:all .4s cubic-bezier(.4,0,.2,1)}
+:root{--ps2-color:#06c;--ps2-glow:rgba(0,102,204,.5);--switch-color:#e60012;--switch-glow:rgba(230,0,18,.5);--psp-color:#0070cc;  --gamecube-color: #964b00;
+  --gamecube-glow: rgba(150, 75, 0, .5);--psp-glow:rgba(0,112,204,.5);--psvita-color:#003791;--psvita-glow:rgba(0,55,145,.5);--wii-color:#009ac7;--wii-glow:rgba(0,154,199,.5);--3ds-color:#d12229;--3ds-glow:rgba(209,34,41,.5);--android-color:#3ddc84;--android-glow:rgba(61,220,132,.5);--pc-color:#00a4ef;--pc-glow:rgba(0,164,239,.5);--bg-dark:#0a0e1a;--bg-darker:#050812;--card-bg:rgba(255,255,255,.03);--card-border:rgba(255,255,255,.08);--text:#fff;--text-muted:rgba(255,255,255,.6);--neon-cyan:#00f0ff;--neon-purple:#b537f2;--neon-pink:#ff2e97;--glass-blur:blur(20px);--transition-smooth:all .4s cubic-bezier(.4,0,.2,1)}
+
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;max-width:100%;overflow-x:hidden}
 body{background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(181,55,242,.15),transparent),radial-gradient(ellipse 60% 50% at 0% 100%,rgba(0,240,255,.1),transparent),radial-gradient(ellipse 60% 50% at 100% 100%,rgba(255,46,151,.1),transparent),linear-gradient(180deg,var(--bg-darker) 0%,var(--bg-dark) 100%);background-attachment:fixed;color:var(--text);font-family:Inter,sans-serif;overflow-x:hidden;min-height:100vh;position:relative;max-width:100%}
@@ -200,6 +202,30 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
   z-index: 5;
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+/* Tambahkan di bagian platform badge */
+.badge-gamecube {
+  background: linear-gradient(135deg, var(--gamecube-color), #7a3c00);
+  box-shadow: 0 5px 20px var(--gamecube-glow), 0 0 30px var(--gamecube-glow) inset
+}
+
+/* Tambahkan untuk game-card */
+.game-card.platform-gamecube .new-badge {
+  --new-main: var(--gamecube-color);
+  --new-dark: #7a3c00;
+  --new-glow: var(--gamecube-glow)
+}
+
+.game-card.platform-gamecube .pin-badge {
+  --pin-main: var(--gamecube-color);
+  --pin-dark: #7a3c00;
+  --pin-glow: var(--gamecube-glow)
+}
+
+/* Tambahkan untuk platform icon */
+.platform-badge.badge-gamecube {
+  background: rgba(150, 75, 0, 0.8) !important;
+  border-color: rgba(180, 100, 0, 0.5) !important;
 }
 
 .game-card:hover .thumbnail-admin-overlay {
@@ -515,6 +541,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
               <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
               <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
               <li><a class="dropdown-item" href="#" data-platform="wii">Wii</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="gamecube">Gamecube</a></li>
               <li><a class="dropdown-item" href="#" data-platform="3ds">3DS</a></li>
               <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
               <li><a class="dropdown-item" href="#" data-platform="pc">PC</a></li>
@@ -687,6 +714,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
             <option value="android">Android</option>
             <option value="pc">PC</option>
             <option value="wii">Wii</option>
+            <option value="gamecube">Gamecube</option>
             <option value="3ds">3DS</option>
           </select>
         </div>
@@ -766,6 +794,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     const GAME3DS_API_URL = "https://script.google.com/macros/s/AKfycby6F_9WvxrFrxbLF6HVh-bVU7_TvV2uBv8x9eNZOSxwH42sUedXVhPlz4y9YitcZWuX/exec";
     const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
     const PINNEDGAME_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
+    const GAMECUBE_API_URL = "https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec";
     const TRACKING_API_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
     const ADMIN_TELEGRAM_ID = "1172835542";
@@ -1559,6 +1588,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
         'psp': 'bi-phone',
         'psvita': 'bi-phone',
         'wii': 'bi-controller',
+        'gamecube': 'bi-controller',
         '3ds': 'bi-laptop',
         'android': 'bi-phone',
         'pc': 'bi-pc'
@@ -1573,6 +1603,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
         case 'psp': return 'PSP';
         case 'psvita': return 'PS Vita';
         case 'wii': return 'Wii';
+        case 'gamecube': return 'Gamecube';
         case '3ds': return '3DS';
         case 'android': return 'Android';
         case 'pc': return 'PC';
@@ -1585,7 +1616,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
       if (!raw) return;
 
       const hash = raw.toLowerCase();
-      const allowed = new Set(['all','ps2','switch','psp','psvita','wii','3ds','android','pc']);
+      const allowed = new Set(['all','ps2','switch','psp','psvita','wii','3ds','android','pc', 'gamecube']);
       if (!allowed.has(hash)) return;
 
       currentPlatform = hash;
@@ -2254,6 +2285,7 @@ async function loadAllGames({ useCache = true } = {}) {
     { platform: 'android', name: 'Android',         url: GAMEANDROID_API_URL,  accessAction: 'accessOriginalLink' },
     { platform: 'pc',      name: 'PC',              url: PC_API_URL,           accessAction: 'accessOriginalLink' },
     { platform: 'wii',     name: 'Wii',             url: GAMEWII_API_URL,      accessAction: 'accessOriginalLink' },
+    { platform: 'gamecube', name: 'Gamecube',       url: GAMECUBE_API_URL,     accessAction: 'accessOriginalLink' },
     { platform: '3ds',     name: '3DS',             url: GAME3DS_API_URL,      accessAction: 'accessOriginalLink' }
   ];
 
@@ -2525,6 +2557,7 @@ function getPlatformOptions(selectedPlatform) {
     { value: 'android', label: 'Android' },
     { value: 'pc', label: 'PC' },
     { value: 'wii', label: 'Wii' },
+    { value: 'gamecube', label: 'Gamecube' },
     { value: '3ds', label: '3DS' }
   ];
   
@@ -3548,6 +3581,9 @@ function renderGameList() {
           case 'wii':
               apiUrl = GAMEWII_API_URL;
               break;
+          case 'gamecube':
+            apiUrl = GAMECUBE_API_URL;
+            break;
           case '3ds':
               apiUrl = GAME3DS_API_URL;
               break;
@@ -3694,6 +3730,16 @@ function renderGameList() {
                 key: currentUser.key
             };
             break;
+        case 'gamecube': 
+          apiUrl = GAMECUBE_API_URL;
+          payload = {
+            action: 'updateThumbnail',
+            download_id: downloadId,
+            thumbnail_url: '',
+            telegram_id: currentUser.wa_number,
+            key: currentUser.key
+          };
+          break;
         case '3ds':
             apiUrl = GAME3DS_API_URL;
             payload = {
