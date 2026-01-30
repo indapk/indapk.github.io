@@ -1,8 +1,8 @@
 // sw.js - Service Worker untuk INDapk Game Library
-const CACHE_NAME = 'indapk-game-cache-v4';
-const DYNAMIC_CACHE_NAME = 'indapk-dynamic-cache-v1';
+const CACHE_NAME = 'indapk-game-cache-v5'; // Naikkan versi
+const DYNAMIC_CACHE_NAME = 'indapk-dynamic-cache-v2';
 const NOTIFICATION_ICON = '/icons/icon-192x192.png';
-const VERSION = '4.0.0';
+const VERSION = '5.0.0';
 
 // API URLs untuk caching
 const API_URLS = [
@@ -44,16 +44,26 @@ self.addEventListener('install', (event) => {
   
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
+      .then(async (cache) => {
         console.log('[SW] Cache opened, adding static assets');
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .then(() => {
+        
+        // Cache assets satu per satu dengan error handling
+        for (const asset of STATIC_ASSETS) {
+          try {
+            await cache.add(asset);
+            console.log(`[SW] Cached: ${asset}`);
+          } catch (error) {
+            console.warn(`[SW] Failed to cache ${asset}:`, error);
+          }
+        }
+        
         console.log('[SW] All assets cached');
         return self.skipWaiting();
       })
       .catch((error) => {
         console.error('[SW] Cache installation failed:', error);
+        // Tetap skip waiting meski ada error
+        return self.skipWaiting();
       })
   );
 });
@@ -62,7 +72,6 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   console.log(`[SW ${VERSION}] Activating Service Worker...`);
   
-  // Hapus cache lama
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -80,6 +89,7 @@ self.addEventListener('activate', (event) => {
     })
     .then(() => {
       console.log('[SW] Service Worker activated');
+      
       // Kirim notifikasi ke semua clients bahwa SW aktif
       return self.clients.matchAll().then((clients) => {
         clients.forEach((client) => {
@@ -90,6 +100,9 @@ self.addEventListener('activate', (event) => {
           });
         });
       });
+    })
+    .catch((error) => {
+      console.error('[SW] Activation error:', error);
     })
   );
 });
@@ -134,16 +147,16 @@ self.addEventListener('fetch', (event) => {
 
 // Cache First untuk static assets
 async function cacheFirstStrategy(event) {
-  const cache = await caches.open(CACHE_NAME);
-  const cachedResponse = await cache.match(event.request);
-  
-  if (cachedResponse) {
-    console.log('[SW] Serving from cache:', event.request.url);
-    return cachedResponse;
-  }
-  
-  // Jika tidak ada di cache, fetch dari network
   try {
+    const cache = await caches.open(CACHE_NAME);
+    const cachedResponse = await cache.match(event.request);
+    
+    if (cachedResponse) {
+      console.log('[SW] Serving from cache:', event.request.url);
+      return cachedResponse;
+    }
+    
+    // Jika tidak ada di cache, fetch dari network
     const networkResponse = await fetch(event.request);
     
     // Clone response untuk cache
@@ -152,12 +165,17 @@ async function cacheFirstStrategy(event) {
     // Cache response untuk penggunaan selanjutnya
     event.waitUntil(
       cache.put(event.request, responseToCache)
+        .catch(error => {
+          console.warn('[SW] Failed to cache response:', error);
+        })
     );
     
     return networkResponse;
   } catch (error) {
     console.error('[SW] Fetch failed:', error);
+    
     // Fallback ke halaman offline jika tersedia
+    const cache = await caches.open(CACHE_NAME);
     const offlineResponse = await cache.match('/offline.html');
     if (offlineResponse) {
       return offlineResponse;
@@ -173,9 +191,9 @@ async function cacheFirstStrategy(event) {
 
 // Network First untuk halaman HTML
 async function networkFirstStrategy(event) {
-  const cache = await caches.open(DYNAMIC_CACHE_NAME);
-  
   try {
+    const cache = await caches.open(DYNAMIC_CACHE_NAME);
+    
     // Coba fetch dari network dulu
     const networkResponse = await fetch(event.request);
     
@@ -185,6 +203,9 @@ async function networkFirstStrategy(event) {
     // Update cache
     event.waitUntil(
       cache.put(event.request, responseToCache)
+        .catch(error => {
+          console.warn('[SW] Failed to cache network response:', error);
+        })
     );
     
     return networkResponse;
@@ -192,14 +213,15 @@ async function networkFirstStrategy(event) {
     console.log('[SW] Network failed, trying cache:', error);
     
     // Coba dari cache
+    const cache = await caches.open(DYNAMIC_CACHE_NAME);
     const cachedResponse = await cache.match(event.request);
     if (cachedResponse) {
       return cachedResponse;
     }
     
     // Fallback ke halaman offline
-    const offlinePage = await caches.open(CACHE_NAME);
-    const offlineResponse = await offlinePage.match('/offline.html');
+    const offlineCache = await caches.open(CACHE_NAME);
+    const offlineResponse = await offlineCache.match('/offline.html');
     if (offlineResponse) {
       return offlineResponse;
     }
@@ -217,29 +239,31 @@ async function networkFirstStrategy(event) {
 
 // Cache First dengan Network Fallback
 async function cacheFirstWithNetworkFallback(event) {
-  const cache = await caches.open(DYNAMIC_CACHE_NAME);
-  const cachedResponse = await cache.match(event.request);
-  
-  if (cachedResponse) {
-    // Background refresh
-    event.waitUntil(
-      (async () => {
-        try {
-          const networkResponse = await fetch(event.request);
-          const responseToCache = networkResponse.clone();
-          await cache.put(event.request, responseToCache);
-        } catch (error) {
-          // Gagal refresh, tetap gunakan cache
-          console.log('[SW] Background refresh failed:', error);
-        }
-      })()
-    );
-    
-    return cachedResponse;
-  }
-  
-  // Jika tidak ada di cache, fetch dari network
   try {
+    const cache = await caches.open(DYNAMIC_CACHE_NAME);
+    const cachedResponse = await cache.match(event.request);
+    
+    if (cachedResponse) {
+      // Background refresh
+      event.waitUntil(
+        (async () => {
+          try {
+            const networkResponse = await fetch(event.request);
+            if (networkResponse.ok) {
+              const responseToCache = networkResponse.clone();
+              await cache.put(event.request, responseToCache);
+            }
+          } catch (error) {
+            // Gagal refresh, tetap gunakan cache
+            console.log('[SW] Background refresh failed:', error);
+          }
+        })()
+      );
+      
+      return cachedResponse;
+    }
+    
+    // Jika tidak ada di cache, fetch dari network
     const networkResponse = await fetch(event.request);
     
     // Cache response untuk penggunaan selanjutnya
@@ -247,12 +271,17 @@ async function cacheFirstWithNetworkFallback(event) {
       const responseToCache = networkResponse.clone();
       event.waitUntil(
         cache.put(event.request, responseToCache)
+          .catch(error => {
+            console.warn('[SW] Failed to cache response:', error);
+          })
       );
     }
     
     return networkResponse;
   } catch (error) {
     console.error('[SW] Fetch failed:', error);
+    
+    // Return error response
     return new Response('Network error', {
       status: 408,
       headers: { 'Content-Type': 'text/plain' }
@@ -262,22 +291,23 @@ async function cacheFirstWithNetworkFallback(event) {
 
 // Cache Then Network untuk API calls
 async function cacheThenNetworkStrategy(event) {
-  const cache = await caches.open(DYNAMIC_CACHE_NAME);
-  const cachedResponse = await cache.match(event.request);
-  
-  // Selalu return cache terlebih dahulu (jika ada)
-  if (cachedResponse) {
-    // Fetch baru di background untuk update
-    event.waitUntil(
-      (async () => {
-        try {
-          const networkResponse = await fetch(event.request);
-          if (networkResponse.ok) {
-            const responseToCache = networkResponse.clone();
-            await cache.put(event.request, responseToCache);
-            
-            // Kirim notifikasi ke clients bahwa ada data baru
-            self.clients.matchAll().then((clients) => {
+  try {
+    const cache = await caches.open(DYNAMIC_CACHE_NAME);
+    const cachedResponse = await cache.match(event.request);
+    
+    // Selalu return cache terlebih dahulu (jika ada)
+    if (cachedResponse) {
+      // Fetch baru di background untuk update
+      event.waitUntil(
+        (async () => {
+          try {
+            const networkResponse = await fetch(event.request);
+            if (networkResponse.ok) {
+              const responseToCache = networkResponse.clone();
+              await cache.put(event.request, responseToCache);
+              
+              // Kirim notifikasi ke clients bahwa ada data baru
+              const clients = await self.clients.matchAll();
               clients.forEach((client) => {
                 client.postMessage({
                   type: 'DATA_UPDATED',
@@ -285,19 +315,17 @@ async function cacheThenNetworkStrategy(event) {
                   timestamp: Date.now()
                 });
               });
-            });
+            }
+          } catch (error) {
+            console.log('[SW] Background API fetch failed:', error);
           }
-        } catch (error) {
-          console.log('[SW] Background API fetch failed:', error);
-        }
-      })()
-    );
+        })()
+      );
+      
+      return cachedResponse;
+    }
     
-    return cachedResponse;
-  }
-  
-  // Jika tidak ada cache, fetch dari network
-  try {
+    // Jika tidak ada cache, fetch dari network
     const networkResponse = await fetch(event.request);
     
     if (networkResponse.ok) {
@@ -308,6 +336,7 @@ async function cacheThenNetworkStrategy(event) {
     return networkResponse;
   } catch (error) {
     console.error('[SW] API fetch failed:', error);
+    
     return new Response(JSON.stringify({ 
       status: 'error', 
       message: 'Failed to fetch data' 
@@ -318,9 +347,15 @@ async function cacheThenNetworkStrategy(event) {
   }
 }
 
-// ===== PUSH NOTIFICATIONS =====
+// ===== PUSH NOTIFICATIONS (Dengan Error Handling) =====
 self.addEventListener('push', (event) => {
   console.log('[SW] Push notification received');
+  
+  // Cek apakah notifikasi diizinkan
+  if (!self.Notification || self.Notification.permission !== 'granted') {
+    console.log('[SW] Push notification ignored - no permission');
+    return;
+  }
   
   let notificationData = {
     title: 'INDapk Game Library',
@@ -340,7 +375,11 @@ self.addEventListener('push', (event) => {
       notificationData = { ...notificationData, ...data };
     } catch (error) {
       console.log('[SW] Push data is not JSON, using text');
-      notificationData.body = event.data.text() || notificationData.body;
+      try {
+        notificationData.body = event.data.text() || notificationData.body;
+      } catch (e) {
+        console.log('[SW] Cannot read push data');
+      }
     }
   }
   
@@ -369,7 +408,11 @@ self.addEventListener('push', (event) => {
     }
   );
   
-  event.waitUntil(showNotification);
+  event.waitUntil(
+    showNotification.catch(error => {
+      console.error('[SW] Failed to show notification:', error);
+    })
+  );
 });
 
 // ===== NOTIFICATION CLICK =====
@@ -381,31 +424,41 @@ self.addEventListener('notificationclick', (event) => {
   const urlToOpen = event.notification.data?.url || '/';
   
   const openClient = async () => {
-    const clients = await self.clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    });
-    
-    // Cari tab/window yang sudah terbuka dengan URL yang sama
-    for (const client of clients) {
-      if (client.url.includes(urlToOpen) && 'focus' in client) {
-        await client.focus();
-        return;
+    try {
+      const clients = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+      });
+      
+      // Cari tab/window yang sudah terbuka dengan URL yang sama
+      for (const client of clients) {
+        if (client.url.includes(urlToOpen) && 'focus' in client) {
+          await client.focus();
+          return;
+        }
       }
-    }
-    
-    // Jika tidak ada, buka tab/window baru
-    if (self.clients.openWindow) {
-      await self.clients.openWindow(urlToOpen);
+      
+      // Jika tidak ada, buka tab/window baru
+      if (self.clients.openWindow) {
+        await self.clients.openWindow(urlToOpen);
+      }
+    } catch (error) {
+      console.error('[SW] Error opening window:', error);
     }
   };
   
   event.waitUntil(openClient());
 });
 
-// ===== BACKGROUND SYNC =====
+// ===== BACKGROUND SYNC (Dengan Compatibility Check) =====
 self.addEventListener('sync', (event) => {
   console.log('[SW] Background sync event:', event.tag);
+  
+  // Cek apakah background sync didukung
+  if (!('sync' in self.registration)) {
+    console.log('[SW] Background sync not supported');
+    return;
+  }
   
   if (event.tag === 'sync-games') {
     event.waitUntil(syncGamesData());
@@ -420,9 +473,9 @@ self.addEventListener('sync', (event) => {
 async function syncGamesData() {
   console.log('[SW] Syncing games data...');
   
-  const cache = await caches.open(DYNAMIC_CACHE_NAME);
-  
   try {
+    const cache = await caches.open(DYNAMIC_CACHE_NAME);
+    
     // Sync semua API
     for (const apiUrl of API_URLS) {
       try {
@@ -445,13 +498,16 @@ async function syncGamesData() {
     }
     
     // Beritahu clients bahwa sync selesai
-    self.clients.matchAll().then((clients) => {
-      clients.forEach((client) => {
+    const clients = await self.clients.matchAll();
+    clients.forEach((client) => {
+      try {
         client.postMessage({
           type: 'SYNC_COMPLETED',
           timestamp: Date.now()
         });
-      });
+      } catch (error) {
+        console.error('[SW] Failed to post sync message:', error);
+      }
     });
     
   } catch (error) {
@@ -465,9 +521,15 @@ async function syncNotificationSettings() {
   // Implementasi sync settings jika diperlukan
 }
 
-// ===== PERIODIC SYNC =====
+// ===== PERIODIC SYNC (Dengan Compatibility Check) =====
 self.addEventListener('periodicsync', (event) => {
   console.log('[SW] Periodic sync event:', event.tag);
+  
+  // Cek apakah periodic sync didukung
+  if (!('periodicSync' in self.registration)) {
+    console.log('[SW] Periodic sync not supported');
+    return;
+  }
   
   if (event.tag === 'periodic-games-sync') {
     event.waitUntil(syncGamesData());
@@ -476,12 +538,14 @@ self.addEventListener('periodicsync', (event) => {
 
 // ===== MESSAGE HANDLING =====
 self.addEventListener('message', (event) => {
+  if (!event.data || !event.data.type) return;
+  
   const { type, data } = event.data;
   console.log(`[SW] Message received: ${type}`, data);
   
   switch (type) {
     case 'CACHE_GAMES':
-      cacheGamesData(data);
+      cacheGamesData(data, event);
       break;
       
     case 'GET_CACHED_GAMES':
@@ -489,7 +553,7 @@ self.addEventListener('message', (event) => {
       break;
       
     case 'CLEAR_CACHE':
-      clearCache();
+      clearCache(event);
       break;
       
     case 'UPDATE_SETTINGS':
@@ -511,11 +575,19 @@ self.addEventListener('message', (event) => {
     case 'TEST_NOTIFICATION':
       sendTestNotification(data);
       break;
+      
+    case 'LOAD_NOTIFIED_GAMES':
+      loadNotifiedGames(event);
+      break;
+      
+    case 'CLEAR_NOTIFICATIONS':
+      clearNotifications();
+      break;
   }
 });
 
 // Cache games data dari client
-async function cacheGamesData(gamesData) {
+async function cacheGamesData(gamesData, event) {
   try {
     const cache = await caches.open(DYNAMIC_CACHE_NAME);
     const response = new Response(JSON.stringify({
@@ -586,7 +658,7 @@ async function getCachedGames(event) {
 }
 
 // Clear cache
-async function clearCache() {
+async function clearCache(event) {
   try {
     const cacheNames = await caches.keys();
     await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
@@ -594,16 +666,26 @@ async function clearCache() {
     
     // Re-cache static assets
     const cache = await caches.open(CACHE_NAME);
-    await cache.addAll(STATIC_ASSETS);
+    
+    for (const asset of STATIC_ASSETS) {
+      try {
+        await cache.add(asset);
+      } catch (error) {
+        console.warn(`[SW] Failed to recache ${asset}:`, error);
+      }
+    }
     
     // Beritahu clients
-    self.clients.matchAll().then((clients) => {
-      clients.forEach((client) => {
+    const clients = await self.clients.matchAll();
+    clients.forEach((client) => {
+      try {
         client.postMessage({
           type: 'CACHE_CLEARED',
           timestamp: Date.now()
         });
-      });
+      } catch (error) {
+        console.error('[SW] Failed to post cache cleared message:', error);
+      }
     });
   } catch (error) {
     console.error('[SW] Error clearing cache:', error);
@@ -638,26 +720,35 @@ async function checkForUpdates() {
     
     for (const asset of STATIC_ASSETS) {
       try {
-        const networkResponse = await fetch(asset, { cache: 'reload' });
+        const networkResponse = await fetch(asset, { 
+          cache: 'reload',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         
         if (networkResponse.status === 200) {
           const cachedResponse = await cache.match(asset);
           
           if (!cachedResponse || 
-              networkResponse.headers.get('etag') !== cachedResponse.headers.get('etag')) {
+              networkResponse.headers.get('etag') !== cachedResponse.headers.get('etag') ||
+              networkResponse.headers.get('last-modified') !== cachedResponse.headers.get('last-modified')) {
             
             console.log(`[SW] Update found for: ${asset}`);
             await cache.put(asset, networkResponse.clone());
             
             // Beritahu client ada update
-            self.clients.matchAll().then((clients) => {
-              clients.forEach((client) => {
+            const clients = await self.clients.matchAll();
+            clients.forEach((client) => {
+              try {
                 client.postMessage({
                   type: 'ASSET_UPDATED',
                   asset: asset,
                   timestamp: Date.now()
                 });
-              });
+              } catch (error) {
+                console.error('[SW] Failed to post asset update message:', error);
+              }
             });
           }
         }
@@ -679,22 +770,30 @@ async function registerBackgroundSync(tag) {
     const registration = await self.registration;
     
     if ('periodicSync' in registration) {
-      const status = await registration.periodicSync.getTags();
-      console.log('[SW] Current periodic sync tags:', status);
-      
-      if (!status.includes(tag)) {
-        await registration.periodicSync.register(tag, {
-          minInterval: 24 * 60 * 60 * 1000 // 24 jam
-        });
-        console.log(`[SW] Periodic sync registered: ${tag}`);
+      try {
+        const status = await registration.periodicSync.getTags();
+        console.log('[SW] Current periodic sync tags:', status);
+        
+        if (!status.includes(tag)) {
+          await registration.periodicSync.register(tag, {
+            minInterval: 24 * 60 * 60 * 1000 // 24 jam
+          });
+          console.log(`[SW] Periodic sync registered: ${tag}`);
+        }
+      } catch (periodicError) {
+        console.log('[SW] Periodic sync not available:', periodicError);
       }
     } else {
       console.log('[SW] Periodic sync not supported');
     }
     
     if ('sync' in registration) {
-      await registration.sync.register(tag);
-      console.log(`[SW] Background sync registered: ${tag}`);
+      try {
+        await registration.sync.register(tag);
+        console.log(`[SW] Background sync registered: ${tag}`);
+      } catch (syncError) {
+        console.log('[SW] Background sync not available:', syncError);
+      }
     } else {
       console.log('[SW] Background sync not supported');
     }
@@ -705,26 +804,77 @@ async function registerBackgroundSync(tag) {
 
 // Send test notification
 async function sendTestNotification(data) {
-  const notificationData = {
-    title: data.title || 'Test Notification',
-    body: data.body || 'This is a test notification from INDapk',
-    icon: NOTIFICATION_ICON,
-    tag: 'test-notification',
-    data: {
-      url: '/',
-      test: true
+  try {
+    const notificationData = {
+      title: data.title || 'Test Notification',
+      body: data.body || 'This is a test notification from INDapk',
+      icon: NOTIFICATION_ICON,
+      tag: 'test-notification',
+      data: {
+        url: '/',
+        test: true
+      }
+    };
+    
+    await self.registration.showNotification(
+      notificationData.title,
+      {
+        body: notificationData.body,
+        icon: notificationData.icon,
+        tag: notificationData.tag,
+        data: notificationData.data
+      }
+    );
+  } catch (error) {
+    console.error('[SW] Failed to send test notification:', error);
+  }
+}
+
+// Load notified games
+async function loadNotifiedGames(event) {
+  try {
+    const cache = await caches.open(DYNAMIC_CACHE_NAME);
+    const response = await cache.match('/notified-games');
+    
+    if (response) {
+      const data = await response.json();
+      
+      if (event.ports && event.ports[0]) {
+        event.ports[0].postMessage({
+          status: 'success',
+          data: data.games || []
+        });
+      }
+    } else {
+      if (event.ports && event.ports[0]) {
+        event.ports[0].postMessage({
+          status: 'empty',
+          games: []
+        });
+      }
     }
-  };
-  
-  await self.registration.showNotification(
-    notificationData.title,
-    {
-      body: notificationData.body,
-      icon: notificationData.icon,
-      tag: notificationData.tag,
-      data: notificationData.data
+  } catch (error) {
+    console.error('[SW] Error loading notified games:', error);
+    
+    if (event.ports && event.ports[0]) {
+      event.ports[0].postMessage({
+        status: 'error',
+        error: error.message,
+        games: []
+      });
     }
-  );
+  }
+}
+
+// Clear notifications
+async function clearNotifications() {
+  try {
+    const cache = await caches.open(DYNAMIC_CACHE_NAME);
+    await cache.delete('/notified-games');
+    console.log('[SW] Notifications cleared');
+  } catch (error) {
+    console.error('[SW] Error clearing notifications:', error);
+  }
 }
 
 // ===== HELPER FUNCTIONS =====
@@ -781,6 +931,104 @@ async function precacheApiData() {
   }
 }
 
+// ===== OFFLINE SUPPORT =====
+// Create offline page jika tidak ada
+async function createOfflinePage() {
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const offlinePage = `
+      <!DOCTYPE html>
+      <html lang="id">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>INDapk - Offline</title>
+        <style>
+          body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a, #1a1f2e);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+          }
+          .container {
+            max-width: 500px;
+          }
+          h1 {
+            color: #00f0ff;
+            margin-bottom: 20px;
+          }
+          p {
+            opacity: 0.8;
+            margin-bottom: 30px;
+          }
+          .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ff4757;
+          }
+          button {
+            background: linear-gradient(135deg, #00f0ff, #b537f2);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+          }
+          button:hover {
+            transform: translateY(-2px);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="offline-icon">📶</div>
+          <h1>Anda sedang offline</h1>
+          <p>Koneksi internet Anda terputus. Silakan periksa koneksi dan coba lagi.</p>
+          <button onclick="location.reload()">Coba Lagi</button>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    const response = new Response(offlinePage, {
+      headers: { 
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'max-age=86400'
+      }
+    });
+    
+    await cache.put('/offline.html', response);
+    console.log('[SW] Offline page created');
+  } catch (error) {
+    console.error('[SW] Error creating offline page:', error);
+  }
+}
+
+// Cek dan buat offline page saat SW aktif
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      try {
+        const cache = await caches.open(CACHE_NAME);
+        const offlinePage = await cache.match('/offline.html');
+        
+        if (!offlinePage) {
+          await createOfflinePage();
+        }
+      } catch (error) {
+        console.error('[SW] Error checking offline page:', error);
+      }
+    })()
+  );
+});
+
 // ===== ERROR HANDLING =====
 self.addEventListener('error', (event) => {
   console.error('[SW] Error:', event.error);
@@ -790,90 +1038,31 @@ self.addEventListener('unhandledrejection', (event) => {
   console.error('[SW] Unhandled rejection:', event.reason);
 });
 
-// ===== OFFLINE SUPPORT =====
-// Create offline page jika tidak ada
-async function createOfflinePage() {
-  const cache = await caches.open(CACHE_NAME);
-  const offlinePage = `
-    <!DOCTYPE html>
-    <html lang="id">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>INDapk - Offline</title>
-      <style>
-        body {
-          font-family: system-ui, -apple-system, sans-serif;
-          background: linear-gradient(135deg, #0a0e1a, #1a1f2e);
-          color: white;
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          padding: 20px;
-        }
-        .container {
-          max-width: 500px;
-        }
-        h1 {
-          color: #00f0ff;
-          margin-bottom: 20px;
-        }
-        p {
-          opacity: 0.8;
-          margin-bottom: 30px;
-        }
-        .offline-icon {
-          font-size: 4rem;
-          margin-bottom: 20px;
-          color: #ff4757;
-        }
-        button {
-          background: linear-gradient(135deg, #00f0ff, #b537f2);
-          border: none;
-          color: white;
-          padding: 12px 24px;
-          border-radius: 25px;
-          font-weight: bold;
-          cursor: pointer;
-          transition: transform 0.3s;
-        }
-        button:hover {
-          transform: translateY(-2px);
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="offline-icon">📶</div>
-        <h1>Anda sedang offline</h1>
-        <p>Koneksi internet Anda terputus. Silakan periksa koneksi dan coba lagi.</p>
-        <button onclick="location.reload()">Coba Lagi</button>
-      </div>
-    </body>
-    </html>
-  `;
-  
-  const response = new Response(offlinePage, {
-    headers: { 'Content-Type': 'text/html; charset=utf-8' }
-  });
-  
-  await cache.put('/offline.html', response);
-}
-
-// Cek dan buat offline page saat SW aktif
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const offlinePage = await cache.match('/offline.html');
-      
-      if (!offlinePage) {
-        await createOfflinePage();
-      }
-    })()
-  );
-});
-
+// ===== INITIALIZATION =====
 console.log(`[SW ${VERSION}] Service Worker loaded successfully`);
+
+// Self-check saat load
+(async function selfCheck() {
+  try {
+    console.log('[SW] Performing self-check...');
+    
+    // Cek cache storage availability
+    if (!caches) {
+      console.warn('[SW] Cache API not available');
+    }
+    
+    // Cek notification permission
+    if (!self.Notification) {
+      console.warn('[SW] Notification API not available');
+    }
+    
+    // Cek background sync
+    if (!('sync' in self.registration)) {
+      console.warn('[SW] Background Sync API not available');
+    }
+    
+    console.log('[SW] Self-check completed');
+  } catch (error) {
+    console.error('[SW] Self-check failed:', error);
+  }
+})();
