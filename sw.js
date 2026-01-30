@@ -3,6 +3,8 @@ const CACHE_NAME = 'indapk-game-cache-v5'; // Naikkan versi
 const DYNAMIC_CACHE_NAME = 'indapk-dynamic-cache-v2';
 const NOTIFICATION_ICON = '/icons/icon-192x192.png';
 const VERSION = '5.0.0';
+const BACKGROUND_SYNC_TAG = 'check-new-games';
+const PUSH_NOTIFICATION_DATA = 'indapk-game-updates';
 
 // API URLs untuk caching
 const API_URLS = [
@@ -349,67 +351,84 @@ async function cacheThenNetworkStrategy(event) {
 
 // ===== PUSH NOTIFICATIONS (Dengan Error Handling) =====
 self.addEventListener('push', (event) => {
-  console.log('[SW] Push notification received');
+  console.log('[SW] Push notification received in background');
   
-  // Cek apakah notifikasi diizinkan
+  // Handle push bahkan jika app tidak terbuka
   if (!self.Notification || self.Notification.permission !== 'granted') {
-    console.log('[SW] Push notification ignored - no permission');
+    console.log('[SW] Push received but notifications not granted');
     return;
   }
   
-  let notificationData = {
-    title: 'INDapk Game Library',
-    body: 'Game baru tersedia!',
-    icon: NOTIFICATION_ICON,
-    badge: NOTIFICATION_ICON,
-    tag: 'indapk-game-notification',
-    data: {
-      url: '/',
-      timestamp: Date.now()
-    }
-  };
+  let notificationData;
   
   if (event.data) {
     try {
-      const data = event.data.json();
-      notificationData = { ...notificationData, ...data };
+      notificationData = event.data.json();
+      console.log('[SW] Push data parsed:', notificationData);
     } catch (error) {
-      console.log('[SW] Push data is not JSON, using text');
-      try {
-        notificationData.body = event.data.text() || notificationData.body;
-      } catch (e) {
-        console.log('[SW] Cannot read push data');
-      }
+      console.log('[SW] Push data is not JSON, using default');
+      notificationData = {
+        title: 'INDapk Game Library',
+        body: event.data.text() || 'Game baru tersedia!',
+        icon: NOTIFICATION_ICON
+      };
     }
+  } else {
+    notificationData = {
+      title: 'INDapk Game Library',
+      body: 'Game baru tersedia!',
+      icon: NOTIFICATION_ICON
+    };
   }
   
-  const showNotification = self.registration.showNotification(
-    notificationData.title,
-    {
-      body: notificationData.body,
-      icon: notificationData.icon,
-      badge: notificationData.badge,
-      tag: notificationData.tag,
-      data: notificationData.data,
-      actions: [
-        {
-          action: 'open',
-          title: 'Buka',
-          icon: '/icons/icon-72x72.png'
-        },
-        {
-          action: 'dismiss',
-          title: 'Tutup',
-          icon: '/icons/icon-72x72.png'
-        }
-      ],
-      vibrate: [200, 100, 200, 100, 200],
-      requireInteraction: false
-    }
-  );
+  // Tambahkan default values
+  notificationData = {
+    icon: NOTIFICATION_ICON,
+    badge: NOTIFICATION_ICON,
+    tag: 'indapk-game-update',
+    timestamp: Date.now(),
+    ...notificationData
+  };
   
+  // Tampilkan notifikasi
   event.waitUntil(
-    showNotification.catch(error => {
+    self.registration.showNotification(
+      notificationData.title,
+      {
+        body: notificationData.body,
+        icon: notificationData.icon,
+        badge: notificationData.badge,
+        tag: notificationData.tag,
+        data: notificationData.data || {
+          url: '/',
+          timestamp: Date.now()
+        },
+        actions: notificationData.actions || [
+          {
+            action: 'open',
+            title: 'Buka',
+            icon: '/icons/icon-72x72.png'
+          }
+        ],
+        vibrate: [200, 100, 200],
+        requireInteraction: notificationData.requireInteraction !== false
+      }
+    )
+    .then(() => {
+      console.log('[SW] Notification shown successfully');
+      
+      // Kirim pesan ke client jika ada
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'PUSH_RECEIVED',
+            data: notificationData,
+            timestamp: Date.now()
+          });
+        });
+      });
+    })
+    .catch(error => {
       console.error('[SW] Failed to show notification:', error);
     })
   );
@@ -454,18 +473,15 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener('sync', (event) => {
   console.log('[SW] Background sync event:', event.tag);
   
-  // Cek apakah background sync didukung
-  if (!('sync' in self.registration)) {
-    console.log('[SW] Background sync not supported');
-    return;
-  }
-  
-  if (event.tag === 'sync-games') {
-    event.waitUntil(syncGamesData());
-  }
-  
-  if (event.tag === 'sync-notifications') {
-    event.waitUntil(syncNotificationSettings());
+  if (event.tag === BACKGROUND_SYNC_TAG) {
+    event.waitUntil(
+      checkAndNotifyNewGames()
+        .catch(error => {
+          console.error('[SW] Background sync failed:', error);
+          // Coba lagi nanti
+          return self.registration.sync.register(BACKGROUND_SYNC_TAG);
+        })
+    );
   }
 });
 
@@ -525,17 +541,292 @@ async function syncNotificationSettings() {
 self.addEventListener('periodicsync', (event) => {
   console.log('[SW] Periodic sync event:', event.tag);
   
-  // Cek apakah periodic sync didukung
-  if (!('periodicSync' in self.registration)) {
-    console.log('[SW] Periodic sync not supported');
-    return;
-  }
-  
-  if (event.tag === 'periodic-games-sync') {
-    event.waitUntil(syncGamesData());
+  if (event.tag === BACKGROUND_SYNC_TAG) {
+    event.waitUntil(
+      checkAndNotifyNewGames()
+        .then(() => {
+          console.log('[SW] Periodic sync completed');
+        })
+        .catch(error => {
+          console.error('[SW] Periodic sync failed:', error);
+        })
+    );
   }
 });
 
+// ===== FUNGSI UTAMA UNTUK CHECK NEW GAMES =====
+async function checkAndNotifyNewGames() {
+  try {
+    console.log('[SW] Checking for new games in background...');
+    
+    // Ambil settings dari cache
+    const settings = await getNotificationSettings();
+    
+    if (!settings.enabled) {
+      console.log('[SW] Notifications disabled in settings');
+      return;
+    }
+    
+    // Ambil data terakhir yang sudah dinotifikasi
+    const lastNotified = await getLastNotifiedGames();
+    const notifiedGameIds = new Set(lastNotified);
+    
+    // Check semua platform yang diaktifkan
+    const newGamesFound = [];
+    
+    for (const platform of settings.platforms) {
+      const platformGames = await fetchPlatformGames(platform);
+      const newGames = platformGames.filter(game => {
+        const gameKey = `${game.download_id}|${platform}`;
+        return !notifiedGameIds.has(gameKey);
+      });
+      
+      newGamesFound.push(...newGames.map(game => ({
+        ...game,
+        platform
+      })));
+    }
+    
+    // Tampilkan notifikasi untuk game baru
+    if (newGamesFound.length > 0) {
+      await showBatchNotifications(newGamesFound);
+      
+      // Simpan game yang sudah dinotifikasi
+      const gameKeys = newGamesFound.map(game => 
+        `${game.download_id}|${game.platform}`
+      );
+      await saveNotifiedGames([...notifiedGameIds, ...gameKeys]);
+      
+      console.log(`[SW] ${newGamesFound.length} new games found and notified`);
+    } else {
+      console.log('[SW] No new games found');
+    }
+    
+  } catch (error) {
+    console.error('[SW] Error checking new games:', error);
+    throw error;
+  }
+}
+
+
+// ===== FUNGSI BANTUAN =====
+async function getNotificationSettings() {
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const response = await cache.match('/notification-settings');
+    
+    if (response) {
+      const data = await response.json();
+      return data.settings || {
+        enabled: false,
+        platforms: [],
+        frequency: 'all'
+      };
+    }
+  } catch (error) {
+    console.error('[SW] Error getting settings:', error);
+  }
+  
+  return {
+    enabled: false,
+    platforms: [],
+    frequency: 'all'
+  };
+}
+
+async function getLastNotifiedGames() {
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const response = await cache.match('/last-notified-games');
+    
+    if (response) {
+      const data = await response.json();
+      return data.gameIds || [];
+    }
+  } catch (error) {
+    console.error('[SW] Error getting notified games:', error);
+  }
+  
+  return [];
+}
+
+async function saveNotifiedGames(gameIds) {
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const response = new Response(JSON.stringify({
+      gameIds: Array.from(gameIds),
+      timestamp: Date.now()
+    }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    await cache.put('/last-notified-games', response);
+  } catch (error) {
+    console.error('[SW] Error saving notified games:', error);
+  }
+}
+
+async function fetchPlatformGames(platform) {
+  const platformUrls = {
+    'ps2': "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec",
+    'switch': "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec",
+    'psp': "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec",
+    'android': "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec",
+    'psvita': "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec",
+    'wii': "https://script.google.com/macros/s/AKfycbz8uhfQtYxyUmZSVloZlY0UDxkQayeYAemS6zDXS4zDKKJ-DYuq16pqFJLkNCYXg18a/exec",
+    'gamecube': "https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec",
+    '3ds': "https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec",
+    'pc': "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec"
+  };
+  
+  const url = platformUrls[platform];
+  if (!url) return [];
+  
+  try {
+    const cache = await caches.open(DYNAMIC_CACHE_NAME);
+    const cacheKey = `${url}-games`;
+    
+    // Coba dari cache dulu
+    const cached = await cache.match(cacheKey);
+    if (cached) {
+      const data = await cached.json();
+      console.log(`[SW] Using cached games for ${platform}`);
+      return data.data || [];
+    }
+    
+    // Fetch dari network
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'action=getAllGames'
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      const games = result.data || [];
+      
+      // Cache hasilnya
+      const cacheResponse = new Response(JSON.stringify({
+        data: games,
+        timestamp: Date.now()
+      }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      await cache.put(cacheKey, cacheResponse);
+      
+      return games;
+    }
+  } catch (error) {
+    console.error(`[SW] Error fetching ${platform} games:`, error);
+  }
+  
+  return [];
+}
+
+async function showBatchNotifications(games) {
+  if (!games || games.length === 0) return;
+  
+  // Untuk multiple games, tampilkan summary notification
+  if (games.length === 1) {
+    const game = games[0];
+    await showSingleNotification(game);
+  } else {
+    await showSummaryNotification(games);
+  }
+}
+
+async function showSingleNotification(game) {
+  const platformName = getPlatformLabel(game.platform);
+  const gameName = game.nama_game || game.ori_name || 'Unknown Game';
+  const thumbnail = game.thumbnail_url || NOTIFICATION_ICON;
+  
+  const notificationOptions = {
+    body: `${platformName} • ${game.category || ''}`,
+    icon: thumbnail,
+    badge: NOTIFICATION_ICON,
+    tag: `game-${game.download_id}-${game.platform}`,
+    data: {
+      url: `/download.html?game=${game.download_id}&platform=${game.platform}`,
+      gameId: game.download_id,
+      platform: game.platform,
+      timestamp: Date.now()
+    },
+    actions: [
+      {
+        action: 'open',
+        title: 'Buka Game',
+        icon: '/icons/icon-72x72.png'
+      }
+    ],
+    vibrate: [200, 100, 200],
+    requireInteraction: true
+  };
+  
+  await self.registration.showNotification(
+    `🎮 ${gameName}`,
+    notificationOptions
+  );
+}
+
+async function showSummaryNotification(games) {
+  const platformCounts = {};
+  games.forEach(game => {
+    platformCounts[game.platform] = (platformCounts[game.platform] || 0) + 1;
+  });
+  
+  const platforms = Object.entries(platformCounts)
+    .map(([platform, count]) => `${getPlatformLabel(platform)}: ${count}`)
+    .join(', ');
+  
+  const notificationOptions = {
+    body: `Game baru tersedia dari: ${platforms}`,
+    icon: NOTIFICATION_ICON,
+    badge: NOTIFICATION_ICON,
+    tag: 'batch-game-update',
+    data: {
+      url: '/',
+      games: games.map(game => ({
+        id: game.download_id,
+        platform: game.platform,
+        name: game.nama_game || game.ori_name
+      })),
+      timestamp: Date.now()
+    },
+    actions: [
+      {
+        action: 'open',
+        title: 'Lihat Semua',
+        icon: '/icons/icon-72x72.png'
+      }
+    ],
+    vibrate: [200, 100, 200, 100, 200],
+    requireInteraction: false
+  };
+  
+  await self.registration.showNotification(
+    `🎮 ${games.length} Game Baru Tersedia!`,
+    notificationOptions
+  );
+}
+
+function getPlatformLabel(platform) {
+  const labels = {
+    'ps2': 'PlayStation 2',
+    'switch': 'Nintendo Switch',
+    'psp': 'PSP',
+    'psvita': 'PS Vita',
+    'wii': 'Wii',
+    'gamecube': 'Gamecube',
+    '3ds': '3DS',
+    'android': 'Android',
+    'pc': 'PC'
+  };
+  
+  return labels[platform] || platform;
+}
 // ===== MESSAGE HANDLING =====
 self.addEventListener('message', (event) => {
   if (!event.data || !event.data.type) return;
