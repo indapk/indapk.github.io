@@ -1098,6 +1098,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     let deferredPrompt = null;
     let PINNED_GAMES_RULES = [];
     let currentPinSlot = null;
+    let backgroundCheckInterval = null;
 
 // ====== NOTIFICATION SYSTEM ======
 
@@ -1196,46 +1197,56 @@ async function checkNotificationPermission() {
 // Enable notifications
 async function enableNotifications() {
   try {
-    // Check if checkbox "dont show again" is checked
-    const dontShowAgain = document.getElementById('dontShowAgain').checked;
-    if (dontShowAgain) {
-      localStorage.setItem('notification_dont_show_again', 'true');
-    }
-    
-    // Request permission
+    // 1. Request permission
     const permission = await Notification.requestPermission();
     
-    if (permission === 'granted') {
-      // Register service worker
-      await setupServiceWorker();
-      
-      // Enable notifications
-      notificationSettings.enabled = true;
-      notificationSettings.lastCheck = Date.now();
-      await saveNotificationSettings();
-      
-      // Start checking for new games
-      startNotificationChecker();
-      
-      // Close modal
-      const modal = bootstrap.Modal.getInstance(document.getElementById('notificationPermissionModal'));
-      if (modal) modal.hide();
-      
-      // Show success message
-      showNotificationMessage('✅ Notifikasi berhasil diaktifkan!', 'success');
-      
-      // Update UI
-      updateNotificationUI();
-      
-      // Check for new games immediately
-      await checkForNewGames();
-      
-    } else {
+    if (permission !== 'granted') {
       showNotificationMessage('❌ Izin notifikasi ditolak', 'danger');
+      return;
     }
+    
+    // 2. Setup service worker
+    const registration = await setupServiceWorker();
+    if (!registration) {
+      throw new Error('Gagal mendaftarkan service worker');
+    }
+    
+    // 3. Update settings
+    notificationSettings.enabled = true;
+    notificationSettings.lastCheck = Date.now();
+    
+    // Simpan settings ke localStorage
+    localStorage.setItem('indapk_notification_settings', JSON.stringify(notificationSettings));
+    
+    // 4. Simpan settings ke service worker
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'UPDATE_SETTINGS',
+        data: notificationSettings
+      });
+    }
+    
+    // 5. Register background sync
+    await registerBackgroundSyncProperly();
+    
+    // 6. Tampilkan pesan sukses
+    showNotificationMessage('✅ Notifikasi berhasil diaktifkan!', 'success');
+    
+    // 7. Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('notificationPermissionModal'));
+    if (modal) modal.hide();
+    
+    // 8. Update UI
+    updateNotificationUI();
+    
+    // 9. Check untuk game baru
+    setTimeout(async () => {
+      await checkForNewGames();
+    }, 2000);
+    
   } catch (error) {
     console.error('Error enabling notifications:', error);
-    showNotificationMessage('❌ Gagal mengaktifkan notifikasi', 'danger');
+    showNotificationMessage('❌ Gagal mengaktifkan notifikasi: ' + error.message, 'danger');
   }
 }
 
@@ -1262,45 +1273,94 @@ async function disableNotifications() {
 }
 
 // Setup service worker
+// Fungsi baru untuk register background sync dengan benar
+async function registerBackgroundSyncProperly() {
+  try {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      const registration = await navigator.serviceWorker.ready;
+      
+      // 1. Coba periodic sync
+      if ('periodicSync' in registration) {
+        try {
+          const status = await registration.periodicSync.getTags();
+          if (!status.includes('check-new-games')) {
+            const permission = await registration.periodicSync.requestPermission();
+            if (permission === 'granted') {
+              await registration.periodicSync.register('check-new-games', {
+                minInterval: 6 * 60 * 60 * 1000, // 6 jam minimal
+              });
+              console.log('✅ Periodic sync registered');
+            }
+          }
+        } catch (periodicError) {
+          console.log('Periodic sync not available:', periodicError);
+        }
+      }
+      
+      // 2. Register background sync
+      if ('sync' in registration) {
+        try {
+          await registration.sync.register('check-new-games');
+          console.log('✅ Background sync registered');
+        } catch (syncError) {
+          console.log('Background sync error:', syncError);
+        }
+      }
+      
+      // 3. Kirim settings ke service worker
+      navigator.serviceWorker.controller.postMessage({
+        type: 'UPDATE_SETTINGS',
+        data: notificationSettings
+      });
+    }
+  } catch (error) {
+    console.error('Error registering background sync:', error);
+  }
+}
+
+// Perbaiki fungsi setupServiceWorker
 async function setupServiceWorker() {
-  if ('serviceWorker' in navigator && 'PushManager' in window) {
+  if ('serviceWorker' in navigator) {
     try {
-      // 1. Cek apakah service worker sudah terdaftar
       const registration = await navigator.serviceWorker.register('/sw.js', {
-        scope: '/'
+        scope: '/',
+        updateViaCache: 'none'
       });
       
       console.log('Service Worker registered:', registration);
       
-      // 2. Tunggu service worker aktif
+      // Tunggu sampai service worker aktif
       if (registration.installing) {
-        console.log('Service Worker installing');
-      } else if (registration.waiting) {
-        console.log('Service Worker installed');
-      } else if (registration.active) {
-        console.log('Service Worker active');
+        await new Promise(resolve => {
+          registration.installing.addEventListener('statechange', () => {
+            if (registration.installing.state === 'activated') {
+              resolve();
+            }
+          });
+        });
       }
       
-      // 3. Subscribe untuk push notifications hanya jika user mengizinkan
-      if (Notification.permission === 'granted') {
-        await subscribeToPushNotifications(registration);
+      // Register background sync setelah service worker aktif
+      await registerBackgroundSyncProperly();
+      
+      // Set interval untuk check manual (fallback)
+      if (notificationSettings.enabled) {
+        setInterval(() => {
+          if (document.visibilityState === 'hidden') {
+            navigator.serviceWorker.controller.postMessage({
+              type: 'CHECK_FOR_UPDATES'
+            });
+          }
+        }, 30 * 60 * 1000); // 30 menit
       }
       
       return registration;
     } catch (error) {
       console.error('Service Worker registration failed:', error);
-      
-      // Fallback: Gunakan background polling tanpa push notifications
-      console.warn('Push notifications not available, using background polling');
-      startBackgroundPolling();
-      
       return null;
     }
-  } else {
-    console.log('Service Worker or Push API not supported');
-    startBackgroundPolling();
-    return null;
   }
+  return null;
 }
 
 // Fungsi baru: Background polling sebagai fallback
@@ -1584,39 +1644,90 @@ function stopNotificationChecker() {
   }
 }
 
+function startBackgroundChecking() {
+  if (backgroundCheckInterval) {
+    clearInterval(backgroundCheckInterval);
+  }
+  
+  // Check setiap 15 menit
+  backgroundCheckInterval = setInterval(async () => {
+    if (notificationSettings.enabled) {
+      try {
+        await checkForNewGames();
+      } catch (error) {
+        console.error('Background check failed:', error);
+      }
+    }
+  }, 15 * 60 * 1000);
+}
+
+function stopBackgroundChecking() {
+  if (backgroundCheckInterval) {
+    clearInterval(backgroundCheckInterval);
+    backgroundCheckInterval = null;
+  }
+}
+
+// Update fungsi startNotificationChecker
+function startNotificationChecker() {
+  startBackgroundChecking();
+}
+function startBackgroundChecking() {
+  if (backgroundCheckInterval) {
+    clearInterval(backgroundCheckInterval);
+  }
+  
+  // Check setiap 15 menit
+  backgroundCheckInterval = setInterval(async () => {
+    if (notificationSettings.enabled) {
+      try {
+        await checkForNewGames();
+      } catch (error) {
+        console.error('Background check failed:', error);
+      }
+    }
+  }, 15 * 60 * 1000);
+}
+
+function stopBackgroundChecking() {
+  if (backgroundCheckInterval) {
+    clearInterval(backgroundCheckInterval);
+    backgroundCheckInterval = null;
+  }
+}
+
+// Update fungsi startNotificationChecker
+function startNotificationChecker() {
+  startBackgroundChecking();
+}
+
+// Update fungsi stopNotificationChecker
+function stopNotificationChecker() {
+  stopBackgroundChecking();
+}
+
+// Update fungsi stopNotificationChecker
+function stopNotificationChecker() {
+  stopBackgroundChecking();
+}
 // Check for new games
 async function checkForNewGames() {
   if (!notificationSettings.enabled) return;
   
   try {
-    // Cek apakah app sedang di foreground
-    const isAppActive = document.visibilityState === 'visible';
-    
-    // Simpan waktu check terakhir
-    const lastCheck = localStorage.getItem('last_notification_check') || 0;
-    const now = Date.now();
-    
-    // Jangan check terlalu sering (minimal 10 menit)
-    if (now - lastCheck < 10 * 60 * 1000 && !isAppActive) {
-      return;
-    }
-    
-    localStorage.setItem('last_notification_check', now.toString());
-    
     console.log('Checking for new games...');
     
-    // Check semua platform secara paralel
-    const promises = notificationSettings.platforms.map(platform => 
-      checkPlatformForNewGames(platform)
-    );
+    // Kirim perintah ke service worker untuk check
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'CHECK_FOR_UPDATES',
+        timestamp: Date.now()
+      });
+    }
     
-    await Promise.allSettled(promises);
-    
-    notificationSettings.lastCheck = now;
+    // Update last check time
+    notificationSettings.lastCheck = Date.now();
     await saveNotificationSettings();
-    
-    // Update badge count
-    updateNotificationBadge();
     
   } catch (error) {
     console.error('Error checking for new games:', error);
@@ -2873,6 +2984,37 @@ function setupEventListeners() {
   const categoryDropdown = document.getElementById('categoryList');
   const refreshBtn = document.getElementById('btnRefreshGames');
   const paginationContainer = document.getElementById('paginationContainer');
+  
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', event => {
+    const { type, data } = event.data;
+    
+    switch (type) {
+      case 'PUSH_RECEIVED':
+        console.log('Push notification received:', data);
+        // Update badge atau UI lainnya
+        updateNotificationBadge();
+        break;
+        
+      case 'DATA_UPDATED':
+        console.log('Data updated from service worker');
+        // Reload data jika perlu
+        if (document.visibilityState === 'visible') {
+          loadAllGames({ useCache: false });
+        }
+        break;
+        
+      case 'ASSET_UPDATED':
+        console.log('Asset updated:', data.asset);
+        break;
+        
+      case 'SW_ACTIVATED':
+        console.log('Service Worker activated:', data.version);
+        break;
+    }
+  });
+}
+
 
   // 2. SEARCH FUNCTIONALITY - FIXED
   if (searchIconBtn && searchReveal && searchInput) {
