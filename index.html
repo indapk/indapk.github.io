@@ -1137,14 +1137,7 @@ async function enableNotifications() {
     
     // Cek dulu apakah Service Worker didukung
     if (!('serviceWorker' in navigator)) {
-      console.warn('Service Worker tidak didukung');
-      // Sembunyikan tombol notifikasi
-      document.querySelector('.notification-settings')?.style.display = 'none';
-    }
-
-    if (!('Notification' in window)) {
-      console.warn('Web Notifications tidak didukung');
-      document.querySelector('.notification-settings')?.style.display = 'none';
+      throw new Error('Service Worker tidak didukung di browser ini');
     }
     
     // Register Service Worker
@@ -1563,25 +1556,20 @@ function sendTestNotification() {
     }
     
     // Helper function untuk konversi VAPID key
-function urlBase64ToUint8Array(base64String) {
-  try {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-      .replace(/\-/g, '+')
-      .replace(/_/g, '/');
-    
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+      
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
     }
-    return outputArray;
-  } catch (error) {
-    console.error('Error converting VAPID key:', error);
-    return new Uint8Array(); // Return array kosong jika gagal
-  }
-}
     
     // Inisialisasi notifikasi
 function initNotifications() {
