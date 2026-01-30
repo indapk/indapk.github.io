@@ -476,6 +476,117 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     border-color: rgba(255, 100, 100, 0.5) !important;
   }
 
+/* Style untuk modal notifikasi */
+.notification-modal .modal-content {
+  border: 2px solid var(--neon-cyan);
+  animation: glowNotification 2s infinite alternate;
+}
+
+@keyframes glowNotification {
+  from { box-shadow: 0 0 20px rgba(0, 240, 255, 0.5); }
+  to { box-shadow: 0 0 30px rgba(0, 240, 255, 0.8); }
+}
+
+.notification-badge {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 9999;
+  background: linear-gradient(135deg, #ff4757, #ff3838);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(255, 71, 87, 0.5);
+  animation: slideInRight 0.5s ease-out;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  max-width: 350px;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.notification-text {
+  flex: 1;
+}
+
+.notification-text strong {
+  color: #00f0ff;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.notification-text small {
+  opacity: 0.8;
+  font-size: 0.85em;
+}
+
+.notification-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.3s;
+}
+
+.notification-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.notification-settings {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 9998;
+}
+
+.btn-notification-settings {
+  background: rgba(0, 240, 255, 0.1);
+  border: 2px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+}
+
+.btn-notification-settings:hover {
+  background: rgba(0, 240, 255, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+}
 
 </style>
 </head>
@@ -527,6 +638,14 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
 <button id="adminStatsBtn" class="btn btn-info btn-sm d-none ms-2" onclick="openStatsDashboard()">
  <i class="bi bi-bar-chart me-1"></i>View Stats</button>
 </nav>
+
+<!-- Tombol Pengaturan Notifikasi -->
+<div class="notification-settings">
+  <button class="btn-notification-settings" onclick="toggleNotificationSettings()" title="Pengaturan Notifikasi">
+    <i class="bi bi-bell"></i>
+  </button>
+</div>
+
   <!-- ===== MAIN CONTENT ===== -->
   <div class="header-banner">
     <div class="banner-container">
@@ -618,7 +737,111 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
 
     <div id="paginationContainer"></div>
   </div>
-  <!-- ===== MODALS ===== -->
+  
+  <!-- ===== MODAL NOTIFIKASI ===== -->
+  <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content notification-modal">
+        <div class="modal-header detail-modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-bell-fill me-2"></i>Aktifkan Notifikasi
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-4">
+            <i class="bi bi-bell display-4 text-neon" style="font-size: 4rem;"></i>
+          </div>
+          <h4 class="text-center mb-3">Jangan Lewatkan Game Baru!</h4>
+          <p class="text-center text-muted mb-4">
+            Aktifkan notifikasi untuk mendapatkan pemberitahuan ketika ada game baru ditambahkan ke koleksi INDapk.
+          </p>
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Notifikasi akan menampilkan:
+            <ul class="mb-0 mt-2">
+              <li>Nama Game</li>
+              <li>Platform</li>
+              <li>Thumbnail Game</li>
+            </ul>
+          </div>
+          <div class="d-grid gap-2 mt-4">
+            <button class="btn btn-success btn-lg" onclick="enableNotifications()">
+              <i class="bi bi-check-circle me-2"></i>Aktifkan Notifikasi
+            </button>
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Nanti Saja
+            </button>
+          </div>
+          <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" id="dontShowAgain">
+            <label class="form-check-label" for="dontShowAgain">
+              Jangan tampilkan lagi
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL PENGATURAN NOTIFIKASI ===== -->
+  <div class="modal fade" id="notificationSettingsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header detail-modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-gear me-2"></i>Pengaturan Notifikasi
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-4">
+            <h6>Status Notifikasi</h6>
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>
+              <span id="notificationStatusText">Memeriksa status...</span>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h6>Platform yang Diinginkan</h6>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="notifyAllPlatforms" checked>
+              <label class="form-check-label" for="notifyAllPlatforms">
+                Semua Platform
+              </label>
+            </div>
+            <div id="platformCheckboxes" class="ms-3">
+              <!-- Platform checkboxes akan diisi oleh JavaScript -->
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h6>Frekuensi Notifikasi</h6>
+            <select class="form-select" id="notificationFrequency">
+              <option value="all">Semua Game Baru</option>
+              <option value="popular">Hanya Game Populer</option>
+              <option value="daily">Sekali per Hari (Ringkasan)</option>
+            </select>
+          </div>
+          
+          <div class="d-grid gap-2">
+            <button class="btn btn-success" onclick="saveNotificationSettings()">
+              <i class="bi bi-save me-2"></i>Simpan Pengaturan
+            </button>
+            <button class="btn btn-outline-primary" onclick="testNotification()">
+              <i class="bi bi-bell me-2"></i>Test Notifikasi
+            </button>
+            <button class="btn btn-outline-danger" onclick="disableNotifications()">
+              <i class="bi bi-bell-slash me-2"></i>Nonaktifkan Notifikasi
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODALS LAINNYA ===== -->
   <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -652,164 +875,167 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
       </div>
     </div>
   </div>
+  
   <!-- Thumbnail Management Modal -->
-<div class="modal fade" id="thumbnailModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header detail-modal-header">
-        <h5 class="modal-title">Kelola Thumbnail</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label">Game: <strong id="thumbnailGameName">-</strong></label>
-          <div class="thumbnail-input-group">
-            <div class="mb-3">
-              <label class="form-label small">URL Thumbnail Saat Ini:</label>
-              <div class="input-group">
-                <input type="text" id="currentThumbnailUrl" class="form-control thumbnail-url-input" readonly>
-                <button class="btn btn-outline-secondary" type="button" onclick="copyThumbnailUrl()">
-                  <i class="bi bi-clipboard"></i>
-                </button>
+  <div class="modal fade" id="thumbnailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header detail-modal-header">
+          <h5 class="modal-title">Kelola Thumbnail</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Game: <strong id="thumbnailGameName">-</strong></label>
+            <div class="thumbnail-input-group">
+              <div class="mb-3">
+                <label class="form-label small">URL Thumbnail Saat Ini:</label>
+                <div class="input-group">
+                  <input type="text" id="currentThumbnailUrl" class="form-control thumbnail-url-input" readonly>
+                  <button class="btn btn-outline-secondary" type="button" onclick="copyThumbnailUrl()">
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label small">Preview:</label>
-              <div class="text-center">
-                <img id="thumbnailPreview" src="" alt="Preview" class="thumbnail-preview">
+              <div class="mb-3">
+                <label class="form-label small">Preview:</label>
+                <div class="text-center">
+                  <img id="thumbnailPreview" src="" alt="Preview" class="thumbnail-preview">
+                </div>
               </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label small">URL Thumbnail Baru:</label>
-              <div class="input-group">
-                <input type="text" id="newThumbnailUrl" class="form-control thumbnail-url-input" 
-                       placeholder="Tempel link thumbnail di sini...">
-                <button class="btn btn-outline-secondary" type="button" onclick="testThumbnail()">
-                  <i class="bi bi-eye"></i>
-                </button>
-              </div>
-              <div class="form-text text-muted">
-                Tempel link gambar (JPEG/PNG/WEBP) dari hosting manapun. Rekomendasi: Imgur, Cloudinary, atau Google Drive (public link).
+              <div class="mb-3">
+                <label class="form-label small">URL Thumbnail Baru:</label>
+                <div class="input-group">
+                  <input type="text" id="newThumbnailUrl" class="form-control thumbnail-url-input" 
+                         placeholder="Tempel link thumbnail di sini...">
+                  <button class="btn btn-outline-secondary" type="button" onclick="testThumbnail()">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+                <div class="form-text text-muted">
+                  Tempel link gambar (JPEG/PNG/WEBP) dari hosting manapun. Rekomendasi: Imgur, Cloudinary, atau Google Drive (public link).
+                </div>
               </div>
             </div>
           </div>
+          <div class="thumbnail-actions">
+            <button class="btn btn-success flex-grow-1" onclick="updateThumbnail()" id="btnUpdateThumbnail">
+              <i class="bi bi-check-circle me-2"></i> Update Thumbnail
+            </button>
+            <button class="btn btn-danger" onclick="removeThumbnail()" id="btnRemoveThumbnail">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+          <div id="thumbnailMessage" class="mt-3"></div>
         </div>
-        <div class="thumbnail-actions">
-          <button class="btn btn-success flex-grow-1" onclick="updateThumbnail()" id="btnUpdateThumbnail">
-            <i class="bi bi-check-circle me-2"></i> Update Thumbnail
-          </button>
-          <button class="btn btn-danger" onclick="removeThumbnail()" id="btnRemoveThumbnail">
-            <i class="bi bi-trash"></i>
-          </button>
-        </div>
-        <div id="thumbnailMessage" class="mt-3"></div>
       </div>
     </div>
   </div>
-</div>
-<div id="pwaInstallContainer" style="display:none; position:fixed; left:16px; right:16px; bottom:16px; z-index:9999;">
-  <div style="background:#0b1220; border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:14px; color:#fff;">
-    <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-      <div>
-        <div style="font-weight:700;">Install INDapk</div>
-        <div style="opacity:0.85; font-size:13px;">Buka lebih cepat seperti aplikasi.</div>
-      </div>
-      <div style="display:flex; gap:10px;">
-        <button id="pwaInstallBtn" class="btn btn-neon btn-sm">Install</button>
-        <button id="pwaInstallLater" class="btn btn-outline-secondary btn-sm">Nanti</button>
+
+  <div id="pwaInstallContainer" style="display:none; position:fixed; left:16px; right:16px; bottom:16px; z-index:9999;">
+    <div style="background:#0b1220; border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:14px; color:#fff;">
+      <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+        <div>
+          <div style="font-weight:700;">Install INDapk</div>
+          <div style="opacity:0.85; font-size:13px;">Buka lebih cepat seperti aplikasi.</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button id="pwaInstallBtn" class="btn btn-neon btn-sm">Install</button>
+          <button id="pwaInstallLater" class="btn btn-outline-secondary btn-sm">Nanti</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="modal fade" id="pinnedGameModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header detail-modal-header">
-        <h5 class="modal-title">Change Pinned Game</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-2 small text-muted">Slot: <strong id="pinSlotText">-</strong></div>
-
-        <div class="mb-3">
-          <label class="form-label">Platform</label>
-          <select class="form-control" id="pinPlatform">
-            <option value="switch">Nintendo Switch</option>
-            <option value="ps2">PlayStation 2</option>
-            <option value="psp">PSP</option>
-            <option value="psvita">PS Vita</option>
-            <option value="android">Android</option>
-            <option value="pc">PC</option>
-            <option value="wii">Wii</option>
-            <option value="gamecube">Gamecube</option>
-            <option value="3ds">3DS</option>
-          </select>
+  <div class="modal fade" id="pinnedGameModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header detail-modal-header">
+          <h5 class="modal-title">Change Pinned Game</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
+        <div class="modal-body">
+          <div class="mb-2 small text-muted">Slot: <strong id="pinSlotText">-</strong></div>
 
-        <div class="mb-3">
-          <label class="form-label">Nama Game</label>
-          <input type="text" class="form-control" id="pinName" placeholder="Contoh: Monster Hunter Rise" />
-        </div>
+          <div class="mb-3">
+            <label class="form-label">Platform</label>
+            <select class="form-control" id="pinPlatform">
+              <option value="switch">Nintendo Switch</option>
+              <option value="ps2">PlayStation 2</option>
+              <option value="psp">PSP</option>
+              <option value="psvita">PS Vita</option>
+              <option value="android">Android</option>
+              <option value="pc">PC</option>
+              <option value="wii">Wii</option>
+              <option value="gamecube">Gamecube</option>
+              <option value="3ds">3DS</option>
+            </select>
+          </div>
 
-        <div id="pinMsg"></div>
+          <div class="mb-3">
+            <label class="form-label">Nama Game</label>
+            <input type="text" class="form-control" id="pinName" placeholder="Contoh: Monster Hunter Rise" />
+          </div>
 
-        <button class="btn btn-success w-100" id="btnSavePinned" onclick="savePinnedChange()">
-          Simpan
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+          <div id="pinMsg"></div>
 
-<!-- Modal untuk Manage Pinned Games (Admin Only) -->
-<div class="modal fade" id="managePinnedModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header detail-modal-header">
-        <h5 class="modal-title">Kelola Pinned Games</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-info">
-          <i class="bi bi-info-circle me-2"></i>
-          <strong>Instruksi:</strong> Atur game yang akan ditampilkan di bagian PINNED. Maksimal 8 slot.
-        </div>
-        
-        <div class="table-responsive">
-          <table class="table table-dark table-hover" id="pinnedGamesTable">
-            <thead>
-              <tr>
-                <th width="50">Slot</th>
-                <th width="120">Platform</th>
-                <th>Nama Game</th>
-                <th width="120">Status</th>
-                <th width="100">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="pinnedGamesBody">
-              <!-- Data akan diisi oleh JavaScript -->
-            </tbody>
-          </table>
-        </div>
-        
-        <div class="mt-3">
-          <button class="btn btn-neon w-100" onclick="addNewPinnedSlot()">
-            <i class="bi bi-plus-circle me-2"></i>Tambah Slot Baru
+          <button class="btn btn-success w-100" id="btnSavePinned" onclick="savePinnedChange()">
+            Simpan
           </button>
         </div>
-        
-        <div id="managePinMessage" class="mt-3"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-success" onclick="saveAllPinnedGames()">
-          <i class="bi bi-save me-2"></i>Simpan Semua Perubahan
-        </button>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Modal untuk Manage Pinned Games (Admin Only) -->
+  <div class="modal fade" id="managePinnedModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header detail-modal-header">
+          <h5 class="modal-title">Kelola Pinned Games</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Instruksi:</strong> Atur game yang akan ditampilkan di bagian PINNED. Maksimal 8 slot.
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table table-dark table-hover" id="pinnedGamesTable">
+              <thead>
+                <tr>
+                  <th width="50">Slot</th>
+                  <th width="120">Platform</th>
+                  <th>Nama Game</th>
+                  <th width="120">Status</th>
+                  <th width="100">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="pinnedGamesBody">
+                <!-- Data akan diisi oleh JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="mt-3">
+            <button class="btn btn-neon w-100" onclick="addNewPinnedSlot()">
+              <i class="bi bi-plus-circle me-2"></i>Tambah Slot Baru
+            </button>
+          </div>
+          
+          <div id="managePinMessage" class="mt-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-success" onclick="saveAllPinnedGames()">
+            <i class="bi bi-save me-2"></i>Simpan Semua Perubahan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // ====== KONFIGURASI URL API ======
@@ -826,6 +1052,12 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     const TRACKING_API_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
     const ADMIN_TELEGRAM_ID = "1172835542";
+    
+    // ====== KONFIGURASI NOTIFIKASI ======
+    const NOTIFICATION_API_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
+    const VAPID_PUBLIC_KEY = "BLab2KvVh6pBk7KjYpXq3wQwRstUVWxyNt8LmZc7hX8jHfLd9gT5rPqAaBcDeFgHiJkLmNoPqRsTuVwXyZ";
+    const NOTIFICATION_ICON = "https://indapk.github.io/icons/icon-192x192.png";
+    
     // ====== GLOBAL STATE ======
     let currentUser = null;
     let allGames = [];
@@ -852,8 +1084,441 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     let deferredPrompt = null;
     let PINNED_GAMES_RULES = [];
     let currentPinSlot = null;
-
-
+    
+    // State untuk notifikasi
+    let notificationPermission = Notification.permission;
+    let serviceWorkerRegistration = null;
+    let notificationSubscription = null;
+    let lastNotifiedGames = JSON.parse(localStorage.getItem('lastNotifiedGames') || '[]');
+    let notificationSettings = JSON.parse(localStorage.getItem('notificationSettings') || '{}');
+    
+    // ====== FUNGSI NOTIFIKASI ======
+    
+    // Cek dan tampilkan modal notifikasi jika diperlukan
+    function checkAndShowNotificationModal() {
+      // Cek jika user sudah mengaktifkan notifikasi
+      const notificationEnabled = localStorage.getItem('notificationEnabled');
+      const dontShowAgain = localStorage.getItem('dontShowNotificationModal');
+      
+      // Tampilkan modal jika:
+      // 1. Belum mengaktifkan notifikasi
+      // 2. Tidak memilih "Jangan tampilkan lagi"
+      // 3. Permission masih default
+      if (!notificationEnabled && !dontShowAgain && Notification.permission === 'default') {
+        // Tunggu 2 detik setelah halaman dimuat
+        setTimeout(() => {
+          const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+          modal.show();
+        }, 2000);
+      }
+    }
+    
+    // Aktifkan notifikasi
+    async function enableNotifications() {
+      const dontShowAgain = document.getElementById('dontShowAgain').checked;
+      
+      if (dontShowAgain) {
+        localStorage.setItem('dontShowNotificationModal', 'true');
+      }
+      
+      // Request permission
+      const permission = await Notification.requestPermission();
+      
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        
+        try {
+          // Register service worker
+          if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            serviceWorkerRegistration = registration;
+            
+            // Subscribe to push notifications
+            const subscription = await registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+            });
+            
+            notificationSubscription = subscription;
+            
+            // Simpan subscription ke localStorage
+            localStorage.setItem('notificationSubscription', JSON.stringify(subscription));
+            localStorage.setItem('notificationEnabled', 'true');
+            
+            // Update UI
+            updateNotificationStatus();
+            
+            // Simpan pengaturan default
+            saveDefaultNotificationSettings();
+            
+            // Tutup modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('notificationModal'));
+            modal.hide();
+            
+            // Tampilkan konfirmasi
+            alert('Notifikasi berhasil diaktifkan! Anda akan mendapatkan pemberitahuan saat ada game baru.');
+          }
+        } catch (error) {
+          console.error('Error enabling notifications:', error);
+          alert('Gagal mengaktifkan notifikasi. Silakan coba lagi.');
+        }
+      } else {
+        alert('Notifikasi ditolak. Anda dapat mengaktifkannya nanti melalui pengaturan.');
+      }
+    }
+    
+    // Nonaktifkan notifikasi
+    async function disableNotifications() {
+      if (notificationSubscription) {
+        try {
+          await notificationSubscription.unsubscribe();
+        } catch (error) {
+          console.error('Error unsubscribing:', error);
+        }
+      }
+      
+      localStorage.removeItem('notificationSubscription');
+      localStorage.removeItem('notificationEnabled');
+      notificationSubscription = null;
+      
+      updateNotificationStatus();
+      alert('Notifikasi telah dinonaktifkan.');
+    }
+    
+    // Toggle pengaturan notifikasi
+    function toggleNotificationSettings() {
+      const modal = new bootstrap.Modal(document.getElementById('notificationSettingsModal'));
+      
+      // Update status
+      updateNotificationStatus();
+      
+      // Load platform checkboxes
+      loadPlatformCheckboxes();
+      
+      // Load current settings
+      loadNotificationSettings();
+      
+      modal.show();
+    }
+    
+    // Update status notifikasi di UI
+    function updateNotificationStatus() {
+      const statusElement = document.getElementById('notificationStatusText');
+      const isEnabled = localStorage.getItem('notificationEnabled') === 'true';
+      
+      if (isEnabled && Notification.permission === 'granted') {
+        statusElement.innerHTML = '<i class="bi bi-check-circle-fill text-success me-2"></i>Notifikasi aktif';
+      } else if (Notification.permission === 'denied') {
+        statusElement.innerHTML = '<i class="bi bi-x-circle-fill text-danger me-2"></i>Notifikasi diblokir di browser';
+      } else {
+        statusElement.innerHTML = '<i class="bi bi-bell-slash text-warning me-2"></i>Notifikasi belum diaktifkan';
+      }
+    }
+    
+    // Load platform checkboxes
+    function loadPlatformCheckboxes() {
+      const platforms = [
+        { id: 'ps2', label: 'PlayStation 2' },
+        { id: 'switch', label: 'Nintendo Switch' },
+        { id: 'psp', label: 'PSP' },
+        { id: 'psvita', label: 'PS Vita' },
+        { id: 'wii', label: 'Wii' },
+        { id: 'gamecube', label: 'Gamecube' },
+        { id: '3ds', label: '3DS' },
+        { id: 'android', label: 'Android' },
+        { id: 'pc', label: 'PC' }
+      ];
+      
+      const container = document.getElementById('platformCheckboxes');
+      let html = '';
+      
+      platforms.forEach(platform => {
+        html += `
+          <div class="form-check mb-1">
+            <input class="form-check-input platform-checkbox" type="checkbox" 
+                   id="platform-${platform.id}" value="${platform.id}">
+            <label class="form-check-label" for="platform-${platform.id}">
+              ${platform.label}
+            </label>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+    
+    // Load pengaturan notifikasi
+    function loadNotificationSettings() {
+      const settings = notificationSettings;
+      
+      // Platform checkboxes
+      const notifyAll = document.getElementById('notifyAllPlatforms');
+      const platformCheckboxes = document.querySelectorAll('.platform-checkbox');
+      
+      if (settings.platforms && settings.platforms.length > 0) {
+        notifyAll.checked = false;
+        platformCheckboxes.forEach(checkbox => {
+          checkbox.checked = settings.platforms.includes(checkbox.value);
+        });
+      } else {
+        notifyAll.checked = true;
+        platformCheckboxes.forEach(checkbox => {
+          checkbox.checked = true;
+          checkbox.disabled = true;
+        });
+      }
+      
+      // Frekuensi
+      const frequencySelect = document.getElementById('notificationFrequency');
+      if (settings.frequency) {
+        frequencySelect.value = settings.frequency;
+      }
+      
+      // Event listener untuk "Semua Platform"
+      notifyAll.addEventListener('change', function() {
+        platformCheckboxes.forEach(checkbox => {
+          checkbox.disabled = this.checked;
+          checkbox.checked = this.checked;
+        });
+      });
+    }
+    
+    // Simpan pengaturan notifikasi
+    function saveNotificationSettings() {
+      const notifyAll = document.getElementById('notifyAllPlatforms').checked;
+      const frequency = document.getElementById('notificationFrequency').value;
+      
+      const settings = {
+        frequency: frequency
+      };
+      
+      if (!notifyAll) {
+        const selectedPlatforms = [];
+        document.querySelectorAll('.platform-checkbox:checked').forEach(checkbox => {
+          selectedPlatforms.push(checkbox.value);
+        });
+        settings.platforms = selectedPlatforms;
+      } else {
+        settings.platforms = [];
+      }
+      
+      notificationSettings = settings;
+      localStorage.setItem('notificationSettings', JSON.stringify(settings));
+      
+      alert('Pengaturan notifikasi berhasil disimpan!');
+      
+      const modal = bootstrap.Modal.getInstance(document.getElementById('notificationSettingsModal'));
+      modal.hide();
+    }
+    
+    // Simpan pengaturan default
+    function saveDefaultNotificationSettings() {
+      if (!localStorage.getItem('notificationSettings')) {
+        const defaultSettings = {
+          frequency: 'all',
+          platforms: [] // Semua platform
+        };
+        notificationSettings = defaultSettings;
+        localStorage.setItem('notificationSettings', JSON.stringify(defaultSettings));
+      }
+    }
+    
+    // Test notifikasi
+    function testNotification() {
+      if (!('Notification' in window)) {
+        alert('Browser tidak mendukung notifikasi.');
+        return;
+      }
+      
+      if (Notification.permission !== 'granted') {
+        alert('Silakan aktifkan notifikasi terlebih dahulu.');
+        return;
+      }
+      
+      // Buat notifikasi test
+      const notification = new Notification('INDapk - Test Notifikasi', {
+        body: 'Notifikasi berfungsi dengan baik! Anda akan mendapatkan pemberitahuan game baru.',
+        icon: NOTIFICATION_ICON,
+        tag: 'test-notification'
+      });
+      
+      notification.onclick = function() {
+        window.focus();
+        notification.close();
+      };
+    }
+    
+    // Cek game baru dan kirim notifikasi
+    async function checkForNewGamesAndNotify() {
+      // Hanya jika notifikasi diaktifkan
+      const isEnabled = localStorage.getItem('notificationEnabled') === 'true';
+      if (!isEnabled || Notification.permission !== 'granted') {
+        return;
+      }
+      
+      try {
+        // Ambil data game terbaru dari API
+        const response = await fetch(GAMEPS2_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: 'action=getAllGames'
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success' && Array.isArray(result.data)) {
+          // Ambil 5 game terbaru
+          const newGames = result.data.slice(0, 5);
+          
+          // Filter hanya game yang belum dinotifikasi
+          const gamesToNotify = newGames.filter(game => {
+            return !lastNotifiedGames.includes(game.download_id);
+          });
+          
+          // Kirim notifikasi untuk setiap game baru
+          gamesToNotify.forEach(game => {
+            sendNotificationForGame(game);
+            lastNotifiedGames.push(game.download_id);
+          });
+          
+          // Simpan daftar game yang sudah dinotifikasi
+          if (gamesToNotify.length > 0) {
+            // Hanya simpan 50 ID terakhir
+            lastNotifiedGames = lastNotifiedGames.slice(-50);
+            localStorage.setItem('lastNotifiedGames', JSON.stringify(lastNotifiedGames));
+          }
+        }
+      } catch (error) {
+        console.error('Error checking for new games:', error);
+      }
+    }
+    
+    // Kirim notifikasi untuk satu game
+    function sendNotificationForGame(game) {
+      const gameName = game.nama_game || game.ori_name || 'Game Baru';
+      const platform = getPlatformLabel(game.platform || 'ps2');
+      
+      // Buat notifikasi
+      const notification = new Notification(`🎮 ${gameName}`, {
+        body: `Platform: ${platform}\nGame baru tersedia di INDapk!`,
+        icon: game.thumbnail_url || NOTIFICATION_ICON,
+        tag: `game-${game.download_id}`,
+        badge: NOTIFICATION_ICON,
+        actions: [
+          {
+            action: 'view',
+            title: 'Lihat Game'
+          }
+        ]
+      });
+      
+      // Handle klik notifikasi
+      notification.onclick = function(event) {
+        event.preventDefault();
+        window.focus();
+        
+        // Redirect ke halaman game
+        if (game.download_id && game.platform) {
+          window.location.href = `download.html?game=${game.download_id}&platform=${game.platform}`;
+        } else {
+          window.location.href = 'https://indapk.github.io';
+        }
+        
+        notification.close();
+      };
+      
+      // Handle action button
+      notification.onaction = function(event) {
+        if (event.action === 'view' && game.download_id && game.platform) {
+          window.open(`download.html?game=${game.download_id}&platform=${game.platform}`, '_blank');
+        }
+      };
+    }
+    
+    // Tampilkan notifikasi sebagai badge
+    function showNotificationBadge(game) {
+      const badge = document.createElement('div');
+      badge.className = 'notification-badge';
+      badge.innerHTML = `
+        <div class="notification-content">
+          ${game.thumbnail_url ? `<img src="${game.thumbnail_url}" class="notification-thumbnail" alt="${game.nama_game}">` : ''}
+          <div class="notification-text">
+            <strong>🎮 ${game.nama_game || game.ori_name}</strong>
+            <small>Platform: ${getPlatformLabel(game.platform)}</small>
+            <small>Game baru tersedia!</small>
+          </div>
+          <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(badge);
+      
+      // Auto remove setelah 5 detik
+      setTimeout(() => {
+        if (badge.parentElement) {
+          badge.remove();
+        }
+      }, 5000);
+      
+      // Handle klik badge
+      badge.addEventListener('click', function(e) {
+        if (!e.target.closest('.notification-close')) {
+          if (game.download_id && game.platform) {
+            window.location.href = `download.html?game=${game.download_id}&platform=${game.platform}`;
+          }
+        }
+      });
+    }
+    
+    // Helper function untuk konversi VAPID key
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+      
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+    
+    // Inisialisasi notifikasi
+    function initNotifications() {
+      // Cek jika service worker sudah terdaftar
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
+        navigator.serviceWorker.ready.then(registration => {
+          serviceWorkerRegistration = registration;
+          
+          // Cek subscription yang ada
+          registration.pushManager.getSubscription().then(subscription => {
+            notificationSubscription = subscription;
+            
+            if (subscription) {
+              localStorage.setItem('notificationEnabled', 'true');
+            }
+            
+            updateNotificationStatus();
+          });
+        });
+      }
+      
+      // Cek dan tampilkan modal notifikasi
+      checkAndShowNotificationModal();
+      
+      // Cek game baru setiap 5 menit
+      setInterval(checkForNewGamesAndNotify, 5 * 60 * 1000);
+      
+      // Cek game baru saat halaman dimuat
+      setTimeout(checkForNewGamesAndNotify, 10000);
+    }
 
 // ====== FUNGSI TRACKING KLIK GAME ======
 async function trackGameClick(gameId, platform, gameName) {
@@ -1072,6 +1737,33 @@ function updateGameCardsWithCachedStats() {
     console.error('Error updating with cached stats:', error);
   }
 }
+
+function showTempMessage(message, type) {
+  const alertClass = {
+    'success': 'alert-success',
+    'danger': 'alert-danger',
+    'warning': 'alert-warning',
+    'info': 'alert-info'
+  }[type] || 'alert-info';
+  
+  const alertDiv = document.createElement('div');
+  alertDiv.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+  alertDiv.style.cssText = 'top: 80px; right: 20px; z-index: 9999; max-width: 300px;';
+  alertDiv.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+  `;
+  
+  document.body.appendChild(alertDiv);
+  
+  // Auto remove setelah 3 detik
+  setTimeout(() => {
+    if (alertDiv.parentElement) {
+      alertDiv.remove();
+    }
+  }, 3000);
+}
+
 function updateGameCardsWithStats(statsArray) {
   // Buat map untuk akses cepat
   const statsMap = new Map();
@@ -1480,6 +2172,9 @@ function goToGameDetail(downloadId, platform, gameName = '') {
     document.addEventListener('DOMContentLoaded', () => {
       const y = document.getElementById('yearNow');
       if (y) y.textContent = new Date().getFullYear();
+      
+      // Inisialisasi notifikasi
+      initNotifications();
     });
 
     // ====== UTILITY FUNCTIONS ======
@@ -2350,6 +3045,9 @@ async function loadAllGames({ useCache = true } = {}) {
     setTimeout(() => {
       loadAllGameStats();
     }, 1000);
+    
+    // 11) Cek game baru untuk notifikasi
+    checkForNewGamesAndNotify();
 
   } catch (error) {
     if (error?.name === 'AbortError') return;
