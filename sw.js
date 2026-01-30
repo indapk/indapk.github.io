@@ -917,32 +917,54 @@ async function getCachedGames(event) {
     const cache = await caches.open(DYNAMIC_CACHE_NAME);
     const response = await cache.match('/cached-games-data');
     
-    if (response) {
+    if (!response) {
+      // Kirim response kosong jika tidak ada data
+      if (event.ports && event.ports[0]) {
+        event.ports[0].postMessage({
+          status: 'empty',
+          data: [],
+          timestamp: Date.now(),
+          version: VERSION
+        });
+      }
+      return;
+    }
+    
+    try {
       const data = await response.json();
       
       if (event.ports && event.ports[0]) {
         event.ports[0].postMessage({
           status: 'success',
-          data: data.data,
-          timestamp: data.timestamp,
-          version: data.version
+          data: data.data || [],
+          timestamp: data.timestamp || Date.now(),
+          version: data.version || VERSION
         });
       }
-    } else {
+    } catch (jsonError) {
+      console.error('[SW] Error parsing cached data:', jsonError);
+      
       if (event.ports && event.ports[0]) {
         event.ports[0].postMessage({
-          status: 'empty',
-          message: 'No cached data found'
+          status: 'error',
+          error: 'Invalid cached data',
+          data: [],
+          timestamp: Date.now(),
+          version: VERSION
         });
       }
     }
+    
   } catch (error) {
     console.error('[SW] Error getting cached games:', error);
     
     if (event.ports && event.ports[0]) {
       event.ports[0].postMessage({
         status: 'error',
-        error: error.message
+        error: error.message,
+        data: [],
+        timestamp: Date.now(),
+        version: VERSION
       });
     }
   }
