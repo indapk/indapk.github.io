@@ -476,173 +476,6 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     border-color: rgba(255, 100, 100, 0.5) !important;
   }
 
-/* ===== NOTIFICATION STYLES ===== */
-.notification-badge {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  background: linear-gradient(135deg, var(--neon-pink), #ff0066);
-  color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  z-index: 9999;
-  box-shadow: 0 0 10px rgba(255, 46, 151, 0.5);
-  cursor: pointer;
-  animation: badgeBounce 0.5s ease-in-out;
-  transition: all 0.3s ease;
-}
-
-.notification-badge:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(255, 46, 151, 0.7);
-}
-
-@keyframes badgeBounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
-
-/* Notification toast */
-.notification-toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  min-width: 300px;
-  max-width: 400px;
-  background: rgba(10, 14, 26, 0.95);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  border-radius: 15px;
-  backdrop-filter: blur(20px);
-  z-index: 10000;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  animation: slideInRight 0.3s ease-out;
-}
-
-.notification-toast-header {
-  padding: 12px 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.notification-toast-body {
-  padding: 15px;
-}
-
-.notification-toast-game {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  transition: background 0.3s ease;
-  cursor: pointer;
-}
-
-.notification-toast-game:hover {
-  background: rgba(0, 240, 255, 0.1);
-}
-
-.notification-toast-game img {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.notification-toast-game-info {
-  flex: 1;
-}
-
-.notification-toast-game-title {
-  font-weight: bold;
-  color: var(--neon-cyan);
-  margin-bottom: 4px;
-}
-
-.notification-toast-game-platform {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* Notification settings */
-.platform-selection {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin: 10px 0;
-}
-
-.platform-checkbox {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  border-radius: 10px;
-  padding: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.platform-checkbox:hover {
-  background: rgba(0, 240, 255, 0.1);
-  border-color: var(--neon-cyan);
-}
-
-.platform-checkbox.checked {
-  background: rgba(0, 240, 255, 0.15);
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
-}
-
-.platform-checkbox label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  margin: 0;
-  width: 100%;
-}
-
-.platform-checkbox input[type="checkbox"] {
-  margin: 0;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .notification-toast {
-    left: 10px;
-    right: 10px;
-    max-width: none;
-  }
-  
-  .platform-selection {
-    grid-template-columns: 1fr;
-  }
-  
-  .notification-badge {
-    top: 10px;
-    right: 10px;
-  }
-}
 
 </style>
 </head>
@@ -1019,7 +852,6 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     let deferredPrompt = null;
     let PINNED_GAMES_RULES = [];
     let currentPinSlot = null;
-
 // ====== NOTIFICATION SYSTEM ======
 const NOTIFICATION_SETTINGS_KEY = 'indapk_notification_settings';
 const NOTIFICATION_PERMISSION_KEY = 'indapk_notification_permission';
@@ -1033,9 +865,11 @@ const DEFAULT_NOTIFICATION_SETTINGS = {
   notifiedGames: []
 };
 
+let swRegistration = null; // Variabel global untuk service worker registration
+
 // Initialize notification system
 async function initNotificationSystem() {
-  await registerServiceWorker();
+  swRegistration = await registerServiceWorker();
   loadNotificationSettings();
   
   // Cek jika user sudah mengaktifkan notifikasi tapi modal belum muncul
@@ -1049,7 +883,9 @@ async function initNotificationSystem() {
   }
   
   // Setup periodic background sync
-  setupPeriodicSync();
+  if (swRegistration) {
+    setupPeriodicSync();
+  }
 }
 
 // Register service worker
@@ -1061,6 +897,7 @@ async function registerServiceWorker() {
       return registration;
     } catch (error) {
       console.error('Service Worker registration failed:', error);
+      return null;
     }
   }
   return null;
@@ -1068,18 +905,51 @@ async function registerServiceWorker() {
 
 // Setup periodic background sync
 function setupPeriodicSync() {
-  if ('periodicSync' in registration && 'periodicSync' in window) {
-    const settings = getNotificationSettings();
-    
-    if (settings.enabled) {
+  if (!swRegistration) {
+    console.warn('Service Worker registration not available');
+    return;
+  }
+
+  const settings = getNotificationSettings();
+  
+  if (settings.enabled) {
+    // Check for periodicSync API support
+    if ('periodicSync' in swRegistration && 'periodicSync' in window) {
       try {
-        registration.periodicSync.register('check-new-games', {
+        swRegistration.periodicSync.register('check-new-games', {
           minInterval: 5 * 60 * 1000, // 5 menit
+        }).then(() => {
+          console.log('Periodic sync registered successfully');
+        }).catch(error => {
+          console.error('Periodic sync registration failed:', error);
         });
       } catch (error) {
         console.error('Periodic sync registration failed:', error);
       }
+    } else {
+      console.log('Periodic Sync API not supported, using interval instead');
+      // Fallback menggunakan setInterval jika periodicSync tidak didukung
+      setupFallbackInterval();
     }
+  }
+}
+
+// Fallback menggunakan setInterval
+function setupFallbackInterval() {
+  const settings = getNotificationSettings();
+  
+  if (settings.enabled) {
+    // Hapus interval sebelumnya jika ada
+    if (window.notificationInterval) {
+      clearInterval(window.notificationInterval);
+    }
+    
+    // Setup interval baru untuk cek game setiap 5 menit
+    window.notificationInterval = setInterval(() => {
+      checkForNewGames();
+    }, 5 * 60 * 1000);
+    
+    console.log('Fallback interval notification system setup');
   }
 }
 
@@ -1092,6 +962,12 @@ function showNotificationPermissionModal() {
   // Cek jika user sudah mengaktifkan notifikasi
   const settings = getNotificationSettings();
   if (settings.enabled) return;
+  
+  // Cek jika browser mendukung notifikasi
+  if (!('Notification' in window)) {
+    console.log('Browser tidak mendukung notifikasi');
+    return;
+  }
   
   // Buat modal element
   const modalHtml = `
@@ -1159,13 +1035,23 @@ function showNotificationPermissionModal() {
     }
     
     // Hapus modal dari DOM
-    modalElement.remove();
+    setTimeout(() => {
+      if (modalElement && modalElement.parentNode) {
+        modalElement.parentNode.remove();
+      }
+    }, 300);
   });
 }
 
 // ====== PERMISSION REQUEST ======
 async function requestNotificationPermission() {
   try {
+    // Cek jika browser mendukung notifikasi
+    if (!('Notification' in window)) {
+      showNotificationMessage('❌ Browser Anda tidak mendukung notifikasi', 'danger');
+      return;
+    }
+    
     // Request permission
     const permission = await Notification.requestPermission();
     
@@ -1218,8 +1104,14 @@ function disableNotifications() {
   saveNotificationSettings(settings);
   
   // Stop periodic sync
-  if ('periodicSync' in registration) {
-    registration.periodicSync.unregister('check-new-games');
+  if (swRegistration && 'periodicSync' in swRegistration) {
+    swRegistration.periodicSync.unregister('check-new-games');
+  }
+  
+  // Stop fallback interval
+  if (window.notificationInterval) {
+    clearInterval(window.notificationInterval);
+    window.notificationInterval = null;
   }
 }
 
@@ -1321,7 +1213,11 @@ function showNotificationSettingsModal() {
   // Handle modal close
   const modalElement = document.getElementById('notificationSettingsModal');
   modalElement.addEventListener('hidden.bs.modal', function() {
-    modalElement.remove();
+    setTimeout(() => {
+      if (modalElement && modalElement.parentNode) {
+        modalElement.parentNode.remove();
+      }
+    }, 300);
   });
 }
 
@@ -1425,6 +1321,14 @@ function toggleNotificationEnabled() {
     settings.enabled = false;
     saveNotificationSettings(settings);
     showNotificationSettingsMessage('Notifikasi dinonaktifkan', 'warning');
+    
+    // Update button state
+    updateNotificationSettingsButton();
+    
+    // Disable periodic sync
+    if (swRegistration && 'periodicSync' in swRegistration) {
+      swRegistration.periodicSync.unregister('check-new-games');
+    }
   }
 }
 
@@ -1488,28 +1392,36 @@ async function testNotification() {
       return;
     }
     
-    // Test notification
-    const registration = await navigator.serviceWorker.ready;
-    
-    registration.showNotification('🎮 Test Notifikasi INDapk', {
-      body: 'Ini adalah notifikasi test. Notifikasi game baru akan menampilkan nama game, platform, dan thumbnail.',
-      icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-192x192.png',
-      image: 'https://www.kuysocial.com/content/uploads/photos/2025/11/kuysocial_2e94906c5735f263e9de8a2ce662e715_cropped.jpg',
-      tag: 'test-notification',
-      requireInteraction: false,
-      actions: [
-        { action: 'open', title: 'Buka INDapk' },
-        { action: 'close', title: 'Tutup' }
-      ],
-      data: {
-        url: window.location.href,
-        gameId: 'test',
-        platform: 'test'
-      }
-    });
-    
-    showNotificationSettingsMessage('✅ Notifikasi test berhasil dikirim!', 'success');
+    // Test notification menggunakan service worker
+    if (swRegistration) {
+      await swRegistration.showNotification('🎮 Test Notifikasi INDapk', {
+        body: 'Ini adalah notifikasi test. Notifikasi game baru akan menampilkan nama game, platform, dan thumbnail.',
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/icon-192x192.png',
+        tag: 'test-notification',
+        requireInteraction: false,
+        actions: [
+          { action: 'open', title: 'Buka INDapk' },
+          { action: 'close', title: 'Tutup' }
+        ],
+        data: {
+          url: window.location.href,
+          gameId: 'test',
+          platform: 'test'
+        }
+      });
+      
+      showNotificationSettingsMessage('✅ Notifikasi test berhasil dikirim!', 'success');
+    } else {
+      // Fallback ke Notification API biasa
+      new Notification('🎮 Test Notifikasi INDapk', {
+        body: 'Ini adalah notifikasi test. Notifikasi game baru akan menampilkan nama game, platform, dan thumbnail.',
+        icon: '/icons/icon-192x192.png',
+        tag: 'test-notification'
+      });
+      
+      showNotificationSettingsMessage('✅ Notifikasi test berhasil dikirim!', 'success');
+    }
     
   } catch (error) {
     console.error('Error sending test notification:', error);
@@ -1531,6 +1443,14 @@ function disableAllNotifications() {
     
     // Update button di navbar
     updateNotificationSettingsButton();
+    
+    // Stop periodic sync
+    if (swRegistration && 'periodicSync' in swRegistration) {
+      swRegistration.periodicSync.unregister('check-new-games');
+    }
+    
+    // Clear permission
+    localStorage.removeItem(NOTIFICATION_PERMISSION_KEY);
   }
 }
 
@@ -1543,6 +1463,11 @@ function saveNotificationSettingsModal() {
     
     // Update button di navbar
     updateNotificationSettingsButton();
+    
+    // Setup periodic sync jika notifikasi diaktifkan
+    if (settings.enabled) {
+      setupPeriodicSync();
+    }
     
     // Tutup modal setelah 1.5 detik
     setTimeout(() => {
@@ -1661,10 +1586,31 @@ function clearNotificationBadge() {
   }
 }
 
+// ====== CHECK FOR NEW GAMES ======
+async function checkForNewGames() {
+  try {
+    const settings = getNotificationSettings();
+    if (!settings.enabled) return;
+    
+    console.log('Checking for new games...');
+    
+    // Implementasi cek game baru
+    // TODO: Implementasi logika cek game baru dari API
+    
+    // Untuk testing, tampilkan badge
+    showNotificationBadge(1);
+    
+  } catch (error) {
+    console.error('Error checking for new games:', error);
+  }
+}
+
 // ====== INITIALIZATION ======
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize notification system
-  initNotificationSystem();
+  setTimeout(() => {
+    initNotificationSystem();
+  }, 1000); // Delay sedikit untuk pastikan DOM siap
   
   // Add notification settings button to navbar
   addNotificationSettingsButton();
@@ -1678,6 +1624,9 @@ function addNotificationSettingsButton() {
   const navActions = document.querySelector('.nav-actions');
   if (!navActions) return;
   
+  // Cek jika button sudah ada
+  if (document.getElementById('notificationSettingsBtn')) return;
+  
   // Buat button notifikasi
   const notificationButton = document.createElement('button');
   notificationButton.id = 'notificationSettingsBtn';
@@ -1685,16 +1634,24 @@ function addNotificationSettingsButton() {
   notificationButton.innerHTML = '<i class="bi bi-bell me-1"></i>Pengaturan Notifikasi';
   notificationButton.onclick = showNotificationSettingsModal;
   
-  // Tambahkan button ke navbar
-  navActions.insertBefore(notificationButton, navActions.firstChild);
+  // Tambahkan button ke navbar (sebelum login button)
+  const loginButton = document.getElementById('loginButton');
+  if (loginButton) {
+    navActions.insertBefore(notificationButton, loginButton);
+  } else {
+    navActions.appendChild(notificationButton);
+  }
   
   // Update button state
   updateNotificationSettingsButton();
 }
 
 function addBadgeStyles() {
-  // Tambahkan style untuk badge
+  // Tambahkan style untuk badge jika belum ada
+  if (document.getElementById('notification-styles')) return;
+  
   const style = document.createElement('style');
+  style.id = 'notification-styles';
   style.textContent = `
     @keyframes badgeBounce {
       0%, 100% { transform: scale(1); }
@@ -1703,15 +1660,27 @@ function addBadgeStyles() {
     
     .notification-badge {
       animation: badgeBounce 0.5s ease-in-out;
+      transition: all 0.3s ease;
     }
     
     .notification-badge:hover {
       transform: scale(1.1);
       box-shadow: 0 0 15px rgba(255, 46, 151, 0.7);
     }
+    
+    /* Notification settings modal specific styles */
+    #platformSelection .form-check-inline {
+      margin-right: 10px;
+      margin-bottom: 5px;
+    }
+    
+    #platformSelection .form-check-label {
+      white-space: nowrap;
+    }
   `;
   document.head.appendChild(style);
 }
+
 
 // ====== FUNGSI TRACKING KLIK GAME ======
 async function trackGameClick(gameId, platform, gameName) {
