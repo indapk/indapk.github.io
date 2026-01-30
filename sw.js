@@ -1,10 +1,8 @@
 // sw.js - Service Worker untuk INDapk Game Library
-// Versi 6.0.0 - Fixed DOM access issues
-
-const CACHE_NAME = 'indapk-game-cache-v6';
-const DYNAMIC_CACHE_NAME = 'indapk-dynamic-cache-v3';
+const CACHE_NAME = 'indapk-game-cache-v5'; // Naikkan versi
+const DYNAMIC_CACHE_NAME = 'indapk-dynamic-cache-v2';
 const NOTIFICATION_ICON = '/icons/icon-192x192.png';
-const VERSION = '6.0.0';
+const VERSION = '5.0.0';
 
 // API URLs untuk caching
 const API_URLS = [
@@ -40,14 +38,6 @@ const STATIC_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
-// State untuk notification settings
-let notificationSettings = {
-  enabled: false,
-  platforms: [],
-  frequency: 'all',
-  lastCheck: 0
-};
-
 // ===== INSTALL EVENT =====
 self.addEventListener('install', (event) => {
   console.log(`[SW ${VERSION}] Installing Service Worker...`);
@@ -72,6 +62,7 @@ self.addEventListener('install', (event) => {
       })
       .catch((error) => {
         console.error('[SW] Cache installation failed:', error);
+        // Tetap skip waiting meski ada error
         return self.skipWaiting();
       })
   );
@@ -356,56 +347,71 @@ async function cacheThenNetworkStrategy(event) {
   }
 }
 
-// ===== PUSH NOTIFICATIONS =====
-self.addEventListener('push', async (event) => {
-  console.log('[SW] Push event received');
+// ===== PUSH NOTIFICATIONS (Dengan Error Handling) =====
+self.addEventListener('push', (event) => {
+  console.log('[SW] Push notification received');
   
-  // Default options
-  const options = {
-    body: 'Game baru tersedia di INDapk!',
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-72x72.png',
-    vibrate: [200, 100, 200],
+  // Cek apakah notifikasi diizinkan
+  if (!self.Notification || self.Notification.permission !== 'granted') {
+    console.log('[SW] Push notification ignored - no permission');
+    return;
+  }
+  
+  let notificationData = {
+    title: 'INDapk Game Library',
+    body: 'Game baru tersedia!',
+    icon: NOTIFICATION_ICON,
+    badge: NOTIFICATION_ICON,
+    tag: 'indapk-game-notification',
     data: {
       url: '/',
       timestamp: Date.now()
-    },
-    actions: [
-      {
-        action: 'open',
-        title: 'Buka',
-        icon: '/icons/icon-72x72.png'
-      },
-      {
-        action: 'close',
-        title: 'Tutup'
-      }
-    ],
-    requireInteraction: false,
-    tag: 'indapk-game-update'
+    }
   };
   
-  // Coba parse data dari push
   if (event.data) {
     try {
       const data = event.data.json();
-      if (data.title) options.title = data.title;
-      if (data.body) options.body = data.body;
-      if (data.icon) options.icon = data.icon;
-      if (data.data) options.data = { ...options.data, ...data.data };
+      notificationData = { ...notificationData, ...data };
     } catch (error) {
-      // Jika bukan JSON, coba sebagai text
+      console.log('[SW] Push data is not JSON, using text');
       try {
-        options.body = event.data.text() || options.body;
+        notificationData.body = event.data.text() || notificationData.body;
       } catch (e) {
-        console.log('[SW] Could not read push data');
+        console.log('[SW] Cannot read push data');
       }
     }
   }
   
-  // Tampilkan notifikasi
+  const showNotification = self.registration.showNotification(
+    notificationData.title,
+    {
+      body: notificationData.body,
+      icon: notificationData.icon,
+      badge: notificationData.badge,
+      tag: notificationData.tag,
+      data: notificationData.data,
+      actions: [
+        {
+          action: 'open',
+          title: 'Buka',
+          icon: '/icons/icon-72x72.png'
+        },
+        {
+          action: 'dismiss',
+          title: 'Tutup',
+          icon: '/icons/icon-72x72.png'
+        }
+      ],
+      vibrate: [200, 100, 200, 100, 200],
+      requireInteraction: false
+    }
+  );
+  
   event.waitUntil(
-    self.registration.showNotification(options.title || 'INDapk', options)
+    showNotification.catch(error => {
+      console.error('[SW] Failed to show notification:', error);
+    })
   );
 });
 
@@ -444,9 +450,15 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil(openClient());
 });
 
-// ===== BACKGROUND SYNC =====
+// ===== BACKGROUND SYNC (Dengan Compatibility Check) =====
 self.addEventListener('sync', (event) => {
   console.log('[SW] Background sync event:', event.tag);
+  
+  // Cek apakah background sync didukung
+  if (!('sync' in self.registration)) {
+    console.log('[SW] Background sync not supported');
+    return;
+  }
   
   if (event.tag === 'sync-games') {
     event.waitUntil(syncGamesData());
@@ -509,9 +521,15 @@ async function syncNotificationSettings() {
   // Implementasi sync settings jika diperlukan
 }
 
-// ===== PERIODIC SYNC =====
+// ===== PERIODIC SYNC (Dengan Compatibility Check) =====
 self.addEventListener('periodicsync', (event) => {
   console.log('[SW] Periodic sync event:', event.tag);
+  
+  // Cek apakah periodic sync didukung
+  if (!('periodicSync' in self.registration)) {
+    console.log('[SW] Periodic sync not supported');
+    return;
+  }
   
   if (event.tag === 'periodic-games-sync') {
     event.waitUntil(syncGamesData());
@@ -564,18 +582,6 @@ self.addEventListener('message', (event) => {
       
     case 'CLEAR_NOTIFICATIONS':
       clearNotifications();
-      break;
-      
-    case 'APP_VISIBLE':
-      handleAppVisible();
-      break;
-      
-    case 'APP_ACTIVE':
-      handleAppActive(data);
-      break;
-      
-    case 'CHECK_NEW_GAMES':
-      checkForNewGames();
       break;
   }
 });
@@ -689,11 +695,9 @@ async function clearCache(event) {
 // Update settings
 async function updateSettings(settings) {
   try {
-    notificationSettings = { ...notificationSettings, ...settings };
-    
     const cache = await caches.open(CACHE_NAME);
     const response = new Response(JSON.stringify({
-      settings: notificationSettings,
+      settings,
       timestamp: Date.now()
     }), {
       headers: { 'Content-Type': 'application/json' }
@@ -711,6 +715,7 @@ async function checkForUpdates() {
   console.log('[SW] Checking for updates...');
   
   try {
+    // Cek update untuk static assets
     const cache = await caches.open(CACHE_NAME);
     
     for (const asset of STATIC_ASSETS) {
@@ -872,43 +877,6 @@ async function clearNotifications() {
   }
 }
 
-// Handle app visible event
-async function handleAppVisible() {
-  console.log('[SW] App is visible');
-  
-  if (notificationSettings.enabled) {
-    await checkForNewGames();
-  }
-}
-
-// Handle app active event
-async function handleAppActive(data) {
-  console.log('[SW] App is active');
-  
-  if (data && data.settings) {
-    notificationSettings = data.settings;
-  }
-}
-
-// Check for new games
-async function checkForNewGames() {
-  if (!notificationSettings.enabled) {
-    console.log('[SW] Notifications disabled, skipping check');
-    return;
-  }
-  
-  try {
-    console.log('[SW] Checking for new games...');
-    
-    // Implementasi check new games sesuai kebutuhan
-    // Untuk sekarang, kita hanya log
-    console.log('[SW] New games check completed');
-    
-  } catch (error) {
-    console.error('[SW] Error checking for new games:', error);
-  }
-}
-
 // ===== HELPER FUNCTIONS =====
 
 // Cek apakah URL adalah static asset
@@ -921,6 +889,20 @@ function isStaticAsset(url) {
       return asset === url.href || url.href.includes(asset);
     }
   });
+}
+
+// Cek apakah URL adalah API URL
+function isApiUrl(url) {
+  return API_URLS.some(apiUrl => url.href.includes(apiUrl));
+}
+
+// Precache API data saat idle
+if (self.requestIdleCallback) {
+  self.requestIdleCallback(() => {
+    precacheApiData();
+  });
+} else {
+  setTimeout(precacheApiData, 5000);
 }
 
 // Precache API data
@@ -949,7 +931,8 @@ async function precacheApiData() {
   }
 }
 
-// Create offline page
+// ===== OFFLINE SUPPORT =====
+// Create offline page jika tidak ada
 async function createOfflinePage() {
   try {
     const cache = await caches.open(CACHE_NAME);
@@ -1028,7 +1011,7 @@ async function createOfflinePage() {
   }
 }
 
-// ===== OFFLINE SUPPORT =====
+// Cek dan buat offline page saat SW aktif
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
@@ -1058,29 +1041,28 @@ self.addEventListener('unhandledrejection', (event) => {
 // ===== INITIALIZATION =====
 console.log(`[SW ${VERSION}] Service Worker loaded successfully`);
 
-// Precache saat idle
-if (self.requestIdleCallback) {
-  self.requestIdleCallback(() => {
-    precacheApiData();
-  }, { timeout: 5000 });
-} else {
-  setTimeout(precacheApiData, 5000);
-}
-
-// Load settings saat startup
-async function loadSettings() {
+// Self-check saat load
+(async function selfCheck() {
   try {
-    const cache = await caches.open(CACHE_NAME);
-    const response = await cache.match('/user-settings');
+    console.log('[SW] Performing self-check...');
     
-    if (response) {
-      const data = await response.json();
-      notificationSettings = data.settings || notificationSettings;
+    // Cek cache storage availability
+    if (!caches) {
+      console.warn('[SW] Cache API not available');
     }
+    
+    // Cek notification permission
+    if (!self.Notification) {
+      console.warn('[SW] Notification API not available');
+    }
+    
+    // Cek background sync
+    if (!('sync' in self.registration)) {
+      console.warn('[SW] Background Sync API not available');
+    }
+    
+    console.log('[SW] Self-check completed');
   } catch (error) {
-    console.error('[SW] Error loading settings:', error);
+    console.error('[SW] Self-check failed:', error);
   }
-}
-
-// Load settings saat SW aktif
-loadSettings();
+})();
