@@ -348,71 +348,75 @@ async function cacheThenNetworkStrategy(event) {
 }
 
 // ===== PUSH NOTIFICATIONS (Dengan Error Handling) =====
-self.addEventListener('push', (event) => {
-  console.log('[SW] Push notification received');
+self.addEventListener('push', async (event) => {
+  console.log('[SW] Push event received');
   
-  // Cek apakah notifikasi diizinkan
-  if (!self.Notification || self.Notification.permission !== 'granted') {
-    console.log('[SW] Push notification ignored - no permission');
-    return;
-  }
-  
-  let notificationData = {
-    title: 'INDapk Game Library',
-    body: 'Game baru tersedia!',
-    icon: NOTIFICATION_ICON,
-    badge: NOTIFICATION_ICON,
-    tag: 'indapk-game-notification',
+  // Default options
+  const options = {
+    body: 'Game baru tersedia di INDapk!',
+    icon: '/icons/icon-192x192.png',
+    badge: '/icons/icon-72x72.png',
+    vibrate: [200, 100, 200],
     data: {
       url: '/',
       timestamp: Date.now()
-    }
+    },
+    actions: [
+      {
+        action: 'open',
+        title: 'Buka',
+        icon: '/icons/icon-72x72.png'
+      },
+      {
+        action: 'close',
+        title: 'Tutup'
+      }
+    ],
+    requireInteraction: false,
+    tag: 'indapk-game-update'
   };
   
+  // Coba parse data dari push
   if (event.data) {
     try {
       const data = event.data.json();
-      notificationData = { ...notificationData, ...data };
+      if (data.title) options.title = data.title;
+      if (data.body) options.body = data.body;
+      if (data.icon) options.icon = data.icon;
+      if (data.data) options.data = { ...options.data, ...data.data };
     } catch (error) {
-      console.log('[SW] Push data is not JSON, using text');
+      // Jika bukan JSON, coba sebagai text
       try {
-        notificationData.body = event.data.text() || notificationData.body;
+        options.body = event.data.text() || options.body;
       } catch (e) {
-        console.log('[SW] Cannot read push data');
+        console.log('[SW] Could not read push data');
       }
     }
   }
   
-  const showNotification = self.registration.showNotification(
-    notificationData.title,
-    {
-      body: notificationData.body,
-      icon: notificationData.icon,
-      badge: notificationData.badge,
-      tag: notificationData.tag,
-      data: notificationData.data,
-      actions: [
-        {
-          action: 'open',
-          title: 'Buka',
-          icon: '/icons/icon-72x72.png'
-        },
-        {
-          action: 'dismiss',
-          title: 'Tutup',
-          icon: '/icons/icon-72x72.png'
-        }
-      ],
-      vibrate: [200, 100, 200, 100, 200],
-      requireInteraction: false
-    }
-  );
-  
+  // Tampilkan notifikasi
   event.waitUntil(
-    showNotification.catch(error => {
-      console.error('[SW] Failed to show notification:', error);
-    })
+    self.registration.showNotification(options.title || 'INDapk', options)
   );
+});
+
+// Deteksi saat app masuk/keluar dari background
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    // App aktif, check notifikasi baru
+    checkForNewGames();
+    updateNotificationBadge();
+  }
+});
+
+// Check saat page load
+window.addEventListener('load', () => {
+  // Delay sedikit untuk memastikan service worker siap
+  setTimeout(() => {
+    if (notificationSettings.enabled) {
+      checkForNewGames();
+    }
+  }, 3000);
 });
 
 // ===== NOTIFICATION CLICK =====
