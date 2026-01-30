@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
   <!-- Tambahkan di head -->
-<script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>List Game INDapk - Multi Platform Game Download</title>
@@ -2372,15 +2371,6 @@ async function savePinnedChange() {
   }
 }
 
-
-
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js")
-        .then((reg) => console.log("SW registered:", reg.scope))
-        .catch((err) => console.log("SW failed:", err));
-    });
-  }
 
 
   window.addEventListener("beforeinstallprompt", (e) => {
