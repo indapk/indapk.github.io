@@ -35,6 +35,66 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// sw.js
+self.addEventListener('push', function(event) {
+  if (!event.data) return;
+  
+  try {
+    const data = event.data.json();
+    const options = {
+      body: data.body || 'Game baru tersedia di INDapk!',
+      icon: data.icon || '/icons/icon-192x192.png',
+      badge: '/icons/icon-192x192.png',
+      tag: data.tag || 'game-notification',
+      data: data.url || 'https://indapk.github.io',
+      actions: [
+        {
+          action: 'view',
+          title: 'Lihat Game'
+        },
+        {
+          action: 'dismiss',
+          title: 'Tutup'
+        }
+      ]
+    };
+    
+    event.waitUntil(
+      self.registration.showNotification(data.title || '🎮 INDapk Game', options)
+    );
+  } catch (e) {
+    console.error('Push event error:', e);
+  }
+});
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  
+  if (event.action === 'view') {
+    // Redirect ke URL game
+    event.waitUntil(
+      clients.openWindow(event.notification.data)
+    );
+  } else {
+    // Klik notifikasi tanpa action
+    event.waitUntil(
+      clients.openWindow('https://indapk.github.io')
+    );
+  }
+});
+
+self.addEventListener('notificationclose', function(event) {
+  console.log('Notification closed');
+});
+
+self.addEventListener('install', function(event) {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(clients.claim());
+});
+
 async function cacheFirst(request) {
   const cached = await caches.match(request);
   if (cached) return cached;
@@ -98,3 +158,4 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(staleWhileRevalidate(req));
   }
 });
+
