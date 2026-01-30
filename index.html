@@ -448,6 +448,34 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
       background: linear-gradient(135deg, #ff3838, #ff0000) !important;
       box-shadow: 0 4px 20px rgba(255, 56, 56, 0.7) !important;
     }
+  .badge-3ds {
+    background: linear-gradient(135deg, var(--3ds-color), #a01b1f);
+    box-shadow: 0 5px 20px var(--3ds-glow), 0 0 30px var(--3ds-glow) inset
+  }
+
+  .game-card.platform-3ds .new-badge {
+    --new-main: var(--3ds-color);
+    --new-dark: #a01b1f;
+    --new-glow: var(--3ds-glow)
+  }
+
+  .game-card.platform-3ds .pin-badge {
+    --pin-main: var(--3ds-color);
+    --pin-dark: #a01b1f;
+    --pin-glow: var(--3ds-glow)
+  }
+
+  /* Untuk platform icon 3DS */
+  .platform-icon.platform-3ds {
+    background: rgba(209, 34, 41, 0.3);
+  }
+
+  /* Untuk platform badge khusus 3DS */
+  .platform-badge.badge-3ds {
+    background: rgba(209, 34, 41, 0.8) !important;
+    border-color: rgba(255, 100, 100, 0.5) !important;
+  }
+
 
 </style>
 </head>
@@ -791,10 +819,10 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
     const GAMEPSVITA_API_URL = "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec";
     const GAMEWII_API_URL = "https://script.google.com/macros/s/AKfycbz8uhfQtYxyUmZSVloZlY0UDxkQayeYAemS6zDXS4zDKKJ-DYuq16pqFJLkNCYXg18a/exec";
-    const GAME3DS_API_URL = "https://script.google.com/macros/s/AKfycby6F_9WvxrFrxbLF6HVh-bVU7_TvV2uBv8x9eNZOSxwH42sUedXVhPlz4y9YitcZWuX/exec";
     const USER_API_URL = "https://script.google.com/macros/s/AKfycbweRCcVmuWrz2gpvIanBqeIsyubAUgOjSssHhnXBW3WUiOu9QbNeUq-y4-9Ps6BuQ8L/exec";
     const PINNEDGAME_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const GAMECUBE_API_URL = "https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec";
+    const GAME3DS_API_URL = "https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec";
     const TRACKING_API_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
     const ADMIN_TELEGRAM_ID = "1172835542";
