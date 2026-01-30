@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <!-- Tambahkan di head -->
+<script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>List Game INDapk - Multi Platform Game Download</title>
@@ -1135,6 +1137,24 @@ async function loadNotificationSettings() {
   }
 }
 
+
+// Initialize Workbox untuk background sync
+if ('serviceWorker' in navigator && window.workbox) {
+  console.log('Workbox detected, enabling advanced features');
+  
+  // Aktifkan background sync
+  workbox.backgroundSync.register('api-requests', {
+    maxRetentionTime: 24 * 60 // Retry untuk 24 jam
+  });
+  
+  // Aktifkan periodic sync jika didukung
+  if ('periodicSync' in workbox) {
+    workbox.periodicSync.register('check-new-games', {
+      minInterval: 12 * 60 * 60 * 1000, // 12 jam
+    });
+  }
+}
+
 // Save notification settings to localStorage
 async function saveNotificationSettings() {
   try {
@@ -1246,23 +1266,52 @@ async function disableNotifications() {
 async function setupServiceWorker() {
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     try {
-      // Register service worker
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      console.log('Service Worker registered:', registration);
-      
-      // Subscribe to push notifications
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array('BMdA_dIuXZSJ5ujFLfYpdNEEEYb0gDPENCjShR86LFdcSsMxcgn1USSg31UBbJmKHE0wSWxcFhFf4tWmDYx40RE') // Ganti dengan VAPID key Anda
+      // 1. Cek apakah service worker sudah terdaftar
+      const registration = await navigator.serviceWorker.register('/sw.js', {
+        scope: '/'
       });
       
-      // Send subscription to server
-      await saveSubscription(subscription);
+      console.log('Service Worker registered:', registration);
       
+      // 2. Tunggu service worker aktif
+      if (registration.installing) {
+        console.log('Service Worker installing');
+      } else if (registration.waiting) {
+        console.log('Service Worker installed');
+      } else if (registration.active) {
+        console.log('Service Worker active');
+      }
+      
+      // 3. Subscribe untuk push notifications hanya jika user mengizinkan
+      if (Notification.permission === 'granted') {
+        await subscribeToPushNotifications(registration);
+      }
+      
+      return registration;
     } catch (error) {
       console.error('Service Worker registration failed:', error);
+      
+      // Fallback: Gunakan background polling tanpa push notifications
+      console.warn('Push notifications not available, using background polling');
+      startBackgroundPolling();
+      
+      return null;
     }
+  } else {
+    console.log('Service Worker or Push API not supported');
+    startBackgroundPolling();
+    return null;
   }
+}
+
+// Fungsi baru: Background polling sebagai fallback
+function startBackgroundPolling() {
+  // Check setiap 15 menit
+  setInterval(async () => {
+    if (notificationSettings.enabled && document.visibilityState === 'hidden') {
+      await checkForNewGames();
+    }
+  }, 15 * 60 * 1000);
 }
 
 // Convert VAPID key
@@ -1337,20 +1386,58 @@ async function registerServiceWorker() {
 
 // ====== BACKGROUND SYNC FALLBACK ======
 function registerBackgroundSyncFallback() {
-  if ('serviceWorker' in navigator && 'SyncManager' in window) {
-    navigator.serviceWorker.ready.then(registration => {
-      return registration.sync.register('check-new-games')
-        .then(() => console.log('Background sync registered'))
-        .catch(error => {
-          console.log('Background sync not supported, using fallback');
-          // Use setTimeout as fallback
-          setInterval(checkForNewGames, 15 * 60 * 1000); // Check every 15 minutes
-        });
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(async (registration) => {
+      // Coba periodic sync terlebih dahulu
+      if ('periodicSync' in registration) {
+        try {
+          const status = await registration.periodicSync.getTags();
+          if (!status.includes('check-new-games')) {
+            await registration.periodicSync.register('check-new-games', {
+              minInterval: 24 * 60 * 60 * 1000, // Minimal 24 jam
+            });
+            console.log('Periodic sync registered');
+          }
+        } catch (periodicError) {
+          console.log('Periodic sync not available:', periodicError);
+          registerNormalSync(registration);
+        }
+      } else {
+        registerNormalSync(registration);
+      }
     });
   } else {
-    console.log('Background sync API not available, using fallback');
-    setInterval(checkForNewGames, 15 * 60 * 1000); // Check every 15 minutes
+    console.log('Service Worker not available, using timer fallback');
+    startTimerFallback();
   }
+}
+
+function registerNormalSync(registration) {
+  if ('sync' in registration) {
+    registration.sync.register('check-new-games')
+      .then(() => console.log('Background sync registered'))
+      .catch(error => {
+        console.log('Background sync not supported:', error);
+        startTimerFallback();
+      });
+  } else {
+    startTimerFallback();
+  }
+}
+
+function startTimerFallback() {
+  // Check setiap 30 menit saat app di background
+  setInterval(async () => {
+    const isAppInBackground = document.visibilityState === 'hidden';
+    const isIdle = 'requestIdleCallback' in window ? 
+      await new Promise(resolve => {
+        requestIdleCallback(() => resolve(true), { timeout: 5000 });
+      }) : true;
+    
+    if (isAppInBackground && isIdle && notificationSettings.enabled) {
+      await checkForNewGames();
+    }
+  }, 30 * 60 * 1000);
 }
 
 // ====== NOTIFICATION PERMISSION ======
@@ -1503,20 +1590,34 @@ async function checkForNewGames() {
   if (!notificationSettings.enabled) return;
   
   try {
-    // Load notified games from service worker
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'LOAD_NOTIFIED_GAMES'
-      });
+    // Cek apakah app sedang di foreground
+    const isAppActive = document.visibilityState === 'visible';
+    
+    // Simpan waktu check terakhir
+    const lastCheck = localStorage.getItem('last_notification_check') || 0;
+    const now = Date.now();
+    
+    // Jangan check terlalu sering (minimal 10 menit)
+    if (now - lastCheck < 10 * 60 * 1000 && !isAppActive) {
+      return;
     }
     
-    // Check each platform
-    for (const platform of notificationSettings.platforms) {
-      await checkPlatformForNewGames(platform);
-    }
+    localStorage.setItem('last_notification_check', now.toString());
     
-    notificationSettings.lastCheck = Date.now();
+    console.log('Checking for new games...');
+    
+    // Check semua platform secara paralel
+    const promises = notificationSettings.platforms.map(platform => 
+      checkPlatformForNewGames(platform)
+    );
+    
+    await Promise.allSettled(promises);
+    
+    notificationSettings.lastCheck = now;
     await saveNotificationSettings();
+    
+    // Update badge count
+    updateNotificationBadge();
     
   } catch (error) {
     console.error('Error checking for new games:', error);
