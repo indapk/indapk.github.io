@@ -1,1381 +1,388 @@
-// sw.js - Service Worker untuk INDapk Game Library
-const CACHE_NAME = 'indapk-game-cache-v5'; // Naikkan versi
-const DYNAMIC_CACHE_NAME = 'indapk-dynamic-cache-v2';
-const NOTIFICATION_ICON = '/icons/icon-192x192.png';
-const VERSION = '5.0.0';
-const BACKGROUND_SYNC_TAG = 'check-new-games';
-const PUSH_NOTIFICATION_DATA = 'indapk-game-updates';
+// sw.js - INDapk PWA dengan Notifikasi Game Baru
+const VERSION = "v2.0.0";
+const STATIC_CACHE = `indapk-static-${VERSION}`;
+const RUNTIME_CACHE = `indapk-runtime-${VERSION}`;
+const NOTIFICATION_CACHE = `indapk-notifications-${VERSION}`;
+const OFFLINE_URL = "/offline.html";
 
-// API URLs untuk caching
-const API_URLS = [
-  "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec",
-  "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec",
-  "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec",
-  "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec",
-  "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec",
-  "https://script.google.com/macros/s/AKfycbz8uhfQtYxyUmZSVloZlY0UDxkQayeYAemS6zDXS4zDKKJ-DYuq16pqFJLkNCYXg18a/exec",
-  "https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec",
-  "https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec",
-  "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec"
+const PRECACHE = [
+  "/",
+  "/index.html",
+  "/manifest.json",
+  "/offline.html",
+  "/icons/icon-192x192.png",
+  "/icons/icon-512x512.png"
 ];
 
-// Assets yang akan di-cache saat instalasi
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/download.html',
-  '/manifest.json',
-  '/favicon.ico',
-  '/icons/icon-72x72.png',
-  '/icons/icon-96x96.png',
-  '/icons/icon-128x128.png',
-  '/icons/icon-144x144.png',
-  '/icons/icon-152x152.png',
-  '/icons/icon-192x192.png',
-  '/icons/icon-384x384.png',
-  '/icons/icon-512x512.png',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css',
-  'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css',
-  'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;700;800&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
-];
+// Konfigurasi API URLs untuk game
+const API_URLS = {
+  ps2: "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec",
+  switch: "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec",
+  psp: "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec",
+  android: "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec",
+  psvita: "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec",
+  wii: "https://script.google.com/macros/s/AKfycbz8uhfQtYxyUmZSVloZlY0UDxkQayeYAemS6zDXS4zDKKJ-DYuq16pqFJLkNCYXg18a/exec",
+  gamecube: "https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec",
+  "3ds": "https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec",
+  pc: "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec"
+};
 
-// ===== INSTALL EVENT =====
-self.addEventListener('install', (event) => {
-  console.log(`[SW ${VERSION}] Installing Service Worker...`);
-  
+// Install: precache file penting
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(async (cache) => {
-        console.log('[SW] Cache opened, adding static assets');
-        
-        // Cache assets satu per satu dengan error handling
-        for (const asset of STATIC_ASSETS) {
-          try {
-            await cache.add(asset);
-            console.log(`[SW] Cached: ${asset}`);
-          } catch (error) {
-            console.warn(`[SW] Failed to cache ${asset}:`, error);
-          }
-        }
-        
-        console.log('[SW] All assets cached');
-        return self.skipWaiting();
-      })
-      .catch((error) => {
-        console.error('[SW] Cache installation failed:', error);
-        // Tetap skip waiting meski ada error
+    caches.open(STATIC_CACHE)
+      .then((cache) => cache.addAll(PRECACHE))
+      .then(() => {
+        console.log("Service Worker installed");
         return self.skipWaiting();
       })
   );
 });
 
-// ===== ACTIVATE EVENT =====
-self.addEventListener('activate', (event) => {
-  console.log(`[SW ${VERSION}] Activating Service Worker...`);
-  
+// Activate: bersihin cache versi lama
+self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME && cacheName !== DYNAMIC_CACHE_NAME) {
-            console.log('[SW] Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-    .then(() => {
-      console.log('[SW] Claiming clients');
+    caches.keys().then((keys) => Promise.all(
+      keys.map((key) => {
+        if (![STATIC_CACHE, RUNTIME_CACHE, NOTIFICATION_CACHE].includes(key)) {
+          return caches.delete(key);
+        }
+      })
+    )).then(() => {
+      console.log("Service Worker activated");
       return self.clients.claim();
     })
-    .then(() => {
-      console.log('[SW] Service Worker activated');
-      
-      // Kirim notifikasi ke semua clients bahwa SW aktif
-      return self.clients.matchAll().then((clients) => {
-        clients.forEach((client) => {
-          client.postMessage({
-            type: 'SW_ACTIVATED',
-            version: VERSION,
-            timestamp: Date.now()
-          });
-        });
-      });
-    })
-    .catch((error) => {
-      console.error('[SW] Activation error:', error);
-    })
   );
 });
 
-// ===== FETCH EVENT (Cache Strategy) =====
-self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-  
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
-    return;
+// ====== NOTIFICATION SYSTEM ======
+// Periodic sync untuk cek game baru
+self.addEventListener("periodicsync", (event) => {
+  if (event.tag === "check-new-games") {
+    event.waitUntil(checkForNewGames());
   }
-  
-  // Skip Chrome extensions
-  if (url.protocol === 'chrome-extension:') {
-    return;
-  }
-  
-  // Skip Google Sheets API (cache dengan strategi khusus)
-  if (API_URLS.some(apiUrl => url.href.includes(apiUrl))) {
-    event.respondWith(cacheThenNetworkStrategy(event));
-    return;
-  }
-  
-  // Untuk assets static, gunakan Cache First
-  if (isStaticAsset(url)) {
-    event.respondWith(cacheFirstStrategy(event));
-    return;
-  }
-  
-  // Untuk halaman HTML, gunakan Network First
-  if (event.request.headers.get('Accept')?.includes('text/html')) {
-    event.respondWith(networkFirstStrategy(event));
-    return;
-  }
-  
-  // Default: Cache First dengan fallback ke network
-  event.respondWith(cacheFirstWithNetworkFallback(event));
 });
 
-// ===== STRATEGI CACHE =====
-
-// Cache First untuk static assets
-async function cacheFirstStrategy(event) {
-  try {
-    const cache = await caches.open(CACHE_NAME);
-    const cachedResponse = await cache.match(event.request);
-    
-    if (cachedResponse) {
-      console.log('[SW] Serving from cache:', event.request.url);
-      return cachedResponse;
-    }
-    
-    // Jika tidak ada di cache, fetch dari network
-    const networkResponse = await fetch(event.request);
-    
-    // Clone response untuk cache
-    const responseToCache = networkResponse.clone();
-    
-    // Cache response untuk penggunaan selanjutnya
-    event.waitUntil(
-      cache.put(event.request, responseToCache)
-        .catch(error => {
-          console.warn('[SW] Failed to cache response:', error);
-        })
-    );
-    
-    return networkResponse;
-  } catch (error) {
-    console.error('[SW] Fetch failed:', error);
-    
-    // Fallback ke halaman offline jika tersedia
-    const cache = await caches.open(CACHE_NAME);
-    const offlineResponse = await cache.match('/offline.html');
-    if (offlineResponse) {
-      return offlineResponse;
-    }
-    
-    // Fallback ke halaman error sederhana
-    return new Response('Network error, anda sedang offline', {
-      status: 503,
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
-    });
-  }
-}
-
-// Network First untuk halaman HTML
-async function networkFirstStrategy(event) {
-  try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    
-    // Coba fetch dari network dulu
-    const networkResponse = await fetch(event.request);
-    
-    // Clone response untuk cache
-    const responseToCache = networkResponse.clone();
-    
-    // Update cache
-    event.waitUntil(
-      cache.put(event.request, responseToCache)
-        .catch(error => {
-          console.warn('[SW] Failed to cache network response:', error);
-        })
-    );
-    
-    return networkResponse;
-  } catch (error) {
-    console.log('[SW] Network failed, trying cache:', error);
-    
-    // Coba dari cache
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const cachedResponse = await cache.match(event.request);
-    if (cachedResponse) {
-      return cachedResponse;
-    }
-    
-    // Fallback ke halaman offline
-    const offlineCache = await caches.open(CACHE_NAME);
-    const offlineResponse = await offlineCache.match('/offline.html');
-    if (offlineResponse) {
-      return offlineResponse;
-    }
-    
-    // Fallback terakhir
-    return new Response(
-      '<h1>Anda sedang offline</h1><p>Coba periksa koneksi internet Anda.</p>',
-      {
-        status: 503,
-        headers: { 'Content-Type': 'text/html; charset=utf-8' }
-      }
-    );
-  }
-}
-
-// Cache First dengan Network Fallback
-async function cacheFirstWithNetworkFallback(event) {
-  try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const cachedResponse = await cache.match(event.request);
-    
-    if (cachedResponse) {
-      // Background refresh
-      event.waitUntil(
-        (async () => {
-          try {
-            const networkResponse = await fetch(event.request);
-            if (networkResponse.ok) {
-              const responseToCache = networkResponse.clone();
-              await cache.put(event.request, responseToCache);
-            }
-          } catch (error) {
-            // Gagal refresh, tetap gunakan cache
-            console.log('[SW] Background refresh failed:', error);
-          }
-        })()
-      );
-      
-      return cachedResponse;
-    }
-    
-    // Jika tidak ada di cache, fetch dari network
-    const networkResponse = await fetch(event.request);
-    
-    // Cache response untuk penggunaan selanjutnya
-    if (networkResponse.ok) {
-      const responseToCache = networkResponse.clone();
-      event.waitUntil(
-        cache.put(event.request, responseToCache)
-          .catch(error => {
-            console.warn('[SW] Failed to cache response:', error);
-          })
-      );
-    }
-    
-    return networkResponse;
-  } catch (error) {
-    console.error('[SW] Fetch failed:', error);
-    
-    // Return error response
-    return new Response('Network error', {
-      status: 408,
-      headers: { 'Content-Type': 'text/plain' }
-    });
-  }
-}
-
-// Cache Then Network untuk API calls
-async function cacheThenNetworkStrategy(event) {
-  try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const cachedResponse = await cache.match(event.request);
-    
-    // Selalu return cache terlebih dahulu (jika ada)
-    if (cachedResponse) {
-      // Fetch baru di background untuk update
-      event.waitUntil(
-        (async () => {
-          try {
-            const networkResponse = await fetch(event.request);
-            if (networkResponse.ok) {
-              const responseToCache = networkResponse.clone();
-              await cache.put(event.request, responseToCache);
-              
-              // Kirim notifikasi ke clients bahwa ada data baru
-              const clients = await self.clients.matchAll();
-              clients.forEach((client) => {
-                client.postMessage({
-                  type: 'DATA_UPDATED',
-                  url: event.request.url,
-                  timestamp: Date.now()
-                });
-              });
-            }
-          } catch (error) {
-            console.log('[SW] Background API fetch failed:', error);
-          }
-        })()
-      );
-      
-      return cachedResponse;
-    }
-    
-    // Jika tidak ada cache, fetch dari network
-    const networkResponse = await fetch(event.request);
-    
-    if (networkResponse.ok) {
-      const responseToCache = networkResponse.clone();
-      await cache.put(event.request, responseToCache);
-    }
-    
-    return networkResponse;
-  } catch (error) {
-    console.error('[SW] API fetch failed:', error);
-    
-    return new Response(JSON.stringify({ 
-      status: 'error', 
-      message: 'Failed to fetch data' 
-    }), {
-      status: 503,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-}
-
-// ===== PUSH NOTIFICATIONS (Dengan Error Handling) =====
-self.addEventListener('push', (event) => {
-  console.log('[SW] Push notification received in background');
+// Push notification
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
   
-  // Handle push bahkan jika app tidak terbuka
-  if (!self.Notification || self.Notification.permission !== 'granted') {
-    console.log('[SW] Push received but notifications not granted');
-    return;
-  }
-  
-  let notificationData;
-  
-  if (event.data) {
-    try {
-      notificationData = event.data.json();
-      console.log('[SW] Push data parsed:', notificationData);
-    } catch (error) {
-      console.log('[SW] Push data is not JSON, using default');
-      notificationData = {
-        title: 'INDapk Game Library',
-        body: event.data.text() || 'Game baru tersedia!',
-        icon: NOTIFICATION_ICON
-      };
-    }
-  } else {
-    notificationData = {
-      title: 'INDapk Game Library',
-      body: 'Game baru tersedia!',
-      icon: NOTIFICATION_ICON
-    };
-  }
-  
-  // Tambahkan default values
-  notificationData = {
-    icon: NOTIFICATION_ICON,
-    badge: NOTIFICATION_ICON,
-    tag: 'indapk-game-update',
-    timestamp: Date.now(),
-    ...notificationData
+  const data = event.data.json();
+  const options = {
+    body: data.body || "Ada game baru tersedia!",
+    icon: data.icon || "/icons/icon-192x192.png",
+    badge: "/icons/icon-192x192.png",
+    tag: data.tag || "new-game",
+    data: data.data || {},
+    requireInteraction: false,
+    actions: data.actions || [
+      { action: "open", title: "Buka Game" },
+      { action: "close", title: "Tutup" }
+    ]
   };
   
-  // Tampilkan notifikasi
   event.waitUntil(
-    self.registration.showNotification(
-      notificationData.title,
-      {
-        body: notificationData.body,
-        icon: notificationData.icon,
-        badge: notificationData.badge,
-        tag: notificationData.tag,
-        data: notificationData.data || {
-          url: '/',
-          timestamp: Date.now()
-        },
-        actions: notificationData.actions || [
-          {
-            action: 'open',
-            title: 'Buka',
-            icon: '/icons/icon-72x72.png'
-          }
-        ],
-        vibrate: [200, 100, 200],
-        requireInteraction: notificationData.requireInteraction !== false
-      }
-    )
-    .then(() => {
-      console.log('[SW] Notification shown successfully');
-      
-      // Kirim pesan ke client jika ada
-      return self.clients.matchAll().then(clients => {
-        clients.forEach(client => {
-          client.postMessage({
-            type: 'PUSH_RECEIVED',
-            data: notificationData,
-            timestamp: Date.now()
-          });
-        });
-      });
-    })
-    .catch(error => {
-      console.error('[SW] Failed to show notification:', error);
-    })
+    self.registration.showNotification(data.title || "Game Baru!", options)
   );
 });
 
-// ===== NOTIFICATION CLICK =====
-self.addEventListener('notificationclick', (event) => {
-  console.log('[SW] Notification clicked:', event.notification.tag);
-  
+// Notification click handler
+self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   
-  const urlToOpen = event.notification.data?.url || '/';
-  
-  const openClient = async () => {
-    try {
-      const clients = await self.clients.matchAll({
-        type: 'window',
-        includeUncontrolled: true
-      });
-      
-      // Cari tab/window yang sudah terbuka dengan URL yang sama
-      for (const client of clients) {
-        if (client.url.includes(urlToOpen) && 'focus' in client) {
-          await client.focus();
-          return;
-        }
-      }
-      
-      // Jika tidak ada, buka tab/window baru
-      if (self.clients.openWindow) {
-        await self.clients.openWindow(urlToOpen);
-      }
-    } catch (error) {
-      console.error('[SW] Error opening window:', error);
-    }
-  };
-  
-  event.waitUntil(openClient());
-});
-
-// ===== BACKGROUND SYNC (Dengan Compatibility Check) =====
-self.addEventListener('sync', (event) => {
-  console.log('[SW] Background sync event:', event.tag);
-  
-  if (event.tag === BACKGROUND_SYNC_TAG) {
-    event.waitUntil(
-      checkAndNotifyNewGames()
-        .catch(error => {
-          console.error('[SW] Background sync failed:', error);
-          // Coba lagi nanti
-          return self.registration.sync.register(BACKGROUND_SYNC_TAG);
+  if (event.action === "open" || event.action === "") {
+    const gameData = event.notification.data;
+    if (gameData && gameData.gameId) {
+      event.waitUntil(
+        clients.matchAll({ type: "window" }).then((clientList) => {
+          const url = `/download.html?game=${gameData.gameId}&platform=${gameData.platform}`;
+          
+          // Jika ada window yang terbuka, fokus dan navigasi
+          for (const client of clientList) {
+            if (client.url.includes("/") && "navigate" in client) {
+              return client.navigate(url).then(client.focus());
+            }
+          }
+          
+          // Jika tidak ada, buka window baru
+          return clients.openWindow(url);
         })
-    );
-  }
-});
-
-// Sync games data
-async function syncGamesData() {
-  console.log('[SW] Syncing games data...');
-  
-  try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    
-    // Sync semua API
-    for (const apiUrl of API_URLS) {
-      try {
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: 'action=getAllGames'
-        });
-        
-        if (response.ok) {
-          const responseToCache = response.clone();
-          await cache.put(apiUrl, responseToCache);
-          console.log(`[SW] Synced: ${apiUrl}`);
-        }
-      } catch (error) {
-        console.error(`[SW] Failed to sync ${apiUrl}:`, error);
-      }
-    }
-    
-    // Beritahu clients bahwa sync selesai
-    const clients = await self.clients.matchAll();
-    clients.forEach((client) => {
-      try {
-        client.postMessage({
-          type: 'SYNC_COMPLETED',
-          timestamp: Date.now()
-        });
-      } catch (error) {
-        console.error('[SW] Failed to post sync message:', error);
-      }
-    });
-    
-  } catch (error) {
-    console.error('[SW] Background sync failed:', error);
-  }
-}
-
-// Sync notification settings
-async function syncNotificationSettings() {
-  console.log('[SW] Syncing notification settings...');
-  // Implementasi sync settings jika diperlukan
-}
-
-// ===== PERIODIC SYNC (Dengan Compatibility Check) =====
-self.addEventListener('periodicsync', (event) => {
-  console.log('[SW] Periodic sync event:', event.tag);
-  
-  if (event.tag === BACKGROUND_SYNC_TAG) {
-    event.waitUntil(
-      checkAndNotifyNewGames()
-        .then(() => {
-          console.log('[SW] Periodic sync completed');
-        })
-        .catch(error => {
-          console.error('[SW] Periodic sync failed:', error);
-        })
-    );
-  }
-});
-
-// ===== FUNGSI UTAMA UNTUK CHECK NEW GAMES =====
-async function checkAndNotifyNewGames() {
-  try {
-    console.log('[SW] Checking for new games in background...');
-    
-    // Ambil settings dari cache
-    const settings = await getNotificationSettings();
-    
-    if (!settings.enabled) {
-      console.log('[SW] Notifications disabled in settings');
-      return;
-    }
-    
-    // Ambil data terakhir yang sudah dinotifikasi
-    const lastNotified = await getLastNotifiedGames();
-    const notifiedGameIds = new Set(lastNotified);
-    
-    // Check semua platform yang diaktifkan
-    const newGamesFound = [];
-    
-    for (const platform of settings.platforms) {
-      const platformGames = await fetchPlatformGames(platform);
-      const newGames = platformGames.filter(game => {
-        const gameKey = `${game.download_id}|${platform}`;
-        return !notifiedGameIds.has(gameKey);
-      });
-      
-      newGamesFound.push(...newGames.map(game => ({
-        ...game,
-        platform
-      })));
-    }
-    
-    // Tampilkan notifikasi untuk game baru
-    if (newGamesFound.length > 0) {
-      await showBatchNotifications(newGamesFound);
-      
-      // Simpan game yang sudah dinotifikasi
-      const gameKeys = newGamesFound.map(game => 
-        `${game.download_id}|${game.platform}`
       );
-      await saveNotifiedGames([...notifiedGameIds, ...gameKeys]);
+    }
+  }
+});
+
+// Cek game baru
+async function checkForNewGames() {
+  try {
+    const settings = await getNotificationSettings();
+    if (!settings.enabled) return;
+    
+    const cache = await caches.open(NOTIFICATION_CACHE);
+    const lastCheck = await cache.match("last-check");
+    const notifiedGames = await cache.match("notified-games");
+    
+    let lastCheckTime = 0;
+    let notifiedGamesList = [];
+    
+    if (lastCheck) {
+      const data = await lastCheck.json();
+      lastCheckTime = data.timestamp || 0;
+    }
+    
+    if (notifiedGames) {
+      const data = await notifiedGames.json();
+      notifiedGamesList = data.games || [];
+    }
+    
+    // Cek game baru dari setiap platform yang dipilih user
+    const platformsToCheck = settings.platforms || ["all"];
+    const allNewGames = [];
+    
+    for (const platform of platformsToCheck) {
+      if (platform === "all") {
+        // Cek semua platform
+        for (const [key, url] of Object.entries(API_URLS)) {
+          const newGames = await checkPlatformForNewGames(key, url, lastCheckTime, notifiedGamesList);
+          allNewGames.push(...newGames);
+        }
+      } else if (API_URLS[platform]) {
+        const newGames = await checkPlatformForNewGames(platform, API_URLS[platform], lastCheckTime, notifiedGamesList);
+        allNewGames.push(...newGames);
+      }
+    }
+    
+    // Filter berdasarkan frekuensi
+    const filteredGames = filterGamesByFrequency(allNewGames, settings.frequency);
+    
+    // Kirim notifikasi untuk game baru
+    for (const game of filteredGames) {
+      await sendNewGameNotification(game);
+      notifiedGamesList.push(`${game.platform}-${game.download_id}`);
+    }
+    
+    // Update cache
+    await cache.put("last-check", new Response(JSON.stringify({ timestamp: Date.now() })));
+    await cache.put("notified-games", new Response(JSON.stringify({ games: notifiedGamesList })));
+    
+  } catch (error) {
+    console.error("Error checking for new games:", error);
+  }
+}
+
+// Cek game baru dari platform tertentu
+async function checkPlatformForNewGames(platform, apiUrl, lastCheckTime, notifiedGamesList) {
+  try {
+    const response = await fetch(`${apiUrl}?action=getAllGames`);
+    if (!response.ok) return [];
+    
+    const data = await response.json();
+    if (data.status !== "success" || !data.data) return [];
+    
+    const newGames = [];
+    const gameId = `${platform}-`;
+    
+    for (const game of data.data) {
+      const gameKey = `${platform}-${game.download_id}`;
       
-      console.log(`[SW] ${newGamesFound.length} new games found and notified`);
-    } else {
-      console.log('[SW] No new games found');
+      // Skip jika sudah dinotifikasi
+      if (notifiedGamesList.includes(gameKey)) continue;
+      
+      // Konversi timestamp game
+      const gameTime = parseGameTimestamp(game.timestamp);
+      
+      // Cek jika game lebih baru dari lastCheckTime
+      if (gameTime > lastCheckTime) {
+        newGames.push({
+          ...game,
+          platform,
+          platform_name: getPlatformName(platform),
+          game_time: gameTime
+        });
+      }
     }
     
+    return newGames;
   } catch (error) {
-    console.error('[SW] Error checking new games:', error);
-    throw error;
+    console.error(`Error checking ${platform}:`, error);
+    return [];
   }
 }
 
-
-// ===== FUNGSI BANTUAN =====
-async function getNotificationSettings() {
-  try {
-    const cache = await caches.open(CACHE_NAME);
-    const response = await cache.match('/notification-settings');
-    
-    if (response) {
-      const data = await response.json();
-      return data.settings || {
-        enabled: false,
-        platforms: [],
-        frequency: 'all'
-      };
-    }
-  } catch (error) {
-    console.error('[SW] Error getting settings:', error);
-  }
+// Filter game berdasarkan frekuensi notifikasi
+function filterGamesByFrequency(games, frequency) {
+  if (frequency === "all") return games;
   
-  return {
-    enabled: false,
-    platforms: [],
-    frequency: 'all'
-  };
-}
-
-async function getLastNotifiedGames() {
-  try {
-    const cache = await caches.open(CACHE_NAME);
-    const response = await cache.match('/last-notified-games');
-    
-    if (response) {
-      const data = await response.json();
-      return data.gameIds || [];
-    }
-  } catch (error) {
-    console.error('[SW] Error getting notified games:', error);
-  }
+  // Urutkan berdasarkan tanggal (terbaru dulu)
+  games.sort((a, b) => b.game_time - a.game_time);
   
-  return [];
-}
-
-async function saveNotifiedGames(gameIds) {
-  try {
-    const cache = await caches.open(CACHE_NAME);
-    const response = new Response(JSON.stringify({
-      gameIds: Array.from(gameIds),
-      timestamp: Date.now()
-    }), {
-      headers: { 'Content-Type': 'application/json' }
+  if (frequency === "popular") {
+    // Dalam implementasi nyata, perlu logika untuk menentukan popularitas
+    // Untuk sementara, return semua game
+    return games;
+  } else if (frequency === "daily") {
+    // Return game terbaru hari ini saja
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return games.filter(game => {
+      const gameDate = new Date(game.game_time);
+      return gameDate >= today;
     });
-    
-    await cache.put('/last-notified-games', response);
-  } catch (error) {
-    console.error('[SW] Error saving notified games:', error);
-  }
-}
-
-async function fetchPlatformGames(platform) {
-  const platformUrls = {
-    'ps2': "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec",
-    'switch': "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec",
-    'psp': "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec",
-    'android': "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec",
-    'psvita': "https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec",
-    'wii': "https://script.google.com/macros/s/AKfycbz8uhfQtYxyUmZSVloZlY0UDxkQayeYAemS6zDXS4zDKKJ-DYuq16pqFJLkNCYXg18a/exec",
-    'gamecube': "https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec",
-    '3ds': "https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec",
-    'pc': "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec"
-  };
-  
-  const url = platformUrls[platform];
-  if (!url) return [];
-  
-  try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const cacheKey = `${url}-games`;
-    
-    // Coba dari cache dulu
-    const cached = await cache.match(cacheKey);
-    if (cached) {
-      const data = await cached.json();
-      console.log(`[SW] Using cached games for ${platform}`);
-      return data.data || [];
-    }
-    
-    // Fetch dari network
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: 'action=getAllGames'
-    });
-    
-    if (response.ok) {
-      const result = await response.json();
-      const games = result.data || [];
-      
-      // Cache hasilnya
-      const cacheResponse = new Response(JSON.stringify({
-        data: games,
-        timestamp: Date.now()
-      }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
-      await cache.put(cacheKey, cacheResponse);
-      
-      return games;
-    }
-  } catch (error) {
-    console.error(`[SW] Error fetching ${platform} games:`, error);
   }
   
-  return [];
+  return games;
 }
 
-async function showBatchNotifications(games) {
-  if (!games || games.length === 0) return;
+// Kirim notifikasi game baru
+async function sendNewGameNotification(game) {
+  const title = `🎮 Game Baru: ${game.nama_game || game.ori_name}`;
+  const body = `Platform: ${game.platform_name || getPlatformName(game.platform)}`;
   
-  // Untuk multiple games, tampilkan summary notification
-  if (games.length === 1) {
-    const game = games[0];
-    await showSingleNotification(game);
-  } else {
-    await showSummaryNotification(games);
-  }
-}
-
-async function showSingleNotification(game) {
-  const platformName = getPlatformLabel(game.platform);
-  const gameName = game.nama_game || game.ori_name || 'Unknown Game';
-  const thumbnail = game.thumbnail_url || NOTIFICATION_ICON;
-  
-  const notificationOptions = {
-    body: `${platformName} • ${game.category || ''}`,
-    icon: thumbnail,
-    badge: NOTIFICATION_ICON,
-    tag: `game-${game.download_id}-${game.platform}`,
+  const options = {
+    body: body,
+    icon: game.thumbnail_url || "/icons/icon-192x192.png",
+    badge: "/icons/icon-192x192.png",
+    tag: `new-game-${game.platform}-${game.download_id}`,
     data: {
-      url: `/download.html?game=${game.download_id}&platform=${game.platform}`,
       gameId: game.download_id,
       platform: game.platform,
-      timestamp: Date.now()
+      url: `/download.html?game=${game.download_id}&platform=${game.platform}`
     },
     actions: [
-      {
-        action: 'open',
-        title: 'Buka Game',
-        icon: '/icons/icon-72x72.png'
-      }
-    ],
-    vibrate: [200, 100, 200],
-    requireInteraction: true
+      { action: "open", title: "Lihat Game" },
+      { action: "close", title: "Tutup" }
+    ]
   };
   
-  await self.registration.showNotification(
-    `🎮 ${gameName}`,
-    notificationOptions
-  );
+  return self.registration.showNotification(title, options);
 }
 
-async function showSummaryNotification(games) {
-  const platformCounts = {};
-  games.forEach(game => {
-    platformCounts[game.platform] = (platformCounts[game.platform] || 0) + 1;
-  });
+// Helper functions
+function parseGameTimestamp(timestamp) {
+  if (!timestamp) return Date.now();
   
-  const platforms = Object.entries(platformCounts)
-    .map(([platform, count]) => `${getPlatformLabel(platform)}: ${count}`)
-    .join(', ');
-  
-  const notificationOptions = {
-    body: `Game baru tersedia dari: ${platforms}`,
-    icon: NOTIFICATION_ICON,
-    badge: NOTIFICATION_ICON,
-    tag: 'batch-game-update',
-    data: {
-      url: '/',
-      games: games.map(game => ({
-        id: game.download_id,
-        platform: game.platform,
-        name: game.nama_game || game.ori_name
-      })),
-      timestamp: Date.now()
-    },
-    actions: [
-      {
-        action: 'open',
-        title: 'Lihat Semua',
-        icon: '/icons/icon-72x72.png'
-      }
-    ],
-    vibrate: [200, 100, 200, 100, 200],
-    requireInteraction: false
-  };
-  
-  await self.registration.showNotification(
-    `🎮 ${games.length} Game Baru Tersedia!`,
-    notificationOptions
-  );
-}
-
-function getPlatformLabel(platform) {
-  const labels = {
-    'ps2': 'PlayStation 2',
-    'switch': 'Nintendo Switch',
-    'psp': 'PSP',
-    'psvita': 'PS Vita',
-    'wii': 'Wii',
-    'gamecube': 'Gamecube',
-    '3ds': '3DS',
-    'android': 'Android',
-    'pc': 'PC'
-  };
-  
-  return labels[platform] || platform;
-}
-// ===== MESSAGE HANDLING =====
-self.addEventListener('message', (event) => {
-  if (!event.data || !event.data.type) return;
-  
-  const { type, data } = event.data;
-  console.log(`[SW] Message received: ${type}`, data);
-  
-  switch (type) {
-    case 'CACHE_GAMES':
-      cacheGamesData(data, event);
-      break;
-      
-    case 'GET_CACHED_GAMES':
-      getCachedGames(event);
-      break;
-      
-    case 'CLEAR_CACHE':
-      clearCache(event);
-      break;
-      
-    case 'UPDATE_SETTINGS':
-      updateSettings(data);
-      break;
-      
-    case 'CHECK_FOR_UPDATES':
-      checkForUpdates();
-      break;
-      
-    case 'SKIP_WAITING':
-      self.skipWaiting();
-      break;
-      
-    case 'REGISTER_BACKGROUND_SYNC':
-      registerBackgroundSync(data);
-      break;
-      
-    case 'TEST_NOTIFICATION':
-      sendTestNotification(data);
-      break;
-      
-    case 'LOAD_NOTIFIED_GAMES':
-      loadNotifiedGames(event);
-      break;
-      
-    case 'CLEAR_NOTIFICATIONS':
-      clearNotifications();
-      break;
-  }
-});
-
-// Cache games data dari client
-async function cacheGamesData(gamesData, event) {
   try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const response = new Response(JSON.stringify({
-      data: gamesData,
-      timestamp: Date.now(),
-      version: VERSION
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    });
-    
-    await cache.put('/cached-games-data', response);
-    console.log('[SW] Games data cached successfully');
-    
-    // Konfirmasi ke client
-    if (event && event.ports && event.ports[0]) {
-      event.ports[0].postMessage({
-        status: 'success',
-        message: 'Data cached successfully'
-      });
-    }
-  } catch (error) {
-    console.error('[SW] Error caching games:', error);
-    
-    if (event && event.ports && event.ports[0]) {
-      event.ports[0].postMessage({
-        status: 'error',
-        error: error.message
-      });
-    }
+    const date = new Date(timestamp);
+    return isNaN(date.getTime()) ? Date.now() : date.getTime();
+  } catch {
+    return Date.now();
   }
 }
 
-// Get cached games untuk client
-async function getCachedGames(event) {
+function getPlatformName(platform) {
+  const names = {
+    ps2: "PlayStation 2",
+    switch: "Nintendo Switch",
+    psp: "PSP",
+    psvita: "PS Vita",
+    wii: "Wii",
+    gamecube: "Gamecube",
+    "3ds": "3DS",
+    android: "Android",
+    pc: "PC"
+  };
+  
+  return names[platform] || platform;
+}
+
+async function getNotificationSettings() {
   try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const response = await cache.match('/cached-games-data');
+    const cache = await caches.open(NOTIFICATION_CACHE);
+    const settings = await cache.match("settings");
     
-    if (!response) {
-      // Kirim response kosong jika tidak ada data
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({
-          status: 'empty',
-          data: [],
-          timestamp: Date.now(),
-          version: VERSION
-        });
+    if (settings) {
+      return await settings.json();
+    }
+    
+    // Default settings
+    return {
+      enabled: false,
+      platforms: ["all"],
+      frequency: "all"
+    };
+  } catch {
+    return {
+      enabled: false,
+      platforms: ["all"],
+      frequency: "all"
+    };
+  }
+}
+
+// ====== CACHE STRATEGIES ======
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+
+  const res = await fetch(request);
+  const cache = await caches.open(RUNTIME_CACHE);
+  cache.put(request, res.clone());
+  return res;
+}
+
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(RUNTIME_CACHE);
+  const cached = await cache.match(request);
+
+  const fetchPromise = fetch(request).then((res) => {
+    cache.put(request, res.clone());
+    return res;
+  }).catch(() => null);
+
+  return cached || (await fetchPromise) || caches.match(OFFLINE_URL);
+}
+
+// Fetch: strategi untuk halaman dan asset
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+
+  // Hanya GET
+  if (req.method !== "GET") return;
+
+  const url = new URL(req.url);
+
+  // Navigasi halaman: Network First, fallback cache, fallback offline
+  if (req.mode === "navigate") {
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(req);
+        const cache = await caches.open(RUNTIME_CACHE);
+        cache.put(req, fresh.clone());
+        return fresh;
+      } catch (e) {
+        const cached = await caches.match(req);
+        return cached || (await caches.match(OFFLINE_URL));
       }
+    })());
+    return;
+  }
+
+  // Same-origin asset: cache-first untuk cepat
+  if (url.origin === self.location.origin) {
+    const dest = req.destination;
+    if (["script", "style", "image", "font"].includes(dest)) {
+      event.respondWith(cacheFirst(req));
       return;
     }
-    
-    try {
-      const data = await response.json();
-      
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({
-          status: 'success',
-          data: data.data || [],
-          timestamp: data.timestamp || Date.now(),
-          version: data.version || VERSION
-        });
-      }
-    } catch (jsonError) {
-      console.error('[SW] Error parsing cached data:', jsonError);
-      
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({
-          status: 'error',
-          error: 'Invalid cached data',
-          data: [],
-          timestamp: Date.now(),
-          version: VERSION
-        });
-      }
-    }
-    
-  } catch (error) {
-    console.error('[SW] Error getting cached games:', error);
-    
-    if (event.ports && event.ports[0]) {
-      event.ports[0].postMessage({
-        status: 'error',
-        error: error.message,
-        data: [],
-        timestamp: Date.now(),
-        version: VERSION
-      });
-    }
+    event.respondWith(staleWhileRevalidate(req));
+    return;
   }
-}
 
-// Clear cache
-async function clearCache(event) {
-  try {
-    const cacheNames = await caches.keys();
-    await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
-    console.log('[SW] All caches cleared');
-    
-    // Re-cache static assets
-    const cache = await caches.open(CACHE_NAME);
-    
-    for (const asset of STATIC_ASSETS) {
-      try {
-        await cache.add(asset);
-      } catch (error) {
-        console.warn(`[SW] Failed to recache ${asset}:`, error);
-      }
-    }
-    
-    // Beritahu clients
-    const clients = await self.clients.matchAll();
-    clients.forEach((client) => {
-      try {
-        client.postMessage({
-          type: 'CACHE_CLEARED',
-          timestamp: Date.now()
-        });
-      } catch (error) {
-        console.error('[SW] Failed to post cache cleared message:', error);
-      }
-    });
-  } catch (error) {
-    console.error('[SW] Error clearing cache:', error);
+  // Cross-origin (CDN, gambar luar): runtime caching ringan
+  if (["script", "style", "image", "font"].includes(req.destination)) {
+    event.respondWith(staleWhileRevalidate(req));
   }
-}
-
-// Update settings
-async function updateSettings(settings) {
-  try {
-    const cache = await caches.open(CACHE_NAME);
-    const response = new Response(JSON.stringify({
-      settings,
-      timestamp: Date.now()
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    });
-    
-    await cache.put('/user-settings', response);
-    console.log('[SW] Settings updated');
-  } catch (error) {
-    console.error('[SW] Error updating settings:', error);
-  }
-}
-
-// Check for updates
-async function checkForUpdates() {
-  console.log('[SW] Checking for updates...');
-  
-  try {
-    // Cek update untuk static assets
-    const cache = await caches.open(CACHE_NAME);
-    
-    for (const asset of STATIC_ASSETS) {
-      try {
-        const networkResponse = await fetch(asset, { 
-          cache: 'reload',
-          headers: {
-            'Cache-Control': 'no-cache'
-          }
-        });
-        
-        if (networkResponse.status === 200) {
-          const cachedResponse = await cache.match(asset);
-          
-          if (!cachedResponse || 
-              networkResponse.headers.get('etag') !== cachedResponse.headers.get('etag') ||
-              networkResponse.headers.get('last-modified') !== cachedResponse.headers.get('last-modified')) {
-            
-            console.log(`[SW] Update found for: ${asset}`);
-            await cache.put(asset, networkResponse.clone());
-            
-            // Beritahu client ada update
-            const clients = await self.clients.matchAll();
-            clients.forEach((client) => {
-              try {
-                client.postMessage({
-                  type: 'ASSET_UPDATED',
-                  asset: asset,
-                  timestamp: Date.now()
-                });
-              } catch (error) {
-                console.error('[SW] Failed to post asset update message:', error);
-              }
-            });
-          }
-        }
-      } catch (error) {
-        console.error(`[SW] Failed to check update for ${asset}:`, error);
-      }
-    }
-    
-    console.log('[SW] Update check completed');
-    
-  } catch (error) {
-    console.error('[SW] Update check failed:', error);
-  }
-}
-
-// Register background sync
-async function registerBackgroundSync(tag) {
-  try {
-    const registration = await self.registration;
-    
-    if ('periodicSync' in registration) {
-      try {
-        const status = await registration.periodicSync.getTags();
-        console.log('[SW] Current periodic sync tags:', status);
-        
-        if (!status.includes(tag)) {
-          await registration.periodicSync.register(tag, {
-            minInterval: 24 * 60 * 60 * 1000 // 24 jam
-          });
-          console.log(`[SW] Periodic sync registered: ${tag}`);
-        }
-      } catch (periodicError) {
-        console.log('[SW] Periodic sync not available:', periodicError);
-      }
-    } else {
-      console.log('[SW] Periodic sync not supported');
-    }
-    
-    if ('sync' in registration) {
-      try {
-        await registration.sync.register(tag);
-        console.log(`[SW] Background sync registered: ${tag}`);
-      } catch (syncError) {
-        console.log('[SW] Background sync not available:', syncError);
-      }
-    } else {
-      console.log('[SW] Background sync not supported');
-    }
-  } catch (error) {
-    console.error('[SW] Failed to register sync:', error);
-  }
-}
-
-// Send test notification
-async function sendTestNotification(data) {
-  try {
-    const notificationData = {
-      title: data.title || 'Test Notification',
-      body: data.body || 'This is a test notification from INDapk',
-      icon: NOTIFICATION_ICON,
-      tag: 'test-notification',
-      data: {
-        url: '/',
-        test: true
-      }
-    };
-    
-    await self.registration.showNotification(
-      notificationData.title,
-      {
-        body: notificationData.body,
-        icon: notificationData.icon,
-        tag: notificationData.tag,
-        data: notificationData.data
-      }
-    );
-  } catch (error) {
-    console.error('[SW] Failed to send test notification:', error);
-  }
-}
-
-// Load notified games
-async function loadNotifiedGames(event) {
-  try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const response = await cache.match('/notified-games');
-    
-    if (response) {
-      const data = await response.json();
-      
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({
-          status: 'success',
-          data: data.games || []
-        });
-      }
-    } else {
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({
-          status: 'empty',
-          games: []
-        });
-      }
-    }
-  } catch (error) {
-    console.error('[SW] Error loading notified games:', error);
-    
-    if (event.ports && event.ports[0]) {
-      event.ports[0].postMessage({
-        status: 'error',
-        error: error.message,
-        games: []
-      });
-    }
-  }
-}
-
-// Clear notifications
-async function clearNotifications() {
-  try {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    await cache.delete('/notified-games');
-    console.log('[SW] Notifications cleared');
-  } catch (error) {
-    console.error('[SW] Error clearing notifications:', error);
-  }
-}
-
-// ===== HELPER FUNCTIONS =====
-
-// Cek apakah URL adalah static asset
-function isStaticAsset(url) {
-  return STATIC_ASSETS.some(asset => {
-    try {
-      const assetUrl = new URL(asset, self.location.origin);
-      return assetUrl.href === url.href;
-    } catch {
-      return asset === url.href || url.href.includes(asset);
-    }
-  });
-}
-
-// Cek apakah URL adalah API URL
-function isApiUrl(url) {
-  return API_URLS.some(apiUrl => url.href.includes(apiUrl));
-}
-
-// Precache API data saat idle
-if (self.requestIdleCallback) {
-  self.requestIdleCallback(() => {
-    precacheApiData();
-  });
-} else {
-  setTimeout(precacheApiData, 5000);
-}
-
-// Precache API data
-async function precacheApiData() {
-  console.log('[SW] Pre-caching API data...');
-  
-  const cache = await caches.open(DYNAMIC_CACHE_NAME);
-  
-  for (const apiUrl of API_URLS) {
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'action=getAllGames'
-      });
-      
-      if (response.ok) {
-        await cache.put(apiUrl, response.clone());
-        console.log(`[SW] Pre-cached: ${apiUrl}`);
-      }
-    } catch (error) {
-      console.error(`[SW] Failed to pre-cache ${apiUrl}:`, error);
-    }
-  }
-}
-
-// ===== OFFLINE SUPPORT =====
-// Create offline page jika tidak ada
-async function createOfflinePage() {
-  try {
-    const cache = await caches.open(CACHE_NAME);
-    const offlinePage = `
-      <!DOCTYPE html>
-      <html lang="id">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>INDapk - Offline</title>
-        <style>
-          body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0a0e1a, #1a1f2e);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-          }
-          .container {
-            max-width: 500px;
-          }
-          h1 {
-            color: #00f0ff;
-            margin-bottom: 20px;
-          }
-          p {
-            opacity: 0.8;
-            margin-bottom: 30px;
-          }
-          .offline-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #ff4757;
-          }
-          button {
-            background: linear-gradient(135deg, #00f0ff, #b537f2);
-            border: none;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s;
-          }
-          button:hover {
-            transform: translateY(-2px);
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="offline-icon">📶</div>
-          <h1>Anda sedang offline</h1>
-          <p>Koneksi internet Anda terputus. Silakan periksa koneksi dan coba lagi.</p>
-          <button onclick="location.reload()">Coba Lagi</button>
-        </div>
-      </body>
-      </html>
-    `;
-    
-    const response = new Response(offlinePage, {
-      headers: { 
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'max-age=86400'
-      }
-    });
-    
-    await cache.put('/offline.html', response);
-    console.log('[SW] Offline page created');
-  } catch (error) {
-    console.error('[SW] Error creating offline page:', error);
-  }
-}
-
-// Cek dan buat offline page saat SW aktif
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    (async () => {
-      try {
-        const cache = await caches.open(CACHE_NAME);
-        const offlinePage = await cache.match('/offline.html');
-        
-        if (!offlinePage) {
-          await createOfflinePage();
-        }
-      } catch (error) {
-        console.error('[SW] Error checking offline page:', error);
-      }
-    })()
-  );
 });
 
-// ===== ERROR HANDLING =====
-self.addEventListener('error', (event) => {
-  console.error('[SW] Error:', event.error);
-});
-
-self.addEventListener('unhandledrejection', (event) => {
-  console.error('[SW] Unhandled rejection:', event.reason);
-});
-
-// ===== INITIALIZATION =====
-console.log(`[SW ${VERSION}] Service Worker loaded successfully`);
-
-// Self-check saat load
-(async function selfCheck() {
-  try {
-    console.log('[SW] Performing self-check...');
-    
-    // Cek cache storage availability
-    if (!caches) {
-      console.warn('[SW] Cache API not available');
-    }
-    
-    // Cek notification permission
-    if (!self.Notification) {
-      console.warn('[SW] Notification API not available');
-    }
-    
-    // Cek background sync
-    if (!('sync' in self.registration)) {
-      console.warn('[SW] Background Sync API not available');
-    }
-    
-    console.log('[SW] Self-check completed');
-  } catch (error) {
-    console.error('[SW] Self-check failed:', error);
+// Background sync for notifications
+self.addEventListener("sync", (event) => {
+  if (event.tag === "send-notification-settings") {
+    event.waitUntil(syncNotificationSettings());
   }
-})();
+});
+
+async function syncNotificationSettings() {
+  // Implementasi sync settings ke server
+  console.log("Syncing notification settings...");
+}
