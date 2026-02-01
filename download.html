@@ -6,7 +6,6 @@
     <title>Download Game - INDapk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -124,6 +123,103 @@
     .threeds-gradient {
         background: linear-gradient(135deg, #8B00FF 0%, #FF69B4 100%);
     }
+    /* Java Platform Styles */
+.java-badge {
+    background: linear-gradient(135deg, #007396 0%, #004466 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.java-tabs .nav-link.active {
+    background: linear-gradient(135deg, #007396 0%, #004466 100%) !important;
+    color: white !important;
+    border-color: #007396 !important;
+}
+
+.platform-card.java {
+    border-left: 4px solid #007396;
+}
+
+.java-header {
+    background: linear-gradient(135deg, #007396 0%, #004466 100%);
+}
+
+.java-badge {
+    background: linear-gradient(135deg, #007396 0%, #004466 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.java-tabs .nav-link.active {
+    background: linear-gradient(135deg, #007396 0%, #004466 100%) !important;
+    color: white !important;
+    border-color: #007396 !important;
+}
+
+/* Platform Card di Game Lainnya */
+.platform-card.java {
+    border-left: 4px solid #007396;
+    background: var(--surface);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.platform-card.java::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.platform-card.java:hover::before {
+    left: 100%;
+}
+
+.platform-card.java:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px var(--shadow);
+}
+
+.platform-card.java .platform-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    color: #007396;
+}
+
+.platform-card.java:hover .platform-icon {
+    transform: scale(1.1);
+    color: #004466;
+}
+
+.platform-card.java .platform-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text);
+}
+
+.platform-card.java .platform-count {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
 </style>
 
 </head>
@@ -469,6 +565,15 @@
                         <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                     </div>
 
+                    <div class="platform-card java" onclick="goToPlatform('java')">
+                        <div class="platform-icon">
+                            <i class="fab fa-java"></i>
+                        </div>
+                        <div class="platform-title">Java</div>
+                        <div class="platform-count">Koleksi Game Java</div>
+                        <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                    </div>
+
                         <div class="platform-card android" onclick="goToPlatform('android')">
                             <div class="platform-icon">
                                 <i class="bi bi-phone"></i>
@@ -777,6 +882,7 @@
         const GAMEGAMECUBE_API_URL = "https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec";
         const GAME3DS_API_URL = "https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec";
         const NOTE_API_URL = "https://script.google.com/macros/s/AKfycbxQioTLy3jP2-4tf75Dxm62tes_hOZJm_CvTSGKAYiKgfifYI3jPSHgUrkOxu-D4ylm0Q/exec";
+        const GAMEJAVA_API_URL = "https://script.google.com/macros/s/AKfycbwvmH1CO1HV10KB6jftoXqJGbjCQSqykEauZbFbitNFkrNaPnbFNw779kH7n9XZX7t3/exec";
         
         const LS_USER_KEY = 'indapkGameUser';
         const LS_LOGOUT_AT_KEY = 'indapkGameLogoutAt';
@@ -1554,15 +1660,17 @@ function setModalHeaderColor(modalId, platform) {
     
     let gradient;
     switch(platform) {
-        case 'ps2': gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)'; break;
-        case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)'; break;
-        case 'psp': gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)'; break;
-        case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)'; break;
-        case 'psvita': gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)'; break;
-        case 'pc': gradient = 'linear-gradient(135deg, #00a4ef 0%, #0082c4 100%)'; break;
-        case 'wii': gradient = 'linear-gradient(135deg, #0099ff 0%, #0055cc 100%)'; break;
-        case 'gamecube': gradient = 'linear-gradient(135deg, #9c59b6 0%, #6a1b9a 100%)'; break;
-        case '3ds': gradient = 'linear-gradient(135deg, #9c59b6 0%, #6a1b9a 100%)'; break;
+        case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
+        case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #b5000e 100%)'; break;
+        case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; break;
+        case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #2aa865 100%)'; break;
+        case 'psvita': gradient = 'linear-gradient(135deg, #003791 0%, #00245e 100%)'; break;
+        case 'pc': gradient = 'linear-gradient(135deg, #00a4ef 0%, #0078d4 100%)'; break;
+        case 'wii': gradient = 'linear-gradient(135deg, #00b7ff 0%, #007acc 100%)'; break;
+        case 'gamecube': gradient = 'linear-gradient(135deg, #6a5acd 0%, #483d8b 100%)'; break;
+        case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; break;
+        case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
+
         default: gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
     }
     
@@ -2080,6 +2188,7 @@ function getCostPerLink(platform) {
         case 'wii':
         case 'gamecube':
         case '3ds':
+        case 'java':
             return 1000;
         case 'switch':
             return 2000;
@@ -2344,7 +2453,8 @@ function goToPlatform(platform) {
         'pc': `${baseUrl}/#pc`,
         'wii': `${baseUrl}/#wii`,
         'gamecube': `${baseUrl}/#gamecube`,
-        '3ds': `${baseUrl}/#3ds`
+        '3ds': `${baseUrl}/#3ds`,
+        'java': `${baseUrl}/#java`
     };
     
     const url = platformUrls[platform] || `${baseUrl}`;
@@ -2367,7 +2477,8 @@ function updateOtherGamesSection(platform) {
         'pc': 'PC',
         'wii': 'Wii',
         'gamecube': 'GameCube',
-        '3ds': '3DS'
+        '3ds': '3DS',
+        'java': 'Java'
     };
     
     const currentPlatformName = platformNames[platform] || 'Game';
@@ -2636,6 +2747,10 @@ async function loadGameDetail() {
             apiUrl = GAMEGAMECUBE_API_URL; 
             action = 'getGameByDownloadId';
             break;
+            case 'java':
+                apiUrl = GAMEJAVA_API_URL;
+                action = 'getGameByDownloadId';
+                break;
             case '3ds':
                 apiUrl = GAME3DS_API_URL;
                 action = 'getGameByDownloadId';
@@ -2709,94 +2824,16 @@ function setPlatformTheme(platform) {
   let c1, c2, shadow, shadowHover;
 
   switch (platform) {
-    case 'ps2':
-      gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
-      badgeClass = 'ps2-badge';
-      platformName = 'PlayStation 2';
-      tabs.className = 'nav nav-tabs ps2-tabs';
-      c1 = '#0066cc'; c2 = '#003366';
-      shadow = 'rgba(0, 102, 204, 0.4)';
-      shadowHover = 'rgba(0, 102, 204, 0.6)';
-      break;
-
-    case 'switch':
-      gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
-      badgeClass = 'switch-badge';
-      platformName = 'Nintendo Switch';
-      tabs.className = 'nav nav-tabs ps2-tabs switch-tabs';
-      c1 = '#e60012'; c2 = '#8b0000';
-      shadow = 'rgba(230, 0, 18, 0.4)';
-      shadowHover = 'rgba(230, 0, 18, 0.6)';
-      break;
-
-    case 'psp':
-      gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
-      badgeClass = 'psp-badge';
-      platformName = 'PSP';
-      tabs.className = 'nav nav-tabs ps2-tabs psp-tabs';
-      c1 = '#0070cc'; c2 = '#004080';
-      shadow = 'rgba(0, 112, 204, 0.4)';
-      shadowHover = 'rgba(0, 112, 204, 0.6)';
-      break;
-
-    case 'android':
-      gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
-      badgeClass = 'android-badge';
-      platformName = 'Android';
-      tabs.className = 'nav nav-tabs ps2-tabs android-tabs';
-      c1 = '#3ddc84'; c2 = '#1a8c4f';
-      shadow = 'rgba(61, 220, 132, 0.4)';
-      shadowHover = 'rgba(61, 220, 132, 0.6)';
-      break;
-
-    case 'psvita':
-      gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
-      badgeClass = 'psvita-badge';
-      platformName = 'PS Vita';
-      tabs.className = 'nav nav-tabs ps2-tabs psvita-tabs';
-      c1 = '#003791'; c2 = '#001f4d';
-      shadow = 'rgba(0, 55, 145, 0.4)';
-      shadowHover = 'rgba(0, 55, 145, 0.6)';
-      break;
-
-    case 'pc':
-      gradient = 'linear-gradient(135deg, #00a4ef 0%, #0082c4 100%)';
-      badgeClass = 'pc-badge';
-      platformName = 'PC';
-      tabs.className = 'nav nav-tabs ps2-tabs pc-tabs';
-      c1 = '#00a4ef'; c2 = '#0082c4';
-      shadow = 'rgba(0, 164, 239, 0.4)';
-      shadowHover = 'rgba(0, 164, 239, 0.6)';
-      break;
-    
-    case 'wii':
-      gradient = 'linear-gradient(135deg, #0099ff 0%, #0055cc 100%)';
-      badgeClass = 'wii-badge';
-      platformName = 'Wii';
-      tabs.className = 'nav nav-tabs ps2-tabs wii-tabs';
-      c1 = '#0099ff'; c2 = '#0055cc';
-      shadow = 'rgba(0, 153, 255, 0.4)';
-      shadowHover = 'rgba(0, 153, 255, 0.6)';
-      break;
-    case 'gamecube':
-        gradient = 'linear-gradient(135deg, #9c59b6 0%, #6a1b9a 100%)';
-        badgeClass = 'gamecube-badge';
-        platformName = 'GameCube';
-        tabs.className = 'nav nav-tabs ps2-tabs gamecube-tabs';
-        c1 = '#9c59b6'; c2 = '#6a1b9a';
-        shadow = 'rgba(156, 89, 182, 0.4)';
-        shadowHover = 'rgba(156, 89, 182, 0.6)';
-        break;
-    case '3ds':
-        gradient = 'linear-gradient(135deg, #8B00FF 0%, #FF69B4 100%)';
-        badgeClass = 'threeds-badge';
-        platformName = 'Nintendo 3DS';
-        tabs.className = 'nav nav-tabs ps2-tabs threeds-tabs';
-        c1 = '#8B00FF'; c2 = '#FF69B4';
-        shadow = 'rgba(139, 0, 255, 0.4)';
-        shadowHover = 'rgba(139, 0, 255, 0.6)';
-        break;
-
+case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; badgeClass = 'ps2-badge'; platformName = 'PlayStation 2'; tabs.className = 'nav nav-tabs ps2-tabs'; c1 = '#003087'; c2 = '#001f4d'; shadow = 'rgba(0, 48, 135, 0.4)'; shadowHover = 'rgba(0, 48, 135, 0.6)'; break;
+case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #b5000e 100%)'; badgeClass = 'switch-badge'; platformName = 'Nintendo Switch'; tabs.className = 'nav nav-tabs ps2-tabs switch-tabs'; c1 = '#e60012'; c2 = '#b5000e'; shadow = 'rgba(230, 0, 18, 0.4)'; shadowHover = 'rgba(230, 0, 18, 0.6)'; break;
+case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; badgeClass = 'psp-badge'; platformName = 'PSP'; tabs.className = 'nav nav-tabs ps2-tabs psp-tabs'; c1 = '#0072ce'; c2 = '#003f7f'; shadow = 'rgba(0, 114, 206, 0.4)'; shadowHover = 'rgba(0, 114, 206, 0.6)'; break;
+case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #2aa865 100%)'; badgeClass = 'android-badge'; platformName = 'Android'; tabs.className = 'nav nav-tabs ps2-tabs android-tabs'; c1 = '#3ddc84'; c2 = '#2aa865'; shadow = 'rgba(61, 220, 132, 0.4)'; shadowHover = 'rgba(61, 220, 132, 0.6)'; break;
+case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; badgeClass = 'java-badge'; platformName = 'Java'; tabs.className = 'nav nav-tabs ps2-tabs java-tabs'; c1 = '#8d4b2d'; c2 = '#5a2d18'; shadow = 'rgba(141, 75, 45, 0.4)'; shadowHover = 'rgba(141, 75, 45, 0.6)'; break;
+case 'psvita': gradient = 'linear-gradient(135deg, #003791 0%, #00245e 100%)'; badgeClass = 'psvita-badge'; platformName = 'PS Vita'; tabs.className = 'nav nav-tabs ps2-tabs psvita-tabs'; c1 = '#003791'; c2 = '#00245e'; shadow = 'rgba(0, 55, 145, 0.4)'; shadowHover = 'rgba(0, 55, 145, 0.6)'; break;
+case 'pc': gradient = 'linear-gradient(135deg, #00a4ef 0%, #0078d4 100%)'; badgeClass = 'pc-badge'; platformName = 'PC'; tabs.className = 'nav nav-tabs ps2-tabs pc-tabs'; c1 = '#00a4ef'; c2 = '#0078d4'; shadow = 'rgba(0, 164, 239, 0.4)'; shadowHover = 'rgba(0, 164, 239, 0.6)'; break;
+case 'wii': gradient = 'linear-gradient(135deg, #00b7ff 0%, #007acc 100%)'; badgeClass = 'wii-badge'; platformName = 'Wii'; tabs.className = 'nav nav-tabs ps2-tabs wii-tabs'; c1 = '#00b7ff'; c2 = '#007acc'; shadow = 'rgba(0, 183, 255, 0.4)'; shadowHover = 'rgba(0, 183, 255, 0.6)'; break;
+case 'gamecube': gradient = 'linear-gradient(135deg, #6a5acd 0%, #483d8b 100%)'; badgeClass = 'gamecube-badge'; platformName = 'GameCube'; tabs.className = 'nav nav-tabs ps2-tabs gamecube-tabs'; c1 = '#6a5acd'; c2 = '#483d8b'; shadow = 'rgba(106, 90, 205, 0.4)'; shadowHover = 'rgba(106, 90, 205, 0.6)'; break;
+case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; badgeClass = 'threeds-badge'; platformName = 'Nintendo 3DS'; tabs.className = 'nav nav-tabs ps2-tabs threeds-tabs'; c1 = '#d32f2f'; c2 = '#9a0007'; shadow = 'rgba(211, 47, 47, 0.4)'; shadowHover = 'rgba(211, 47, 47, 0.6)'; break;
     default:
       gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
       badgeClass = 'ps2-badge';
@@ -2896,6 +2933,7 @@ function getEmulatorPlatformKey(platform) {
     case 'wii': return 'wii';
     case 'gamecube': return 'gamecube';
     case '3ds': return '3ds';
+    case 'java': return 'java';
     default: return '';
   }
 }
@@ -3017,7 +3055,7 @@ function showEmulatorDetailModal() {
     return;
   }
 
-  infoEl.textContent = `${currentEmulators.length} emulator ditemukan untuk platform ini`;
+  infoEl.textContent = `${currentEmulators.length} emulator ditemukan untuk platform ini\nSilahkan Download Sesuai Pilihan`;
 
   bodyEl.innerHTML = currentEmulators.map((emu) => {
     const nama = emu.nama_emulator || '-';
@@ -4039,6 +4077,9 @@ function generateAdLinksHTML(game, platform) {
         case '3ds':
             html += generate3dsAdLinks(game); 
             break;
+        case 'java':
+            html += generateJavaAdLinks(game);
+            break;
         default:
             html += '<p>Link iklan tidak tersedia untuk platform ini.</p>';
     }
@@ -4046,6 +4087,128 @@ function generateAdLinksHTML(game, platform) {
     return html;
 }
 
+function generateJavaAdLinks(game) {
+    let html = '';
+    const gameName = getGameName(game);
+    
+    // Format detection untuk Java
+    const formats = Array.isArray(game.formats) ? game.formats : ['JAR'];
+    
+    formats.forEach(format => {
+        const formatKey = format.toLowerCase().replace(/\s+/g, '_');
+        
+        // Link Iklan 1 (INDapk Short) - GRATIS
+        const linksIklan1 = game.link_iklan_formats?.[format] || game.link_iklan || [];
+        if (linksIklan1.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px; border-color: #007396 !important;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between" style="background: #007396 !important;">
+                        <span><i class="fab fa-java"></i> INDapk Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan1.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud" style="background: #007396; border-color: #007396;">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - GRATIS
+        const linksIklan2 = game.link_iklan2_formats?.[format] || game.link_iklan2 || [];
+        if (linksIklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between" style="background: #6c757d !important;">
+                        <span><i class="fab fa-java"></i> Semawur Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan2.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    });
+    
+    // Fallback jika tidak ada format-specific links
+    if (html === '' && (game.link_iklan || game.link_iklan2)) {
+        // Link Iklan 1 (INDapk Short) - generic
+        if (game.link_iklan && Array.isArray(game.link_iklan) && game.link_iklan.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px; border-color: #007396 !important;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between" style="background: #007396 !important;">
+                        <span><i class="fab fa-java"></i> INDapk Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud" style="background: #007396; border-color: #007396;">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - generic
+        if (game.link_iklan2 && Array.isArray(game.link_iklan2) && game.link_iklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between" style="background: #6c757d !important;">
+                        <span><i class="fab fa-java"></i> Semawur Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan2.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    }
+    
+    return html || '<p class="text-muted">Link iklan gratis belum tersedia untuk game Java ini.</p>';
+}
 
 // ====== 3DS LINK FUNCTIONS ======
 function generate3dsAdLinks(game) {
@@ -4856,12 +5019,79 @@ function generateOriginalLinksHTML(game, platform) {
         case '3ds':
             html += generate3dsOriginalLinks(game);
             break;
+        case 'java':
+            html += generateJavaOriginalLinks(game);
+            break;
         default:
             html += '<p>Link asli tidak tersedia untuk platform ini.</p>';
     }
     
     html += `</div>`;
     return html;
+}
+
+function generateJavaOriginalLinks(game) {
+    let html = '';
+    const formats = Array.isArray(game.formats) ? game.formats : ['JAR'];
+    const priceText = getPriceText('java');
+    
+    formats.forEach(format => {
+        const linksAsli = game.link_asli_formats?.[format] || game.link_asli || [];
+        if (linksAsli.length > 0) {
+            html += `
+                <div class="link-section original-link">
+                    <h6>Link Asli Tanpa Iklan - ${escapeHTML(format)}</h6>
+                    <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+            `;
+            
+            linksAsli.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                html += `
+                    <div class="link-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${escapeHTML(cloud)}</span>
+                            <button class="btn btn-sm btn-success"
+                                onclick="requestOriginalLink(this, '${game.download_id}', '${format}', ${index}, '${cloud}', 'java')"
+                                ${!currentUser ? 'disabled' : ''}>
+                                <i class="fab fa-java"></i> ${priceText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        }
+    });
+    
+    // Fallback untuk link asli generic
+    if (html === '' && game.link_asli && Array.isArray(game.link_asli) && game.link_asli.length > 0) {
+        html += `
+            <div class="link-section original-link">
+                <h6>Link Asli Tanpa Iklan</h6>
+                <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+        `;
+        
+        game.link_asli.forEach((link, index) => {
+            const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+            html += `
+                <div class="link-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>${escapeHTML(cloud)}</span>
+                        <button class="btn btn-sm btn-success"
+                            onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'java')"
+                            ${!currentUser ? 'disabled' : ''}>
+                            <i class="fab fa-java"></i> ${priceText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+    }
+    
+    return html || '<p class="text-muted">Link asli (berbayar) belum tersedia untuk game Java ini.</p>';
 }
 
 function generateWiiOriginalLinks(game) {
@@ -5530,6 +5760,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     apiUrl = GAME3DS_API_URL;
                     action = 'accessOriginalLink';
                     break;
+                case 'java':
+                    apiUrl = GAMEJAVA_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
                 default:
                     throw new Error('Platform tidak didukung: ' + platform);
             }
@@ -5575,8 +5809,14 @@ document.addEventListener('DOMContentLoaded', function() {
                        `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
                        `&user_key=${encodeURIComponent(currentUser.key)}`;
             } 
+            else if (platform === 'java') {
+                    body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                           `&format=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
+                           `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                           `&key=${encodeURIComponent(currentUser.key)}`;
+                    console.log('Java request body:', body);
+            } 
             else {
-                // PS2, PSP, Switch, dan lainnya menggunakan 'link_type'
                 body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
                        `&link_type=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
                        `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
