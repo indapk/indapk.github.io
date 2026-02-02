@@ -21,13 +21,76 @@
   <style>
 :root{--ps2-color:#06c;--ps2-glow:rgba(0,102,204,.5);--switch-color:#e60012;--switch-glow:rgba(230,0,18,.5);--psp-color:#0070cc;  --gamecube-color: #964b00;
   --gamecube-glow: rgba(150, 75, 0, .5);--psp-glow:rgba(0,112,204,.5);--psvita-color:#003791;--psvita-glow:rgba(0,55,145,.5);--wii-color:#009ac7;--wii-glow:rgba(0,154,199,.5);--3ds-color:#d12229;--3ds-glow:rgba(209,34,41,.5);--android-color:#3ddc84;--android-glow:rgba(61,220,132,.5);--pc-color:#00a4ef;--pc-glow:rgba(0,164,239,.5);--bg-dark:#0a0e1a;--bg-darker:#050812;--card-bg:rgba(255,255,255,.03);--card-border:rgba(255,255,255,.08);--text:#fff;--text-muted:rgba(255,255,255,.6);--neon-cyan:#00f0ff;--neon-purple:#b537f2;--neon-pink:#ff2e97;--glass-blur:blur(20px);--transition-smooth:all .4s cubic-bezier(.4,0,.2,1)
-  --java-color:#f89820; /* WARNA BARU UNTUK JAVA */
-  --java-glow:rgba(248,152,32,.5); /* GLOW BARU UNTUK JAVA */}
+  --java-color:#f89820;
+  --java-glow:rgba(248,152,32,.5);
+  --ios-color:#0a84ff;
+  --ios-glow:rgba(10,132,255,.5);
+  --ps1-color:#800080;
+  --ps1-glow:rgba(128,0,128,.5);
+--ps3-color:#00439c;
+--ps3-glow:rgba(0,67,156,.5);}
+
+  /* TAMBAHKAN DI BAGIAN PLATFORM BADGE */
+.badge-ps3{
+  background:linear-gradient(135deg,var(--ps3-color),#002d6e);
+  box-shadow:0 5px 20px var(--ps3-glow),0 0 30px var(--ps3-glow) inset
+}
+
+.game-card.platform-ps3 .new-badge{
+  --new-main:var(--ps3-color);
+  --new-dark:#002d6e;
+  --new-glow:var(--ps3-glow)
+}
+
+.game-card.platform-ps3 .pin-badge{
+  --pin-main:var(--ps3-color);
+  --pin-dark:#002d6e;
+  --pin-glow:var(--ps3-glow)
+}
+
+/* Untuk platform icon PS3 */
+.platform-icon.platform-ps3{
+  background:rgba(0,67,156,0.3);
+}
+
+/* Untuk platform badge khusus PS3 */
+.platform-badge.badge-ps3{
+  background:rgba(0,67,156,0.8) !important;
+  border-color:rgba(0,100,200,0.5) !important;
+}
 .badge-java {
   background: linear-gradient(135deg, var(--java-color), #e68900);
   box-shadow: 0 5px 20px var(--java-glow), 0 0 30px var(--java-glow) inset;
 }
+.badge-ios {
+  background: linear-gradient(135deg, var(--ios-color), #0066cc);
+  box-shadow: 0 5px 20px var(--ios-glow), 0 0 30px var(--ios-glow) inset;
+}
+.badge-ps1 {
+  background: linear-gradient(135deg, var(--ps1-color), #5a005a);
+  box-shadow: 0 5px 20px var(--ps1-glow), 0 0 30px var(--ps1-glow) inset;
+}
 
+.game-card.platform-ps1 .new-badge {
+  --new-main: var(--ps1-color);
+  --new-dark: #5a005a;
+  --new-glow: var(--ps1-glow);
+}
+
+.game-card.platform-ps1 .pin-badge {
+  --pin-main: var(--ps1-color);
+  --pin-dark: #5a005a;
+  --pin-glow: var(--ps1-glow);
+}
+
+.platform-icon.platform-ps1 {
+  background: rgba(128, 0, 128, 0.3);
+}
+
+.platform-badge.badge-ps1 {
+  background: rgba(128, 0, 128, 0.8) !important;
+  border-color: rgba(200, 0, 200, 0.5) !important;
+}
 .game-card.platform-java .new-badge {
   --new-main: var(--java-color);
   --new-dark: #e68900;
@@ -50,6 +113,29 @@
   background: rgba(248, 152, 32, 0.8) !important;
   border-color: rgba(255, 180, 50, 0.5) !important;
 }
+.game-card.platform-ios .new-badge {
+  --new-main: var(--ios-color);
+  --new-dark: #0066cc;
+  --new-glow: var(--ios-glow);
+}
+
+.game-card.platform-ios .pin-badge {
+  --pin-main: var(--ios-color);
+  --pin-dark: #0066cc;
+  --pin-glow: var(--ios-glow);
+}
+
+/* Untuk platform icon iOS */
+.platform-icon.platform-ios {
+  background: rgba(10, 132, 255, 0.3);
+}
+
+/* Untuk platform badge khusus iOS */
+.platform-badge.badge-ios {
+  background: rgba(10, 132, 255, 0.8) !important;
+  border-color: rgba(90, 170, 255, 0.5) !important;
+}
+
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;max-width:100%;overflow-x:hidden}
 body{background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(181,55,242,.15),transparent),radial-gradient(ellipse 60% 50% at 0% 100%,rgba(0,240,255,.1),transparent),radial-gradient(ellipse 60% 50% at 100% 100%,rgba(255,46,151,.1),transparent),linear-gradient(180deg,var(--bg-darker) 0%,var(--bg-dark) 100%);background-attachment:fixed;color:var(--text);font-family:Inter,sans-serif;overflow-x:hidden;min-height:100vh;position:relative;max-width:100%}
@@ -592,7 +678,9 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#" data-platform="all">Semua Platform</a></li>
               <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
               <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
               <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
               <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
               <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
@@ -600,6 +688,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
               <li><a class="dropdown-item" href="#" data-platform="gamecube">Gamecube</a></li>
               <li><a class="dropdown-item" href="#" data-platform="3ds">3DS</a></li>
               <li><a class="dropdown-item" href="#" data-platform="java">Java</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="ios">Ios</a></li>
               <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
               <li><a class="dropdown-item" href="#" data-platform="pc">PC</a></li>
             </ul>
@@ -765,7 +854,9 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
           <label class="form-label">Platform</label>
           <select class="form-control" id="pinPlatform">
             <option value="switch">Nintendo Switch</option>
+            <option value="ps1">PlayStation 1</option>
             <option value="ps2">PlayStation 2</option>
+            <option value="ps3">PlayStation 3</option>
             <option value="psp">PSP</option>
             <option value="psvita">PS Vita</option>
             <option value="android">Android</option>
@@ -774,6 +865,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
             <option value="gamecube">Gamecube</option>
             <option value="3ds">3DS</option>
             <option value="java">Java</option>
+            <option value="ios">Ios</option>
           </select>
         </div>
 
@@ -818,7 +910,6 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
               </tr>
             </thead>
             <tbody id="pinnedGamesBody">
-              <!-- Data akan diisi oleh JavaScript -->
             </tbody>
           </table>
         </div>
@@ -843,7 +934,9 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // ====== KONFIGURASI URL API ======
+    const GAMEPS1_API_URL = "https://script.google.com/macros/s/AKfycbxExg-rUr-CcJUYZ786k57e5E7JO2mSrGdRppr6JWbb7fHoTTAJs7x7AnYEmcOOK-49/exec";
     const GAMEPS2_API_URL = "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec";
+    const GAMEPS3_API_URL = "https://script.google.com/macros/s/AKfycbwqkrPhEvF3-_r1cu_wI7nRd56Z1AzNhank78R7dFgxHK57Wd2cf2WmV9ESXMAg_LHC/exec"; 
     const GAMESWITCH_API_URL = "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec";
     const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec"; 
     const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
@@ -854,6 +947,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     const GAMECUBE_API_URL = "https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec";
     const GAME3DS_API_URL = "https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec";
     const GAMEJAVA_API_URL = "https://script.google.com/macros/s/AKfycbwvmH1CO1HV10KB6jftoXqJGbjCQSqykEauZbFbitNFkrNaPnbFNw779kH7n9XZX7t3/exec";
+    const GAMEIOS_API_URL = "https://script.google.com/macros/s/AKfycbxicykcCe_w26RZhwMf1o8oeTVz9aRFlhRjH1Aq_Em7KR5U-z31YzB8Co5KUhQYyqcDkw/exec";
     const TRACKING_API_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
     const ADMIN_TELEGRAM_ID = "1172835542";
@@ -1642,7 +1736,9 @@ function goToGameDetail(downloadId, platform, gameName = '') {
 
     function getPlatformIcon(platform) {
       const icons = {
+        'ps1': 'bi-playstation', 
         'ps2': 'bi-playstation',
+        'ps3': 'bi-playstation',
         'switch': 'bi-nintendo-switch',
         'psp': 'bi-phone',
         'psvita': 'bi-phone',
@@ -1651,6 +1747,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
         '3ds': 'bi-laptop',
         'android': 'bi-phone',
         'java': 'bi-cup',
+        'ios': 'bi-apple',
         'pc': 'bi-pc'
       };
       return icons[platform] || 'bi-controller';
@@ -1658,7 +1755,9 @@ function goToGameDetail(downloadId, platform, gameName = '') {
 
     function getPlatformLabel(p) {
       switch (p) {
+        case 'ps1': return 'PlayStation 1';
         case 'ps2': return 'PlayStation 2';
+        case 'ps3': return 'PlayStation 3';
         case 'switch': return 'Nintendo Switch';
         case 'psp': return 'PSP';
         case 'psvita': return 'PS Vita';
@@ -1667,6 +1766,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
         case '3ds': return '3DS';
         case 'android': return 'Android';
         case 'java': return 'Java';
+        case 'ios': return 'Ios';
         case 'pc': return 'PC';
         default: return 'Semua';
       }
@@ -1677,7 +1777,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
       if (!raw) return;
 
       const hash = raw.toLowerCase();
-      const allowed = new Set(['all','ps2','switch','psp','psvita','wii','3ds','java','android','pc', 'gamecube']);
+      const allowed = new Set(['all','ps1','ps2','ps3','switch','psp','psvita','wii','3ds','java','ios','android','pc', 'gamecube']);
       if (!allowed.has(hash)) return;
 
       currentPlatform = hash;
@@ -2339,7 +2439,9 @@ async function loadAllGames({ useCache = true } = {}) {
   const { signal } = loadAbort;
 
   const configs = [
+    { platform: 'ps1',     name: 'PlayStation 1',   url: GAMEPS1_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'ps2',     name: 'PlayStation 2',   url: GAMEPS2_API_URL,      accessAction: 'accessOriginalLink' },
+    { platform: 'ps3',     name: 'PlayStation 3',   url: GAMEPS3_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'switch',  name: 'Nintendo Switch', url: GAMESWITCH_API_URL,   accessAction: 'accessSwitchOriginalLink' },
     { platform: 'psvita',  name: 'PS Vita',         url: GAMEPSVITA_API_URL,   accessAction: 'accessOriginalLink' },
     { platform: 'psp',     name: 'PSP',             url: GAMEPSP_API_URL,      accessAction: 'accessOriginalLink' },
@@ -2348,7 +2450,8 @@ async function loadAllGames({ useCache = true } = {}) {
     { platform: 'wii',     name: 'Wii',             url: GAMEWII_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'gamecube', name: 'Gamecube',       url: GAMECUBE_API_URL,     accessAction: 'accessOriginalLink' },
     { platform: '3ds',     name: '3DS',             url: GAME3DS_API_URL,      accessAction: 'accessOriginalLink' },
-    { platform: 'java',    name: 'Java',            url: GAMEJAVA_API_URL,     accessAction: 'accessOriginalLink' } 
+    { platform: 'java',    name: 'Java',            url: GAMEJAVA_API_URL,     accessAction: 'accessOriginalLink' },
+    { platform: 'ios',     name: 'Ios',             url: GAMEIOS_API_URL,      accessAction: 'accessOriginalLink' } 
   ];
 
   try {
@@ -2613,7 +2716,9 @@ function renderPinnedGamesTable(pinnedGames) {
 function getPlatformOptions(selectedPlatform) {
   const platforms = [
     { value: 'switch', label: 'Nintendo Switch' },
+    { value: 'ps1', label: 'PlayStation 1' },
     { value: 'ps2', label: 'PlayStation 2' },
+    { value: 'ps3', label: 'PlayStation 3' },
     { value: 'psp', label: 'PSP' },
     { value: 'psvita', label: 'PS Vita' },
     { value: 'android', label: 'Android' },
@@ -2621,7 +2726,8 @@ function getPlatformOptions(selectedPlatform) {
     { value: 'wii', label: 'Wii' },
     { value: 'gamecube', label: 'Gamecube' },
     { value: '3ds', label: '3DS' },
-    { value: 'java', label: 'Java' }
+    { value: 'java', label: 'Java' },
+    { value: 'ios', label: 'Ios' }
   ];
   
   return platforms.map(p => `
@@ -3623,8 +3729,14 @@ function renderGameList() {
         
         let apiUrl;
         switch(platform) {
+          case 'ps1':
+            apiUrl = GAMEPS1_API_URL;
+            break;
           case 'ps2':
             apiUrl = GAMEPS2_API_URL;
+            break;
+          case 'ps3':
+            apiUrl = GAMEPS3_API_URL;
             break;
           case 'switch':
             apiUrl = GAMESWITCH_API_URL;
@@ -3652,6 +3764,9 @@ function renderGameList() {
               break;
           case 'java':
             apiUrl = GAMEJAVA_API_URL;
+            break;
+          case 'ios':
+            apiUrl = GAMEIOS_API_URL;
             break;
 
           default:
@@ -3726,8 +3841,28 @@ function renderGameList() {
         const { downloadId, platform } = currentThumbnailGame;
         
         switch(platform) {
+          case 'ps1':
+            apiUrl = GAMEPS1_API_URL;
+            payload = {
+              action: 'updateThumbnail',
+              download_id: downloadId,
+              thumbnail_url: '',
+              telegram_id: currentUser.wa_number,
+              key: currentUser.key
+            };
+            break;
           case 'ps2':
             apiUrl = GAMEPS2_API_URL;
+            payload = {
+              action: 'updateThumbnail',
+              download_id: downloadId,
+              thumbnail_url: '',
+              telegram_id: currentUser.wa_number,
+              key: currentUser.key
+            };
+            break;
+          case 'ps3':
+            apiUrl = GAMEPS3_API_URL;
             payload = {
               action: 'updateThumbnail',
               download_id: downloadId,
@@ -3816,16 +3951,26 @@ function renderGameList() {
                 key: currentUser.key
             };
             break;
-      case 'java':
-        apiUrl = GAMEJAVA_API_URL;
-        payload = {
-          action: 'updateThumbnail',
-          download_id: downloadId,
-          thumbnail_url: '',
-          telegram_id: currentUser.wa_number,
-          key: currentUser.key
-        };
-        break;
+        case 'java':
+          apiUrl = GAMEJAVA_API_URL;
+          payload = {
+            action: 'updateThumbnail',
+            download_id: downloadId,
+            thumbnail_url: '',
+            telegram_id: currentUser.wa_number,
+            key: currentUser.key
+          };
+          break;
+        case 'ios':
+          apiUrl = GAMEIOS_API_URL;
+          payload = {
+            action: 'updateThumbnail',
+            download_id: downloadId,
+            thumbnail_url: '',
+            telegram_id: currentUser.wa_number,
+            key: currentUser.key
+          };
+          break;
           default:
             throw new Error('Platform tidak didukung');
         }
