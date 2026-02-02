@@ -18,580 +18,1110 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" href="favicon.png" sizes="32x32" type="image/png">
   <link rel="icon" href="favicon.png" sizes="16x16" type="image/png">
-  <style>
-:root{--ps2-color:#06c;--ps2-glow:rgba(0,102,204,.5);--switch-color:#e60012;--switch-glow:rgba(230,0,18,.5);--psp-color:#0070cc;  --gamecube-color: #964b00;
-  --gamecube-glow: rgba(150, 75, 0, .5);--psp-glow:rgba(0,112,204,.5);--psvita-color:#003791;--psvita-glow:rgba(0,55,145,.5);--wii-color:#009ac7;--wii-glow:rgba(0,154,199,.5);--3ds-color:#d12229;--3ds-glow:rgba(209,34,41,.5);--android-color:#3ddc84;--android-glow:rgba(61,220,132,.5);--pc-color:#00a4ef;--pc-glow:rgba(0,164,239,.5);--bg-dark:#0a0e1a;--bg-darker:#050812;--card-bg:rgba(255,255,255,.03);--card-border:rgba(255,255,255,.08);--text:#fff;--text-muted:rgba(255,255,255,.6);--neon-cyan:#00f0ff;--neon-purple:#b537f2;--neon-pink:#ff2e97;--glass-blur:blur(20px);--transition-smooth:all .4s cubic-bezier(.4,0,.2,1)
+<style>
+/* =========================================================
+   THEME + PLATFORM PALETTE
+========================================================= */
+:root{
+  /* Base */
+  --bg-dark:#0a0e1a;
+  --bg-darker:#050812;
+  --card-bg:rgba(255,255,255,.03);
+  --card-border:rgba(255,255,255,.08);
+  --text:#fff;
+  --text-muted:rgba(255,255,255,.6);
+
+  /* Neon accents */
+  --neon-cyan:#00f0ff;
+  --neon-purple:#b537f2;
+  --neon-pink:#ff2e97;
+
+  /* Effects */
+  --glass-blur:blur(20px);
+  --transition-smooth:all .4s cubic-bezier(.4,0,.2,1);
+
+  /* Platform Colors (main + glow + rgb for rgba helper) */
+  /* PS1 */
+  --ps1-color:#8a2be2;
+  --ps1-dark:#5a1bb0;
+  --ps1-glow:rgba(138,43,226,.5);
+  --ps1-rgb:138,43,226;
+
+  /* PS2 */
+  --ps2-color:#0066cc;
+  --ps2-dark:#004d99;
+  --ps2-glow:rgba(0,102,204,.5);
+  --ps2-rgb:0,102,204;
+
+  /* PS3 */
+  --ps3-color:#00439c;
+  --ps3-dark:#002d6e;
+  --ps3-glow:rgba(0,67,156,.5);
+  --ps3-rgb:0,67,156;
+
+  /* PS Vita */
+  --psvita-color:#003791;
+  --psvita-dark:#002466;
+  --psvita-glow:rgba(0,55,145,.5);
+  --psvita-rgb:0,55,145;
+
+  /* Switch */
+  --switch-color:#e60012;
+  --switch-dark:#b30000;
+  --switch-glow:rgba(230,0,18,.5);
+  --switch-rgb:230,0,18;
+
+  /* Nintendo 3DS */
+  --n3ds-color:#d12229;
+  --n3ds-dark:#a01b1f;
+  --n3ds-glow:rgba(209,34,41,.5);
+  --n3ds-rgb:209,34,41;
+
+  /* Nintendo Wii */
+  --wii-color:#009ac7;
+  --wii-dark:#007299;
+  --wii-glow:rgba(0,154,199,.5);
+  --wii-rgb:0,154,199;
+
+  /* Nintendo GameCube */
+  --gamecube-color:#6a5acd;
+  --gamecube-dark:#4b3bb3;
+  --gamecube-glow:rgba(106,90,205,.5);
+  --gamecube-rgb:106,90,205;
+
+  /* Java */
   --java-color:#f89820;
+  --java-dark:#e68900;
   --java-glow:rgba(248,152,32,.5);
+  --java-rgb:248,152,32;
+
+  /* iOS */
   --ios-color:#0a84ff;
+  --ios-dark:#0066cc;
   --ios-glow:rgba(10,132,255,.5);
-  --ps1-color:#800080;
-  --ps1-glow:rgba(128,0,128,.5);
---ps3-color:#00439c;
---ps3-glow:rgba(0,67,156,.5);}
+  --ios-rgb:10,132,255;
 
-  /* TAMBAHKAN DI BAGIAN PLATFORM BADGE */
-.badge-ps3{
-  background:linear-gradient(135deg,var(--ps3-color),#002d6e);
-  box-shadow:0 5px 20px var(--ps3-glow),0 0 30px var(--ps3-glow) inset
-}
+  /* Android */
+  --android-color:#3ddc84;
+  --android-dark:#2ba861;
+  --android-glow:rgba(61,220,132,.5);
+  --android-rgb:61,220,132;
 
-.game-card.platform-ps3 .new-badge{
-  --new-main:var(--ps3-color);
-  --new-dark:#002d6e;
-  --new-glow:var(--ps3-glow)
+  /* PC */
+  --pc-color:#00a4ef;
+  --pc-dark:#0082c4;
+  --pc-glow:rgba(0,164,239,.5);
+  --pc-rgb:0,164,239;
 }
 
-.game-card.platform-ps3 .pin-badge{
-  --pin-main:var(--ps3-color);
-  --pin-dark:#002d6e;
-  --pin-glow:var(--ps3-glow)
-}
-
-/* Untuk platform icon PS3 */
-.platform-icon.platform-ps3{
-  background:rgba(0,67,156,0.3);
-}
-
-/* Untuk platform badge khusus PS3 */
-.platform-badge.badge-ps3{
-  background:rgba(0,67,156,0.8) !important;
-  border-color:rgba(0,100,200,0.5) !important;
-}
-.badge-java {
-  background: linear-gradient(135deg, var(--java-color), #e68900);
-  box-shadow: 0 5px 20px var(--java-glow), 0 0 30px var(--java-glow) inset;
-}
-.badge-ios {
-  background: linear-gradient(135deg, var(--ios-color), #0066cc);
-  box-shadow: 0 5px 20px var(--ios-glow), 0 0 30px var(--ios-glow) inset;
-}
-.badge-ps1 {
-  background: linear-gradient(135deg, var(--ps1-color), #5a005a);
-  box-shadow: 0 5px 20px var(--ps1-glow), 0 0 30px var(--ps1-glow) inset;
-}
-
-.game-card.platform-ps1 .new-badge {
-  --new-main: var(--ps1-color);
-  --new-dark: #5a005a;
-  --new-glow: var(--ps1-glow);
-}
-
-.game-card.platform-ps1 .pin-badge {
-  --pin-main: var(--ps1-color);
-  --pin-dark: #5a005a;
-  --pin-glow: var(--ps1-glow);
-}
-
-.platform-icon.platform-ps1 {
-  background: rgba(128, 0, 128, 0.3);
-}
-
-.platform-badge.badge-ps1 {
-  background: rgba(128, 0, 128, 0.8) !important;
-  border-color: rgba(200, 0, 200, 0.5) !important;
-}
-.game-card.platform-java .new-badge {
-  --new-main: var(--java-color);
-  --new-dark: #e68900;
-  --new-glow: var(--java-glow);
-}
-
-.game-card.platform-java .pin-badge {
-  --pin-main: var(--java-color);
-  --pin-dark: #e68900;
-  --pin-glow: var(--java-glow);
-}
-
-/* Untuk platform icon Java */
-.platform-icon.platform-java {
-  background: rgba(248, 152, 32, 0.3);
-}
-
-/* Untuk platform badge khusus Java */
-.platform-badge.badge-java {
-  background: rgba(248, 152, 32, 0.8) !important;
-  border-color: rgba(255, 180, 50, 0.5) !important;
-}
-.game-card.platform-ios .new-badge {
-  --new-main: var(--ios-color);
-  --new-dark: #0066cc;
-  --new-glow: var(--ios-glow);
-}
-
-.game-card.platform-ios .pin-badge {
-  --pin-main: var(--ios-color);
-  --pin-dark: #0066cc;
-  --pin-glow: var(--ios-glow);
-}
-
-/* Untuk platform icon iOS */
-.platform-icon.platform-ios {
-  background: rgba(10, 132, 255, 0.3);
-}
-
-/* Untuk platform badge khusus iOS */
-.platform-badge.badge-ios {
-  background: rgba(10, 132, 255, 0.8) !important;
-  border-color: rgba(90, 170, 255, 0.5) !important;
-}
-
+/* =========================================================
+   RESET
+========================================================= */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;max-width:100%;overflow-x:hidden}
-body{background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(181,55,242,.15),transparent),radial-gradient(ellipse 60% 50% at 0% 100%,rgba(0,240,255,.1),transparent),radial-gradient(ellipse 60% 50% at 100% 100%,rgba(255,46,151,.1),transparent),linear-gradient(180deg,var(--bg-darker) 0%,var(--bg-dark) 100%);background-attachment:fixed;color:var(--text);font-family:Inter,sans-serif;overflow-x:hidden;min-height:100vh;position:relative;max-width:100%}
-body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(0,240,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.03) 1px,transparent 1px);background-size:50px 50px;animation:gridMove 20s linear infinite;pointer-events:none;z-index:0;will-change:transform}
-@keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(50px,50px)}}
-body::after{content:"";position:fixed;width:100%;height:100%;background-image:radial-gradient(2px 2px at 20% 30%,rgba(0,240,255,.3),transparent),radial-gradient(2px 2px at 60% 70%,rgba(181,55,242,.3),transparent),radial-gradient(1px 1px at 50% 50%,rgba(255,46,151,.3),transparent),radial-gradient(1px 1px at 80% 10%,rgba(61,220,132,.3),transparent);background-size:200px 200px,300px 300px,250px 250px,280px 280px;background-position:0 0,40px 60px,130px 270px,70px 100px;animation:particleFloat 30s linear infinite;pointer-events:none;z-index:0;opacity:.4;will-change:transform}
-@keyframes particleFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(10px,-20px)}50%{transform:translate(-15px,-10px)}75%{transform:translate(20px,15px)}}
+body{
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%,rgba(181,55,242,.15),transparent),
+    radial-gradient(ellipse 60% 50% at 0% 100%,rgba(0,240,255,.1),transparent),
+    radial-gradient(ellipse 60% 50% at 100% 100%,rgba(255,46,151,.1),transparent),
+    linear-gradient(180deg,var(--bg-darker) 0%,var(--bg-dark) 100%);
+  background-attachment:fixed;
+  color:var(--text);
+  font-family:Inter,sans-serif;
+  overflow-x:hidden;
+  min-height:100vh;
+  position:relative;
+  max-width:100%;
+}
+
+/* Background grid */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,240,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,240,255,.03) 1px,transparent 1px);
+  background-size:50px 50px;
+  animation:gridMove 20s linear infinite;
+  pointer-events:none;
+  z-index:0;
+}
+@keyframes gridMove{
+  0%{transform:translate(0,0)}
+  100%{transform:translate(50px,50px)}
+}
+
+/* Floating particles */
+body::after{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%,rgba(0,240,255,.3),transparent),
+    radial-gradient(2px 2px at 60% 70%,rgba(181,55,242,.3),transparent),
+    radial-gradient(1px 1px at 50% 50%,rgba(255,46,151,.3),transparent),
+    radial-gradient(1px 1px at 80% 10%,rgba(61,220,132,.3),transparent);
+  background-size:200px 200px,300px 300px,250px 250px,280px 280px;
+  background-position:0 0,40px 60px,130px 270px,70px 100px;
+  animation:particleFloat 30s linear infinite;
+  pointer-events:none;
+  z-index:0;
+  opacity:.4;
+}
+@keyframes particleFloat{
+  0%,100%{transform:translate(0,0)}
+  25%{transform:translate(10px,-20px)}
+  50%{transform:translate(-15px,-10px)}
+  75%{transform:translate(20px,15px)}
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar{width:12px}
 ::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--neon-cyan),var(--neon-purple));border-radius:10px;border:2px solid var(--bg-dark)}
-::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,var(--neon-purple),var(--neon-pink))}
-.navbar{background:rgba(10,14,26,.7)!important;backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom:1px solid rgba(0,240,255,.1);box-shadow:0 0 40px rgba(0,240,255,.1),0 10px 50px rgba(0,0,0,.5);position:sticky;top:0;z-index:1000;animation:slideDown .6s ease-out;will-change:transform}
-@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
-.navbar-brand{font-family:Orbitron,sans-serif;font-weight:900;font-size:1.5rem;letter-spacing:2px;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple),var(--neon-pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 30px rgba(0,240,255,.5);position:relative;transition:var(--transition-smooth)}
-.navbar-brand i{background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 10px var(--neon-cyan));animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.navbar-brand:hover{transform:translateY(-2px);filter:drop-shadow(0 5px 15px var(--neon-cyan))}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,var(--neon-cyan),var(--neon-purple));
+  border-radius:10px;
+  border:2px solid var(--bg-dark);
+}
+::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,var(--neon-purple),var(--neon-pink));
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+.navbar{
+  background:rgba(10,14,26,.7)!important;
+  backdrop-filter:var(--glass-blur);
+  -webkit-backdrop-filter:var(--glass-blur);
+  border-bottom:1px solid rgba(0,240,255,.1);
+  box-shadow:0 0 40px rgba(0,240,255,.1),0 10px 50px rgba(0,0,0,.5);
+  position:sticky;
+  top:0;
+  z-index:1000;
+  animation:slideDown .6s ease-out;
+}
+@keyframes slideDown{
+  from{transform:translateY(-100%);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+
+.navbar-brand{
+  font-family:Orbitron,sans-serif;
+  font-weight:900;
+  font-size:1.5rem;
+  letter-spacing:2px;
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple),var(--neon-pink));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 30px rgba(0,240,255,.5);
+  transition:var(--transition-smooth);
+}
+.navbar-brand i{
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 10px var(--neon-cyan));
+  animation:brandPulse 2s ease-in-out infinite;
+}
+@keyframes brandPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
+.navbar-brand:hover{
+  transform:translateY(-2px);
+  filter:drop-shadow(0 5px 15px var(--neon-cyan));
+}
+
 .nav-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.nav-actions .btn{border-radius:25px;padding:8px 20px;font-weight:600;transition:var(--transition-smooth);position:relative;overflow:hidden}
-.nav-actions .btn::before{content:"";position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.2);transform:translate(-50%,-50%);transition:width .6s,height .6s}
+.nav-actions .btn{
+  border-radius:25px;
+  padding:8px 20px;
+  font-weight:600;
+  transition:var(--transition-smooth);
+  position:relative;
+  overflow:hidden;
+}
+.nav-actions .btn::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:0;
+  height:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  transform:translate(-50%,-50%);
+  transition:width .6s,height .6s;
+}
 .nav-actions .btn:hover::before{width:300px;height:300px}
-.btn-neon{background:linear-gradient(135deg,var(--neon-purple),var(--neon-pink));border:2px solid var(--neon-pink);color:#fff;box-shadow:0 0 20px rgba(255,46,151,.4)}
+
+.btn-neon{
+  background:linear-gradient(135deg,var(--neon-purple),var(--neon-pink));
+  border:2px solid var(--neon-pink);
+  color:#fff;
+  box-shadow:0 0 20px rgba(255,46,151,.4);
+}
 .btn-neon:hover{transform:translateY(-3px);box-shadow:0 5px 30px rgba(255,46,151,.6)}
-.btn-neon-outline{background:transparent;border:2px solid var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 0 15px rgba(0,240,255,.2)}
-.btn-neon-outline:hover{background:rgba(0,240,255,.1);transform:translateY(-3px);box-shadow:0 5px 25px rgba(0,240,255,.4);color:var(--neon-cyan)}
-.btn-telegram{background:linear-gradient(135deg,#0088cc,#00a8e8);border:2px solid #00a8e8;color:#fff;box-shadow:0 0 20px rgba(0,136,204,.4)}
+
+.btn-neon-outline{
+  background:transparent;
+  border:2px solid var(--neon-cyan);
+  color:var(--neon-cyan);
+  box-shadow:0 0 15px rgba(0,240,255,.2);
+}
+.btn-neon-outline:hover{
+  background:rgba(0,240,255,.1);
+  transform:translateY(-3px);
+  box-shadow:0 5px 25px rgba(0,240,255,.4);
+  color:var(--neon-cyan);
+}
+
+.btn-telegram{
+  background:linear-gradient(135deg,#0088cc,#00a8e8);
+  border:2px solid #00a8e8;
+  color:#fff;
+  box-shadow:0 0 20px rgba(0,136,204,.4);
+}
 .btn-telegram:hover{transform:translateY(-3px);box-shadow:0 5px 30px rgba(0,168,232,.6);color:#fff}
-#userHeader .badge{background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.3);color:var(--neon-cyan);padding:8px 15px;border-radius:20px;font-weight:600;backdrop-filter:blur(10px);box-shadow:0 0 15px rgba(0,240,255,.2)}
-.header-banner{width:100%;margin-bottom:40px;position:relative;overflow:hidden;border-radius:0 0 30px 30px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:fadeInScale .8s ease-out}
-@keyframes fadeInScale{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+
+#userHeader .badge{
+  background:rgba(0,240,255,.1);
+  border:1px solid rgba(0,240,255,.3);
+  color:var(--neon-cyan);
+  padding:8px 15px;
+  border-radius:20px;
+  font-weight:600;
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 15px rgba(0,240,255,.2);
+}
+
+/* =========================================================
+   HEADER BANNER
+========================================================= */
+.header-banner{
+  width:100%;
+  margin-bottom:40px;
+  position:relative;
+  overflow:hidden;
+  border-radius:0 0 30px 30px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  animation:fadeInScale .8s ease-out;
+}
+@keyframes fadeInScale{
+  from{opacity:0;transform:scale(.95)}
+  to{opacity:1;transform:scale(1)}
+}
 .banner-container{position:relative;width:100%;height:350px;overflow:hidden}
 .banner-image{width:100%;height:100%;object-fit:cover;filter:brightness(.7);transition:transform .8s ease}
 .header-banner:hover .banner-image{transform:scale(1.05);filter:brightness(.8)}
-.banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(10,14,26,.9) 0%,rgba(10,14,26,.6) 50%,transparent 100%);display:flex;flex-direction:column;justify-content:center;padding:0 60px}
-.banner-overlay h1{font-family:Orbitron,sans-serif;font-weight:900;font-size:3.5rem;margin-bottom:15px;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple),var(--neon-pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 50px rgba(0,240,255,.5);animation:glow 2s ease-in-out infinite alternate}
-@keyframes glow{from{filter:drop-shadow(0 0 20px var(--neon-cyan))}to{filter:drop-shadow(0 0 35px var(--neon-purple))}}
-.banner-overlay .lead{font-size:1.3rem;color:rgba(255,255,255,.9);font-weight:600;max-width:600px;text-shadow:0 2px 10px rgba(0,0,0,.7);animation:slideInLeft .8s ease-out .3s both}
-@keyframes slideInLeft{from{opacity:0;transform:translateX(-50px)}to{opacity:1;transform:translateX(0)}}
-.filter-section{background:rgba(255,255,255,.03);border:1px solid rgba(0,240,255,.2);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-radius:25px;padding:25px;margin-bottom:30px;box-shadow:0 0 40px rgba(0,240,255,.1),0 20px 60px rgba(0,0,0,.3);position:relative;z-index:10;animation:slideUp .6s ease-out .2s both;will-change:transform}
-@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.filter-section::before{content:"";position:absolute;inset:0;border-radius:25px;padding:2px;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple),var(--neon-pink));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.3;pointer-events:none}
-.input-group-text{background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.3);color:var(--neon-cyan);border-right:0;border-radius:20px 0 0 20px}
-.form-control{background:rgba(255,255,255,.05);border:1px solid rgba(0,240,255,.3);color:var(--text);border-left:0;border-radius:0 20px 20px 0;transition:var(--transition-smooth)}
+
+.banner-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to right,rgba(10,14,26,.9) 0%,rgba(10,14,26,.6) 50%,transparent 100%);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:0 60px;
+}
+.banner-overlay h1{
+  font-family:Orbitron,sans-serif;
+  font-weight:900;
+  font-size:3.5rem;
+  margin-bottom:15px;
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple),var(--neon-pink));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 50px rgba(0,240,255,.5);
+  animation:glowPulse 2s ease-in-out infinite alternate;
+}
+@keyframes glowPulse{
+  from{filter:drop-shadow(0 0 20px var(--neon-cyan))}
+  to{filter:drop-shadow(0 0 35px var(--neon-purple))}
+}
+.banner-overlay .lead{
+  font-size:1.3rem;
+  color:rgba(255,255,255,.9);
+  font-weight:600;
+  max-width:600px;
+  text-shadow:0 2px 10px rgba(0,0,0,.7);
+  animation:slideInLeft .8s ease-out .3s both;
+}
+@keyframes slideInLeft{
+  from{opacity:0;transform:translateX(-50px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* =========================================================
+   FILTER
+========================================================= */
+.filter-section{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(0,240,255,.2);
+  backdrop-filter:var(--glass-blur);
+  -webkit-backdrop-filter:var(--glass-blur);
+  border-radius:25px;
+  padding:25px;
+  margin-bottom:30px;
+  box-shadow:0 0 40px rgba(0,240,255,.1),0 20px 60px rgba(0,0,0,.3);
+  position:relative;
+  z-index:10;
+  animation:slideUp .6s ease-out .2s both;
+}
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.filter-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:25px;
+  padding:2px;
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple),var(--neon-pink));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:.3;
+  pointer-events:none;
+}
+
+.input-group-text{
+  background:rgba(0,240,255,.1);
+  border:1px solid rgba(0,240,255,.3);
+  color:var(--neon-cyan);
+  border-right:0;
+  border-radius:20px 0 0 20px;
+}
+.form-control{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(0,240,255,.3);
+  color:var(--text);
+  border-left:0;
+  border-radius:0 20px 20px 0;
+  transition:var(--transition-smooth);
+}
 .form-control::placeholder{color:rgba(255,255,255,.4)}
-.form-control:focus{background:rgba(255,255,255,.08);border-color:var(--neon-cyan);box-shadow:0 0 20px rgba(0,240,255,.3);color:var(--text)}
-.btn-outline-secondary.dropdown-toggle{background:rgba(255,255,255,.05);border:2px solid rgba(0,240,255,.3);color:var(--text);border-radius:20px;transition:var(--transition-smooth);font-weight:600}
-.btn-outline-secondary.dropdown-toggle:hover{background:rgba(0,240,255,.1);border-color:var(--neon-cyan);transform:translateY(-2px);box-shadow:0 5px 20px rgba(0,240,255,.3)}
-.dropdown-menu{background:rgba(10,14,26,.95);border:1px solid rgba(0,240,255,.3);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);padding:10px}
-.dropdown-item{color:rgba(255,255,255,.8);border-radius:15px;padding:12px 16px;transition:var(--transition-smooth);font-weight:500}
-.dropdown-item:hover{background:rgba(0,240,255,.15);color:var(--neon-cyan);transform:translateX(5px)}
-.btn-refresh-icon{background:rgba(181,55,242,.1);border:2px solid var(--neon-purple);color:var(--neon-purple);border-radius:20px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;transition:var(--transition-smooth)}
-.btn-refresh-icon:hover{background:rgba(181,55,242,.2);transform:rotate(180deg) scale(1.1);box-shadow:0 0 25px rgba(181,55,242,.5)}
-.platform-badge{padding:8px 16px;border-radius:25px;font-size:.75rem;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;box-shadow:0 5px 20px rgba(0,0,0,.4);position:relative;overflow:hidden;transition:var(--transition-smooth)}
-.platform-badge::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,.1),transparent);transform:rotate(45deg);animation:shine 3s infinite}
-@keyframes shine{0%{transform:translateX(-100%) translateY(-100%) rotate(45deg)}100%{transform:translateX(100%) translateY(100%) rotate(45deg)}}
-.badge-ps2{background:linear-gradient(135deg,var(--ps2-color),#004d99);box-shadow:0 5px 20px var(--ps2-glow),0 0 30px var(--ps2-glow) inset}
-.badge-switch{background:linear-gradient(135deg,var(--switch-color),#b30000);box-shadow:0 5px 20px var(--switch-glow),0 0 30px var(--switch-glow) inset}
-.badge-psp{background:linear-gradient(135deg,var(--psp-color),#005299);box-shadow:0 5px 20px var(--psp-glow),0 0 30px var(--psp-glow) inset}
-.badge-psvita{background:linear-gradient(135deg,var(--psvita-color),#002466);box-shadow:0 5px 20px var(--psvita-glow),0 0 30px var(--psvita-glow) inset}
-.badge-wii{background:linear-gradient(135deg,var(--wii-color),#007299);box-shadow:0 5px 20px var(--wii-glow),0 0 30px var(--wii-glow) inset}
-.badge-3ds{background:linear-gradient(135deg,var(--3ds-color),#a01b1f);box-shadow:0 5px 20px var(--3ds-glow),0 0 30px var(--3ds-glow) inset}
-.badge-android{background:linear-gradient(135deg,var(--android-color),#2ba861);box-shadow:0 5px 20px var(--android-glow),0 0 30px var(--android-glow) inset}
-.badge-pc{background:linear-gradient(135deg,var(--pc-color),#0082c4);box-shadow:0 5px 20px var(--pc-glow),0 0 30px var(--pc-glow) inset}
+.form-control:focus{
+  background:rgba(255,255,255,.08);
+  border-color:var(--neon-cyan);
+  box-shadow:0 0 20px rgba(0,240,255,.3);
+  color:var(--text);
+}
+
+.btn-outline-secondary.dropdown-toggle{
+  background:rgba(255,255,255,.05);
+  border:2px solid rgba(0,240,255,.3);
+  color:var(--text);
+  border-radius:20px;
+  transition:var(--transition-smooth);
+  font-weight:600;
+}
+.btn-outline-secondary.dropdown-toggle:hover{
+  background:rgba(0,240,255,.1);
+  border-color:var(--neon-cyan);
+  transform:translateY(-2px);
+  box-shadow:0 5px 20px rgba(0,240,255,.3);
+}
+
+.dropdown-menu{
+  background:rgba(10,14,26,.95);
+  border:1px solid rgba(0,240,255,.3);
+  backdrop-filter:var(--glass-blur);
+  -webkit-backdrop-filter:var(--glass-blur);
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  padding:10px;
+}
+.dropdown-item{
+  color:rgba(255,255,255,.8);
+  border-radius:15px;
+  padding:12px 16px;
+  transition:var(--transition-smooth);
+  font-weight:500;
+}
+.dropdown-item:hover{
+  background:rgba(0,240,255,.15);
+  color:var(--neon-cyan);
+  transform:translateX(5px);
+}
+
+.btn-refresh-icon{
+  background:rgba(181,55,242,.1);
+  border:2px solid var(--neon-purple);
+  color:var(--neon-purple);
+  border-radius:20px;
+  width:52px;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:var(--transition-smooth);
+}
+.btn-refresh-icon:hover{
+  background:rgba(181,55,242,.2);
+  transform:rotate(180deg) scale(1.1);
+  box-shadow:0 0 25px rgba(181,55,242,.5);
+}
+
+/* =========================================================
+   PLATFORM BADGE + ICON (GENERIC)
+========================================================= */
+.platform-badge{
+  padding:8px 16px;
+  border-radius:25px;
+  font-size:.75rem;
+  font-weight:700;
+  color:#fff;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 5px 20px rgba(0,0,0,.4);
+  position:relative;
+  overflow:hidden;
+  transition:var(--transition-smooth);
+}
+.platform-badge::before{
+  content:"";
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,.1),transparent);
+  transform:rotate(45deg);
+  animation:shine 3s infinite;
+}
+@keyframes shine{
+  0%{transform:translateX(-100%) translateY(-100%) rotate(45deg)}
+  100%{transform:translateX(100%) translateY(100%) rotate(45deg)}
+}
 .platform-badge:hover{transform:translateY(-3px) scale(1.05)}
-.platform-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.2);font-size:.85rem}
-.new-badge{--new-main:var(--neon-pink);--new-dark:#ff0066;--new-glow:rgba(255,46,151,.6);background:linear-gradient(135deg,var(--new-main),var(--new-dark));color:#fff;padding:6px 12px;border-radius:20px;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 0 20px var(--new-glow);animation:newPulse 1.5s ease-in-out infinite}
-.game-card.platform-ps2 .new-badge{--new-main:var(--ps2-color);--new-dark:#004d99;--new-glow:var(--ps2-glow)}
-.game-card.platform-switch .new-badge{--new-main:var(--switch-color);--new-dark:#b30000;--new-glow:var(--switch-glow)}
-.game-card.platform-psp .new-badge{--new-main:var(--psp-color);--new-dark:#005299;--new-glow:var(--psp-glow)}
-.game-card.platform-psvita .new-badge{--new-main:var(--psvita-color);--new-dark:#002466;--new-glow:var(--psvita-glow)}
-.game-card.platform-wii .new-badge{--new-main:var(--wii-color);--new-dark:#007299;--new-glow:var(--wii-glow)}
-.game-card.platform-3ds .new-badge{--new-main:var(--3ds-color);--new-dark:#a01b1f;--new-glow:var(--3ds-glow)}
-.game-card.platform-android .new-badge{--new-main:var(--android-color);--new-dark:#2ba861;--new-glow:var(--android-glow)}
-.game-card.platform-pc .new-badge{--new-main:var(--pc-color);--new-dark:#0082c4;--new-glow:var(--pc-glow)}
-@keyframes newPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05);box-shadow:0 0 30px var(--new-glow)}}
-.category-badge{cursor:pointer;background:rgba(255,255,255,.05);border:1px solid rgba(0,240,255,.3);color:var(--neon-cyan);padding:5px 12px;border-radius:15px;font-size:.75rem;font-weight:600;transition:var(--transition-smooth);display:inline-block;margin:3px}
-.category-badge:hover{background:rgba(0,240,255,.15);transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,240,255,.3)}
-.game-card{background:rgba(255,255,255,.02);border:1px solid rgba(0,240,255,.15);border-radius:25px;overflow:hidden;transition:var(--transition-smooth);cursor:pointer;position:relative;height:100%;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;transform:translateY(30px);will-change:transform}
+
+.platform-icon{
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.2);
+  font-size:.85rem;
+}
+
+/* =========================================================
+   PLATFORM MAPPING (BADGE + ICON)
+========================================================= */
+/* Badge gradients */
+.badge-ps1{background:linear-gradient(135deg,var(--ps1-color),var(--ps1-dark));box-shadow:0 5px 20px var(--ps1-glow),0 0 30px var(--ps1-glow) inset}
+.badge-ps2{background:linear-gradient(135deg,var(--ps2-color),var(--ps2-dark));box-shadow:0 5px 20px var(--ps2-glow),0 0 30px var(--ps2-glow) inset}
+.badge-ps3{background:linear-gradient(135deg,var(--ps3-color),var(--ps3-dark));box-shadow:0 5px 20px var(--ps3-glow),0 0 30px var(--ps3-glow) inset}
+.badge-psvita{background:linear-gradient(135deg,var(--psvita-color),var(--psvita-dark));box-shadow:0 5px 20px var(--psvita-glow),0 0 30px var(--psvita-glow) inset}
+.badge-switch{background:linear-gradient(135deg,var(--switch-color),var(--switch-dark));box-shadow:0 5px 20px var(--switch-glow),0 0 30px var(--switch-glow) inset}
+.badge-3ds{background:linear-gradient(135deg,var(--n3ds-color),var(--n3ds-dark));box-shadow:0 5px 20px var(--n3ds-glow),0 0 30px var(--n3ds-glow) inset}
+.badge-wii{background:linear-gradient(135deg,var(--wii-color),var(--wii-dark));box-shadow:0 5px 20px var(--wii-glow),0 0 30px var(--wii-glow) inset}
+.badge-gamecube{background:linear-gradient(135deg,var(--gamecube-color),var(--gamecube-dark));box-shadow:0 5px 20px var(--gamecube-glow),0 0 30px var(--gamecube-glow) inset}
+.badge-java{background:linear-gradient(135deg,var(--java-color),var(--java-dark));box-shadow:0 5px 20px var(--java-glow),0 0 30px var(--java-glow) inset}
+.badge-ios{background:linear-gradient(135deg,var(--ios-color),var(--ios-dark));box-shadow:0 5px 20px var(--ios-glow),0 0 30px var(--ios-glow) inset}
+.badge-android{background:linear-gradient(135deg,var(--android-color),var(--android-dark));box-shadow:0 5px 20px var(--android-glow),0 0 30px var(--android-glow) inset}
+.badge-pc{background:linear-gradient(135deg,var(--pc-color),var(--pc-dark));box-shadow:0 5px 20px var(--pc-glow),0 0 30px var(--pc-glow) inset}
+
+/* Icon background tint */
+.platform-icon.platform-ps1{background:rgba(var(--ps1-rgb),.3)}
+.platform-icon.platform-ps2{background:rgba(var(--ps2-rgb),.3)}
+.platform-icon.platform-ps3{background:rgba(var(--ps3-rgb),.3)}
+.platform-icon.platform-psvita{background:rgba(var(--psvita-rgb),.3)}
+.platform-icon.platform-switch{background:rgba(var(--switch-rgb),.3)}
+.platform-icon.platform-3ds{background:rgba(var(--n3ds-rgb),.3)}
+.platform-icon.platform-wii{background:rgba(var(--wii-rgb),.3)}
+.platform-icon.platform-gamecube{background:rgba(var(--gamecube-rgb),.3)}
+.platform-icon.platform-java{background:rgba(var(--java-rgb),.3)}
+.platform-icon.platform-ios{background:rgba(var(--ios-rgb),.3)}
+.platform-icon.platform-android{background:rgba(var(--android-rgb),.3)}
+.platform-icon.platform-pc{background:rgba(var(--pc-rgb),.3)}
+
+/* Badge solid style for thumbnail overlay (consistent + no duplicate rules) */
+.platform-badge.badge-ps1{background:rgba(var(--ps1-rgb),.82)!important;border-color:rgba(var(--ps1-rgb),.45)!important}
+.platform-badge.badge-ps2{background:rgba(var(--ps2-rgb),.82)!important;border-color:rgba(var(--ps2-rgb),.45)!important}
+.platform-badge.badge-ps3{background:rgba(var(--ps3-rgb),.82)!important;border-color:rgba(var(--ps3-rgb),.45)!important}
+.platform-badge.badge-psvita{background:rgba(var(--psvita-rgb),.82)!important;border-color:rgba(var(--psvita-rgb),.45)!important}
+.platform-badge.badge-switch{background:rgba(var(--switch-rgb),.82)!important;border-color:rgba(var(--switch-rgb),.45)!important}
+.platform-badge.badge-3ds{background:rgba(var(--n3ds-rgb),.82)!important;border-color:rgba(var(--n3ds-rgb),.45)!important}
+.platform-badge.badge-wii{background:rgba(var(--wii-rgb),.82)!important;border-color:rgba(var(--wii-rgb),.45)!important}
+.platform-badge.badge-gamecube{background:rgba(var(--gamecube-rgb),.82)!important;border-color:rgba(var(--gamecube-rgb),.45)!important}
+.platform-badge.badge-java{background:rgba(var(--java-rgb),.82)!important;border-color:rgba(var(--java-rgb),.45)!important}
+.platform-badge.badge-ios{background:rgba(var(--ios-rgb),.82)!important;border-color:rgba(var(--ios-rgb),.45)!important}
+.platform-badge.badge-android{background:rgba(var(--android-rgb),.82)!important;border-color:rgba(var(--android-rgb),.45)!important}
+.platform-badge.badge-pc{background:rgba(var(--pc-rgb),.82)!important;border-color:rgba(var(--pc-rgb),.45)!important}
+
+/* =========================================================
+   PLATFORM TOKENS ON CARD (NEW + PIN) - 1 RULESET
+========================================================= */
+.game-card{--pf-main:var(--neon-pink);--pf-dark:#ff0066;--pf-glow:rgba(255,46,151,.6)}
+.game-card.platform-ps1{--pf-main:var(--ps1-color);--pf-dark:var(--ps1-dark);--pf-glow:var(--ps1-glow)}
+.game-card.platform-ps2{--pf-main:var(--ps2-color);--pf-dark:var(--ps2-dark);--pf-glow:var(--ps2-glow)}
+.game-card.platform-ps3{--pf-main:var(--ps3-color);--pf-dark:var(--ps3-dark);--pf-glow:var(--ps3-glow)}
+.game-card.platform-psvita{--pf-main:var(--psvita-color);--pf-dark:var(--psvita-dark);--pf-glow:var(--psvita-glow)}
+.game-card.platform-switch{--pf-main:var(--switch-color);--pf-dark:var(--switch-dark);--pf-glow:var(--switch-glow)}
+.game-card.platform-3ds{--pf-main:var(--n3ds-color);--pf-dark:var(--n3ds-dark);--pf-glow:var(--n3ds-glow)}
+.game-card.platform-wii{--pf-main:var(--wii-color);--pf-dark:var(--wii-dark);--pf-glow:var(--wii-glow)}
+.game-card.platform-gamecube{--pf-main:var(--gamecube-color);--pf-dark:var(--gamecube-dark);--pf-glow:var(--gamecube-glow)}
+.game-card.platform-java{--pf-main:var(--java-color);--pf-dark:var(--java-dark);--pf-glow:var(--java-glow)}
+.game-card.platform-ios{--pf-main:var(--ios-color);--pf-dark:var(--ios-dark);--pf-glow:var(--ios-glow)}
+.game-card.platform-android{--pf-main:var(--android-color);--pf-dark:var(--android-dark);--pf-glow:var(--android-glow)}
+.game-card.platform-pc{--pf-main:var(--pc-color);--pf-dark:var(--pc-dark);--pf-glow:var(--pc-glow)}
+
+/* New badge */
+.new-badge{
+  background:linear-gradient(135deg,var(--pf-main),var(--pf-dark));
+  color:#fff;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:.7rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 0 20px var(--pf-glow);
+  animation:newPulse 1.5s ease-in-out infinite;
+}
+@keyframes newPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05);box-shadow:0 0 30px var(--pf-glow)}
+}
+
+/* Pin badge */
+.pinned-section{
+  margin-bottom:22px;
+  padding:18px;
+  border-radius:25px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,46,151,.25);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 0 35px rgba(255,46,151,.12);
+  position:relative;
+  z-index:1;
+}
+.pinned-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-weight:800;letter-spacing:.5px}
+.pinned-title i{color:var(--neon-pink);filter:drop-shadow(0 0 12px rgba(255,46,151,.55))}
+
+.pin-badge{
+  position:absolute;
+  top:150px;
+  right:14px;
+  z-index:3;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:linear-gradient(135deg,var(--pf-main),var(--pf-dark));
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:1px;
+  box-shadow:0 0 22px var(--pf-glow);
+  backdrop-filter:blur(10px);
+  animation:pinFloat 1.9s ease-in-out infinite;
+  transform-origin:center;
+  overflow:hidden;
+}
+.pin-badge::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,.16),transparent);
+  transform:rotate(35deg) translateX(-120%);
+  animation:pinShine 3s linear infinite;
+}
+@keyframes pinFloat{
+  0%,100%{transform:translateY(0) rotate(-3deg) scale(1)}
+  50%{transform:translateY(-6px) rotate(3deg) scale(1.03)}
+}
+@keyframes pinShine{
+  0%{transform:rotate(35deg) translateX(-120%)}
+  100%{transform:rotate(35deg) translateX(120%)}
+}
+.game-card:hover .pin-badge{animation-duration:1.2s;box-shadow:0 0 30px var(--pf-glow)}
+
+/* =========================================================
+   CATEGORY BADGE
+========================================================= */
+.category-badge{
+  cursor:pointer;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(0,240,255,.3);
+  color:var(--neon-cyan);
+  padding:5px 12px;
+  border-radius:15px;
+  font-size:.75rem;
+  font-weight:600;
+  transition:var(--transition-smooth);
+  display:inline-block;
+  margin:3px;
+}
+.category-badge:hover{
+  background:rgba(0,240,255,.15);
+  transform:translateY(-2px);
+  box-shadow:0 5px 15px rgba(0,240,255,.3);
+}
+
+/* =========================================================
+   GAME CARD
+========================================================= */
+.game-card{
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(0,240,255,.15);
+  border-radius:25px;
+  overflow:hidden;
+  transition:var(--transition-smooth);
+  cursor:pointer;
+  position:relative;
+  height:100%;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  opacity:0;
+  transform:translateY(30px);
+}
 .game-card.is-visible{opacity:1;transform:translateY(0);animation:cardFadeIn .6s ease-out}
-@keyframes cardFadeIn{from{opacity:0;transform:translateY(30px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-.game-card::before{content:"";position:absolute;inset:0;border-radius:25px;padding:2px;background:linear-gradient(135deg,transparent,var(--neon-cyan),var(--neon-purple),transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s ease}
-.game-card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 0 40px rgba(0,240,255,.3),0 20px 60px rgba(0,0,0,.5);border-color:var(--neon-cyan)}
+@keyframes cardFadeIn{
+  from{opacity:0;transform:translateY(30px) scale(.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.game-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:25px;
+  padding:2px;
+  background:linear-gradient(135deg,transparent,var(--neon-cyan),var(--neon-purple),transparent);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:0;
+  transition:opacity .4s ease;
+}
+.game-card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:0 0 40px rgba(0,240,255,.3),0 20px 60px rgba(0,0,0,.5);
+  border-color:var(--neon-cyan);
+}
 .game-card:hover::before{opacity:1}
-.thumbnail-container{position:relative;height:180px;overflow:hidden;background:linear-gradient(135deg,rgba(0,240,255,.1),rgba(181,55,242,.1))}
+
+.thumbnail-container{
+  position:relative;
+  height:180px;
+  overflow:hidden;
+  background:linear-gradient(135deg,rgba(0,240,255,.1),rgba(181,55,242,.1));
+}
 .game-thumbnail{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
 .game-card:hover .game-thumbnail{transform:scale(1.1) rotate(2deg)}
-.thumbnail-badge{position:absolute;top:15px;left:15px;z-index:2;backdrop-filter:blur(15px);animation:badgeBounce 2s ease-in-out infinite}
-@keyframes badgeBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+.thumbnail-badge{
+  position:absolute;
+  top:15px;
+  left:15px;
+  z-index:2;
+  backdrop-filter:blur(15px);
+  animation:badgeBounce 2s ease-in-out infinite;
+}
+@keyframes badgeBounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
 .card-body{padding:20px;position:relative;z-index:1}
 .card-title{font-weight:700;font-size:1.1rem;margin-bottom:10px;color:var(--text);transition:color .3s ease}
 .game-card:hover .card-title{color:var(--neon-cyan)}
 .card-text{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+
+/* =========================================================
+   LOADING + EMPTY
+========================================================= */
 .spinner-container{display:flex;justify-content:center;align-items:center;min-height:300px}
-.spinner-border{width:4rem;height:4rem;border-width:4px;border-color:var(--neon-cyan);border-right-color:transparent;filter:drop-shadow(0 0 20px var(--neon-cyan));animation:spin 1s linear infinite}
+.spinner-border{
+  width:4rem;
+  height:4rem;
+  border-width:4px;
+  border-color:var(--neon-cyan);
+  border-right-color:transparent;
+  filter:drop-shadow(0 0 20px var(--neon-cyan));
+  animation:spin 1s linear infinite;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
-.empty-state{text-align:center;padding:60px 20px;background:rgba(255,255,255,.02);border:2px dashed rgba(0,240,255,.3);border-radius:25px;color:var(--text-muted)}
-.empty-state i{font-size:4rem;color:var(--neon-cyan);margin-bottom:20px;filter:drop-shadow(0 0 30px var(--neon-cyan));animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
-.pagination-wrap{background:rgba(255,255,255,.02);border:1px solid rgba(0,240,255,.2);border-radius:25px;padding:20px;backdrop-filter:var(--glass-blur);margin-top:40px;margin-bottom:40px}
-.pagination .page-link{background:rgba(255,255,255,.05);border:1px solid rgba(0,240,255,.3);color:var(--text);border-radius:15px;margin:0 5px;padding:10px 16px;transition:var(--transition-smooth);font-weight:600}
-.pagination .page-link:hover{background:rgba(0,240,255,.15);border-color:var(--neon-cyan);transform:translateY(-3px);box-shadow:0 5px 20px rgba(0,240,255,.3);color:var(--text)}
-.pagination .page-item.active .page-link{background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));border-color:var(--neon-cyan);box-shadow:0 0 25px rgba(0,240,255,.5)}
-.modal-content{background:rgba(10,14,26,.95);border:1px solid rgba(0,240,255,.3);border-radius:25px;backdrop-filter:var(--glass-blur);box-shadow:0 30px 80px rgba(0,0,0,.7)}
-.login-modal-header,.detail-modal-header{background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));border-radius:25px 25px 0 0;border-bottom:0;padding:20px 25px}
+
+.empty-state{
+  text-align:center;
+  padding:60px 20px;
+  background:rgba(255,255,255,.02);
+  border:2px dashed rgba(0,240,255,.3);
+  border-radius:25px;
+  color:var(--text-muted);
+}
+.empty-state i{
+  font-size:4rem;
+  color:var(--neon-cyan);
+  margin-bottom:20px;
+  filter:drop-shadow(0 0 30px var(--neon-cyan));
+  animation:floatY 3s ease-in-out infinite;
+}
+@keyframes floatY{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-20px)}
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+.pagination-wrap{
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(0,240,255,.2);
+  border-radius:25px;
+  padding:20px;
+  backdrop-filter:var(--glass-blur);
+  margin:40px 0;
+}
+.pagination .page-link{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(0,240,255,.3);
+  color:var(--text);
+  border-radius:15px;
+  margin:0 5px;
+  padding:10px 16px;
+  transition:var(--transition-smooth);
+  font-weight:600;
+}
+.pagination .page-link:hover{
+  background:rgba(0,240,255,.15);
+  border-color:var(--neon-cyan);
+  transform:translateY(-3px);
+  box-shadow:0 5px 20px rgba(0,240,255,.3);
+  color:var(--text);
+}
+.pagination .page-item.active .page-link{
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));
+  border-color:var(--neon-cyan);
+  box-shadow:0 0 25px rgba(0,240,255,.5);
+}
+
+/* =========================================================
+   MODAL + ALERT
+========================================================= */
+.modal-content{
+  background:rgba(10,14,26,.95);
+  border:1px solid rgba(0,240,255,.3);
+  border-radius:25px;
+  backdrop-filter:var(--glass-blur);
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+}
+.login-modal-header,.detail-modal-header{
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));
+  border-radius:25px 25px 0 0;
+  border-bottom:0;
+  padding:20px 25px;
+}
 .modal-title{font-weight:700;font-size:1.3rem}
 .btn-close-white{filter:brightness(1.5)}
+
 .alert{border-radius:20px;border:1px solid;backdrop-filter:blur(10px)}
 .alert-info{background:rgba(0,240,255,.1);border-color:rgba(0,240,255,.3);color:var(--neon-cyan)}
 .alert-warning{background:rgba(255,193,7,.1);border-color:rgba(255,193,7,.3);color:#ffc107}
 .alert-danger{background:rgba(255,46,151,.1);border-color:rgba(255,46,151,.3);color:var(--neon-pink)}
+
+/* Buttons (Bootstrap overrides) */
 .btn{border-radius:20px;font-weight:600;transition:var(--transition-smooth);position:relative;overflow:hidden}
-.btn::after{content:"";position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.2);transform:translate(-50%,-50%);transition:width .5s,height .5s}
+.btn::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:0;
+  height:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  transform:translate(-50%,-50%);
+  transition:width .5s,height .5s;
+}
 .btn:active::after{width:300px;height:300px}
+
 .btn-success{background:linear-gradient(135deg,#22c55e,#16a34a);border:0;box-shadow:0 5px 20px rgba(34,197,94,.4)}
 .btn-success:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(34,197,94,.6)}
 .btn-warning{background:linear-gradient(135deg,#fbbf24,#f59e0b);border:0;color:#78350f;box-shadow:0 5px 20px rgba(251,191,36,.4)}
 .btn-danger{background:linear-gradient(135deg,var(--neon-pink),#dc2626);border:0;box-shadow:0 5px 20px rgba(255,46,151,.4)}
 .btn-outline-primary{border:2px solid var(--neon-purple);color:var(--neon-purple);background:transparent}
 .btn-outline-primary:hover{background:rgba(181,55,242,.2);border-color:var(--neon-purple);color:var(--neon-purple)}
-.site-footer{margin-top:60px;padding:30px 0;background:rgba(10,14,26,.8);border-top:1px solid rgba(0,240,255,.2);backdrop-filter:var(--glass-blur);box-shadow:0 -10px 40px rgba(0,0,0,.3)}
-.footer-brand{font-family:Orbitron,sans-serif;font-weight:700;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.site-footer{
+  margin-top:60px;
+  padding:30px 0;
+  background:rgba(10,14,26,.8);
+  border-top:1px solid rgba(0,240,255,.2);
+  backdrop-filter:var(--glass-blur);
+  box-shadow:0 -10px 40px rgba(0,0,0,.3);
+}
+.footer-brand{
+  font-family:Orbitron,sans-serif;
+  font-weight:700;
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 .site-footer a{color:var(--text-muted);text-decoration:none;transition:var(--transition-smooth)}
 .site-footer a:hover{color:var(--neon-cyan);text-shadow:0 0 15px var(--neon-cyan)}
-@media (max-width:992px){.banner-overlay h1{font-size:2.5rem}.banner-container{height:280px}}
+
+/* =========================================================
+   REVEAL + CATEGORY MENU
+========================================================= */
+.reveal{opacity:0;transform:translateY(30px);transition:all .6s ease-out}
+.reveal.active{opacity:1;transform:translateY(0)}
+
+#categoryList.category-menu{max-height:360px;overflow-y:auto;min-width:100%;padding:8px 0}
+#categoryList.category-menu .dropdown-item{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#categoryText{display:inline-block;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
+
+/* =========================================================
+   SEARCH REVEAL
+========================================================= */
+.search-reveal{display:flex;align-items:center;gap:10px}
+.search-reveal-btn{
+  width:52px;
+  height:52px;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,240,255,.1);
+  border:1px solid rgba(0,240,255,.3);
+  color:var(--neon-cyan);
+  transition:var(--transition-smooth);
+  box-shadow:0 0 15px rgba(0,240,255,.15);
+}
+.search-reveal-btn i{
+  font-size:1.1rem;
+  transition:transform .35s ease,filter .35s ease;
+  filter:drop-shadow(0 0 10px rgba(0,240,255,.45));
+}
+.search-reveal:is(:hover,:focus-within,.is-open) .search-reveal-btn{
+  background:rgba(0,240,255,.15);
+  border-color:var(--neon-cyan);
+  box-shadow:0 0 25px rgba(0,240,255,.25);
+}
+.search-reveal:is(:hover,:focus-within,.is-open) .search-reveal-btn i{
+  transform:rotate(-10deg) scale(1.08);
+  filter:drop-shadow(0 0 16px rgba(0,240,255,.7));
+}
+.search-reveal-input{
+  width:0;
+  opacity:0;
+  transform:translateX(-10px) scale(.98);
+  pointer-events:none;
+  overflow:hidden;
+  transition:width .45s ease,opacity .25s ease,transform .35s ease;
+}
+.search-reveal:is(:hover,:focus-within,.is-open) .search-reveal-input{
+  width:320px;
+  opacity:1;
+  transform:translateX(0) scale(1);
+  pointer-events:auto;
+}
+.search-reveal-input .form-control{height:52px;border-radius:20px}
+
+/* =========================================================
+   ADMIN PINNED + TABLE
+========================================================= */
+.thumbnail-admin-overlay{
+  position:absolute;
+  top:10px;
+  right:10px;
+  z-index:5;
+  opacity:0;
+  transition:opacity .3s ease;
+}
+.game-card:hover .thumbnail-admin-overlay{opacity:1}
+
+.text-neon{
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.table-dark{
+  --bs-table-bg:rgba(255,255,255,.03);
+  --bs-table-border-color:rgba(0,240,255,.15);
+  --bs-table-striped-bg:rgba(0,240,255,.05);
+}
+.table-hover tbody tr:hover{background-color:rgba(0,240,255,.1)!important}
+
+.table .form-select-sm,
+.table .form-control-sm{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(0,240,255,.3);
+  color:var(--text);
+  border-radius:8px;
+}
+.table .form-control-sm:focus{
+  background:rgba(255,255,255,.08);
+  border-color:var(--neon-cyan);
+  box-shadow:0 0 10px rgba(0,240,255,.3);
+}
+
+/* Bootstrap badge sizing */
+.badge{font-size:.75em;padding:4px 8px}
+.bg-success{background:linear-gradient(135deg,#22c55e,#16a34a)!important}
+.bg-warning{background:linear-gradient(135deg,#fbbf24,#f59e0b)!important;color:#78350f!important}
+.bg-danger{background:linear-gradient(135deg,var(--neon-pink),#dc2626)!important}
+
+/* =========================================================
+   CLICK COUNT BADGES
+========================================================= */
+.game-click-count{
+  background:linear-gradient(135deg,#ff4757,#ff3838)!important;
+  border:2px solid rgba(255,255,255,.3);
+  box-shadow:0 4px 12px rgba(255,71,87,.4);
+  font-size:.75rem;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:20px;
+  animation:countPulseMini 2s infinite;
+}
+@keyframes countPulseMini{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
+.game-card:hover .game-click-count{
+  animation:none;
+  transform:scale(1.1);
+  transition:transform .2s ease;
+}
+
+.click-count-badge{
+  background:linear-gradient(135deg,#ff6b6b,#ee5a52)!important;
+  border:2px solid rgba(255,255,255,.4)!important;
+  box-shadow:0 4px 15px rgba(255,107,107,.5)!important;
+  font-size:.8rem!important;
+  font-weight:700!important;
+  padding:5px 10px!important;
+  border-radius:20px!important;
+  animation:countPulse 3s infinite!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  min-width:50px!important;
+  height:28px!important;
+}
+.click-count-badge i{font-size:.8rem!important}
+@keyframes countPulse{
+  0%{box-shadow:0 4px 15px rgba(255,107,107,.5)}
+  50%{box-shadow:0 4px 20px rgba(255,107,107,.8)}
+  100%{box-shadow:0 4px 15px rgba(255,107,107,.5)}
+}
+.game-card:hover .click-count-badge{
+  animation:none!important;
+  transform:scale(1.1)!important;
+  transition:all .3s ease!important;
+  box-shadow:0 6px 25px rgba(255,107,107,.9)!important;
+}
+.click-count-badge i.bi-eye-fill{
+  color:#fff!important;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))!important;
+}
+.click-count-badge.high-count{
+  background:linear-gradient(135deg,#ff3838,#ff0000)!important;
+  box-shadow:0 4px 20px rgba(255,56,56,.7)!important;
+}
+
+/* Popular highlight */
+.game-card.high-popularity{
+  border:2px solid #ff6b6b!important;
+  box-shadow:0 8px 30px rgba(255,107,107,.4)!important;
+}
+.game-card.medium-popularity{
+  border:1px solid #ffa502!important;
+  box-shadow:0 4px 20px rgba(255,165,2,.3)!important;
+}
+
+/* =========================================================
+   THUMBNAIL PLATFORM BADGE (CLEAN)
+========================================================= */
+.platform-badge.thumbnail-badge{
+  position:absolute!important;
+  top:10px!important;
+  left:10px!important;
+  z-index:5!important;
+  backdrop-filter:blur(4px)!important;
+  border:1px solid rgba(255,255,255,.2)!important;
+  border-radius:20px!important;
+  padding:4px 10px!important;
+  font-size:.75rem!important;
+  font-weight:600!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  max-width:120px!important;
+}
+
+/* =========================================================
+   PERFORMANCE TOGGLES
+========================================================= */
+body::before,body::after,.game-card,.navbar,.filter-section{will-change:transform}
+body.is-scrolling::before,body.is-scrolling::after{animation-play-state:paused}
+body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.game-card){
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width:992px){
+  .banner-overlay h1{font-size:2.5rem}
+  .banner-container{height:280px}
+}
 @media (max-width:768px){
-  .banner-overlay h1{font-size:2rem}.banner-container{height:220px}.banner-overlay{padding:0 30px}
-  .nav-actions{gap:8px}.nav-actions .btn{padding:6px 12px;font-size:.85rem}
+  .banner-overlay h1{font-size:2rem}
+  .banner-container{height:220px}
+  .banner-overlay{padding:0 30px}
+  .nav-actions{gap:8px}
+  .nav-actions .btn{padding:6px 12px;font-size:.85rem}
   body{background-attachment:scroll}
+  .search-reveal:is(:hover,:focus-within,.is-open) .search-reveal-input{width:100%}
+  .search-reveal{width:100%}
+  .search-reveal-input{flex:1}
+  .platform-badge.thumbnail-badge{font-size:.7rem!important;padding:3px 8px!important;max-width:100px!important}
+  .click-count-badge{font-size:.7rem!important;padding:4px 8px!important;min-width:45px!important;height:26px!important}
 }
 @media (max-width:576px){
-  .banner-overlay h1{font-size:1.6rem}.banner-container{height:180px}.banner-overlay{padding:0 20px;text-align:center}
-  .filter-section{padding:18px}.nav-actions{width:100%;justify-content:center}
-  .navbar .container{flex-wrap:wrap}.navbar-brand{width:100%;text-align:center;margin-bottom:10px}
+  .banner-overlay h1{font-size:1.6rem}
+  .banner-container{height:180px}
+  .banner-overlay{padding:0 20px;text-align:center}
+  .filter-section{padding:18px}
+  .nav-actions{width:100%;justify-content:center}
+  .navbar .container{flex-wrap:wrap}
+  .navbar-brand{width:100%;text-align:center;margin-bottom:10px}
   .nav-actions .btn{white-space:normal;text-align:center;line-height:1.2}
   #categoryText{max-width:120px}
 }
-.reveal{opacity:0;transform:translateY(30px);transition:all .6s ease-out}
-.reveal.active{opacity:1;transform:translateY(0)}
-#categoryList.category-menu{max-height:360px;overflow-y:auto;min-width:100%;padding-top:8px;padding-bottom:8px}
-#categoryList.category-menu .dropdown-item{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#categoryText{display:inline-block;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
-.search-reveal{display:flex;align-items:center;gap:10px}
-.search-reveal-btn{width:52px;height:52px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.3);color:var(--neon-cyan);transition:var(--transition-smooth);box-shadow:0 0 15px rgba(0,240,255,.15)}
-.search-reveal-btn i{font-size:1.1rem;transition:transform .35s ease,filter .35s ease;filter:drop-shadow(0 0 10px rgba(0,240,255,.45))}
-.search-reveal:is(:hover,:focus-within,.is-open) .search-reveal-btn{background:rgba(0,240,255,.15);border-color:var(--neon-cyan);box-shadow:0 0 25px rgba(0,240,255,.25)}
-.search-reveal:is(:hover,:focus-within,.is-open) .search-reveal-btn i{transform:rotate(-10deg) scale(1.08);filter:drop-shadow(0 0 16px rgba(0,240,255,.7))}
-.search-reveal-input{width:0;opacity:0;transform:translateX(-10px) scale(.98);pointer-events:none;overflow:hidden;transition:width .45s ease,opacity .25s ease,transform .35s ease}
-.search-reveal:is(:hover,:focus-within,.is-open) .search-reveal-input{width:320px;opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
-.search-reveal-input .form-control{height:52px;border-radius:20px}
-@media (max-width:768px){
-  .search-reveal:is(:hover,:focus-within,.is-open) .search-reveal-input{width:100%}
-  .search-reveal{width:100%}.search-reveal-input{flex:1}
-}
-.pinned-section{margin-bottom:22px;padding:18px;border-radius:25px;background:rgba(255,255,255,.03);border:1px solid rgba(255,46,151,.25);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 0 35px rgba(255,46,151,.12);position:relative;z-index:1}
-.pinned-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-weight:800;letter-spacing:.5px}
-.pinned-title i{color:var(--neon-pink);filter:drop-shadow(0 0 12px rgba(255,46,151,.55))}
-.pin-badge{--pin-main:var(--neon-pink);--pin-dark:#dc2626;--pin-glow:rgba(255,46,151,.45);position:absolute;top:150px;right:14px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--pin-main),var(--pin-dark));border:1px solid rgba(255,255,255,.25);color:#fff;padding:6px 12px;border-radius:999px;font-size:.72rem;font-weight:900;letter-spacing:1px;box-shadow:0 0 22px var(--pin-glow);backdrop-filter:blur(10px);animation:pinFloat 1.9s ease-in-out infinite;transform-origin:center;overflow:hidden}
-.pin-badge::before{content:"";position:absolute;inset:-40%;background:linear-gradient(45deg,transparent,rgba(255,255,255,.16),transparent);transform:rotate(35deg) translateX(-120%);animation:pinShine 3s linear infinite}
-.game-card:hover .pin-badge{animation-duration:1.2s;box-shadow:0 0 30px var(--pin-glow)}
-@keyframes pinFloat{0%,100%{transform:translateY(0) rotate(-3deg) scale(1)}50%{transform:translateY(-6px) rotate(3deg) scale(1.03)}}
-@keyframes pinShine{0%{transform:rotate(35deg) translateX(-120%)}100%{transform:rotate(35deg) translateX(120%)}}
-.game-card.platform-ps2 .pin-badge{--pin-main:var(--ps2-color);--pin-dark:#004d99;--pin-glow:var(--ps2-glow)}
-.game-card.platform-switch .pin-badge{--pin-main:var(--switch-color);--pin-dark:#b30000;--pin-glow:var(--switch-glow)}
-.game-card.platform-psp .pin-badge{--pin-main:var(--psp-color);--pin-dark:#005299;--pin-glow:var(--psp-glow)}
-.game-card.platform-psvita .pin-badge{--pin-main:var(--psvita-color);--pin-dark:#002466;--pin-glow:var(--psvita-glow)}
-.game-card.platform-wii .pin-badge{--pin-main:var(--wii-color);--pin-dark:#007299;--pin-glow:var(--wii-glow)}
-.game-card.platform-3ds .pin-badge{--pin-main:var(--3ds-color);--pin-dark:#a01b1f;--pin-glow:var(--3ds-glow)}
-.game-card.platform-android .pin-badge{--pin-main:var(--android-color);--pin-dark:#2ba861;--pin-glow:var(--android-glow)}
-.game-card.platform-pc .pin-badge{--pin-main:var(--pc-color);--pin-dark:#0082c4;--pin-glow:var(--pc-glow)}
-body::before,body::after,.game-card,.navbar,.filter-section{will-change:transform}
-body.is-scrolling::before,body.is-scrolling::after{animation-play-state:paused}
-body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.game-card){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-/* Admin Pinned Game Styles */
-.thumbnail-admin-overlay {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 5;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-/* Tambahkan di bagian platform badge */
-.badge-gamecube {
-  background: linear-gradient(135deg, var(--gamecube-color), #7a3c00);
-  box-shadow: 0 5px 20px var(--gamecube-glow), 0 0 30px var(--gamecube-glow) inset
-}
-
-/* Tambahkan untuk game-card */
-.game-card.platform-gamecube .new-badge {
-  --new-main: var(--gamecube-color);
-  --new-dark: #7a3c00;
-  --new-glow: var(--gamecube-glow)
-}
-
-.game-card.platform-gamecube .pin-badge {
-  --pin-main: var(--gamecube-color);
-  --pin-dark: #7a3c00;
-  --pin-glow: var(--gamecube-glow)
-}
-
-/* Tambahkan untuk platform icon */
-.platform-badge.badge-gamecube {
-  background: rgba(150, 75, 0, 0.8) !important;
-  border-color: rgba(180, 100, 0, 0.5) !important;
-}
-
-.game-card:hover .thumbnail-admin-overlay {
-  opacity: 1;
-}
-
-.text-neon {
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Table styles for manage pinned */
-.table-dark {
-  --bs-table-bg: rgba(255, 255, 255, 0.03);
-  --bs-table-border-color: rgba(0, 240, 255, 0.15);
-  --bs-table-striped-bg: rgba(0, 240, 255, 0.05);
-}
-
-.table-hover tbody tr:hover {
-  background-color: rgba(0, 240, 255, 0.1) !important;
-}
-
-/* Form select in table */
-.table .form-select-sm {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  color: var(--text);
-  border-radius: 8px;
-}
-
-.table .form-control-sm {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  color: var(--text);
-  border-radius: 8px;
-}
-
-.table .form-control-sm:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
-}
-
-/* Badge styles */
-.badge {
-  font-size: 0.75em;
-  padding: 4px 8px;
-}
-
-.bg-success {
-  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
-}
-
-.bg-warning {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
-  color: #78350f !important;
-}
-
-.bg-danger {
-  background: linear-gradient(135deg, var(--neon-pink), #dc2626) !important;
-}
-.badge-pc{background:linear-gradient(135deg,var(--pc-color),#0082c4);box-shadow:0 5px 20px var(--pc-glow),0 0 30px var(--pc-glow) inset}
-
-.game-click-count {
-  background: linear-gradient(135deg, #ff4757, #ff3838) !important;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 20px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.game-card:hover .game-click-count {
-  animation: none;
-  transform: scale(1.1);
-  transition: transform 0.2s ease;
-}
-
-/* Popular games highlight */
-.game-card.high-popularity {
-  border: 2px solid #ff4757 !important;
-  box-shadow: 0 0 20px rgba(255, 71, 87, 0.3) !important;
-}
-
-.game-card.medium-popularity {
-  border: 1px solid #ffa502 !important;
-}
-
-.platform-badge.thumbnail-badge {
-      position: absolute !important;
-      top: 10px !important;
-      left: 10px !important;
-      z-index: 5 !important;
-      background: rgba(0, 0, 0, 0.7) !important;
-      backdrop-filter: blur(4px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      border-radius: 20px !important;
-      padding: 4px 10px !important;
-      font-size: 0.75rem !important;
-      font-weight: 600 !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 5px !important;
-      max-width: 120px !important;
-    }
-    
-    /* STYLE UNTUK CLICK COUNT BADGE (POJOK KANAN ATAS) */
-    .click-count-badge {
-      background: linear-gradient(135deg, #ff6b6b, #ee5a52) !important;
-      border: 2px solid rgba(255, 255, 255, 0.4) !important;
-      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5) !important;
-      font-size: 0.8rem !important;
-      font-weight: 700 !important;
-      padding: 5px 10px !important;
-      border-radius: 20px !important;
-      animation: countPulse 3s infinite !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 4px !important;
-      min-width: 50px !important;
-      height: 28px !important;
-    }
-    
-    .click-count-badge i {
-      font-size: 0.8rem !important;
-    }
-    
-    @keyframes countPulse {
-      0% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5); }
-      50% { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.8); }
-      100% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5); }
-    }
-    
-    .game-card:hover .click-count-badge {
-      animation: none !important;
-      transform: scale(1.1) !important;
-      transition: all 0.3s ease !important;
-      box-shadow: 0 6px 25px rgba(255, 107, 107, 0.9) !important;
-    }
-    
-    /* Popular games highlight */
-    .game-card.high-popularity {
-      border: 2px solid #ff6b6b !important;
-      box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4) !important;
-    }
-    
-    .game-card.medium-popularity {
-      border: 1px solid #ffa502 !important;
-      box-shadow: 0 4px 20px rgba(255, 165, 2, 0.3) !important;
-    }
-    
-    /* Pastikan thumbnail container bisa menampung badge */
-    .thumbnail-container {
-      position: relative !important;
-      overflow: hidden !important;
-    }
-    
-    /* Styling untuk platform badge khusus */
-    .platform-badge.badge-ps2 {
-      background: rgba(0, 100, 255, 0.8) !important;
-      border-color: rgba(0, 150, 255, 0.5) !important;
-    }
-    
-    .platform-badge.badge-switch {
-      background: rgba(230, 0, 0, 0.8) !important;
-      border-color: rgba(255, 50, 50, 0.5) !important;
-    }
-    
-    .platform-badge.badge-android {
-      background: rgba(60, 180, 75, 0.8) !important;
-      border-color: rgba(100, 220, 100, 0.5) !important;
-    }
-    
-    .platform-badge.badge-pc {
-      background: rgba(100, 100, 100, 0.8) !important;
-      border-color: rgba(150, 150, 150, 0.5) !important;
-    }
-    
-    /* Responsive adjustment */
-    @media (max-width: 768px) {
-      .platform-badge.thumbnail-badge {
-        font-size: 0.7rem !important;
-        padding: 3px 8px !important;
-        max-width: 100px !important;
-      }
-      
-      .click-count-badge {
-        font-size: 0.7rem !important;
-        padding: 4px 8px !important;
-        min-width: 45px !important;
-        height: 26px !important;
-      }
-    }
-    
-    /* Efek hover untuk card */
-    .game-card:hover {
-      transform: translateY(-5px) !important;
-      transition: transform 0.3s ease !important;
-    }
-    
-    /* Styling untuk icon eye */
-    .click-count-badge i.bi-eye-fill {
-      color: white !important;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)) !important;
-    }
-    
-    /* Jika count tinggi, beri efek glow */
-    .click-count-badge.high-count {
-      background: linear-gradient(135deg, #ff3838, #ff0000) !important;
-      box-shadow: 0 4px 20px rgba(255, 56, 56, 0.7) !important;
-    }
-  .badge-3ds {
-    background: linear-gradient(135deg, var(--3ds-color), #a01b1f);
-    box-shadow: 0 5px 20px var(--3ds-glow), 0 0 30px var(--3ds-glow) inset
-  }
-
-  .game-card.platform-3ds .new-badge {
-    --new-main: var(--3ds-color);
-    --new-dark: #a01b1f;
-    --new-glow: var(--3ds-glow)
-  }
-
-  .game-card.platform-3ds .pin-badge {
-    --pin-main: var(--3ds-color);
-    --pin-dark: #a01b1f;
-    --pin-glow: var(--3ds-glow)
-  }
-
-  /* Untuk platform icon 3DS */
-  .platform-icon.platform-3ds {
-    background: rgba(209, 34, 41, 0.3);
-  }
-
-  /* Untuk platform badge khusus 3DS */
-  .platform-badge.badge-3ds {
-    background: rgba(209, 34, 41, 0.8) !important;
-    border-color: rgba(255, 100, 100, 0.5) !important;
-  }
-
-
 </style>
+
 </head>
 <body>
   <!-- ===== NAVIGATION ===== -->
