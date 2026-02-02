@@ -21,12 +21,42 @@
   <link rel="icon" href="favicon.png" sizes="32x32" type="image/png">
   <link rel="icon" href="favicon.png" sizes="16x16" type="image/png">
 <style>
-    :root{--ps2-gradient:linear-gradient(135deg,#0066cc 0%,#003366 100%);--gamecube-gradient: linear-gradient(135deg, #9c59b6 0%, #6a1b9a 100%);
+    :root{--ps2-gradient:linear-gradient(135deg,#0066cc 0%,#003366 100%);--ps1-gradient: linear-gradient(135deg, #0070dd 0%, #0055aa 100%);--gamecube-gradient: linear-gradient(135deg, #9c59b6 0%, #6a1b9a 100%);
 --switch-gradient:linear-gradient(135deg,#e60012 0%,#8b0000 100%);--psp-gradient:linear-gradient(135deg,#0070cc 0%,#004080 100%);--android-gradient:linear-gradient(135deg,#3ddc84 0%,#1a8c4f 100%);--wii-gradient:linear-gradient(135deg,#0099ff 0%,#0055cc 100%);--psvita-gradient:linear-gradient(135deg,#003791 0%,#001f4d 100%);--community-bg:linear-gradient(135deg,#667eea 0%,#764ba2 100%);--community-bar:linear-gradient(90deg,#667eea,#764ba2,#667eea);--community-shadow:rgba(102,126,234,.4);--community-shadow-hover:rgba(102,126,234,.6)}.wii-badge{background:var(--wii-gradient)}.wii-tabs .nav-link.active{background:var(--wii-gradient)!important;color:#fff!important;box-shadow:0 8px 25px rgba(0,153,204,.4)}@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}@keyframes shimmer{0%{background-position:-1000px 0}100%{background-position:1000px 0}}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}@keyframes glow{0%,100%{box-shadow:0 10px 30px rgba(0,102,204,.3)}50%{box-shadow:0 10px 40px rgba(0,102,204,.6)}}body{background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;min-height:100vh;position:relative;overflow-x:hidden}body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.1) 1px,transparent 1px);background-size:50px 50px;animation:float 20s infinite linear;pointer-events:none;z-index:0}.container{position:relative;z-index:1}.game-header{background:var(--ps2-gradient);color:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,102,204,.3);position:relative;overflow:hidden;animation:fadeInUp .6s ease,glow 3s infinite}.game-header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,.1) 50%,transparent 70%);animation:shimmer 3s infinite}.game-header h1{position:relative;z-index:1;text-shadow:2px 2px 4px rgba(0,0,0,.3)}.game-header p{position:relative;z-index:1}.platform-badge{color:#fff;padding:8px 16px;border-radius:25px;font-size:.85rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all .3s ease;animation:fadeInUp .8s ease;box-shadow:0 4px 10px rgba(0,0,0,.2)}.platform-badge:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 8px 20px rgba(0,0,0,.3)}.ps2-badge{background:var(--ps2-gradient)}.switch-badge{background:var(--switch-gradient)}.psp-badge{background:var(--psp-gradient)}.android-badge{background:var(--android-gradient)}.psvita-badge{background:var(--psvita-gradient)}.btn-cloud{margin:0;transition:all .4s cubic-bezier(.175,.885,.32,1.275);border-radius:12px;font-weight:600;padding:12px 24px;position:relative;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,.1)}.btn-cloud::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.3);transform:translate(-50%,-50%);transition:width .6s,height .6s}.btn-cloud:hover::before{width:300px;height:300px}.btn-cloud:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,.2)}.btn-cloud:active{transform:translateY(-2px)}.ps2-tabs-wrap{margin-top:15px;animation:fadeInUp 1s ease}.ps2-tabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;padding:15px!important;background:rgba(255,255,255,.95)!important;border-radius:20px!important;box-shadow:0 10px 30px rgba(0,0,0,.1)!important;border:0!important;overflow:visible!important;backdrop-filter:blur(10px)}.ps2-tabs .nav-item{margin:0!important;width:100%!important;animation:fadeInUp 1.2s ease}.ps2-tabs .nav-item:nth-child(2){animation-delay:.1s}.ps2-tabs .nav-item:nth-child(3){animation-delay:.2s}.ps2-tabs .nav-link{width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;border:0!important;border-radius:15px!important;padding:14px 12px!important;font-size:.95rem!important;font-weight:700!important;line-height:1.2!important;background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%)!important;color:#0f172a!important;white-space:normal!important;text-align:center!important;transition:all .4s cubic-bezier(.175,.885,.32,1.275)!important;position:relative;overflow:hidden}.ps2-tabs .nav-link::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:currentColor;transform:scaleX(0);transition:transform .3s ease}.ps2-tabs .nav-link:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.15)}.ps2-tabs .nav-link.active{background:var(--ps2-gradient)!important;color:#fff!important;transform:scale(1.05);box-shadow:0 8px 25px rgba(0,102,204,.4)}.ps2-tabs .nav-link.active::after{transform:scaleX(1)}.switch-tabs .nav-link.active{background:var(--switch-gradient)!important;color:#fff!important;box-shadow:0 8px 25px rgba(230,0,18,.4)}.psp-tabs .nav-link.active{background:var(--psp-gradient)!important;color:#fff!important;box-shadow:0 8px 25px rgba(0,112,204,.4)}.android-tabs .nav-link.active{background:var(--android-gradient)!important;color:#fff!important;box-shadow:0 8px 25px rgba(61,220,132,.4)}.psvita-tabs .nav-link.active{background:var(--psvita-gradient)!important;color:#fff!important;box-shadow:0 8px 25px rgba(0,55,145,.4)}@media (max-width:576px){.ps2-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.ps2-tabs .nav-item:last-child{grid-column:1/-1!important}}.ad-note-banner{background:linear-gradient(135deg,#e3f2fd 0%,#bbdefb 100%);border:2px solid #2196f3;border-radius:15px;padding:18px;margin-bottom:20px;animation:fadeInUp 1.4s ease;transition:transform .3s ease}.ad-note-banner:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(33,150,243,.3)}.ad-note-pill{background:#2196f3;color:#fff;padding:6px 16px;border-radius:25px;display:inline-block;font-weight:600;margin-bottom:10px;animation:pulse 2s infinite}.ad-note-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.ad-note-box{background:#fff;padding:12px;border-radius:10px;border:1px solid #e0e0e0;transition:all .3s ease}.ad-note-box:hover{transform:scale(1.03);box-shadow:0 4px 12px rgba(0,0,0,.1)}.login-prompt{background:linear-gradient(135deg,#fff3cd 0%,#ffeaa7 100%);border:2px dashed #ffc107;padding:20px;border-radius:12px;animation:pulseWarning 2s infinite;position:relative;overflow:hidden}@keyframes pulseWarning{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}.login-prompt::before{content:'⚠️';position:absolute;top:10px;right:15px;font-size:2rem;opacity:.2;animation:float 3s ease-in-out infinite}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}.user-info-box{background:linear-gradient(135deg,#e9ecef 0%,#dee2e6 100%);padding:15px;border-radius:12px;margin-bottom:20px;border-left:5px solid #007bff;animation:slideInRight .5s ease-out;box-shadow:0 4px 15px rgba(0,0,0,.1)}@keyframes slideInRight{from{transform:translateX(-20px);opacity:0}to{transform:translateX(0);opacity:1}}.modal-icon-lg{font-size:3rem;display:block;margin:0 auto 15px;animation:float 3s infinite}.btn-copy-success{background-color:#198754!important;color:#fff!important}.link-section{background:rgba(255,255,255,.95);border-radius:15px;padding:22px;margin-bottom:20px;border-left:5px solid #2196f3;box-shadow:0 8px 20px rgba(0,0,0,.08);animation:slideInLeft .8s ease;backdrop-filter:blur(10px);transition:all .3s ease}.link-section:hover{transform:translateX(5px);box-shadow:0 12px 30px rgba(0,0,0,.12)}.ad-link{border-left-color:#ffc107;background:linear-gradient(135deg,#fffcf3 0%,#fff9e6 100%)}.original-link{border-left-color:#28a745;background:linear-gradient(135deg,#f8fff9 0%,#e8f5e9 100%)}.link-item{padding:14px 18px;background:linear-gradient(135deg,#fff 0%,#f8f9fa 100%);border-radius:12px;margin-bottom:12px;border:1px solid #e9ecef;transition:all .3s cubic-bezier(.175,.885,.32,1.275)}.link-item:hover{transform:translateY(-4px) translateX(4px);box-shadow:0 8px 20px rgba(0,0,0,.12);border-color:#2196f3}.game-thumb-wrap{background:rgba(255,255,255,.95);border-radius:18px;padding:15px;box-shadow:0 10px 30px rgba(0,0,0,.1);margin-bottom:20px;animation:fadeInUp 1s ease;transition:all .3s ease}.game-thumb-wrap:hover{transform:translateY(-5px);box-shadow:0 15px 40px rgba(0,0,0,.15)}.game-thumb{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;transition:transform .3s ease}.game-thumb:hover{transform:scale(1.02)}.tutorial-video-card{background:rgba(255,255,255,.95);border-radius:15px;padding:18px;margin:0 0 20px 0;border-left:5px solid #0d6efd;box-shadow:0 8px 20px rgba(0,0,0,.08);animation:fadeInUp 1.2s ease;transition:all .3s ease}.tutorial-video-card:hover{transform:translateX(5px);box-shadow:0 12px 30px rgba(0,0,0,.12)}.tutorial-video-card .title{font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}.ratio video{width:100%;height:100%;object-fit:contain;background:#000;border-radius:12px;transition:transform .3s ease}.ratio video:hover{transform:scale(1.01)}.btn-outline-secondary{transition:all .3s ease;border-radius:10px;font-weight:600}.btn-outline-secondary:hover{transform:translateY(-3px);box-shadow:0 6px 15px rgba(0,0,0,.15)}.user-info-box{background:linear-gradient(135deg,#fff 0%,#f8f9fa 100%);padding:18px;border-radius:15px;border-left:5px solid #0d6efd;box-shadow:0 8px 20px rgba(0,0,0,.08);animation:fadeInUp .6s ease}.modal-content{border-radius:20px;overflow:hidden;border:none;box-shadow:0 15px 50px rgba(0,0,0,.3)}.modal-header{border-bottom:none;padding:20px 25px}.modal-body{padding:25px}.tab-content{background:rgba(255,255,255,.95);border-radius:0 0 20px 20px;animation:fadeInUp 1.4s ease;backdrop-filter:blur(10px)}.spinner-border{animation:fadeInUp .5s ease,spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.btn-success,.btn-danger,.btn-primary,.btn-secondary{border-radius:10px;font-weight:600;transition:all .3s ease;position:relative;overflow:hidden}.btn-success:hover,.btn-danger:hover,.btn-primary:hover,.btn-secondary:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.2)}.table{border-radius:10px;overflow:hidden}.table-striped tbody tr{transition:all .3s ease}.table-striped tbody tr:hover{background-color:#e3f2fd;transform:scale(1.01)}.ind-toast{border:0;border-radius:16px;overflow:hidden;box-shadow:0 15px 45px rgba(0,0,0,.18);backdrop-filter:blur(10px)}.ind-toast .toast-header{background:linear-gradient(135deg,rgba(25,135,84,.12) 0%,rgba(13,110,253,.1) 100%);border-bottom:1px solid rgba(0,0,0,.06)}@keyframes glowGreen{0%,100%{box-shadow:0 0 0 rgba(25,135,84,0)}50%{box-shadow:0 0 35px rgba(25,135,84,.35)}}.user-info-box.login-flash{animation:glowGreen 1.2s ease;border-left-color:#198754!important}.komunitas-section{margin-top:50px;padding:30px 0}.komunitas-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:25px;overflow:hidden;box-shadow:0 20px 60px rgba(102,126,234,.4);border:none;transition:all .5s cubic-bezier(.175,.885,.32,1.275);position:relative}.komunitas-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--community-bar);animation:shimmer 3s infinite}.komunitas-card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 30px 80px var(--community-shadow-hover)}.komunitas-card{background:var(--community-bg);border-radius:25px;overflow:hidden;box-shadow:0 20px 60px var(--community-shadow);border:none;transition:all .5s cubic-bezier(.175,.885,.32,1.275);position:relative}.komunitas-header{text-align:center;padding:30px 30px 20px;position:relative;overflow:hidden}.komunitas-header h3{font-size:2.2rem;font-weight:800;text-shadow:2px 2px 8px rgba(0,0,0,.3);margin-bottom:10px;animation:fadeInUp .8s ease}.komunitas-header p{font-size:1.1rem;opacity:.9;animation:fadeInUp 1s ease}.komunitas-icon{font-size:3.5rem;margin-bottom:20px;display:inline-block;animation:float 3s ease-in-out infinite}.komunitas-body{padding:0 30px 30px}.social-card{background:rgba(255,255,255,.15);backdrop-filter:blur(15px);border-radius:20px;padding:20px;margin-bottom:20px;border:1px solid rgba(255,255,255,.2);transition:all .4s cubic-bezier(.175,.885,.32,1.275);cursor:pointer;position:relative;overflow:hidden}.social-card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .6s}.social-card:hover::before{left:100%}.social-card:hover{transform:translateY(-8px) scale(1.03);background:rgba(255,255,255,.25);box-shadow:0 15px 35px rgba(0,0,0,.2)}.social-icon{font-size:2.5rem;width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:20px;flex-shrink:0;transition:all .3s ease}.social-card:hover .social-icon{transform:scale(1.1) rotate(5deg)}.social-content{flex:1}.social-title{font-size:1.3rem;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:10px}.social-link{color:#fff;text-decoration:none;font-size:.95rem;word-break:break-all;display:block;padding:8px 0;transition:all .3s ease;border-radius:8px;padding-left:5px}.social-link:hover{color:#ffd166;background:rgba(255,255,255,.1);padding-left:15px}.social-badge{position:absolute;top:15px;right:15px;background:rgba(255,255,255,.3);color:#fff;padding:4px 12px;border-radius:20px;font-size:.8rem;font-weight:600}.komunitas-footer{text-align:center;padding:25px 30px 0;border-top:1px solid rgba(255,255,255,.2);margin-top:20px}.info-text{font-size:1rem;opacity:.9;display:flex;align-items:center;justify-content:center;gap:10px}.whatsapp{background:linear-gradient(135deg,#25D366,#128C7E)}.telegram{background:linear-gradient(135deg,#0088cc,#005999)}.megaphone{background:linear-gradient(135deg,#ff6b6b,#ee5a52)}.robot{background:linear-gradient(135deg,#ffd166,#ffb142)}.tiktok{background:linear-gradient(135deg,#000,#333)}@media (max-width:768px){.komunitas-header h3{font-size:1.8rem}.social-card{flex-direction:column;text-align:center}.social-icon{margin-right:0;margin-bottom:15px;align-self:center}.social-badge{position:relative;top:0;right:0;display:inline-block;margin-top:10px}.header-controls{flex-direction:column;align-items:flex-end}}:root{--accent1:#0066cc;--accent2:#003366;--page-bg:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);--text:#0f172a;--muted:#475569;--surface:rgba(255,255,255,.95);--surface-2:#fff;--border:rgba(0,0,0,.1);--shadow:rgba(0,0,0,.12);--hover-row:rgba(33,150,243,.12)}body{background:var(--page-bg);color:var(--text)}body.theme-dark{--page-bg:linear-gradient(135deg,#0b1220 0%,#111827 100%);--text:#e5e7eb;--muted:#9ca3af;--surface:rgba(17,24,39,.9);--surface-2:rgba(30,41,59,.92);--border:rgba(255,255,255,.12);--shadow:rgba(0,0,0,.55);--hover-row:rgba(255,255,255,.06)}body.theme-dark::before{background:radial-gradient(circle,rgba(255,255,255,.07) 1px,transparent 1px)}.ps2-tabs,.tab-content,.link-section,.link-item,.game-thumb-wrap,.tutorial-video-card,.user-info-box{background:var(--surface)!important;border-color:var(--border)!important;box-shadow:0 10px 30px var(--shadow)!important}.link-item{background:linear-gradient(135deg,var(--surface-2) 0%,var(--surface) 100%)!important}body.theme-dark .ad-note-banner{background:linear-gradient(135deg,rgba(13,110,253,.18) 0%,rgba(13,110,253,.1) 100%);border-color:rgba(13,110,253,.55)}body.theme-dark .login-prompt{background:linear-gradient(135deg,rgba(255,193,7,.18) 0%,rgba(255,193,7,.1) 100%);border-color:rgba(255,193,7,.55)}.table{color:var(--text)}body.theme-dark .table{color:var(--text)}body.theme-dark .table-striped>tbody>tr:nth-of-type(odd)>*{color:var(--text)}.table-striped tbody tr:hover{background-color:var(--hover-row)!important}body.theme-dark .text-muted,body.theme-dark .small.text-muted{color:var(--muted)!important}body.theme-dark .modal-content{background:var(--surface-2);color:var(--text)}body.theme-dark .modal-body,body.theme-dark .modal-footer{background:transparent}body.theme-dark .ps2-tabs .nav-link{background:linear-gradient(135deg,rgba(30,41,59,.9) 0%,rgba(17,24,39,.9) 100%)!important;color:var(--text)!important;box-shadow:0 6px 18px rgba(0,0,0,.35)}body.theme-dark .ps2-tabs{background:rgba(15,23,42,.35)!important}body.theme-dark .btn-outline-secondary{color:var(--text);border-color:var(--border)}body.theme-dark .btn-outline-secondary:hover{border-color:rgba(255,255,255,.25)}body.theme-dark .form-control{background:rgba(15,23,42,.55);border-color:var(--border);color:var(--text)}body.theme-dark .form-control::placeholder{color:rgba(229,231,235,.55)}body.theme-dark .ad-note-box{background:rgba(17,24,39,.92)!important;border-color:rgba(255,255,255,.12)!important;color:var(--text)!important}body.theme-dark .ad-note-box .fw-bold,body.theme-dark .ad-note-box div{color:var(--text)!important}body.theme-dark .card{background:rgba(30,41,59,.92)!important;border-color:rgba(255,255,255,.12)!important;color:var(--text)!important}body.theme-dark .card-body{background:transparent!important;color:var(--text)!important}body.theme-dark .card h1,body.theme-dark .card h2,body.theme-dark .card h3,body.theme-dark .card h4,body.theme-dark .card h5,body.theme-dark .card h6{color:var(--text)!important}body.theme-dark .card .text-muted{color:var(--muted)!important}body.theme-dark .card .card-header{border-bottom-color:rgba(255,255,255,.1)!important}#themeToggle{position:relative;overflow:hidden;transition:all .5s cubic-bezier(.68,-.55,.27,1.55);border-radius:50px;padding:8px 16px;transform:scale(1)}#themeToggle::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(0,102,204,.2);transform:translate(-50%,-50%);transition:width .6s,height .6s}#themeToggle:hover::before{width:300px;height:300px}#themeToggle:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 10px 25px rgba(0,0,0,.2)}#themeToggle:active{transform:translateY(-1px) scale(.98);transition:transform .1s}#themeToggle:hover i{animation:rotateIcon .6s ease}@keyframes rotateIcon{0%{transform:rotate(0)}25%{transform:rotate(15deg)}50%{transform:rotate(-10deg)}75%{transform:rotate(5deg)}100%{transform:rotate(0)}}#themeToggle span{display:inline-block;transition:transform .3s ease}#themeToggle:hover span{transform:translateX(3px)}body.theme-dark #themeToggle{background:linear-gradient(135deg,#374151 0%,#1f2937 100%);border-color:#4b5563;color:#f3f4f6;box-shadow:0 4px 15px rgba(0,0,0,.3)}body.theme-dark #themeToggle:hover{background:linear-gradient(135deg,#4b5563 0%,#374151 100%);box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 20px rgba(251,191,36,.3)}body:not(.theme-dark) #themeToggle{background:linear-gradient(135deg,#f3f4f6 0%,#e5e7eb 100%);border-color:#d1d5db;color:#374151;box-shadow:0 4px 15px rgba(0,0,0,.1)}body:not(.theme-dark) #themeToggle:hover{background:linear-gradient(135deg,#fff 0%,#f3f4f6 100%);box-shadow:0 10px 30px rgba(0,0,0,.15),0 0 20px rgba(59,130,246,.2)}#themeToggle.changing{animation:themeChange .8s ease}@keyframes themeChange{0%{transform:scale(1)}25%{transform:scale(.9) rotate(-5deg)}50%{transform:scale(1.1) rotate(5deg)}75%{transform:scale(.95) rotate(-3deg)}100%{transform:scale(1) rotate(0)}}body.theme-dark #themeToggle:hover i{color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,.7);animation:glowPulse 2s infinite}@keyframes glowPulse{0%,100%{text-shadow:0 0 10px rgba(251,191,36,.7)}50%{text-shadow:0 0 20px rgba(251,191,36,1),0 0 30px rgba(251,191,36,.5)}}body:not(.theme-dark) #themeToggle:hover i{color:#1e40af;text-shadow:0 0 10px rgba(30,64,175,.3);animation:glowPulseLight 2s infinite}@keyframes glowPulseLight{0%,100%{text-shadow:0 0 10px rgba(30,64,175,.3)}50%{text-shadow:0 0 15px rgba(30,64,175,.5),0 0 25px rgba(30,64,175,.2)}}.user-info-box{background:linear-gradient(135deg,rgba(255,255,255,.95) 0%,rgba(248,249,250,.95) 100%);border-radius:16px;padding:20px;margin-bottom:24px;border-left:6px solid var(--accent1,#0d6efd);box-shadow:0 8px 30px rgba(0,0,0,.12);animation:slideInRight .5s ease-out;backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,.08)}.user-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent1,#0d6efd),var(--accent2,#004080));display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 12px rgba(0,102,204,.3)}.saldo-box{background:linear-gradient(135deg,rgba(25,135,84,.1) 0%,rgba(21,128,61,.1) 100%);padding:12px 20px;border-radius:12px;border:1px solid rgba(25,135,84,.2);min-width:140px;transition:all .3s ease}.saldo-box:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(25,135,84,.15);border-color:rgba(25,135,84,.3)}.saldo-amount{font-size:1.3rem;letter-spacing:.5px}.btn-success{background:linear-gradient(135deg,#198754 0%,#157347 100%);border:none;transition:all .3s ease}.btn-success:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(25,135,84,.3)}.btn-danger{background:linear-gradient(135deg,#dc3545 0%,#b02a37 100%);border:none;transition:all .3s ease}.btn-danger:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(220,53,69,.3)}@keyframes slideInRight{from{transform:translateX(-30px);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes fadeInUp{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}body.theme-dark .user-info-box{background:linear-gradient(135deg,rgba(30,41,59,.95) 0%,rgba(15,23,42,.95) 100%);border-left-color:var(--accent1,#3b82f6);border:1px solid rgba(255,255,255,.1)}body.theme-dark .saldo-box{background:linear-gradient(135deg,rgba(21,128,61,.2) 0%,rgba(20,83,45,.2) 100%);border-color:rgba(21,128,61,.3)}body.theme-dark .user-avatar{background:linear-gradient(135deg,var(--accent1,#3b82f6),var(--accent2,#1e40af))}.user-info-box.login-success{animation:glowPulse 1.5s ease}@keyframes glowPulse{0%,100%{box-shadow:0 8px 30px rgba(0,0,0,.12)}50%{box-shadow:0 8px 40px rgba(13,110,253,.4)}}.balance-icon{font-size:4rem;color:#ff6b6b;animation:pulseBalance 2s infinite}@keyframes pulseBalance{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.8}}.balance-info-card{background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);border-radius:12px;padding:20px;border-left:4px solid #dc3545;box-shadow:0 4px 15px rgba(0,0,0,.08)}.balance-info-card hr{border-top:2px dashed #dee2e6;opacity:.6}body.theme-dark .balance-info-card{background:linear-gradient(135deg,rgba(33,37,41,.9) 0%,rgba(52,58,64,.9) 100%);border-left-color:#ff6b6b}body.theme-dark .balance-icon{color:#ff8787}@keyframes shakeModal{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-5px)}20%,40%,60%,80%{transform:translateX(5px)}}.modal-shake .modal-content{animation:shakeModal .5s cubic-bezier(.36,.07,.19,.97) both}@keyframes shakeModal{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-5px)}20%,40%,60%,80%{transform:translateX(5px)}}.modal-shake .modal-content{animation:shakeModal .5s cubic-bezier(.36,.07,.19,.97) both}.skeleton-loading{padding:20px}.skeleton-item{background:rgba(255,255,255,.1);border-radius:12px;padding:15px}.skeleton-line{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:loading 1.5s infinite;border-radius:4px;margin-bottom:10px}@keyframes loading{0%{background-position:200% 0}100%{background-position:-200% 0}}.other-games-section{margin-top:40px;padding:25px 0;background:rgba(255,255,255,.05);border-radius:20px;animation:fadeInUp 1.2s ease}.other-games-card{background:var(--surface);border-radius:18px;padding:25px;box-shadow:0 10px 30px var(--shadow);border:1px solid var(--border);transition:all .4s ease}.other-games-card:hover{transform:translateY(-5px);box-shadow:0 15px 40px rgba(0,0,0,.15)}.other-games-header{text-align:center;margin-bottom:25px}.other-games-header h3{font-size:1.8rem;font-weight:700;margin-bottom:10px;color:var(--text)}.other-games-header p{color:var(--muted);font-size:1rem}.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-top:20px}.platform-card{background:linear-gradient(135deg,var(--surface-2) 0%,var(--surface) 100%);border-radius:15px;padding:20px;text-align:center;border:1px solid var(--border);transition:all .3s cubic-bezier(.175,.885,.32,1.275);cursor:pointer;position:relative;overflow:hidden}.platform-card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);transition:left .6s}.platform-card:hover::before{left:100%}.platform-card:hover{transform:translateY(-8px);box-shadow:0 10px 25px var(--shadow)}.platform-icon{font-size:2.5rem;margin-bottom:15px;display:inline-block;transition:all .3s ease}.platform-card:hover .platform-icon{transform:scale(1.1)}.platform-title{font-size:1.1rem;font-weight:600;margin-bottom:5px;color:var(--text)}.platform-count{font-size:.85rem;color:var(--muted)}.platform-card.ps2{border-left:4px solid #0066cc}.platform-card.switch{border-left:4px solid #e60012}.platform-card.psp{border-left:4px solid #0070cc}.platform-card.android{border-left:4px solid #3ddc84}.platform-card.psvita{border-left:4px solid #003791}.platform-card.other{border-left:4px solid #6c757d}@media (max-width:768px){.platform-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.other-games-card{padding:20px 15px}}.pc-badge{background:linear-gradient(135deg,#00a4ef 0%,#0082c4 100%)}.pc-tabs .nav-link.active{background:linear-gradient(135deg,#00a4ef 0%,#0082c4 100%)!important;color:#fff!important;box-shadow:0 8px 25px rgba(0,164,239,.4)}.system-requirements-card{background:linear-gradient(135deg,rgba(0,164,239,.1) 0%,rgba(0,130,196,.1) 100%);border-radius:16px;padding:20px;margin:20px 0;border-left:5px solid #00a4ef;box-shadow:0 8px 30px rgba(0,164,239,.15);animation:fadeInUp .8s ease}.system-requirements-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid rgba(0,164,239,.2)}.system-requirements-header i{font-size:2rem;color:#00a4ef;background:rgba(0,164,239,.1);padding:12px;border-radius:12px}.system-requirements-header h4{margin:0;color:#00a4ef;font-weight:700}.system-requirements-content{background:rgba(255,255,255,.95);border-radius:12px;padding:20px;margin-top:15px;border:1px solid rgba(0,164,239,.2)}.sys-req-table{width:100%;border-collapse:separate;border-spacing:0}.sys-req-table tr{transition:all .2s ease}.sys-req-table tr:hover{background:rgba(0,164,239,.05)}.sys-req-table th{background:rgba(0,164,239,.1);color:#007bbd;font-weight:700;padding:14px 16px;text-align:left;border-bottom:2px solid rgba(0,164,239,.3);white-space:nowrap;width:180px}.sys-req-table td{padding:14px 16px;border-bottom:1px solid rgba(0,164,239,.1);color:#333;word-break:break-word}.sys-req-table tr:last-child th,.sys-req-table tr:last-child td{border-bottom:none}.sys-req-badge{background:linear-gradient(135deg,#00a4ef 0%,#0082c4 100%);color:#fff;padding:6px 14px;border-radius:20px;font-size:.85rem;font-weight:600;display:inline-block;margin-right:8px;margin-bottom:6px}.sys-req-notes{margin-top:20px;padding:15px;background:rgba(255,193,7,.1);border-radius:10px;border-left:4px solid #ffc107}.sys-req-notes .note-title{font-weight:700;color:#ff9800;margin-bottom:8px;display:flex;align-items:center;gap:8px}body.theme-dark .system-requirements-card{background:linear-gradient(135deg,rgba(0,164,239,.15) 0%,rgba(0,130,196,.1) 100%);border-left-color:#00a4ef}body.theme-dark .system-requirements-content{background:rgba(30,41,59,.95);border-color:rgba(0,164,239,.3)}body.theme-dark .sys-req-table th{background:rgba(0,164,239,.2);color:#66b3ff}body.theme-dark .sys-req-table td{color:#e5e7eb;border-bottom-color:rgba(0,164,239,.2)}body.theme-dark .sys-req-notes{background:rgba(255,193,7,.15);border-left-color:#ffc107}.pc-badge{background:linear-gradient(135deg,#00a4ef 0%,#0082c4 100%)}.pc-tabs .nav-link.active{background:linear-gradient(135deg,#00a4ef 0%,#0082c4 100%)!important;color:#fff!important;box-shadow:0 8px 25px rgba(0,164,239,.4)}.platform-card.wii{border-left:4px solid #0099ff}.system-requirements-card{background:linear-gradient(135deg,rgba(0,164,239,.1) 0%,rgba(0,130,196,.1) 100%);border-radius:16px;padding:20px;margin:20px 0;border-left:5px solid #00a4ef;box-shadow:0 8px 30px rgba(0,164,239,.15);animation:fadeInUp .8s ease}
       .note-item .card {
     border-width: 2px;
       }
       
+.ps3-badge {
+    background: linear-gradient(135deg, #0000FF 0%, #000080 100%);
+}
+
+.ps3-tabs .nav-link.active {
+    background: linear-gradient(135deg, #0000FF 0%, #000080 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 255, 0.4) !important;
+}
+
+.platform-card.ps3 {
+    border-left: 4px solid #0000FF;
+}
+
+.ps3-header {
+    background: linear-gradient(135deg, #0000FF 0%, #000080 100%);
+}
+        .ps1-badge {
+            background: var(--ps1-gradient);
+        }
+
+        .ps1-tabs .nav-link.active {
+            background: var(--ps1-gradient) !important;
+            color: #fff !important;
+            box-shadow: 0 8px 25px rgba(0, 112, 221, 0.4);
+        }
+
+        .platform-card.ps1 {
+            border-left: 4px solid #0070dd;
+        }
       .note-item .card.border-warning {
         background-color: rgba(255,193,7,0.05);
       }
@@ -220,6 +250,98 @@
     font-size: 0.85rem;
     color: var(--muted);
 }
+/* iOS Platform Styles */
+.ios-badge {
+  background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
+  color: white;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.ios-tabs .nav-link.active {
+  background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%) !important;
+  color: white !important;
+  border-color: #0a84ff !important;
+}
+
+.platform-card.ios {
+  border-left: 4px solid #0a84ff;
+}
+
+.ios-header {
+  background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
+}
+
+.ios-badge {
+  background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
+  color: white;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* Platform Card di Game Lainnya */
+.platform-card.ios {
+  border-left: 4px solid #0a84ff;
+  background: var(--surface);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.platform-card.ios::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  transition: left 0.6s;
+}
+
+.platform-card.ios:hover::before {
+  left: 100%;
+}
+
+.platform-card.ios:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px var(--shadow);
+}
+
+.platform-card.ios .platform-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  display: inline-block;
+  transition: all 0.3s ease;
+  color: #0a84ff;
+}
+
+.platform-card.ios:hover .platform-icon {
+  transform: scale(1.1);
+  color: #0066cc;
+}
+
+.platform-card.ios .platform-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--text);
+}
+
+.platform-card.ios .platform-count {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 </style>
 
 </head>
@@ -510,6 +632,15 @@
                             <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                         </div>
 
+                    <div class="platform-card ps1" onclick="goToPlatform('ps1')">
+                        <div class="platform-icon">
+                            <i class="bi bi-playstation"></i>
+                        </div>
+                        <div class="platform-title">PlayStation 1</div>
+                        <div class="platform-count">Koleksi Game PS1</div>
+                        <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                    </div>
+
                         <div class="platform-card ps2" onclick="goToPlatform('ps2')">
                             <div class="platform-icon">
                                 <i class="bi bi-playstation"></i>
@@ -519,6 +650,15 @@
                             <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                         </div>
                         
+                    <div class="platform-card ps3" onclick="goToPlatform('ps3')">
+                        <div class="platform-icon">
+                            <i class="bi bi-playstation"></i>
+                        </div>
+                        <div class="platform-title">PlayStation 3</div>
+                        <div class="platform-count">Koleksi Game PS3</div>
+                        <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                    </div>
+
                         <div class="platform-card psp" onclick="goToPlatform('psp')">
                             <div class="platform-icon">
                                 <i class="bi bi-controller"></i>
@@ -572,6 +712,15 @@
                         <div class="platform-title">Java</div>
                         <div class="platform-count">Koleksi Game Java</div>
                         <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                    </div>
+
+                    <div class="platform-card ios" onclick="goToPlatform('ios')">
+                      <div class="platform-icon">
+                        <i class="fab fa-apple"></i>
+                      </div>
+                      <div class="platform-title">iOS</div>
+                      <div class="platform-count">Koleksi Game iOS</div>
+                      <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                     </div>
 
                         <div class="platform-card android" onclick="goToPlatform('android')">
@@ -870,7 +1019,9 @@
 
     <script>
         // ====== CONFIG ======
+        const GAMEPS1_API_URL = "https://script.google.com/macros/s/AKfycbxExg-rUr-CcJUYZ786k57e5E7JO2mSrGdRppr6JWbb7fHoTTAJs7x7AnYEmcOOK-49/exec";
         const GAMEPS2_API_URL = "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec";
+        const GAMEPS3_API_URL = "https://script.google.com/macros/s/AKfycbwqkrPhEvF3-_r1cu_wI7nRd56Z1AzNhank78R7dFgxHK57Wd2cf2WmV9ESXMAg_LHC/exec"; 
         const GAMESWITCH_API_URL = "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec";
         const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec";
         const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
@@ -883,6 +1034,7 @@
         const GAME3DS_API_URL = "https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec";
         const NOTE_API_URL = "https://script.google.com/macros/s/AKfycbxQioTLy3jP2-4tf75Dxm62tes_hOZJm_CvTSGKAYiKgfifYI3jPSHgUrkOxu-D4ylm0Q/exec";
         const GAMEJAVA_API_URL = "https://script.google.com/macros/s/AKfycbwvmH1CO1HV10KB6jftoXqJGbjCQSqykEauZbFbitNFkrNaPnbFNw779kH7n9XZX7t3/exec";
+        const GAMEIOS_API_URL = "https://script.google.com/macros/s/AKfycbxicykcCe_w26RZhwMf1o8oeTVz9aRFlhRjH1Aq_Em7KR5U-z31YzB8Co5KUhQYyqcDkw/exec";
         
         const LS_USER_KEY = 'indapkGameUser';
         const LS_LOGOUT_AT_KEY = 'indapkGameLogoutAt';
@@ -962,6 +1114,59 @@ function getAvailableFormats(game, platform) {
         case 'ps2':
             if (hasArr(game.link_iklan_iso) || hasArr(game.link_asli_iso)) formats.add('ISO');
             if (hasArr(game.link_iklan_chd) || hasArr(game.link_asli_chd)) formats.add('CHD');
+            break;
+        case 'ps3':
+            if (game.formats && Array.isArray(game.formats)) {
+                game.formats.forEach(format => formats.add(format.toUpperCase()));
+            } else {
+                // Fallback jika tidak ada array formats
+                if (hasArr(game.link_iklan_formats)) {
+                    Object.keys(game.link_iklan_formats).forEach(format => formats.add(format.toUpperCase()));
+                }
+                if (hasArr(game.link_asli_formats)) {
+                    Object.keys(game.link_asli_formats).forEach(format => formats.add(format.toUpperCase()));
+                }
+            }
+            
+            // Format spesifik PS3
+            if (hasArr(game.link_iklan_pkg) || hasArr(game.link_asli_pkg)) formats.add('PKG');
+            if (hasArr(game.link_iklan_iso) || hasArr(game.link_asli_iso)) formats.add('ISO');
+            if (hasArr(game.link_iklan_rar) || hasArr(game.link_asli_rar)) formats.add('RAR');
+            if (hasArr(game.link_iklan_zip) || hasArr(game.link_asli_zip)) formats.add('ZIP');
+            if (hasArr(game.link_iklan_7z) || hasArr(game.link_asli_7z)) formats.add('7Z');
+            
+            // Generic fallback
+            if (formats.size === 0 && (hasArr(game.link_iklan) || hasArr(game.link_asli))) {
+                formats.add('ISO'); // Default format PS3
+            }
+            break;
+            
+        case 'ps1':
+            if (game.formats && Array.isArray(game.formats)) {
+                game.formats.forEach(format => formats.add(format.toUpperCase()));
+            } else {
+                // Fallback jika tidak ada array formats
+                if (hasArr(game.link_iklan_formats)) {
+                    Object.keys(game.link_iklan_formats).forEach(format => formats.add(format.toUpperCase()));
+                }
+                if (hasArr(game.link_asli_formats)) {
+                    Object.keys(game.link_asli_formats).forEach(format => formats.add(format.toUpperCase()));
+                }
+            }
+            
+            // Format spesifik PS1
+            if (hasArr(game.link_iklan_bin) || hasArr(game.link_asli_bin)) formats.add('BIN/CUE');
+            if (hasArr(game.link_iklan_iso) || hasArr(game.link_asli_iso)) formats.add('ISO');
+            if (hasArr(game.link_iklan_chd) || hasArr(game.link_asli_chd)) formats.add('CHD');
+            if (hasArr(game.link_iklan_pbp) || hasArr(game.link_asli_pbp)) formats.add('PBP');
+            if (hasArr(game.link_iklan_rar) || hasArr(game.link_asli_rar)) formats.add('RAR');
+            if (hasArr(game.link_iklan_zip) || hasArr(game.link_asli_zip)) formats.add('ZIP');
+            if (hasArr(game.link_iklan_eboot) || hasArr(game.link_asli_eboot)) formats.add('EBOOT');
+            
+            // Generic fallback
+            if (formats.size === 0 && (hasArr(game.link_iklan) || hasArr(game.link_asli))) {
+                formats.add('ISO'); // Default format PS1
+            }
             break;
             
         case 'psp':
@@ -1191,6 +1396,35 @@ function getCloudsForFormat(format) {
                 }
             }
             break;
+        case 'ps3':
+            const ps3Format = formatKey.toUpperCase();
+            if (game.cloud_formats && game.cloud_formats[format]) {
+                clouds.push(...game.cloud_formats[format]);
+            } else if (game.cloud_formats && game.cloud_formats[ps3Format]) {
+                clouds.push(...game.cloud_formats[ps3Format]);
+            } else {
+                // Generic clouds untuk PS3
+                const linkCount = getPS3LinkCount(game, formatKey);
+                for (let i = 1; i <= linkCount; i++) {
+                    clouds.push(`Cloud ${i}`);
+                }
+            }
+            break;
+            
+        case 'ps1':  // TAMBAHKAN CLOUD DETECTION PS1
+            const ps1Format = formatKey.toUpperCase();
+            if (game.cloud_formats && game.cloud_formats[format]) {
+                clouds.push(...game.cloud_formats[format]);
+            } else if (game.cloud_formats && game.cloud_formats[ps1Format]) {
+                clouds.push(...game.cloud_formats[ps1Format]);
+            } else {
+                // Generic clouds untuk PS1
+                const linkCount = getPS1LinkCount(game, formatKey);
+                for (let i = 1; i <= linkCount; i++) {
+                    clouds.push(`Cloud ${i}`);
+                }
+            }
+            break;
 
         case '3ds':
             const formatUpper3DS = format.toUpperCase();
@@ -1216,6 +1450,7 @@ function getCloudsForFormat(format) {
     console.log('Filtered clouds for', formatKey, ':', filteredClouds);
     return filteredClouds;
 }
+
 
 function getAndroidLinkCount(game, formatKey) {
     console.log('Getting Android link count for', formatKey, ':', {
@@ -1660,6 +1895,7 @@ function setModalHeaderColor(modalId, platform) {
     
     let gradient;
     switch(platform) {
+        case 'ps1': gradient = 'linear-gradient(135deg, #0070dd 0%, #0055aa 100%)'; break;
         case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
         case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #b5000e 100%)'; break;
         case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; break;
@@ -1670,6 +1906,8 @@ function setModalHeaderColor(modalId, platform) {
         case 'gamecube': gradient = 'linear-gradient(135deg, #6a5acd 0%, #483d8b 100%)'; break;
         case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; break;
         case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
+        case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; break;
+
 
         default: gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
     }
@@ -2180,6 +2418,7 @@ function getSystemTheme() {
 
 function getCostPerLink(platform) {
     switch(platform) {
+        case 'ps1':
         case 'ps2':
         case 'psp':
         case 'psvita':
@@ -2189,6 +2428,8 @@ function getCostPerLink(platform) {
         case 'gamecube':
         case '3ds':
         case 'java':
+        case 'ios':
+        case 'ps3':
             return 1000;
         case 'switch':
             return 2000;
@@ -2445,7 +2686,9 @@ function goToPlatform(platform) {
     const baseUrl = 'https://indapk.github.io';
     
     const platformUrls = {
+        'ps1': `${baseUrl}/#ps1`,
         'ps2': `${baseUrl}/#ps2`,
+        'ps3': `${baseUrl}/#ps3`,
         'switch': `${baseUrl}/#switch`,
         'psp': `${baseUrl}/#psp`,
         'android': `${baseUrl}/#android`,
@@ -2454,7 +2697,8 @@ function goToPlatform(platform) {
         'wii': `${baseUrl}/#wii`,
         'gamecube': `${baseUrl}/#gamecube`,
         '3ds': `${baseUrl}/#3ds`,
-        'java': `${baseUrl}/#java`
+        'java': `${baseUrl}/#java`,
+        'ios': `${baseUrl}/#ios`
     };
     
     const url = platformUrls[platform] || `${baseUrl}`;
@@ -2469,7 +2713,9 @@ function updateOtherGamesSection(platform) {
     if (!titleEl || !subtitleEl) return;
     
     const platformNames = {
+        'ps1': 'PlayStation 1',
         'ps2': 'PlayStation 2',
+        'ps3': 'PlayStation 3',
         'switch': 'Nintendo Switch',
         'psp': 'PSP',
         'android': 'Android',
@@ -2478,7 +2724,8 @@ function updateOtherGamesSection(platform) {
         'wii': 'Wii',
         'gamecube': 'GameCube',
         '3ds': '3DS',
-        'java': 'Java'
+        'java': 'Java',
+        'ios': 'Ios'
     };
     
     const currentPlatformName = platformNames[platform] || 'Game';
@@ -2715,8 +2962,16 @@ async function loadGameDetail() {
     try {
         let apiUrl, action;
         switch(platform) {
+            case 'ps1':
+                apiUrl = GAMEPS1_API_URL;
+                action = 'getGameByDownloadId';
+                break;
             case 'ps2':
                 apiUrl = GAMEPS2_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+            case 'ps3':
+                apiUrl = GAMEPS3_API_URL;
                 action = 'getGameByDownloadId';
                 break;
             case 'switch':
@@ -2749,6 +3004,10 @@ async function loadGameDetail() {
             break;
             case 'java':
                 apiUrl = GAMEJAVA_API_URL;
+                action = 'getGameByDownloadId';
+                break;
+            case 'ios':
+                apiUrl = GAMEIOS_API_URL;
                 action = 'getGameByDownloadId';
                 break;
             case '3ds':
@@ -2824,6 +3083,7 @@ function setPlatformTheme(platform) {
   let c1, c2, shadow, shadowHover;
 
   switch (platform) {
+case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; badgeClass = 'ios-badge'; platformName = 'iOS'; tabs.className = 'nav nav-tabs ps2-tabs ios-tabs'; c1 = '#0a84ff'; c2 = '#0066cc'; shadow = 'rgba(10, 132, 255, 0.4)'; shadowHover = 'rgba(10, 132, 255, 0.6)'; break;
 case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; badgeClass = 'ps2-badge'; platformName = 'PlayStation 2'; tabs.className = 'nav nav-tabs ps2-tabs'; c1 = '#003087'; c2 = '#001f4d'; shadow = 'rgba(0, 48, 135, 0.4)'; shadowHover = 'rgba(0, 48, 135, 0.6)'; break;
 case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #b5000e 100%)'; badgeClass = 'switch-badge'; platformName = 'Nintendo Switch'; tabs.className = 'nav nav-tabs ps2-tabs switch-tabs'; c1 = '#e60012'; c2 = '#b5000e'; shadow = 'rgba(230, 0, 18, 0.4)'; shadowHover = 'rgba(230, 0, 18, 0.6)'; break;
 case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; badgeClass = 'psp-badge'; platformName = 'PSP'; tabs.className = 'nav nav-tabs ps2-tabs psp-tabs'; c1 = '#0072ce'; c2 = '#003f7f'; shadow = 'rgba(0, 114, 206, 0.4)'; shadowHover = 'rgba(0, 114, 206, 0.6)'; break;
@@ -2834,6 +3094,24 @@ case 'pc': gradient = 'linear-gradient(135deg, #00a4ef 0%, #0078d4 100%)'; badge
 case 'wii': gradient = 'linear-gradient(135deg, #00b7ff 0%, #007acc 100%)'; badgeClass = 'wii-badge'; platformName = 'Wii'; tabs.className = 'nav nav-tabs ps2-tabs wii-tabs'; c1 = '#00b7ff'; c2 = '#007acc'; shadow = 'rgba(0, 183, 255, 0.4)'; shadowHover = 'rgba(0, 183, 255, 0.6)'; break;
 case 'gamecube': gradient = 'linear-gradient(135deg, #6a5acd 0%, #483d8b 100%)'; badgeClass = 'gamecube-badge'; platformName = 'GameCube'; tabs.className = 'nav nav-tabs ps2-tabs gamecube-tabs'; c1 = '#6a5acd'; c2 = '#483d8b'; shadow = 'rgba(106, 90, 205, 0.4)'; shadowHover = 'rgba(106, 90, 205, 0.6)'; break;
 case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; badgeClass = 'threeds-badge'; platformName = 'Nintendo 3DS'; tabs.className = 'nav nav-tabs ps2-tabs threeds-tabs'; c1 = '#d32f2f'; c2 = '#9a0007'; shadow = 'rgba(211, 47, 47, 0.4)'; shadowHover = 'rgba(211, 47, 47, 0.6)'; break;
+        case 'ps1':
+            gradient = 'linear-gradient(135deg, #0070dd 0%, #0055aa 100%)';
+            badgeClass = 'ps1-badge';
+            platformName = 'PlayStation 1';
+            tabs.className = 'nav nav-tabs ps2-tabs ps1-tabs';
+            c1 = '#0070dd'; c2 = '#0055aa';
+            shadow = 'rgba(0, 112, 221, 0.4)';
+            shadowHover = 'rgba(0, 112, 221, 0.6)';
+            break;
+        case 'ps3':
+            gradient = 'linear-gradient(135deg, #0000FF 0%, #000080 100%)';
+            badgeClass = 'ps3-badge';
+            platformName = 'PlayStation 3';
+            tabs.className = 'nav nav-tabs ps2-tabs ps3-tabs';
+            c1 = '#0000FF'; c2 = '#000080';
+            shadow = 'rgba(0, 0, 255, 0.4)';
+            shadowHover = 'rgba(0, 0, 255, 0.6)';
+            break;
     default:
       gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
       badgeClass = 'ps2-badge';
@@ -2925,15 +3203,18 @@ function normStr(s) {
 
 function getEmulatorPlatformKey(platform) {
   switch (platform) {
+    case 'ps1': return 'ps1';
     case 'ps2': return 'ps2';
+    case 'ps3': return 'ps3';
     case 'psp': return 'psp';
     case 'switch': return 'switch';
-    case 'pc': return 'pc';
+    case 'PC': return 'PC';
     case 'psvita': return 'psvita';
     case 'wii': return 'wii';
     case 'gamecube': return 'gamecube';
     case '3ds': return '3ds';
     case 'java': return 'java';
+    case 'ios': return 'ios';
     default: return '';
   }
 }
@@ -3306,6 +3587,10 @@ function generateDetailsHTML(game, platform, platformName) {
     const isWii = platform === 'wii';
     const isGamecube = platform === 'gamecube';
     const is3DS = platform === '3ds';
+    const isPS1 = platform === 'ps1';
+    const isPS3 = platform === 'ps3';
+    const isJava = platform === 'java';
+    const isIos = platform === 'ios';
 
     const gameName = getGameName(game);
     const category = game.category || game.ori_category || '-';
@@ -3318,6 +3603,12 @@ const hasWiiFormats = isWii && game.formats && Array.isArray(game.formats) && ga
     }
 
 const hasGamecubeFormats = isGamecube && game.formats && Array.isArray(game.formats) && game.formats.length > 0;
+    // ========= Helpers (khusus buat function ini) =========
+    function hasArr(v) {
+        return Array.isArray(v) && v.filter(Boolean).length > 0;
+    }
+
+const hasPS3Formats = isPS3 && game.formats && Array.isArray(game.formats) && game.formats.length > 0;
     // ========= Helpers (khusus buat function ini) =========
     function hasArr(v) {
         return Array.isArray(v) && v.filter(Boolean).length > 0;
@@ -3700,6 +3991,10 @@ const has3DSFormats = is3DS && game.formats && Array.isArray(game.formats) && ga
             gameLainnyaUrl = 'https://indapk.github.io/#switch';
             platformLabel = 'Switch';
             break;
+        case 'ps1':
+            gameLainnyaUrl = 'https://indapk.github.io/#ps1';
+            platformLabel = 'PS1';
+            break;
         case 'ps2':
             gameLainnyaUrl = 'https://indapk.github.io/#ps2';
             platformLabel = 'PS2';
@@ -3725,6 +4020,26 @@ const has3DSFormats = is3DS && game.formats && Array.isArray(game.formats) && ga
             platformLabel = 'Lainnya';
     }
     
+    if (isPS3) {
+        // TAMBAHKAN FORMAT BADGES UNTUK PS3
+        if (hasPS3Formats) {
+            game.formats.forEach(format => {
+                formatBadges += badge(format.toUpperCase(), 'ps3-badge');
+            });
+        }
+        if (!formatBadges) formatBadges = `<span class="text-muted">Tidak ada format</span>`;
+    }
+
+    if (isPS1) {
+        const hasISO = hasAnyKey(['link_iklan_iso', 'link_iklan2_iso', 'link_asli_iso', 'cloud_iso', 'ukuran_iso']);
+        const hasCHD = hasAnyKey(['link_iklan_chd', 'link_iklan2_chd', 'link_asli_chd', 'cloud_chd', 'ukuran_chd']);
+        const hasPBP = hasAnyKey(['link_iklan_pbp', 'link_iklan2_pbp', 'link_asli_pbp', 'cloud_pbp', 'ukuran_pbp']);
+        
+        if (hasISO) formatBadges += badge('ISO', 'ps1-badge');
+        if (hasCHD) formatBadges += badge('CHD', 'ps1-badge');
+        if (hasPBP) formatBadges += badge('PBP', 'ps1-badge');
+    }
+
     if (gameLainnyaUrl) {
         gameLainnyaSection = `
             <div class="mt-4 pt-3 border-top">
@@ -4050,8 +4365,14 @@ function generateAdLinksHTML(game, platform) {
     
     // Generate platform-specific ad links
     switch(platform) {
+        case 'ps1':
+            html += generatePS1AdLinks(game);
+            break;
         case 'ps2':
             html += generatePS2AdLinks(game);
+            break;
+        case 'ps3':
+            html += generatePS3AdLinks(game);
             break;
         case 'switch':
             html += generateSwitchAdLinks(game);
@@ -4080,12 +4401,327 @@ function generateAdLinksHTML(game, platform) {
         case 'java':
             html += generateJavaAdLinks(game);
             break;
+        case 'ios':
+            html += generateIosAdLinks(game);
+            break;
         default:
             html += '<p>Link iklan tidak tersedia untuk platform ini.</p>';
     }
     
     return html;
 }
+
+// ====== PS3 LINK FUNCTIONS ======
+function generatePS3AdLinks(game) {
+    let html = '';
+    const gameName = getGameName(game);
+    
+    // Format detection untuk PS3
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    
+    formats.forEach(format => {
+        const formatKey = format.toLowerCase().replace(/\s+/g, '_');
+        
+        // Link Iklan 1 (INDapk Short)
+        const linksIklan1 = game.link_iklan_formats?.[format] || game.link_iklan || [];
+        if (linksIklan1.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-star-fill"></i> INDapk Short</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan1.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur)
+        const linksIklan2 = game.link_iklan2_formats?.[format] || game.link_iklan2 || [];
+        if (linksIklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-link-45deg"></i> Semawur Short</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan2.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    });
+    
+    // Fallback jika tidak ada format-specific links
+    if (html === '' && (game.link_iklan || game.link_iklan2)) {
+        // Link Iklan 1 (INDapk Short) - generic
+        if (game.link_iklan && Array.isArray(game.link_iklan) && game.link_iklan.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-star-fill"></i> INDapk Short</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - generic
+        if (game.link_iklan2 && Array.isArray(game.link_iklan2) && game.link_iklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-link-45deg"></i> Semawur Short</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan2.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    }
+    
+    return html || '<p class="text-muted">Link iklan gratis belum tersedia untuk game PS3 ini.</p>';
+}
+
+function generatePS3OriginalLinks(game) {
+    let html = '';
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    const priceText = getPriceText('ps3');
+    
+    formats.forEach(format => {
+        const linksAsli = game.link_asli_formats?.[format] || game.link_asli || [];
+        if (linksAsli.length > 0) {
+            html += `
+                <div class="link-section original-link">
+                    <h6>Link Asli Tanpa Iklan - ${escapeHTML(format)}</h6>
+                    <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+            `;
+            
+            linksAsli.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                html += `
+                    <div class="link-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${escapeHTML(cloud)}</span>
+                            <button class="btn btn-sm btn-success"
+                                onclick="requestOriginalLink(this, '${game.download_id}', '${format}', ${index}, '${cloud}', 'ps3')"
+                                ${!currentUser ? 'disabled' : ''}>
+                                <i class="bi bi-unlock"></i> ${priceText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        }
+    });
+    
+    // Fallback untuk link asli generic
+    if (html === '' && game.link_asli && Array.isArray(game.link_asli) && game.link_asli.length > 0) {
+        html += `
+            <div class="link-section original-link">
+                <h6>Link Asli Tanpa Iklan</h6>
+                <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+        `;
+        
+        game.link_asli.forEach((link, index) => {
+            const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+            html += `
+                <div class="link-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>${escapeHTML(cloud)}</span>
+                        <button class="btn btn-sm btn-success"
+                            onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'ps3')"
+                            ${!currentUser ? 'disabled' : ''}>
+                            <i class="bi bi-unlock"></i> ${priceText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+    }
+    
+    return html || '<p class="text-muted">Link asli (berbayar) belum tersedia untuk game PS3 ini.</p>';
+}
+// ====== PS1 AD LINKS FUNCTIONS ======
+function generatePS1AdLinks(game) {
+    let html = '';
+    const gameName = getGameName(game);
+    
+    // Format detection untuk PS1
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    
+    formats.forEach(format => {
+        const formatKey = format.toLowerCase().replace(/\s+/g, '_');
+        
+        // Link Iklan 1 (INDapk Short) - GRATIS
+        const linksIklan1 = game.link_iklan_formats?.[format] || game.link_iklan || [];
+        if (linksIklan1.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-star-fill"></i> INDapk Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan1.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - GRATIS
+        const linksIklan2 = game.link_iklan2_formats?.[format] || game.link_iklan2 || [];
+        if (linksIklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-link-45deg"></i> Semawur Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan2.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    });
+    
+    // Fallback jika tidak ada format-specific links
+    if (html === '' && (game.link_iklan || game.link_iklan2)) {
+        // Link Iklan 1 (INDapk Short) - generic
+        if (game.link_iklan && Array.isArray(game.link_iklan) && game.link_iklan.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-star-fill"></i> INDapk Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - generic
+        if (game.link_iklan2 && Array.isArray(game.link_iklan2) && game.link_iklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-link-45deg"></i> Semawur Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan2.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    }
+    
+    return html || '<p class="text-muted">Link iklan gratis belum tersedia untuk game PS1 ini.</p>';
+}
+
 
 function generateJavaAdLinks(game) {
     let html = '';
@@ -4208,6 +4844,129 @@ function generateJavaAdLinks(game) {
     }
     
     return html || '<p class="text-muted">Link iklan gratis belum tersedia untuk game Java ini.</p>';
+}
+
+function generateIosAdLinks(game) {
+  let html = '';
+  const gameName = getGameName(game);
+
+  // Format detection untuk iOS
+  const formats = Array.isArray(game.formats) ? game.formats : ['IPA'];
+
+  formats.forEach(format => {
+    const formatKey = format.toLowerCase().replace(/\s+/g, '_');
+
+    // Link Iklan 1 (INDapk Short) - GRATIS
+    const linksIklan1 = game.link_iklan_formats?.[format] || game.link_iklan || [];
+    if (linksIklan1.length > 0) {
+      html += `
+        <div class="card border-primary mb-4" style="border-width: 2px; border-color: #0a84ff !important;">
+          <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between" style="background: #0a84ff !important;">
+            <span><i class="fab fa-apple"></i> INDapk Short (Gratis)</span>
+            <span class="badge bg-light text-dark">Utama</span>
+          </div>
+          <div class="card-body">
+            <div class="text-muted mb-2">
+              Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+            </div>
+            <h4>${escapeHTML(gameName)} - ${format}</h4>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+      `;
+
+      linksIklan1.forEach((link, index) => {
+        const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+        if (link && link.trim() !== '') {
+          html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud" style="background: #0a84ff; border-color: #0a84ff;">${escapeHTML(cloud)}</a>`;
+        }
+      });
+
+      html += `</div></div></div>`;
+    }
+
+    // Link Iklan 2 (Semawur) - GRATIS
+    const linksIklan2 = game.link_iklan2_formats?.[format] || game.link_iklan2 || [];
+    if (linksIklan2.length > 0) {
+      html += `
+        <div class="card border-secondary mb-3">
+          <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between" style="background: #6c757d !important;">
+            <span><i class="fab fa-apple"></i> Semawur Short (Gratis)</span>
+            <span class="badge bg-light text-dark">Alternatif</span>
+          </div>
+          <div class="card-body">
+            <div class="text-muted mb-2">
+              Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+            </div>
+            <h4>${escapeHTML(gameName)} - ${format}</h4>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+      `;
+
+      linksIklan2.forEach((link, index) => {
+        const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+        if (link && link.trim() !== '') {
+          html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+        }
+      });
+
+      html += `</div></div></div>`;
+    }
+  });
+
+  // Fallback jika tidak ada format-specific links
+  if (html === '' && (game.link_iklan || game.link_iklan2)) {
+    // Link Iklan 1 (INDapk Short) - generic
+    if (game.link_iklan && Array.isArray(game.link_iklan) && game.link_iklan.length > 0) {
+      html += `
+        <div class="card border-primary mb-4" style="border-width: 2px; border-color: #0a84ff !important;">
+          <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between" style="background: #0a84ff !important;">
+            <span><i class="fab fa-apple"></i> INDapk Short (Gratis)</span>
+            <span class="badge bg-light text-dark">Utama</span>
+          </div>
+          <div class="card-body">
+            <div class="text-muted mb-2">
+              Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+            </div>
+            <h4>${escapeHTML(gameName)}</h4>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+      `;
+
+      game.link_iklan.forEach((link, index) => {
+        const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+        if (link && link.trim() !== '') {
+          html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud" style="background: #0a84ff; border-color: #0a84ff;">${escapeHTML(cloud)}</a>`;
+        }
+      });
+
+      html += `</div></div></div>`;
+    }
+
+    // Link Iklan 2 (Semawur) - generic
+    if (game.link_iklan2 && Array.isArray(game.link_iklan2) && game.link_iklan2.length > 0) {
+      html += `
+        <div class="card border-secondary mb-3">
+          <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between" style="background: #6c757d !important;">
+            <span><i class="fab fa-apple"></i> Semawur Short (Gratis)</span>
+            <span class="badge bg-light text-dark">Alternatif</span>
+          </div>
+          <div class="card-body">
+            <div class="text-muted mb-2">
+              Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+            </div>
+            <h4>${escapeHTML(gameName)}</h4>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+      `;
+
+      game.link_iklan2.forEach((link, index) => {
+        const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+        if (link && link.trim() !== '') {
+          html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+        }
+      });
+
+      html += `</div></div></div>`;
+    }
+  }
+
+  return html || '<p class="text-muted">Link iklan gratis belum tersedia untuk game iOS ini.</p>';
 }
 
 // ====== 3DS LINK FUNCTIONS ======
@@ -4992,8 +5751,14 @@ function generateOriginalLinksHTML(game, platform) {
     html += `<div id="originalLinksContent" style="display:${currentUser ? 'block' : 'none'}">`;
     
     switch(platform) {
+        case 'ps1':
+            html += generatePS1OriginalLinks(game);
+            break;
         case 'ps2':
             html += generatePS2OriginalLinks(game);
+            break;
+        case 'ps3':
+            html += generatePS3OriginalLinks(game);
             break;
         case 'switch':
             html += generateSwitchOriginalLinks(game);
@@ -5022,12 +5787,79 @@ function generateOriginalLinksHTML(game, platform) {
         case 'java':
             html += generateJavaOriginalLinks(game);
             break;
+        case 'ios':
+            html += generateIosOriginalLinks(game);
+            break;
         default:
             html += '<p>Link asli tidak tersedia untuk platform ini.</p>';
     }
     
     html += `</div>`;
     return html;
+}
+// ====== PS1 LINK FUNCTIONS ======
+function generatePS1OriginalLinks(game) {
+    let html = '';
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    const priceText = getPriceText('ps1');
+    
+    formats.forEach(format => {
+        const linksAsli = game.link_asli_formats?.[format] || game.link_asli || [];
+        if (linksAsli.length > 0) {
+            html += `
+                <div class="link-section original-link">
+                    <h6>Link Asli Tanpa Iklan - ${escapeHTML(format)}</h6>
+                    <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+            `;
+            
+            linksAsli.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                html += `
+                    <div class="link-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${escapeHTML(cloud)}</span>
+                            <button class="btn btn-sm btn-success"
+                                onclick="requestOriginalLink(this, '${game.download_id}', '${format}', ${index}, '${cloud}', 'ps1')"
+                                ${!currentUser ? 'disabled' : ''}>
+                                <i class="bi bi-unlock"></i> ${priceText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        }
+    });
+    
+    // Fallback untuk link asli generic
+    if (html === '' && game.link_asli && Array.isArray(game.link_asli) && game.link_asli.length > 0) {
+        html += `
+            <div class="link-section original-link">
+                <h6>Link Asli Tanpa Iklan</h6>
+                <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+        `;
+        
+        game.link_asli.forEach((link, index) => {
+            const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+            html += `
+                <div class="link-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>${escapeHTML(cloud)}</span>
+                        <button class="btn btn-sm btn-success"
+                            onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'ps1')"
+                            ${!currentUser ? 'disabled' : ''}>
+                            <i class="bi bi-unlock"></i> ${priceText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+    }
+    
+    return html || '<p class="text-muted">Link asli (berbayar) belum tersedia untuk game PS1 ini.</p>';
 }
 
 function generateJavaOriginalLinks(game) {
@@ -5093,6 +5925,71 @@ function generateJavaOriginalLinks(game) {
     
     return html || '<p class="text-muted">Link asli (berbayar) belum tersedia untuk game Java ini.</p>';
 }
+
+function generateIosOriginalLinks(game) {
+  let html = '';
+  const formats = Array.isArray(game.formats) ? game.formats : ['IPA'];
+  const priceText = getPriceText('ios');
+
+  formats.forEach(format => {
+    const linksAsli = game.link_asli_formats?.[format] || game.link_asli || [];
+    if (linksAsli.length > 0) {
+      html += `
+        <div class="link-section original-link">
+          <h6>Link Asli Tanpa Iklan - ${escapeHTML(format)}</h6>
+          <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+      `;
+
+      linksAsli.forEach((link, index) => {
+        const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+        html += `
+          <div class="link-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>${escapeHTML(cloud)}</span>
+              <button class="btn btn-sm btn-success"
+                onclick="requestOriginalLink(this, '${game.download_id}', '${format}', ${index}, '${cloud}', 'ios')"
+                ${!currentUser ? 'disabled' : ''}>
+                <i class="fab fa-apple"></i> ${priceText}
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+    }
+  });
+
+  // Fallback untuk link asli generic
+  if (html === '' && game.link_asli && Array.isArray(game.link_asli) && game.link_asli.length > 0) {
+    html += `
+      <div class="link-section original-link">
+        <h6>Link Asli Tanpa Iklan</h6>
+        <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+    `;
+
+    game.link_asli.forEach((link, index) => {
+      const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+      html += `
+        <div class="link-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${escapeHTML(cloud)}</span>
+            <button class="btn btn-sm btn-success"
+              onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'ios')"
+              ${!currentUser ? 'disabled' : ''}>
+              <i class="fab fa-apple"></i> ${priceText}
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  return html || '<p class="text-muted">Link asli (berbayar) belum tersedia untuk game iOS ini.</p>';
+}
+
 
 function generateWiiOriginalLinks(game) {
     let html = '';
@@ -5534,27 +6431,19 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
     if (modalHeader) {
         let gradient;
         switch(platform) {
-            case 'ps2':
-                gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
-                break;
-            case 'switch':
-                gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
-                break;
-            case 'psp':
-                gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
-                break;
-            case 'android':
-                gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
-                break;
-            case 'psvita':
-                gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
-                break;
-            case 'wii':
-                gradient = 'linear-gradient(135deg, #0099ff 0%, #0055cc 100%)';
-                break;
-            case 'gamecube':
-                gradient = 'linear-gradient(135deg, #9c59b6 0%, #6a1b9a 100%)';
-                break;
+        case 'ps1': gradient = 'linear-gradient(135deg, #7a7a7a 0%, #3f3f3f 100%)'; break;
+        case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
+        case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #b5000e 100%)'; break;
+        case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; break;
+        case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #2aa865 100%)'; break;
+        case 'psvita': gradient = 'linear-gradient(135deg, #003791 0%, #00245e 100%)'; break;
+        case 'pc': gradient = 'linear-gradient(135deg, #00a4ef 0%, #0078d4 100%)'; break;
+        case 'wii': gradient = 'linear-gradient(135deg, #00b7ff 0%, #007acc 100%)'; break;
+        case 'gamecube': gradient = 'linear-gradient(135deg, #6a5acd 0%, #483d8b 100%)'; break;
+        case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
+        case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; break;
+
+
             default:
                 gradient = 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)';
         }
@@ -5590,24 +6479,24 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
     if (modalHeader) {
         let gradient;
         switch(platform) {
-            case 'ps2':
-                gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
-                break;
-            case 'switch':
-                gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
-                break;
-            case 'psp':
-                gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
-                break;
-            case 'android':
-                gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
-                break;
-            case 'psvita':
-                gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
-                break;
-            case '3ds':
-                gradient = 'linear-gradient(135deg, #8B00FF 0%, #FF69B4 100%)';
-                break;
+            case 'ps1': gradient = 'linear-gradient(135deg, #7a7a7a 0%, #3f3f3f 100%)'; break;
+            case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
+            case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; break;
+            case 'psvita': gradient = 'linear-gradient(135deg, #003791 0%, #00245e 100%)'; break;
+            case 'ps3': gradient = 'linear-gradient(135deg, #1a1a1a 0%, #000000 100%)'; break;
+            case 'ps4': gradient = 'linear-gradient(135deg, #00439c 0%, #001f4d 100%)'; break;
+            case 'ps5': gradient = 'linear-gradient(135deg, #0a84ff 0%, #003087 100%)'; break;
+            case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #b5000e 100%)'; break;
+            case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; break;
+            case 'wii': gradient = 'linear-gradient(135deg, #00b7ff 0%, #007acc 100%)'; break;
+            case 'wiiu': gradient = 'linear-gradient(135deg, #009ac7 0%, #005f7f 100%)'; break;
+            case 'gamecube': gradient = 'linear-gradient(135deg, #6a5acd 0%, #483d8b 100%)'; break;
+            case 'pc': gradient = 'linear-gradient(135deg, #00a4ef 0%, #0078d4 100%)'; break;
+            case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #2aa865 100%)'; break;
+            case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
+            case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; break;
+
+
             default:
                 gradient = 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)';
         }
@@ -5632,33 +6521,25 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
 function updateModalHeadersForPlatform(platform) {
     let gradient;
     switch(platform) {
-        case 'ps2':
-            gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
-            break;
-        case 'switch':
-            gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
-            break;
-        case 'psp':
-            gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
-            break;
-        case 'android':
-            gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
-            break;
-        case 'psvita':
-            gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
-            break;
-        case 'pc':
-            gradient = 'linear-gradient(135deg, #00a4ef 0%, #0082c4 100%)';
-            break;
-        case 'wii':
-            gradient = 'linear-gradient(135deg, #0099ff 0%, #0055cc 100%)';
-            break;
-        case 'gamecube':
-            gradient = 'linear-gradient(135deg, #9c59b6 0%, #6a1b9a 100%)';
-            break;
-        case '3ds':
-            gradient = 'linear-gradient(135deg, #8B00FF 0%, #FF69B4 100%)';
-            break;            
+        case 'ps1': gradient = 'linear-gradient(135deg, #7a7a7a 0%, #3f3f3f 100%)'; break;
+        case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
+        case 'ps3': gradient = 'linear-gradient(135deg, #0000FF 0%, #000080 100%)'; break;
+        case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; break;
+        case 'psvita': gradient = 'linear-gradient(135deg, #003791 0%, #00245e 100%)'; break;
+        case 'ps3': gradient = 'linear-gradient(135deg, #1a1a1a 0%, #000000 100%)'; break;
+        case 'ps4': gradient = 'linear-gradient(135deg, #00439c 0%, #001f4d 100%)'; break;
+        case 'ps5': gradient = 'linear-gradient(135deg, #0a84ff 0%, #003087 100%)'; break;
+        case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #b5000e 100%)'; break;
+        case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; break;
+        case 'wii': gradient = 'linear-gradient(135deg, #00b7ff 0%, #007acc 100%)'; break;
+        case 'wiiu': gradient = 'linear-gradient(135deg, #009ac7 0%, #005f7f 100%)'; break;
+        case 'gamecube': gradient = 'linear-gradient(135deg, #6a5acd 0%, #483d8b 100%)'; break;
+        case 'pc': gradient = 'linear-gradient(135deg, #00a4ef 0%, #0078d4 100%)'; break;
+        case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #2aa865 100%)'; break;
+        case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
+        case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; break;
+
+        
         default:
             gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
     }
@@ -5724,8 +6605,16 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             let apiUrl, action;
             switch(platform) {
+                case 'ps1':
+                    apiUrl = GAMEPS1_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
                 case 'ps2':
                     apiUrl = GAMEPS2_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
+                case 'ps3':
+                    apiUrl = GAMEPS3_API_URL;
                     action = 'accessOriginalLink';
                     break;
                 case 'switch':
@@ -5764,15 +6653,44 @@ document.addEventListener('DOMContentLoaded', function() {
                     apiUrl = GAMEJAVA_API_URL;
                     action = 'accessOriginalLink';
                     break;
+                case 'ios':
+                    apiUrl = GAMEIOS_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
                 default:
                     throw new Error('Platform tidak didukung: ' + platform);
             }
             
             let body;
             
-            // Format body sesuai dengan platform
-            if (platform === 'wii') {
-                // Wii menggunakan 'format' bukan 'link_type'
+            
+            
+        if (platform === 'ps1') {
+            body = `action=${action}` +
+                   `&download_id=${encodeURIComponent(downloadId)}` +
+                   `&format=${encodeURIComponent(linkType)}` +
+                   `&index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key || '')}`; 
+        }
+        else if (platform === 'ps3') {
+            // Parameter untuk PS3 sesuai dengan GS Code
+            body = `action=${action}` +
+                   `&download_id=${encodeURIComponent(downloadId)}` +
+                   `&format=${encodeURIComponent(linkType)}` +
+                   `&index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key || '')}`;
+        }
+        else if (platform === 'psp') {
+            body = `action=${action}` +
+                   `&download_id=${encodeURIComponent(downloadId)}` +
+                   `&format=${encodeURIComponent(linkType)}` +
+                   `&index=${encodeURIComponent(index)}` +
+                   `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                   `&key=${encodeURIComponent(currentUser.key || '')}`;
+        }
+        else if (platform === 'wii') {
                 body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
                        `&format=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
                        `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
@@ -5815,6 +6733,13 @@ document.addEventListener('DOMContentLoaded', function() {
                            `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
                            `&key=${encodeURIComponent(currentUser.key)}`;
                     console.log('Java request body:', body);
+            }
+            else if (platform === 'ios') {
+                    body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                           `&format=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
+                           `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                           `&key=${encodeURIComponent(currentUser.key)}`;
+                    console.log('Ios request body:', body);
             } 
             else {
                 body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
