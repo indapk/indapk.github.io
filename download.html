@@ -23,7 +23,7 @@
 <style>
 /* =========================================================
    CLEAN DOWNLOAD PAGE CSS (RAPIH + WARNA PLATFORM KONSISTEN)
-   Platform: PS1, PS2, PS3, PSP, PS Vita, Switch, Wii, GameCube, 3DS, Java, iOS, Android, PC
+   Platform: PS1, PS2, PS3, PS4, PSP, PS Vita, Switch, Wii, WiiU, GameCube, 3DS, Java, iOS, Android, PC
 ========================================================= */
 
 /* =========================
@@ -56,10 +56,12 @@
   --ps1-gradient:linear-gradient(135deg,#6b5bff 0%,#3a2fb8 100%);
   --ps2-gradient:linear-gradient(135deg,#0066cc 0%,#003366 100%);
   --ps3-gradient:linear-gradient(135deg,#00439c 0%,#002d6e 100%);
+  --ps4-gradient:linear-gradient(135deg,#0070cc 0%,#004080 100%);
   --psp-gradient:linear-gradient(135deg,#0070cc 0%,#004080 100%);
   --psvita-gradient:linear-gradient(135deg,#003791 0%,#001f4d 100%);
   --switch-gradient:linear-gradient(135deg,#e60012 0%,#8b0000 100%);
   --wii-gradient:linear-gradient(135deg,#0099ff 0%,#0055cc 100%);
+  --wiiu-gradient:linear-gradient(135deg,#009ac7 0%,#006699 100%);
   --gamecube-gradient:linear-gradient(135deg,#6a5acd 0%,#4b3bb3 100%);
   --threeds-gradient:linear-gradient(135deg,#d12229 0%,#a01b1f 100%);
   --java-gradient:linear-gradient(135deg,#f89820 0%,#e68900 100%);
@@ -71,10 +73,12 @@
   --ps1-solid:#6b5bff;
   --ps2-solid:#0066cc;
   --ps3-solid:#00439c;
+  --ps4-solid:#0070cc;
   --psp-solid:#0070cc;
   --psvita-solid:#003791;
   --switch-solid:#e60012;
   --wii-solid:#0099ff;
+  --wiiu-solid:#009ac7;
   --gamecube-solid:#6a5acd;
   --threeds-solid:#d12229;
   --java-solid:#f89820;
@@ -186,10 +190,12 @@ body.theme-dark::before{
 .game-header.header-ps1{--header-gradient:var(--ps1-gradient);--header-shadow:rgba(107,91,255,.35)}
 .game-header.header-ps2{--header-gradient:var(--ps2-gradient);--header-shadow:rgba(0,102,204,.3)}
 .game-header.header-ps3{--header-gradient:var(--ps3-gradient);--header-shadow:rgba(0,67,156,.3)}
+.game-header.header-ps4{--header-gradient:var(--ps4-gradient);--header-shadow:rgba(0,112,204,.3)}
 .game-header.header-psp{--header-gradient:var(--psp-gradient);--header-shadow:rgba(0,112,204,.3)}
 .game-header.header-psvita{--header-gradient:var(--psvita-gradient);--header-shadow:rgba(0,55,145,.3)}
 .game-header.header-switch{--header-gradient:var(--switch-gradient);--header-shadow:rgba(230,0,18,.28)}
 .game-header.header-wii{--header-gradient:var(--wii-gradient);--header-shadow:rgba(0,153,255,.28)}
+.game-header.header-wiiu{--header-gradient:var(--wiiu-gradient);--header-shadow:rgba(0,154,199,.28)}
 .game-header.header-gamecube{--header-gradient:var(--gamecube-gradient);--header-shadow:rgba(106,90,205,.28)}
 .game-header.header-3ds{--header-gradient:var(--threeds-gradient);--header-shadow:rgba(209,34,41,.28)}
 .game-header.header-java{--header-gradient:var(--java-gradient);--header-shadow:rgba(248,152,32,.28)}
@@ -219,10 +225,12 @@ body.theme-dark::before{
 .ps1-badge{background:var(--ps1-gradient)}
 .ps2-badge{background:var(--ps2-gradient)}
 .ps3-badge{background:var(--ps3-gradient)}
+.ps4-badge{background:var(--ps4-gradient)}
 .psp-badge{background:var(--psp-gradient)}
 .psvita-badge{background:var(--psvita-gradient)}
 .switch-badge{background:var(--switch-gradient)}
 .wii-badge{background:var(--wii-gradient)}
+.wiiu-badge{background:var(--wiiu-gradient)}
 .gamecube-badge{background:var(--gamecube-gradient)}
 .threeds-badge{background:var(--threeds-gradient)}
 .java-badge{background:var(--java-gradient)}
@@ -317,10 +325,12 @@ body.theme-dark .ps2-tabs .nav-link{
 .ps1-tabs{--active-tab-gradient:var(--ps1-gradient);--active-tab-shadow:rgba(107,91,255,.35)}
 .ps2-tabs{--active-tab-gradient:var(--ps2-gradient);--active-tab-shadow:rgba(0,102,204,.35)}
 .ps3-tabs{--active-tab-gradient:var(--ps3-gradient);--active-tab-shadow:rgba(0,67,156,.35)}
+.ps4-tabs{--active-tab-gradient:var(--ps4-gradient);--active-tab-shadow:rgba(0,112,204,.35)}
 .psp-tabs{--active-tab-gradient:var(--psp-gradient);--active-tab-shadow:rgba(0,112,204,.35)}
 .psvita-tabs{--active-tab-gradient:var(--psvita-gradient);--active-tab-shadow:rgba(0,55,145,.35)}
 .switch-tabs{--active-tab-gradient:var(--switch-gradient);--active-tab-shadow:rgba(230,0,18,.35)}
 .wii-tabs{--active-tab-gradient:var(--wii-gradient);--active-tab-shadow:rgba(0,153,255,.35)}
+.wiiu-tabs{--active-tab-gradient:var(--wiiu-gradient);--active-tab-shadow:rgba(0,154,199,.35)}
 .gamecube-tabs{--active-tab-gradient:var(--gamecube-gradient);--active-tab-shadow:rgba(106,90,205,.35)}
 .threeds-tabs{--active-tab-gradient:var(--threeds-gradient);--active-tab-shadow:rgba(209,34,41,.35)}
 .java-tabs{--active-tab-gradient:var(--java-gradient);--active-tab-shadow:rgba(248,152,32,.35)}
@@ -635,10 +645,12 @@ body.theme-dark .btn-outline-secondary:hover{border-color:rgba(255,255,255,.25)}
 .platform-card.ps1{border-left:4px solid var(--ps1-solid)}
 .platform-card.ps2{border-left:4px solid var(--ps2-solid)}
 .platform-card.ps3{border-left:4px solid var(--ps3-solid)}
+.platform-card.ps4{border-left:4px solid var(--ps4-solid)}
 .platform-card.psp{border-left:4px solid var(--psp-solid)}
 .platform-card.psvita{border-left:4px solid var(--psvita-solid)}
 .platform-card.switch{border-left:4px solid var(--switch-solid)}
 .platform-card.wii{border-left:4px solid var(--wii-solid)}
+.platform-card.wiiu{border-left:4px solid var(--wiiu-solid)}
 .platform-card.gamecube{border-left:4px solid var(--gamecube-solid)}
 .platform-card.threeds{border-left:4px solid var(--threeds-solid)}
 .platform-card.java{border-left:4px solid var(--java-solid)}
@@ -1469,6 +1481,15 @@ https://www.indapk.com/wp-content/uploads/2026/01/MotoGP-Android-INDapk-3.jpg"><
                         <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                     </div>
 
+                    <div class="platform-card ps4" onclick="goToPlatform('ps4')">
+                        <div class="platform-icon">
+                            <i class="bi bi-playstation"></i>
+                        </div>
+                        <div class="platform-title">PlayStation 4</div>
+                        <div class="platform-count">Koleksi Game PS4</div>
+                        <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                    </div>
+
                         <div class="platform-card psp" onclick="goToPlatform('psp')">
                             <div class="platform-icon">
                                 <i class="bi bi-controller"></i>
@@ -1841,7 +1862,8 @@ https://www.indapk.com/wp-content/uploads/2026/01/MotoGP-Android-INDapk-3.jpg"><
         // ====== CONFIG ======
         const GAMEPS1_API_URL = "https://script.google.com/macros/s/AKfycbxExg-rUr-CcJUYZ786k57e5E7JO2mSrGdRppr6JWbb7fHoTTAJs7x7AnYEmcOOK-49/exec";
         const GAMEPS2_API_URL = "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec";
-        const GAMEPS3_API_URL = "https://script.google.com/macros/s/AKfycbwqkrPhEvF3-_r1cu_wI7nRd56Z1AzNhank78R7dFgxHK57Wd2cf2WmV9ESXMAg_LHC/exec"; 
+        const GAMEPS3_API_URL = "https://script.google.com/macros/s/AKfycbwqkrPhEvF3-_r1cu_wI7nRd56Z1AzNhank78R7dFgxHK57Wd2cf2WmV9ESXMAg_LHC/exec";
+        const GAMEPS4_API_URL = "https://script.google.com/macros/s/AKfycbwHLRSQiwAiqj-y2W4JA8QfD1oDA13BepnHQHqNjxWYLHJl4Z7IoKGkA12wN-nlOINEeQ/exec";
         const GAMESWITCH_API_URL = "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec";
         const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec";
         const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
@@ -2386,6 +2408,12 @@ function getAvailableFormats(game, platform) {
         case 'pc':
             if (hasArr(game.link_iklan) || hasArr(game.link_asli)) formats.add('Original');
             break;
+        
+        case 'ps4':
+            if (game.formats && Array.isArray(game.formats)) {
+                game.formats.forEach(format => formats.add(format.toUpperCase()));
+            }
+            break;
             
         case 'wii':
             if (game.formats && Array.isArray(game.formats)) {
@@ -2473,6 +2501,24 @@ function getCloudsForFormat(format) {
             }
             break;
             
+        case 'ps4':
+            // GUNAKAN VARIABEL BERBEDA untuk PS4
+            const ps4FormatUpper = format.toUpperCase();
+            console.log('PS4 format check:', ps4FormatUpper, 'Cloud formats:', game.cloud_formats);
+            
+            if (game.cloud_formats && game.cloud_formats[format]) {
+                clouds.push(...game.cloud_formats[format]);
+            } else if (game.cloud_formats && game.cloud_formats[ps4FormatUpper]) {
+                clouds.push(...game.cloud_formats[ps4FormatUpper]);
+            } else {
+                const linkCount = getPS4LinkCount(game, ps4FormatUpper);
+                console.log('PS4 generic clouds, link count:', linkCount);
+                for (let i = 1; i <= linkCount; i++) {
+                    clouds.push(`Cloud ${i}`);
+                }
+            }
+            break;
+            
         case 'android':
             console.log('Android clouds check for format:', formatKey);
             console.log('Available cloud fields:', {
@@ -2522,16 +2568,17 @@ function getCloudsForFormat(format) {
             break;
             
         case 'wii':
-            const formatUpper = format.toUpperCase();
-            console.log('Wii format check:', formatUpper, 'Cloud formats:', game.cloud_formats);
+            // GUNAKAN VARIABEL BERBEDA untuk Wii
+            const wiiFormatUpper = format.toUpperCase();
+            console.log('Wii format check:', wiiFormatUpper, 'Cloud formats:', game.cloud_formats);
             
             if (game.cloud_formats && game.cloud_formats[format]) {
                 clouds.push(...game.cloud_formats[format]);
-            } else if (game.cloud_formats && game.cloud_formats[formatUpper]) {
-                clouds.push(...game.cloud_formats[formatUpper]);
+            } else if (game.cloud_formats && game.cloud_formats[wiiFormatUpper]) {
+                clouds.push(...game.cloud_formats[wiiFormatUpper]);
             } else {
                 // Generic clouds untuk Wii
-                const linkCount = getWiiLinkCount(game, formatUpper);
+                const linkCount = getWiiLinkCount(game, wiiFormatUpper);
                 console.log('Wii generic clouds, link count:', linkCount);
                 for (let i = 1; i <= linkCount; i++) {
                     clouds.push(`Cloud ${i}`);
@@ -2540,28 +2587,31 @@ function getCloudsForFormat(format) {
             break;
             
         case 'gamecube':
-            const formatUpperGamecube = format.toUpperCase();
-            console.log('Gamecube format check:', formatUpperGamecube, 'Cloud formats:', game.cloud_formats);
+            // GUNAKAN VARIABEL BERBEDA untuk Gamecube
+            const gamecubeFormatUpper = format.toUpperCase();
+            console.log('Gamecube format check:', gamecubeFormatUpper, 'Cloud formats:', game.cloud_formats);
             
             if (game.cloud_formats && game.cloud_formats[format]) {
                 clouds.push(...game.cloud_formats[format]);
-            } else if (game.cloud_formats && game.cloud_formats[formatUpperGamecube]) {
-                clouds.push(...game.cloud_formats[formatUpperGamecube]);
+            } else if (game.cloud_formats && game.cloud_formats[gamecubeFormatUpper]) {
+                clouds.push(...game.cloud_formats[gamecubeFormatUpper]);
             } else {
                 // Generic clouds untuk Gamecube
-                const linkCount = getWiiLinkCount(game, formatUpperGamecube);
+                const linkCount = getGamecubeLinkCount(game, gamecubeFormatUpper);
                 console.log('Gamecube generic clouds, link count:', linkCount);
                 for (let i = 1; i <= linkCount; i++) {
                     clouds.push(`Cloud ${i}`);
                 }
             }
             break;
+            
         case 'ps3':
-            const ps3Format = formatKey.toUpperCase();
+            // GUNAKAN VARIABEL BERBEDA untuk PS3
+            const ps3FormatUpper = formatKey.toUpperCase();
             if (game.cloud_formats && game.cloud_formats[format]) {
                 clouds.push(...game.cloud_formats[format]);
-            } else if (game.cloud_formats && game.cloud_formats[ps3Format]) {
-                clouds.push(...game.cloud_formats[ps3Format]);
+            } else if (game.cloud_formats && game.cloud_formats[ps3FormatUpper]) {
+                clouds.push(...game.cloud_formats[ps3FormatUpper]);
             } else {
                 // Generic clouds untuk PS3
                 const linkCount = getPS3LinkCount(game, formatKey);
@@ -2571,12 +2621,13 @@ function getCloudsForFormat(format) {
             }
             break;
             
-        case 'ps1':  // TAMBAHKAN CLOUD DETECTION PS1
-            const ps1Format = formatKey.toUpperCase();
+        case 'ps1':
+            // GUNAKAN VARIABEL BERBEDA untuk PS1
+            const ps1FormatUpper = formatKey.toUpperCase();
             if (game.cloud_formats && game.cloud_formats[format]) {
                 clouds.push(...game.cloud_formats[format]);
-            } else if (game.cloud_formats && game.cloud_formats[ps1Format]) {
-                clouds.push(...game.cloud_formats[ps1Format]);
+            } else if (game.cloud_formats && game.cloud_formats[ps1FormatUpper]) {
+                clouds.push(...game.cloud_formats[ps1FormatUpper]);
             } else {
                 // Generic clouds untuk PS1
                 const linkCount = getPS1LinkCount(game, formatKey);
@@ -2587,22 +2638,39 @@ function getCloudsForFormat(format) {
             break;
 
         case '3ds':
-            const formatUpper3DS = format.toUpperCase();
-            console.log('3DS format check:', formatUpper3DS, 'Cloud formats:', game.cloud_formats);
+            // GUNAKAN VARIABEL BERBEDA untuk 3DS
+            const threedsFormatUpper = format.toUpperCase();
+            console.log('3DS format check:', threedsFormatUpper, 'Cloud formats:', game.cloud_formats);
             
             if (game.cloud_formats && game.cloud_formats[format]) {
                 clouds.push(...game.cloud_formats[format]);
-            } else if (game.cloud_formats && game.cloud_formats[formatUpper3DS]) {
-                clouds.push(...game.cloud_formats[formatUpper3DS]);
+            } else if (game.cloud_formats && game.cloud_formats[threedsFormatUpper]) {
+                clouds.push(...game.cloud_formats[threedsFormatUpper]);
             } else {
                 // Generic clouds untuk 3DS
-                const linkCount = getWiiLinkCount(game, formatUpper3DS);
+                const linkCount = get3DSLinkCount(game, threedsFormatUpper);
                 console.log('3DS generic clouds, link count:', linkCount);
                 for (let i = 1; i <= linkCount; i++) {
                     clouds.push(`Cloud ${i}`);
                 }
             }
             break;
+            
+        default:
+            // Untuk platform lain yang belum didefinisikan
+            console.log('Platform not specifically handled:', platform);
+            // Fallback generic
+            if (game.cloud_types && Array.isArray(game.cloud_types)) {
+                clouds.push(...game.cloud_types);
+            } else if (game.cloud_formats) {
+                // Coba ambil berdasarkan format
+                const defaultFormatUpper = format.toUpperCase();
+                if (game.cloud_formats[format]) {
+                    clouds.push(...game.cloud_formats[format]);
+                } else if (game.cloud_formats[defaultFormatUpper]) {
+                    clouds.push(...game.cloud_formats[defaultFormatUpper]);
+                }
+            }
     }
     
     // Filter empty clouds
@@ -2648,7 +2716,22 @@ function getWiiLinkCount(game, format) {
         0
     );
 }
-
+function getPS3LinkCount(game, formatKey) {
+    return Math.max(
+        game.link_iklan_formats?.[formatKey]?.length || 0,
+        game.link_iklan2_formats?.[formatKey]?.length || 0,
+        game.link_asli_formats?.[formatKey]?.length || 0,
+        0
+    );
+}
+function getPS4LinkCount(game, format) {
+    return Math.max(
+        game.link_iklan_formats?.[format]?.length || 0,
+        game.link_iklan2_formats?.[format]?.length || 0,
+        game.link_asli_formats?.[format]?.length || 0,
+        0
+    );
+}
 function getGamecubeLinkCount(game, format) {
     return Math.max(
         game.link_iklan_formats?.[format]?.length || 0,
@@ -2658,6 +2741,14 @@ function getGamecubeLinkCount(game, format) {
     );
 }
 
+function getPS1LinkCount(game, formatKey) {
+    return Math.max(
+        game.link_iklan_formats?.[formatKey]?.length || 0,
+        game.link_iklan2_formats?.[formatKey]?.length || 0,
+        game.link_asli_formats?.[formatKey]?.length || 0,
+        0
+    );
+}
 function get3DSLinkCount(game, format) {
     return Math.max(
         game.link_iklan_formats?.[format]?.length || 0,
@@ -3590,6 +3681,7 @@ function getCostPerLink(platform) {
         case 'java':
         case 'ios':
         case 'ps3':
+        case 'ps4':
             return 1000;
         case 'switch':
             return 2000;
@@ -3849,6 +3941,7 @@ function goToPlatform(platform) {
         'ps1': `${baseUrl}/#ps1`,
         'ps2': `${baseUrl}/#ps2`,
         'ps3': `${baseUrl}/#ps3`,
+        'ps4': `${baseUrl}/#ps4`,
         'switch': `${baseUrl}/#switch`,
         'psp': `${baseUrl}/#psp`,
         'android': `${baseUrl}/#android`,
@@ -3876,6 +3969,7 @@ function updateOtherGamesSection(platform) {
         'ps1': 'PlayStation 1',
         'ps2': 'PlayStation 2',
         'ps3': 'PlayStation 3',
+        'ps4': 'PlayStation 4',
         'switch': 'Nintendo Switch',
         'psp': 'PSP',
         'android': 'Android',
@@ -4134,6 +4228,10 @@ async function loadGameDetail() {
                 apiUrl = GAMEPS3_API_URL;
                 action = 'getGameByDownloadId';
                 break;
+            case 'ps4':
+                apiUrl = GAMEPS4_API_URL;
+                action = 'getGameByDownloadId';
+                break;
             case 'switch':
                 apiUrl = GAMESWITCH_API_URL;
                 action = 'getGameByDownloadId';
@@ -4272,6 +4370,15 @@ case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; badg
             shadow = 'rgba(0, 0, 255, 0.4)';
             shadowHover = 'rgba(0, 0, 255, 0.6)';
             break;
+        case 'ps4':
+            gradient = 'linear-gradient(135deg, #0070cc 0%, #003791 100%)';
+            badgeClass = 'ps4-badge';
+            platformName = 'PlayStation 4';
+            tabs.className = 'nav nav-tabs ps2-tabs ps4-tabs';
+            c1 = '#0070cc'; c2 = '#003791';
+            shadow = 'rgba(0, 112, 204, 0.4)';
+            shadowHover = 'rgba(0, 112, 204, 0.6)';
+            break;
     default:
       gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
       badgeClass = 'ps2-badge';
@@ -4370,6 +4477,7 @@ function getEmulatorPlatformKey(platform) {
     case 'ps1': return 'ps1';
     case 'ps2': return 'ps2';
     case 'ps3': return 'ps3';
+    case 'ps4': return 'ps4';
     case 'psp': return 'psp';
     case 'switch': return 'switch';
     case 'PC': return 'PC';
@@ -4753,6 +4861,7 @@ function generateDetailsHTML(game, platform, platformName) {
     const is3DS = platform === '3ds';
     const isPS1 = platform === 'ps1';
     const isPS3 = platform === 'ps3';
+    const isPS4 = platform === 'ps4';
     const isJava = platform === 'java';
     const isIos = platform === 'ios';
 
@@ -5538,6 +5647,9 @@ function generateAdLinksHTML(game, platform) {
         case 'ps3':
             html += generatePS3AdLinks(game);
             break;
+        case 'ps4':
+            html += generatePS4AdLinks(game);
+            break;
         case 'switch':
             html += generateSwitchAdLinks(game);
             break;
@@ -5575,6 +5687,295 @@ function generateAdLinksHTML(game, platform) {
     return html;
 }
 
+
+// ====== PS4 LINK FUNCTIONS ======
+function generatePS4AdLinks(game) {
+    let html = '';
+    const gameName = getGameName(game);
+    const hasUpdates = game.include_updates && Array.isArray(game.update_versions) && game.update_versions.length > 0;
+    
+    // Format detection untuk PS4 - Game Utama
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    
+    // Bagian 1: Game Utama
+    formats.forEach(format => {
+        const formatKey = format.toLowerCase().replace(/\s+/g, '_');
+        
+        // Link Iklan 1 (INDapk Short) - Game Utama
+        const linksIklan1 = game.link_iklan_formats?.[format] || game.link_iklan || [];
+        if (linksIklan1.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-star-fill"></i> INDapk Short - Game Utama</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan1.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - Game Utama
+        const linksIklan2 = game.link_iklan2_formats?.[format] || game.link_iklan2 || [];
+        if (linksIklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-link-45deg"></i> Semawur Short - Game Utama</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan2.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    });
+    
+    // Bagian 2: Update Versi (jika ada)
+    if (hasUpdates) {
+        html += `<div class="card border-warning mb-4">
+                    <div class="card-header bg-warning text-white">
+                        <span><i class="bi bi-cloud-arrow-up-fill"></i> Update Versi</span>
+                    </div>
+                    <div class="card-body">
+                        <h4>Update Versi untuk ${escapeHTML(gameName)}</h4>
+                        <div class="alert alert-warning">
+                            <i class="bi bi-info-circle"></i> Link download untuk update versi game.
+                        </div>`;
+        
+        game.update_versions.forEach((version, index) => {
+            const formatKey = `update_${index}`;
+            
+            // Link Iklan 1 untuk Update
+            const updateLinksIklan1 = game.update_link_iklan_formats?.[formatKey] || [];
+            if (updateLinksIklan1.length > 0) {
+                html += `
+                    <div class="mb-4">
+                        <h5>${escapeHTML(version)} - INDapk Short</h5>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                `;
+                
+                updateLinksIklan1.forEach((link, linkIndex) => {
+                    const cloud = game.update_cloud_formats?.[formatKey]?.[linkIndex] || `Cloud ${linkIndex + 1}`;
+                    if (link && link.trim() !== '') {
+                        html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-warning btn-cloud">${escapeHTML(cloud)}</a>`;
+                    }
+                });
+                
+                html += `</div>`;
+            }
+            
+            // Link Iklan 2 untuk Update
+            const updateLinksIklan2 = game.update_link_iklan2_formats?.[formatKey] || [];
+            if (updateLinksIklan2.length > 0) {
+                html += `
+                    <h5>${escapeHTML(version)} - Semawur Short</h5>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                `;
+                
+                updateLinksIklan2.forEach((link, linkIndex) => {
+                    const cloud = game.update_cloud_formats?.[formatKey]?.[linkIndex] || `Cloud ${linkIndex + 1}`;
+                    if (link && link.trim() !== '') {
+                        html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                    }
+                });
+                
+                html += `</div>`;
+            }
+            
+            html += `</div>`;
+        });
+        
+        html += `</div></div>`;
+    }
+    
+    // Fallback jika tidak ada format-specific links untuk game utama
+    if (html === '' && (game.link_iklan || game.link_iklan2)) {
+        // Link Iklan 1 (INDapk Short) - generic
+        if (game.link_iklan && Array.isArray(game.link_iklan) && game.link_iklan.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-star-fill"></i> INDapk Short</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Gunakan ini. Jika sulit lewat iklannya, pakai Link Semawur.
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - generic
+        if (game.link_iklan2 && Array.isArray(game.link_iklan2) && game.link_iklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-link-45deg"></i> Semawur Short</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Jika Link INDapk Short sulit dilewati, gunakan Link Semawur di bawah.
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan2.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    }
+    
+    return html || '<p class="text-muted">Link iklan gratis belum tersedia untuk game PS4 ini.</p>';
+}
+
+function generatePS4OriginalLinks(game) {
+    let html = '';
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    const priceText = getPriceText('ps4');
+    const hasUpdates = game.include_updates && Array.isArray(game.update_versions) && game.update_versions.length > 0;
+    
+    // Game Utama
+    formats.forEach(format => {
+        const linksAsli = game.link_asli_formats?.[format] || game.link_asli || [];
+        if (linksAsli.length > 0) {
+            html += `
+                <div class="link-section original-link">
+                    <h6>Link Asli Tanpa Iklan - ${escapeHTML(format)}</h6>
+                    <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+            `;
+            
+            linksAsli.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                html += `
+                    <div class="link-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${escapeHTML(cloud)}</span>
+                            <button class="btn btn-sm btn-success"
+                                onclick="requestOriginalLink(this, '${game.download_id}', '${format}', ${index}, '${cloud}', 'ps4')"
+                                ${!currentUser ? 'disabled' : ''}>
+                                <i class="bi bi-unlock"></i> ${priceText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        }
+    });
+    
+    // Update Versi (jika ada)
+    if (hasUpdates) {
+        html += `<div class="link-section original-link mt-4">
+                    <h6 class="text-warning"><i class="bi bi-cloud-arrow-up"></i> Link Asli untuk Update Versi</h6>
+                    <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>`;
+        
+        game.update_versions.forEach((version, index) => {
+            const formatKey = `update_${index}`;
+            const linksAsliUpdate = game.update_link_asli_formats?.[formatKey] || [];
+            
+            if (linksAsliUpdate.length > 0) {
+                html += `
+                    <div class="mb-3">
+                        <h6>${escapeHTML(version)}</h6>
+                `;
+                
+                linksAsliUpdate.forEach((link, linkIndex) => {
+                    const cloud = game.update_cloud_formats?.[formatKey]?.[linkIndex] || `Cloud ${linkIndex + 1}`;
+                    html += `
+                        <div class="link-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>${escapeHTML(cloud)}</span>
+                                <button class="btn btn-sm btn-warning"
+                                    onclick="requestUpdateOriginalLink(this, '${game.download_id}', ${index}, ${linkIndex}, '${cloud}', 'ps4')"
+                                    ${!currentUser ? 'disabled' : ''}>
+                                    <i class="bi bi-unlock"></i> ${priceText}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+        });
+        
+        html += `</div>`;
+    }
+    
+    // Fallback untuk link asli generic
+    if (html === '' && game.link_asli && Array.isArray(game.link_asli) && game.link_asli.length > 0) {
+        html += `
+            <div class="link-section original-link">
+                <h6>Link Asli Tanpa Iklan</h6>
+                <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+        `;
+        
+        game.link_asli.forEach((link, index) => {
+            const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+            html += `
+                <div class="link-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>${escapeHTML(cloud)}</span>
+                        <button class="btn btn-sm btn-success"
+                            onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'ps4')"
+                            ${!currentUser ? 'disabled' : ''}>
+                            <i class="bi bi-unlock"></i> ${priceText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+    }
+    
+    return html || '<p class="text-muted">Link asli (berbayar) belum tersedia untuk game PS4 ini.</p>';
+}
 // ====== PS3 LINK FUNCTIONS ======
 function generatePS3AdLinks(game) {
     let html = '';
@@ -6924,6 +7325,9 @@ function generateOriginalLinksHTML(game, platform) {
         case 'ps3':
             html += generatePS3OriginalLinks(game);
             break;
+        case 'ps4':
+            html += generatePS4OriginalLinks(game);
+            break;
         case 'switch':
             html += generateSwitchOriginalLinks(game);
             break;
@@ -7597,6 +8001,8 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
         switch(platform) {
         case 'ps1': gradient = 'linear-gradient(135deg, #7a7a7a 0%, #3f3f3f 100%)'; break;
         case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
+        case 'ps3': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
+        case 'ps4': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
         case 'switch': gradient = 'linear-gradient(135deg, #e60012 0%, #b5000e 100%)'; break;
         case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; break;
         case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #2aa865 100%)'; break;
@@ -7645,6 +8051,8 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
         switch(platform) {
             case 'ps1': gradient = 'linear-gradient(135deg, #7a7a7a 0%, #3f3f3f 100%)'; break;
             case 'ps2': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
+            case 'ps3': gradient = 'linear-gradient(135deg, #003087 0%, #001f4d 100%)'; break;
+            case 'ps4': gradient = 'linear-gradient(135deg, #0070cc 0%, #003791 100%)'; break;
             case 'psp': gradient = 'linear-gradient(135deg, #0072ce 0%, #003f7f 100%)'; break;
             case 'psvita': gradient = 'linear-gradient(135deg, #003791 0%, #00245e 100%)'; break;
             case 'ps3': gradient = 'linear-gradient(135deg, #1a1a1a 0%, #000000 100%)'; break;
@@ -7781,6 +8189,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     apiUrl = GAMEPS3_API_URL;
                     action = 'accessOriginalLink';
                     break;
+                case 'ps4':
+                    apiUrl = GAMEPS4_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
                 case 'switch':
                     apiUrl = GAMESWITCH_API_URL;
                     action = 'accessSwitchOriginalLink';
@@ -7845,6 +8257,13 @@ document.addEventListener('DOMContentLoaded', function() {
                    `&index=${encodeURIComponent(index)}` +
                    `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
                    `&key=${encodeURIComponent(currentUser.key || '')}`;
+        }
+        else if (platform === 'ps4') {
+            // Parameter untuk PS4 sesuai dengan GS Code
+                body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                       `&format=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
+                       `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                       `&key=${encodeURIComponent(currentUser.key)}`;
         }
         else if (platform === 'psp') {
             body = `action=${action}` +
