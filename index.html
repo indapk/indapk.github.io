@@ -59,6 +59,12 @@
   --ps3-glow:rgba(0,67,156,.5);
   --ps3-rgb:0,67,156;
 
+  /* PS4 */
+  --ps4-color:#0070cc;
+  --ps4-dark:#004d99;
+  --ps4-glow:rgba(0,112,204,.5);
+  --ps4-rgb:0,112,204;
+
   /* PS Vita */
   --psvita-color:#003791;
   --psvita-dark:#002466;
@@ -82,6 +88,12 @@
   --wii-dark:#007299;
   --wii-glow:rgba(0,154,199,.5);
   --wii-rgb:0,154,199;
+
+  /* Nintendo WiiU */
+  --wiiu-color:#009ac7;
+  --wiiu-dark:#007299;
+  --wiiu-glow:rgba(0,154,199,.5);
+  --wiiu-rgb:0,154,199;
 
   /* Nintendo GameCube */
   --gamecube-color:#6a5acd;
@@ -524,10 +536,12 @@ body::after{
 .badge-ps1{background:linear-gradient(135deg,var(--ps1-color),var(--ps1-dark));box-shadow:0 5px 20px var(--ps1-glow),0 0 30px var(--ps1-glow) inset}
 .badge-ps2{background:linear-gradient(135deg,var(--ps2-color),var(--ps2-dark));box-shadow:0 5px 20px var(--ps2-glow),0 0 30px var(--ps2-glow) inset}
 .badge-ps3{background:linear-gradient(135deg,var(--ps3-color),var(--ps3-dark));box-shadow:0 5px 20px var(--ps3-glow),0 0 30px var(--ps3-glow) inset}
+.badge-ps4{background:linear-gradient(135deg,var(--ps4-color),var(--ps4-dark));box-shadow:0 5px 20px var(--ps4-glow),0 0 30px var(--ps4-glow) inset}
 .badge-psvita{background:linear-gradient(135deg,var(--psvita-color),var(--psvita-dark));box-shadow:0 5px 20px var(--psvita-glow),0 0 30px var(--psvita-glow) inset}
 .badge-switch{background:linear-gradient(135deg,var(--switch-color),var(--switch-dark));box-shadow:0 5px 20px var(--switch-glow),0 0 30px var(--switch-glow) inset}
 .badge-3ds{background:linear-gradient(135deg,var(--n3ds-color),var(--n3ds-dark));box-shadow:0 5px 20px var(--n3ds-glow),0 0 30px var(--n3ds-glow) inset}
 .badge-wii{background:linear-gradient(135deg,var(--wii-color),var(--wii-dark));box-shadow:0 5px 20px var(--wii-glow),0 0 30px var(--wii-glow) inset}
+.badge-wiiu{background:linear-gradient(135deg,var(--wiiu-color),var(--wiiu-dark));box-shadow:0 5px 20px var(--wiiu-glow),0 0 30px var(--wiiu-glow) inset}
 .badge-gamecube{background:linear-gradient(135deg,var(--gamecube-color),var(--gamecube-dark));box-shadow:0 5px 20px var(--gamecube-glow),0 0 30px var(--gamecube-glow) inset}
 .badge-java{background:linear-gradient(135deg,var(--java-color),var(--java-dark));box-shadow:0 5px 20px var(--java-glow),0 0 30px var(--java-glow) inset}
 .badge-ios{background:linear-gradient(135deg,var(--ios-color),var(--ios-dark));box-shadow:0 5px 20px var(--ios-glow),0 0 30px var(--ios-glow) inset}
@@ -538,10 +552,12 @@ body::after{
 .platform-icon.platform-ps1{background:rgba(var(--ps1-rgb),.3)}
 .platform-icon.platform-ps2{background:rgba(var(--ps2-rgb),.3)}
 .platform-icon.platform-ps3{background:rgba(var(--ps3-rgb),.3)}
+.platform-icon.platform-ps4{background:rgba(var(--ps4-rgb),.3)}
 .platform-icon.platform-psvita{background:rgba(var(--psvita-rgb),.3)}
 .platform-icon.platform-switch{background:rgba(var(--switch-rgb),.3)}
 .platform-icon.platform-3ds{background:rgba(var(--n3ds-rgb),.3)}
 .platform-icon.platform-wii{background:rgba(var(--wii-rgb),.3)}
+.platform-icon.platform-wiiu{background:rgba(var(--wiiu-rgb),.3)}
 .platform-icon.platform-gamecube{background:rgba(var(--gamecube-rgb),.3)}
 .platform-icon.platform-java{background:rgba(var(--java-rgb),.3)}
 .platform-icon.platform-ios{background:rgba(var(--ios-rgb),.3)}
@@ -552,10 +568,12 @@ body::after{
 .platform-badge.badge-ps1{background:rgba(var(--ps1-rgb),.82)!important;border-color:rgba(var(--ps1-rgb),.45)!important}
 .platform-badge.badge-ps2{background:rgba(var(--ps2-rgb),.82)!important;border-color:rgba(var(--ps2-rgb),.45)!important}
 .platform-badge.badge-ps3{background:rgba(var(--ps3-rgb),.82)!important;border-color:rgba(var(--ps3-rgb),.45)!important}
+.platform-badge.badge-ps4{background:rgba(var(--ps4-rgb),.82)!important;border-color:rgba(var(--ps4-rgb),.45)!important}
 .platform-badge.badge-psvita{background:rgba(var(--psvita-rgb),.82)!important;border-color:rgba(var(--psvita-rgb),.45)!important}
 .platform-badge.badge-switch{background:rgba(var(--switch-rgb),.82)!important;border-color:rgba(var(--switch-rgb),.45)!important}
 .platform-badge.badge-3ds{background:rgba(var(--n3ds-rgb),.82)!important;border-color:rgba(var(--n3ds-rgb),.45)!important}
 .platform-badge.badge-wii{background:rgba(var(--wii-rgb),.82)!important;border-color:rgba(var(--wii-rgb),.45)!important}
+.platform-badge.badge-wiiu{background:rgba(var(--wiiu-rgb),.82)!important;border-color:rgba(var(--wiiu-rgb),.45)!important}
 .platform-badge.badge-gamecube{background:rgba(var(--gamecube-rgb),.82)!important;border-color:rgba(var(--gamecube-rgb),.45)!important}
 .platform-badge.badge-java{background:rgba(var(--java-rgb),.82)!important;border-color:rgba(var(--java-rgb),.45)!important}
 .platform-badge.badge-ios{background:rgba(var(--ios-rgb),.82)!important;border-color:rgba(var(--ios-rgb),.45)!important}
@@ -569,10 +587,12 @@ body::after{
 .game-card.platform-ps1{--pf-main:var(--ps1-color);--pf-dark:var(--ps1-dark);--pf-glow:var(--ps1-glow)}
 .game-card.platform-ps2{--pf-main:var(--ps2-color);--pf-dark:var(--ps2-dark);--pf-glow:var(--ps2-glow)}
 .game-card.platform-ps3{--pf-main:var(--ps3-color);--pf-dark:var(--ps3-dark);--pf-glow:var(--ps3-glow)}
+.game-card.platform-ps4{--pf-main:var(--ps4-color);--pf-dark:var(--ps4-dark);--pf-glow:var(--ps4-glow)}
 .game-card.platform-psvita{--pf-main:var(--psvita-color);--pf-dark:var(--psvita-dark);--pf-glow:var(--psvita-glow)}
 .game-card.platform-switch{--pf-main:var(--switch-color);--pf-dark:var(--switch-dark);--pf-glow:var(--switch-glow)}
 .game-card.platform-3ds{--pf-main:var(--n3ds-color);--pf-dark:var(--n3ds-dark);--pf-glow:var(--n3ds-glow)}
 .game-card.platform-wii{--pf-main:var(--wii-color);--pf-dark:var(--wii-dark);--pf-glow:var(--wii-glow)}
+.game-card.platform-wiiu{--pf-main:var(--wiiu-color);--pf-dark:var(--wiiu-dark);--pf-glow:var(--wiiu-glow)}
 .game-card.platform-gamecube{--pf-main:var(--gamecube-color);--pf-dark:var(--gamecube-dark);--pf-glow:var(--gamecube-glow)}
 .game-card.platform-java{--pf-main:var(--java-color);--pf-dark:var(--java-dark);--pf-glow:var(--java-glow)}
 .game-card.platform-ios{--pf-main:var(--ios-color);--pf-dark:var(--ios-dark);--pf-glow:var(--ios-glow)}
@@ -1122,36 +1142,23 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
 }
 /* =========================================================
    TRAKTEER TOP SUPPORTER WIDGET (INDapk THEME)
-   Tempel di paling bawah CSS kamu
 ========================================================= */
-
-/* Wrapper utama */
 .trakteer-leaderboard{
   position: relative;
   overflow: hidden;
-
   margin: 26px 0;
   border-radius: 26px;
-
-  /* Neon glass tanpa blur (anti teks soft) */
   background:
     radial-gradient(1100px 360px at 10% -20%, rgba(0,240,255,.18), transparent 55%),
     radial-gradient(900px 320px at 90% 0%, rgba(181,55,242,.14), transparent 55%),
     linear-gradient(180deg, rgba(10,14,26,.85), rgba(5,8,18,.78));
-
   border: 1px solid rgba(0,240,255,.22);
   box-shadow:
     0 18px 60px rgba(0,0,0,.45),
     0 0 40px rgba(0,240,255,.08);
-
-  /* Pastikan tidak ada transform yg bikin blur */
   transform: none !important;
-
-  /* Space dalam */
   padding: 18px;
 }
-
-/* Border glow gradient */
 .trakteer-leaderboard::before{
   content:"";
   position:absolute;
@@ -1165,65 +1172,39 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
   opacity:.22;
   pointer-events:none;
 }
-
-/* Header kecil di atas iframe (opsional tapi bagus) */
 .trakteer-leaderboard::after{
   content:"Top Supporter";
   position:absolute;
   top:14px;
   left:16px;
   z-index:2;
-
   font-family: Orbitron, Inter, sans-serif;
   font-weight: 900;
   letter-spacing: .8px;
   font-size: 14px;
-
   color: rgba(233,241,255,.92);
   text-shadow: 0 0 14px rgba(0,240,255,.18);
   padding: 8px 12px;
   border-radius: 999px;
-
   background: rgba(0,240,255,.08);
   border: 1px solid rgba(0,240,255,.18);
 }
-
-/* Iframe */
 .trakteer-iframe{
   width: 100%;
-  height: 520px;          /* default desktop */
+  height: 520px;
   border: 0;
   display:block;
-
   border-radius: 20px;
-
-  /* Iframe kadang punya background default, kita kasih layer gelap */
   background: rgba(0,0,0,.18);
-
-  /* Anti blur rendering */
   transform: none !important;
 }
-
-/* =========================================================
-   FORCE THEME INSIDE IFRAME (LIMITATION NOTICE)
-   CSS luar TIDAK bisa styling isi iframe lintas domain.
-   Jadi kita bikin solusi: legibilitas dari luar + fallback warna.
-========================================================= */
-
-/* Buat teks yang tampak gelap di widget tetap kebaca:
-   kasih kontras area iframe */
 .trakteer-leaderboard{
-  /* Membantu teks hitam jadi kebaca dengan background lebih terang tipis */
   box-shadow:
     0 18px 60px rgba(0,0,0,.45),
     0 0 40px rgba(0,240,255,.08),
     inset 0 0 0 1px rgba(255,255,255,.06),
     inset 0 0 60px rgba(255,255,255,.02);
 }
-
-/* =========================================================
-   RESPONSIVE HEIGHT (biar isi tidak kepotong)
-========================================================= */
 @media (max-width: 992px){
   .trakteer-iframe{ height: 560px; }
 }
@@ -1235,11 +1216,6 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
 @media (max-width: 480px){
   .trakteer-iframe{ height: 660px; }
 }
-
-/* =========================================================
-   OPTIONAL: kalau widget kamu dibungkus .reveal yang pakai transform
-   ini mencegah teks soft
-========================================================= */
 .reveal .trakteer-leaderboard{
   transform: none !important;
 }
@@ -1345,6 +1321,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
               <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
               <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
               <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
+              <li><a class="dropdown-item" href="#" data-platform="ps4">PlayStation 4</a></li>
               <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
               <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
               <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
@@ -1521,6 +1498,7 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
             <option value="ps1">PlayStation 1</option>
             <option value="ps2">PlayStation 2</option>
             <option value="ps3">PlayStation 3</option>
+            <option value="ps4">PlayStation 4</option>
             <option value="psp">PSP</option>
             <option value="psvita">PS Vita</option>
             <option value="android">Android</option>
@@ -1600,7 +1578,8 @@ body.is-scrolling :is(.navbar,.filter-section,.dropdown-menu,.modal-content,.gam
     // ====== KONFIGURASI URL API ======
     const GAMEPS1_API_URL = "https://script.google.com/macros/s/AKfycbxExg-rUr-CcJUYZ786k57e5E7JO2mSrGdRppr6JWbb7fHoTTAJs7x7AnYEmcOOK-49/exec";
     const GAMEPS2_API_URL = "https://script.google.com/macros/s/AKfycbwvTmKNFx0rxWjAAlTpQk9h0hnFD-GcKZcUG4g3MtHFJLnw86lPGqgSoQuuVUJDe1xy/exec";
-    const GAMEPS3_API_URL = "https://script.google.com/macros/s/AKfycbwqkrPhEvF3-_r1cu_wI7nRd56Z1AzNhank78R7dFgxHK57Wd2cf2WmV9ESXMAg_LHC/exec"; 
+    const GAMEPS3_API_URL = "https://script.google.com/macros/s/AKfycbwqkrPhEvF3-_r1cu_wI7nRd56Z1AzNhank78R7dFgxHK57Wd2cf2WmV9ESXMAg_LHC/exec";
+    const GAMEPS4_API_URL = "https://script.google.com/macros/s/AKfycbwHLRSQiwAiqj-y2W4JA8QfD1oDA13BepnHQHqNjxWYLHJl4Z7IoKGkA12wN-nlOINEeQ/exec";
     const GAMESWITCH_API_URL = "https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec";
     const GAMEPSP_API_URL = "https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec"; 
     const GAMEANDROID_API_URL = "https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec";
@@ -2403,6 +2382,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
         'ps1': 'bi-playstation', 
         'ps2': 'bi-playstation',
         'ps3': 'bi-playstation',
+        'ps4': 'bi-playstation',
         'switch': 'bi-nintendo-switch',
         'psp': 'bi-phone',
         'psvita': 'bi-phone',
@@ -2422,6 +2402,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
         case 'ps1': return 'PlayStation 1';
         case 'ps2': return 'PlayStation 2';
         case 'ps3': return 'PlayStation 3';
+        case 'ps4': return 'PlayStation 4';
         case 'switch': return 'Nintendo Switch';
         case 'psp': return 'PSP';
         case 'psvita': return 'PS Vita';
@@ -2441,7 +2422,7 @@ function goToGameDetail(downloadId, platform, gameName = '') {
       if (!raw) return;
 
       const hash = raw.toLowerCase();
-      const allowed = new Set(['all','ps1','ps2','ps3','switch','psp','psvita','wii','3ds','java','ios','android','pc', 'gamecube']);
+      const allowed = new Set(['all','ps1','ps2','ps3','ps4', 'switch','psp','psvita','wii','3ds','java','ios','android','pc', 'gamecube']);
       if (!allowed.has(hash)) return;
 
       currentPlatform = hash;
@@ -3106,6 +3087,7 @@ async function loadAllGames({ useCache = true } = {}) {
     { platform: 'ps1',     name: 'PlayStation 1',   url: GAMEPS1_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'ps2',     name: 'PlayStation 2',   url: GAMEPS2_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'ps3',     name: 'PlayStation 3',   url: GAMEPS3_API_URL,      accessAction: 'accessOriginalLink' },
+    { platform: 'ps4',     name: 'PlayStation 4',   url: GAMEPS4_API_URL,      accessAction: 'accessOriginalLink' },
     { platform: 'switch',  name: 'Nintendo Switch', url: GAMESWITCH_API_URL,   accessAction: 'accessSwitchOriginalLink' },
     { platform: 'psvita',  name: 'PS Vita',         url: GAMEPSVITA_API_URL,   accessAction: 'accessOriginalLink' },
     { platform: 'psp',     name: 'PSP',             url: GAMEPSP_API_URL,      accessAction: 'accessOriginalLink' },
@@ -3383,6 +3365,7 @@ function getPlatformOptions(selectedPlatform) {
     { value: 'ps1', label: 'PlayStation 1' },
     { value: 'ps2', label: 'PlayStation 2' },
     { value: 'ps3', label: 'PlayStation 3' },
+    { value: 'ps4', label: 'PlayStation 4' },
     { value: 'psp', label: 'PSP' },
     { value: 'psvita', label: 'PS Vita' },
     { value: 'android', label: 'Android' },
@@ -4402,6 +4385,9 @@ function renderGameList() {
           case 'ps3':
             apiUrl = GAMEPS3_API_URL;
             break;
+          case 'ps4':
+            apiUrl = GAMEPS4_API_URL;
+            break;
           case 'switch':
             apiUrl = GAMESWITCH_API_URL;
             break;
@@ -4535,6 +4521,17 @@ function renderGameList() {
               key: currentUser.key
             };
             break;
+        case 'ps4':
+          apiUrl = GAMEPS4_API_URL;
+          payload = {
+            action: 'updateThumbnail',
+            download_id: downloadId,
+            thumbnail_url: newUrl,
+            telegram_id: currentUser.wa_number,
+            key: currentUser.key,
+            admin: true
+          };
+          break;
           case 'psvita':
             apiUrl = GAMEPSVITA_API_URL;
             payload = {
