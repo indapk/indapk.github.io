@@ -86,6 +86,11 @@
   --android-solid:#3ddc84;
   --pc-solid:#00a4ef;
 
+  /* Platform gradients untuk APKsgi */
+--apksgi-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+--apksgi-solid: #ff416c;
+
+
   /* Header defaults (will be overridden by .header-ps2 / etc) */
   --header-gradient:var(--ps2-gradient);
   --header-shadow:rgba(0,102,204,.3);
@@ -202,6 +207,10 @@ body.theme-dark::before{
 .game-header.header-ios{--header-gradient:var(--ios-gradient);--header-shadow:rgba(10,132,255,.28)}
 .game-header.header-android{--header-gradient:var(--android-gradient);--header-shadow:rgba(61,220,132,.28)}
 .game-header.header-pc{--header-gradient:var(--pc-gradient);--header-shadow:rgba(0,164,239,.28)}
+.game-header.header-apksgi {
+    --header-gradient: var(--apksgi-gradient);
+    --header-shadow: rgba(255, 65, 108, 0.35);
+}
 
 /* =========================
    PLATFORM BADGES (ONE SYSTEM)
@@ -237,6 +246,10 @@ body.theme-dark::before{
 .ios-badge{background:var(--ios-gradient)}
 .android-badge{background:var(--android-gradient)}
 .pc-badge{background:var(--pc-gradient)}
+.apksgi-badge {
+    background: var(--apksgi-gradient);
+}
+
 
 /* =========================
    CLOUD BUTTONS
@@ -284,6 +297,10 @@ body.theme-dark::before{
   border:1px solid var(--border)!important;
   overflow:visible!important;
   backdrop-filter:blur(10px);
+}
+.apksgi-tabs {
+    --active-tab-gradient: var(--apksgi-gradient);
+    --active-tab-shadow: rgba(255, 65, 108, 0.35);
 }
 
 .ps2-tabs .nav-item{margin:0!important;width:100%!important;animation:fadeInUp 1.1s ease}
@@ -662,6 +679,11 @@ body.theme-dark .btn-outline-secondary:hover{border-color:rgba(255,255,255,.25)}
 @media (max-width:768px){
   .platform-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
   .other-games-card{padding:20px 15px}
+}
+
+/* Platform card untuk APKsgi */
+.platform-card.apksgi {
+    border-left: 4px solid var(--apksgi-solid);
 }
 
 /* =========================
@@ -1100,6 +1122,33 @@ body.theme-dark .note-item .card.border-secondary{background-color:rgba(108,117,
     border-radius: 20px;
     font-size: 0.9rem;
 }
+.fa-18 {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", Arial, sans-serif;
+    font-weight: 900;
+  }
+  .fa-18:before {
+      content: "18+";
+      font-size: 0.9em;
+  }
+  .screenshot-item img.error,
+  .preview-item img.error {
+      filter: grayscale(100%);
+      opacity: 0.7;
+      background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+  }
+
+  /* Indikator loading */
+  .screenshot-item img.loading,
+  .preview-item img.loading {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+  }
+
+  @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+  }
 </style>
 
 
@@ -1582,6 +1631,15 @@ https://www.indapk.com/wp-content/uploads/2026/01/MotoGP-Android-INDapk-3.jpg"><
                         <div class="small text-muted mt-2">Klik untuk lihat semua</div>
                     </div>
 
+                    <div class="platform-card apksgi" onclick="goToPlatform('apksgi')">
+                        <div class="platform-icon">
+                            <i class="fas fa-18"></i>
+                        </div>
+                        <div class="platform-title">APKsgi 18+</div>
+                        <div class="platform-count">Koleksi Game 18+</div>
+                        <div class="small text-muted mt-2">Klik untuk lihat semua</div>
+                    </div>
+
                     </div>
                     
                     <div class="text-center mt-4">
@@ -1877,7 +1935,9 @@ https://www.indapk.com/wp-content/uploads/2026/01/MotoGP-Android-INDapk-3.jpg"><
         const NOTE_API_URL = "https://script.google.com/macros/s/AKfycbxQioTLy3jP2-4tf75Dxm62tes_hOZJm_CvTSGKAYiKgfifYI3jPSHgUrkOxu-D4ylm0Q/exec";
         const GAMEJAVA_API_URL = "https://script.google.com/macros/s/AKfycbwvmH1CO1HV10KB6jftoXqJGbjCQSqykEauZbFbitNFkrNaPnbFNw779kH7n9XZX7t3/exec";
         const GAMEIOS_API_URL = "https://script.google.com/macros/s/AKfycbxicykcCe_w26RZhwMf1o8oeTVz9aRFlhRjH1Aq_Em7KR5U-z31YzB8Co5KUhQYyqcDkw/exec";
+        const APKSGI_API_URL = "https://script.google.com/macros/s/AKfycbw1-OmUFQ6awOwO4wCbKbvEqVqKQlVfixX7bY9mCL0LKDZ1yBAg2PVTA12WXoFz5f3C/exec";
         const SCREENSHOT_API_URL = GAMEANDROID_API_URL; 
+        const IMAGE_PROXY_URL = 'https://images.weserv.nl/';
         const LS_USER_KEY = 'indapkGameUser';
         const LS_LOGOUT_AT_KEY = 'indapkGameLogoutAt';
         
@@ -1900,6 +1960,18 @@ https://www.indapk.com/wp-content/uploads/2026/01/MotoGP-Android-INDapk-3.jpg"><
 // ====== SCREENSHOT SYSTEM ======
 
 
+function getProxiedImageUrl(url) {
+    if (!url || url.trim() === '') {
+        return 'https://placehold.co/900x450?text=No+Thumbnail';
+    }
+    
+    // Hanya proxy URL yang berasal dari domain tertentu jika perlu
+    if (url.includes('https://fap-nation.org') || url.includes('googleusercontent.com')) {
+        return IMAGE_PROXY_URL + '?url=' + encodeURIComponent(url) + '&w=900&h=450&fit=cover';
+    }
+    
+    return url;
+}
 
 // Fungsi untuk memuat screenshots
 async function loadScreenshots() {
@@ -1955,13 +2027,17 @@ function displayScreenshots(screenshots) {
         html += '<div class="screenshots-grid">';
         
         screenshots.forEach((screenshot, index) => {
+            // TAMBAHKAN PROXY PADA URL GAMBAR
+            const proxiedUrl = getProxiedScreenshotUrl(screenshot);
+            
             html += `
                 <div class="screenshot-item" onclick="openScreenshotLightbox(${index})">
                     <img 
-                        src="${escapeHTML(screenshot)}" 
+                        src="${escapeHTML(proxiedUrl)}" 
                         alt="Gameplay Screenshot ${index + 1}"
                         loading="lazy"
                         onerror="this.src='https://placehold.co/400x225?text=Screenshot+Error'"
+                        data-original-url="${escapeHTML(screenshot)}"
                     >
                     <div class="screenshot-overlay">
                         <small>Screenshot ${index + 1}</small>
@@ -1991,6 +2067,48 @@ function displayScreenshots(screenshots) {
     container.innerHTML = html;
 }
 
+// Fungsi baru untuk mendapatkan URL screenshot dengan proxy
+function getProxiedScreenshotUrl(originalUrl, forLightbox = false) {
+    if (!originalUrl || originalUrl.trim() === '') {
+        return 'https://placehold.co/400x225?text=No+Screenshot';
+    }
+    
+    // Daftar domain yang memerlukan proxy
+    const proxyDomains = [
+        'fap-nation.org',
+        'googleusercontent.com',
+        'blogspot.com',
+        'apksgi.com',
+        'apksgi.net',
+        'apksgi.org',
+        'drive.google.com',
+        'dropbox.com',
+        'mega.nz',
+        'mediafire.com',
+        // Tambahkan domain lain yang memerlukan proxy
+    ];
+    
+    // Cek apakah URL berasal dari domain yang memerlukan proxy
+    const needsProxy = proxyDomains.some(domain => 
+        originalUrl.toLowerCase().includes(domain.toLowerCase())
+    );
+    
+    // Parameter proxy berbeda untuk thumbnail dan lightbox
+    if (needsProxy) {
+        if (forLightbox) {
+            // Untuk lightbox (ukuran lebih besar)
+            return IMAGE_PROXY_URL + '?url=' + encodeURIComponent(originalUrl) + 
+                   '&w=1200&h=675&fit=contain&output=webp&q=90';
+        } else {
+            // Untuk thumbnail (ukuran kecil)
+            return IMAGE_PROXY_URL + '?url=' + encodeURIComponent(originalUrl) + 
+                   '&w=400&h=225&fit=cover&output=webp&q=80';
+        }
+    }
+    
+    // Jika tidak, gunakan URL asli
+    return originalUrl;
+}
 // Fungsi untuk menampilkan pesan jika tidak ada screenshot
 function showNoScreenshotsMessage() {
     const container = document.getElementById('screenshotsContent');
@@ -2021,12 +2139,15 @@ function openScreenshotLightbox(index) {
     if (!currentScreenshots || currentScreenshots.length === 0) return;
     
     lightboxIndex = index;
-    const imageUrl = currentScreenshots[lightboxIndex];
+    const originalUrl = currentScreenshots[lightboxIndex];
+    const imageUrl = getProxiedScreenshotUrl(originalUrl);
     const imageElement = document.getElementById('lightboxImage');
     const counterElement = document.getElementById('lightboxCounter');
     
     if (imageElement && counterElement) {
-        imageElement.src = imageUrl;
+        // Gunakan proxy untuk lightbox juga
+        imageElement.src = getProxiedScreenshotUrl(originalUrl, true);
+        imageElement.dataset.originalUrl = originalUrl;
         counterElement.textContent = `${lightboxIndex + 1} / ${currentScreenshots.length}`;
         
         const lightboxModal = new bootstrap.Modal(document.getElementById('screenshotLightbox'));
@@ -2159,11 +2280,15 @@ function previewScreenshots() {
     let html = '';
     
     links.forEach((link, index) => {
+        // Gunakan proxy untuk preview juga
+        const proxiedUrl = getProxiedScreenshotUrl(link);
+        
         html += `
             <div class="preview-item">
-                <img src="${escapeHTML(link)}" 
+                <img src="${escapeHTML(proxiedUrl)}" 
                      alt="Preview ${index + 1}"
-                     onerror="this.style.display='none'">
+                     data-original-url="${escapeHTML(link)}"
+                     onerror="this.src='https://placehold.co/120x68?text=Error'">
                 <button class="remove-preview" onclick="removePreview(${index})">
                     <i class="bi bi-x"></i>
                 </button>
@@ -2172,6 +2297,33 @@ function previewScreenshots() {
     });
     
     previewContainer.innerHTML = html;
+}
+
+// Fungsi untuk handle error pada gambar
+function handleScreenshotError(imgElement) {
+    const originalUrl = imgElement.dataset.originalUrl;
+    
+    if (!originalUrl) return;
+    
+    // Coba alternatif URL jika tersedia
+    if (originalUrl.includes('googleusercontent.com')) {
+        // Coba format lain untuk Google Drive
+        const altUrl = originalUrl.replace('/view?usp=sharing', '/preview');
+        imgElement.src = getProxiedScreenshotUrl(altUrl);
+        imgElement.dataset.retry = '1';
+    } else if (imgElement.dataset.retry !== '2') {
+        // Coba dengan parameter proxy berbeda
+        const retryCount = parseInt(imgElement.dataset.retry || '0') + 1;
+        imgElement.dataset.retry = retryCount.toString();
+        
+        // Coba tanpa https, atau format berbeda
+        const altUrl = originalUrl.replace('https://', 'http://');
+        imgElement.src = getProxiedScreenshotUrl(altUrl);
+    } else {
+        // Fallback ke placeholder
+        imgElement.src = 'https://placehold.co/400x225?text=Image+Not+Available';
+        imgElement.classList.add('error');
+    }
 }
 
 // Fungsi untuk menghapus preview
@@ -3158,6 +3310,7 @@ function setModalHeaderColor(modalId, platform) {
         case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; break;
         case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
         case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; break;
+        case 'apksgi': gradient = 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)'; break;
 
 
         default: gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
@@ -3682,6 +3835,7 @@ function getCostPerLink(platform) {
         case 'ios':
         case 'ps3':
         case 'ps4':
+        case 'apksgi':
             return 1000;
         case 'switch':
             return 2000;
@@ -3951,6 +4105,7 @@ function goToPlatform(platform) {
         'gamecube': `${baseUrl}/#gamecube`,
         '3ds': `${baseUrl}/#3ds`,
         'java': `${baseUrl}/#java`,
+        'apksgi': `${baseUrl}/#apksgi`,
         'ios': `${baseUrl}/#ios`
     };
     
@@ -4272,6 +4427,10 @@ async function loadGameDetail() {
                 apiUrl = GAME3DS_API_URL;
                 action = 'getGameByDownloadId';
                 break;
+            case 'apksgi':
+                apiUrl = APKSGI_API_URL;
+                action = 'getGameByDownloadId';
+                break;
 
             default:
                 alert('Platform tidak didukung');
@@ -4379,6 +4538,16 @@ case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; badg
             shadow = 'rgba(0, 112, 204, 0.4)';
             shadowHover = 'rgba(0, 112, 204, 0.6)';
             break;
+        case 'apksgi':
+            gradient = 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)';
+            badgeClass = 'apksgi-badge';
+            platformName = 'APKsgi 18+';
+            tabs.className = 'nav nav-tabs ps2-tabs apksgi-tabs';
+            c1 = '#ff416c';
+            c2 = '#ff4b2b';
+            shadow = 'rgba(255, 65, 108, 0.4)';
+            shadowHover = 'rgba(255, 65, 108, 0.6)';
+            break;
     default:
       gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
       badgeClass = 'ps2-badge';
@@ -4457,14 +4626,16 @@ function displayGameDetail(game, platform) {
 }
 
 function getThumbnailUrl(game) {
-  const candidates = [
-    game?.thumbnail_url,
-    game?.thumbnailUrl,
-    game?.game_data?.thumbnailUrl,
-    game?.game_data?.thumbnail_url
-  ];
-  const url = candidates.find(v => String(v || '').trim().length > 0);
-  return String(url || '').trim();
+    const candidates = [
+        game?.thumbnail_url,
+        game?.thumbnailUrl,
+        game?.game_data?.thumbnailUrl,
+        game?.game_data?.thumbnail_url
+    ];
+    const url = candidates.find(v => String(v || '').trim().length > 0);
+    const rawUrl = String(url || '').trim();
+    
+    return getProxiedImageUrl(rawUrl);
 }
 
         
@@ -5680,6 +5851,9 @@ function generateAdLinksHTML(game, platform) {
         case 'ios':
             html += generateIosAdLinks(game);
             break;
+        case 'apksgi':
+            html += generateAPKsgiAdLinks(game);
+            break;
         default:
             html += '<p>Link iklan tidak tersedia untuk platform ini.</p>';
     }
@@ -6791,6 +6965,199 @@ function generateWiiAdLinks(game) {
     return html || '<p>Link iklan tidak tersedia untuk game Wii ini.</p>';
 }
 
+
+function generateAPKsgiAdLinks(game) {
+    let html = '';
+    const gameName = getGameName(game);
+    
+    // Format detection untuk APKsgi
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    
+    formats.forEach(format => {
+        const formatKey = format.toLowerCase().replace(/\s+/g, '_');
+        
+        // Link Iklan 1 (INDapk Short) - GRATIS
+        const linksIklan1 = game.link_iklan_formats?.[format] || game.link_iklan || [];
+        if (linksIklan1.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px; border-color: #ff416c !important;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between" style="background: #ff416c !important;">
+                        <span><i class="fas fa-18"></i> INDapk Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+                            <span class="badge bg-danger ms-2">18+</span>
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan1.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud" style="background: #ff416c; border-color: #ff416c;">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - GRATIS
+        const linksIklan2 = game.link_iklan2_formats?.[format] || game.link_iklan2 || [];
+        if (linksIklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="fas fa-18"></i> Semawur Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+                            <span class="badge bg-danger ms-2">18+</span>
+                        </div>
+                        <h4>${escapeHTML(gameName)} - ${format}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            linksIklan2.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    });
+    
+    // Fallback jika tidak ada format-specific links
+    if (html === '' && (game.link_iklan || game.link_iklan2)) {
+        // Link Iklan 1 (INDapk Short) - generic
+        if (game.link_iklan && Array.isArray(game.link_iklan) && game.link_iklan.length > 0) {
+            html += `
+                <div class="card border-primary mb-4" style="border-width: 2px; border-color: #ff416c !important;">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between" style="background: #ff416c !important;">
+                        <span><i class="fas fa-18"></i> INDapk Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Utama</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Link iklan GRATIS. Lewati iklan untuk mendapatkan link download.
+                            <span class="badge bg-danger ms-2">18+</span>
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-primary btn-cloud" style="background: #ff416c; border-color: #ff416c;">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+        
+        // Link Iklan 2 (Semawur) - generic
+        if (game.link_iklan2 && Array.isArray(game.link_iklan2) && game.link_iklan2.length > 0) {
+            html += `
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                        <span><i class="fas fa-18"></i> Semawur Short (Gratis)</span>
+                        <span class="badge bg-light text-dark">Alternatif</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            Alternatif link iklan GRATIS. Gunakan jika link utama sulit.
+                            <span class="badge bg-danger ms-2">18+</span>
+                        </div>
+                        <h4>${escapeHTML(gameName)}</h4>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+            `;
+            
+            game.link_iklan2.forEach((link, index) => {
+                const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                if (link && link.trim() !== '') {
+                    html += `<a href="${escapeHTML(link)}" target="_blank" class="btn btn-secondary btn-cloud">${escapeHTML(cloud)}</a>`;
+                }
+            });
+            
+            html += `</div></div></div>`;
+        }
+    }
+    
+    return html || '<p class="text-muted">Link iklan gratis belum tersedia untuk game APKsgi ini.</p>';
+}
+
+function generateAPKsgiOriginalLinks(game) {
+    let html = '';
+    const formats = Array.isArray(game.formats) ? game.formats : [];
+    const priceText = getPriceText('apksgi');
+    
+    formats.forEach(format => {
+        const linksAsli = game.link_asli_formats?.[format] || game.link_asli || [];
+        if (linksAsli.length > 0) {
+            html += `
+                <div class="link-section original-link">
+                    <h6><i class="fas fa-18"></i> Link Asli Tanpa Iklan - ${escapeHTML(format)}</h6>
+                    <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+                    <span class="badge bg-danger mb-2">18+ Content</span>
+            `;
+            
+            linksAsli.forEach((link, index) => {
+                const cloud = game.cloud_formats?.[format]?.[index] || game.cloud_types?.[index] || `Cloud ${index + 1}`;
+                html += `
+                    <div class="link-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${escapeHTML(cloud)}</span>
+                            <button class="btn btn-sm btn-success"
+                                onclick="requestOriginalLink(this, '${game.download_id}', '${format}', ${index}, '${cloud}', 'apksgi')"
+                                ${!currentUser ? 'disabled' : ''}>
+                                <i class="fas fa-unlock-alt"></i> ${priceText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        }
+    });
+    
+    // Fallback untuk link asli generic
+    if (html === '' && game.link_asli && Array.isArray(game.link_asli) && game.link_asli.length > 0) {
+        html += `
+            <div class="link-section original-link">
+                <h6><i class="fas fa-18"></i> Link Asli Tanpa Iklan</h6>
+                <p class="small text-muted">${priceText} per link. Bebas iklan dan langsung download</p>
+                <span class="badge bg-danger mb-2">18+ Content</span>
+        `;
+        
+        game.link_asli.forEach((link, index) => {
+            const cloud = game.cloud_types?.[index] || `Cloud ${index + 1}`;
+            html += `
+                <div class="link-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>${escapeHTML(cloud)}</span>
+                        <button class="btn btn-sm btn-success"
+                            onclick="requestOriginalLink(this, '${game.download_id}', 'ori', ${index}, '${cloud}', 'apksgi')"
+                            ${!currentUser ? 'disabled' : ''}>
+                            <i class="fas fa-unlock-alt"></i> ${priceText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+    }
+    
+    return html || '<p class="text-muted">Link asli (berbayar) belum tersedia untuk game APKsgi ini.</p>';
+}
         function generatePS2AdLinks(game) {
             let html = '';
             const gameName = getGameName(game);
@@ -7357,6 +7724,9 @@ function generateOriginalLinksHTML(game, platform) {
             break;
         case 'ios':
             html += generateIosOriginalLinks(game);
+            break;
+        case 'apksgi':
+            html += generateAPKsgiOriginalLinks(game);
             break;
         default:
             html += '<p>Link asli tidak tersedia untuk platform ini.</p>';
@@ -8012,6 +8382,7 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
         case 'gamecube': gradient = 'linear-gradient(135deg, #6a5acd 0%, #483d8b 100%)'; break;
         case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
         case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; break;
+        case 'apksgi': gradient = 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)'; break;
 
 
             default:
@@ -8067,6 +8438,7 @@ function showInsufficientBalanceModal(currentBalance, requiredAmount, platform) 
             case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #2aa865 100%)'; break;
             case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
             case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; break;
+        case 'apksgi': gradient = 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)'; break;
 
 
             default:
@@ -8110,6 +8482,7 @@ function updateModalHeadersForPlatform(platform) {
         case 'android': gradient = 'linear-gradient(135deg, #3ddc84 0%, #2aa865 100%)'; break;
         case 'java': gradient = 'linear-gradient(135deg, #8d4b2d 0%, #5a2d18 100%)'; break;
         case 'ios': gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)'; break;
+        case 'apksgi': gradient = 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)'; break;
 
         
         default:
@@ -8233,6 +8606,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     apiUrl = GAMEIOS_API_URL;
                     action = 'accessOriginalLink';
                     break;
+                case 'apksgi':
+                    apiUrl = APKSGI_API_URL;
+                    action = 'accessOriginalLink';
+                    break;
                 default:
                     throw new Error('Platform tidak didukung: ' + platform);
             }
@@ -8259,6 +8636,13 @@ document.addEventListener('DOMContentLoaded', function() {
                    `&key=${encodeURIComponent(currentUser.key || '')}`;
         }
         else if (platform === 'ps4') {
+            // Parameter untuk PS4 sesuai dengan GS Code
+                body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
+                       `&format=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
+                       `&telegram_id=${encodeURIComponent(currentUser.wa_number)}` +
+                       `&key=${encodeURIComponent(currentUser.key)}`;
+        }
+        else if (platform === 'apksgi') {
             // Parameter untuk PS4 sesuai dengan GS Code
                 body = `action=${action}&download_id=${encodeURIComponent(downloadId)}` +
                        `&format=${encodeURIComponent(linkType)}&index=${encodeURIComponent(index)}` +
