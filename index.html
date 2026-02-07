@@ -124,6 +124,12 @@
       --pc-dark:#0082c4;
       --pc-glow:rgba(0,164,239,.5);
       --pc-rgb:0,164,239;
+
+      /* APKsgi */
+      --apksgi-color:#ff2e97;
+      --apksgi-dark:#d4006a;
+      --apksgi-glow:rgba(255,46,151,.5);
+      --apksgi-rgb:255,46,151;
     }
 
     /* =========================================================
@@ -489,6 +495,100 @@
     }
 
     /* =========================================================
+       NAV TABS
+    ========================================================= */
+    .nav-tabs-container {
+      margin: 20px auto 30px;
+      max-width: 1200px;
+    }
+
+    .nav-tabs-custom {
+      border: none;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: var(--glass-blur);
+      border-radius: 25px;
+      padding: 8px;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-tabs-custom .nav-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    .nav-tabs-custom .nav-link {
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 12px 20px;
+      border-radius: 20px;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .nav-tabs-custom .nav-link:hover {
+      color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .nav-tabs-custom .nav-link.active {
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      color: white;
+      box-shadow: 0 5px 20px rgba(0, 240, 255, 0.4);
+      border: none;
+    }
+
+    .nav-tabs-custom .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 25%;
+      width: 50%;
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+      animation: tabPulse 2s infinite;
+    }
+
+    @keyframes tabPulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    .tab-badge {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .nav-tabs-custom .nav-link.active .tab-badge {
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .nav-tabs-custom .nav-link {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+      .nav-tabs-custom .nav-link i {
+        display: none;
+      }
+    }
+
+    /* =========================================================
        FILTER
     ========================================================= */
     .filter-section{
@@ -665,6 +765,7 @@
     .badge-ios{background:linear-gradient(135deg,var(--ios-color),var(--ios-dark));box-shadow:0 5px 20px var(--ios-glow),0 0 30px var(--ios-glow) inset}
     .badge-android{background:linear-gradient(135deg,var(--android-color),var(--android-dark));box-shadow:0 5px 20px var(--android-glow),0 0 30px var(--android-glow) inset}
     .badge-pc{background:linear-gradient(135deg,var(--pc-color),var(--pc-dark));box-shadow:0 5px 20px var(--pc-glow),0 0 30px var(--pc-glow) inset}
+    .badge-apksgi{background:linear-gradient(135deg,var(--apksgi-color),var(--apksgi-dark));box-shadow:0 5px 20px var(--apksgi-glow),0 0 30px var(--apksgi-glow) inset}
 
     /* Icon background tint */
     .platform-icon.platform-ps1{background:rgba(var(--ps1-rgb),.3)}
@@ -681,6 +782,7 @@
     .platform-icon.platform-ios{background:rgba(var(--ios-rgb),.3)}
     .platform-icon.platform-android{background:rgba(var(--android-rgb),.3)}
     .platform-icon.platform-pc{background:rgba(var(--pc-rgb),.3)}
+    .platform-icon.platform-apksgi{background:rgba(var(--apksgi-rgb),.3)}
 
     /* Badge solid style for thumbnail overlay (consistent + no duplicate rules) */
     .platform-badge.badge-ps1{background:rgba(var(--ps1-rgb),.82)!important;border-color:rgba(var(--ps1-rgb),.45)!important}
@@ -697,6 +799,7 @@
     .platform-badge.badge-ios{background:rgba(var(--ios-rgb),.82)!important;border-color:rgba(var(--ios-rgb),.45)!important}
     .platform-badge.badge-android{background:rgba(var(--android-rgb),.82)!important;border-color:rgba(var(--android-rgb),.45)!important}
     .platform-badge.badge-pc{background:rgba(var(--pc-rgb),.82)!important;border-color:rgba(var(--pc-rgb),.45)!important}
+    .platform-badge.badge-apksgi{background:rgba(var(--apksgi-rgb),.82)!important;border-color:rgba(var(--apksgi-rgb),.45)!important}
 
     /* =========================================================
        PLATFORM TOKENS ON CARD (NEW + PIN) - 1 RULESET
@@ -716,6 +819,7 @@
     .game-card.platform-ios{--pf-main:var(--ios-color);--pf-dark:var(--ios-dark);--pf-glow:var(--ios-glow)}
     .game-card.platform-android{--pf-main:var(--android-color);--pf-dark:var(--android-dark);--pf-glow:var(--android-glow)}
     .game-card.platform-pc{--pf-main:var(--pc-color);--pf-dark:var(--pc-dark);--pf-glow:var(--pc-glow)}
+    .game-card.platform-apksgi{--pf-main:var(--apksgi-color);--pf-dark:var(--apksgi-dark);--pf-glow:var(--apksgi-glow)}
 
     /* New badge */
     .new-badge{
@@ -866,6 +970,16 @@
     }
     .game-thumbnail{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
     .game-card:hover .game-thumbnail{transform:scale(1.1) rotate(2deg)}
+
+    /* Thumbnail blur khusus untuk APKsgi */
+    .game-card.platform-apksgi .game-thumbnail {
+      filter: blur(15px);
+      transition: filter 0.4s ease, transform 0.6s ease;
+    }
+    
+    .game-card.platform-apksgi:hover .game-thumbnail {
+      filter: blur(0);
+    }
 
     .thumbnail-badge{
       position:absolute;
@@ -1259,85 +1373,6 @@
       #categoryText{max-width:120px}
     }
 
-    /* =========================================================
-       TRAKTEER TOP SUPPORTER WIDGET (INDapk THEME)
-    ========================================================= */
-    .trakteer-leaderboard{
-      position: relative;
-      overflow: hidden;
-      margin: 26px 0;
-      border-radius: 26px;
-      background:
-        radial-gradient(1100px 360px at 10% -20%, rgba(0,240,255,.18), transparent 55%),
-        radial-gradient(900px 320px at 90% 0%, rgba(181,55,242,.14), transparent 55%),
-        linear-gradient(180deg, rgba(10,14,26,.85), rgba(5,8,18,.78));
-      border: 1px solid rgba(0,240,255,.22);
-      box-shadow:
-        0 18px 60px rgba(0,0,0,.45),
-        0 0 40px rgba(0,240,255,.08);
-      transform: none !important;
-      padding: 18px;
-    }
-    .trakteer-leaderboard::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      padding:2px;
-      border-radius:26px;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity:.22;
-      pointer-events:none;
-    }
-    .trakteer-leaderboard::after{
-      content:"Top Supporter";
-      position:absolute;
-      top:14px;
-      left:16px;
-      z-index:2;
-      font-family: Orbitron, Inter, sans-serif;
-      font-weight: 900;
-      letter-spacing: .8px;
-      font-size: 14px;
-      color: rgba(233,241,255,.92);
-      text-shadow: 0 0 14px rgba(0,240,255,.18);
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(0,240,255,.08);
-      border: 1px solid rgba(0,240,255,.18);
-    }
-    .trakteer-iframe{
-      width: 100%;
-      height: 520px;
-      border: 0;
-      display:block;
-      border-radius: 20px;
-      background: rgba(0,0,0,.18);
-      transform: none !important;
-    }
-    .trakteer-leaderboard{
-      box-shadow:
-        0 18px 60px rgba(0,0,0,.45),
-        0 0 40px rgba(0,240,255,.08),
-        inset 0 0 0 1px rgba(255,255,255,.06),
-        inset 0 0 60px rgba(255,255,255,.02);
-    }
-    @media (max-width: 992px){
-      .trakteer-iframe{ height: 560px; }
-    }
-    @media (max-width: 768px){
-      .trakteer-leaderboard{ padding: 14px; border-radius: 22px; }
-      .trakteer-leaderboard::after{ font-size: 13px; top:12px; left:12px; }
-      .trakteer-iframe{ height: 600px; border-radius: 18px; }
-    }
-    @media (max-width: 480px){
-      .trakteer-iframe{ height: 660px; }
-    }
-    .reveal .trakteer-leaderboard{
-      transform: none !important;
-    }
   </style>
 </head>
 <body>
@@ -1462,88 +1497,248 @@
   </div>
 
   <div class="container mt-4">
-    <!-- Filter Section -->
-    <div class="filter-section">
-      <div class="row g-3 align-items-center">
-        <div class="col-md-4">
-          <div class="search-reveal" id="searchReveal">
-            <button type="button" class="search-reveal-btn" id="searchIconBtn" aria-label="Cari Game">
-              <i class="bi bi-search"></i>
-            </button>
-            <div class="search-reveal-input">
-              <input type="text" id="searchInput" class="form-control" placeholder="Cari game..." 
-                     autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-4">
-          <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle dropdown-platform w-100" type="button" data-bs-toggle="dropdown">
-              <i class="bi bi-device-ssd me-2"></i> Platform: <span id="platformText">Semua</span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" data-platform="all">Semua Platform</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ps4">PlayStation 4</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="wii">Wii</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="gamecube">Gamecube</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="3ds">3DS</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="java">Java</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ios">Ios</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="pc">PC</a></li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="col-md-4">
-          <div class="d-flex gap-2 align-items-stretch category-wrap">
-            <div class="dropdown flex-grow-1">
-              <button class="btn btn-outline-secondary dropdown-toggle dropdown-category w-100" type="button" data-bs-toggle="dropdown">
-                <i class="bi bi-tags me-2"></i> Kategori: <span id="categoryText">Semua</span>
-              </button>
-              <ul class="dropdown-menu category-menu w-100" id="categoryList">
-                <li>
-                  <a class="dropdown-item" href="#" data-category="all">Semua Kategori</a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li class="px-3 py-2">
-                  <input
-                    type="text"
-                    id="categorySearch"
-                    class="form-control form-control-sm"
-                    placeholder="Cari kategori..."
-                    autocomplete="off"
-                  />
-                </li>
-                <li><hr class="dropdown-divider"></li>
-              </ul>
-            </div>
-            <button id="btnRefreshGames" class="btn-refresh-icon" type="button" title="Refresh Game">
-              <i class="bi bi-arrow-clockwise"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Game List -->
-    <div id="gameListContainer">
-      <div class="spinner-container">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs-container">
+      <ul class="nav nav-tabs nav-tabs-custom justify-content-center" id="mainTabs">
+        <li class="nav-item">
+          <button class="nav-link active" id="beranda-tab" data-bs-toggle="tab" data-bs-target="#beranda">
+            <i class="bi bi-house-door"></i> Beranda
+            <span class="tab-badge ms-1" id="beranda-count">0</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="indapk-tab" data-bs-toggle="tab" data-bs-target="#indapk">
+            <i class="bi bi-controller"></i> INDapk
+            <span class="tab-badge ms-1" id="indapk-count">0</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="apksgi-tab" data-bs-toggle="tab" data-bs-target="#apksgi">
+            <i class="bi bi-18-circle"></i> APKsgi
+            <span class="tab-badge ms-1" id="apksgi-count">0</span>
+          </button>
+        </li>
+      </ul>
     </div>
 
-    <div id="paginationContainer"></div>
+    <!-- Tab Content -->
+    <div class="tab-content" id="mainTabsContent">
+      <!-- Beranda Tab -->
+      <div class="tab-pane fade show active" id="beranda">
+        <!-- Filter Section -->
+        <div class="filter-section">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-4">
+              <div class="search-reveal" id="searchReveal">
+                <button type="button" class="search-reveal-btn" id="searchIconBtn" aria-label="Cari Game">
+                  <i class="bi bi-search"></i>
+                </button>
+                <div class="search-reveal-input">
+                  <input type="text" id="searchInput" class="form-control" placeholder="Cari game..." 
+                         autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle dropdown-platform w-100" type="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-device-ssd me-2"></i> Platform: <span id="platformText">Semua</span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" data-platform="all">Semua Platform</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ps4">PlayStation 4</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="wii">Wii</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="gamecube">Gamecube</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="3ds">3DS</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="java">Java</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ios">Ios</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="pc">PC</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="apksgi">APKsgi</a></li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="d-flex gap-2 align-items-stretch category-wrap">
+                <div class="dropdown flex-grow-1">
+                  <button class="btn btn-outline-secondary dropdown-toggle dropdown-category w-100" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-tags me-2"></i> Kategori: <span id="categoryText">Semua</span>
+                  </button>
+                  <ul class="dropdown-menu category-menu w-100" id="categoryList">
+                    <li>
+                      <a class="dropdown-item" href="#" data-category="all">Semua Kategori</a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="px-3 py-2">
+                      <input
+                        type="text"
+                        id="categorySearch"
+                        class="form-control form-control-sm"
+                        placeholder="Cari kategori..."
+                        autocomplete="off"
+                      />
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                  </ul>
+                </div>
+                <button id="btnRefreshGames" class="btn-refresh-icon" type="button" title="Refresh Game">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Game List -->
+        <div id="gameListContainer">
+          <div class="spinner-container">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="paginationContainer"></div>
+      </div>
+
+      <!-- INDapk Tab -->
+      <div class="tab-pane fade" id="indapk">
+        <div class="filter-section">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-4">
+              <div class="search-reveal" id="searchRevealIndapk">
+                <button type="button" class="search-reveal-btn" id="searchIconBtnIndapk" aria-label="Cari Game INDapk">
+                  <i class="bi bi-search"></i>
+                </button>
+                <div class="search-reveal-input">
+                  <input type="text" id="searchInputIndapk" class="form-control" placeholder="Cari game INDapk..." 
+                         autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle dropdown-platform-indapk w-100" type="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-device-ssd me-2"></i> Platform: <span id="platformTextIndapk">Semua</span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" data-platform="all">Semua Platform</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ps4">PlayStation 4</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="wii">Wii</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="gamecube">Gamecube</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="3ds">3DS</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="java">Java</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="ios">Ios</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
+                  <li><a class="dropdown-item" href="#" data-platform="pc">PC</a></li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="d-flex gap-2 align-items-stretch">
+                <div class="dropdown flex-grow-1">
+                  <button class="btn btn-outline-secondary dropdown-toggle dropdown-category-indapk w-100" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-tags me-2"></i> Kategori: <span id="categoryTextIndapk">Semua</span>
+                  </button>
+                  <ul class="dropdown-menu category-menu w-100" id="categoryListIndapk">
+                    <li><a class="dropdown-item" href="#" data-category="all">Semua Kategori</a></li>
+                  </ul>
+                </div>
+                <button id="btnRefreshGamesIndapk" class="btn-refresh-icon" type="button" title="Refresh Game">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="indapkListContainer">
+          <div class="spinner-container">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="paginationIndapkContainer"></div>
+      </div>
+
+      <!-- APKsgi Tab -->
+      <div class="tab-pane fade" id="apksgi">
+        <div class="filter-section">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-4">
+              <div class="search-reveal" id="searchRevealApksgi">
+                <button type="button" class="search-reveal-btn" id="searchIconBtnApksgi" aria-label="Cari Game APKsgi">
+                  <i class="bi bi-search"></i>
+                </button>
+                <div class="search-reveal-input">
+                  <input type="text" id="searchInputApksgi" class="form-control" placeholder="Cari game APKsgi..." 
+                         autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle dropdown-platform-apksgi w-100" type="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-device-ssd me-2"></i> Platform: <span id="platformTextApksgi">Semua</span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" data-platform="all">Semua Platform</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#" data-platform="apksgi">APKsgi</a></li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="d-flex gap-2 align-items-stretch">
+                <div class="dropdown flex-grow-1">
+                  <button class="btn btn-outline-secondary dropdown-toggle dropdown-category-apksgi w-100" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-tags me-2"></i> Kategori: <span id="categoryTextApksgi">Semua</span>
+                  </button>
+                  <ul class="dropdown-menu category-menu w-100" id="categoryListApksgi">
+                    <li><a class="dropdown-item" href="#" data-category="all">Semua Kategori</a></li>
+                  </ul>
+                </div>
+                <button id="btnRefreshGamesApksgi" class="btn-refresh-icon" type="button" title="Refresh Game">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="apksgiListContainer">
+          <div class="spinner-container">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="paginationApksgiContainer"></div>
+      </div>
+    </div>
   </div>
 
   <!-- ===== MODALS ===== -->
@@ -1788,6 +1983,8 @@
     const GAMEIOS_API_URL = "https://script.google.com/macros/s/AKfycbxicykcCe_w26RZhwMf1o8oeTVz9aRFlhRjH1Aq_Em7KR5U-z31YzB8Co5KUhQYyqcDkw/exec";
     const TRACKING_API_URL = "https://script.google.com/macros/s/AKfycbw1ftGvO0CNdQ6q6BIYH1uBUQFS8VsSzD3IJcK_uTlNBcdEXK2qGmXD8k0HYCWWX2H6/exec";
     const PC_API_URL = "https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec";
+    const APKSGI_API_URL = "https://script.google.com/macros/s/AKfycbw1-OmUFQ6awOwO4wCbKbvEqVqKQlVfixX7bY9mCL0LKDZ1yBAg2PVTA12WXoFz5f3C/exec";
+    const IMAGE_PROXY_URL = 'https://images.weserv.nl/';
     const ADMIN_TELEGRAM_ID = "1172835542";
     
     // ====== GLOBAL STATE ======
@@ -1816,6 +2013,19 @@
     let deferredPrompt = null;
     let PINNED_GAMES_RULES = [];
     let currentPinSlot = null;
+    
+    // State untuk tab
+    let currentTab = 'beranda';
+    let indapkGames = [];
+    let apksgiGames = [];
+    let currentPageIndapk = 1;
+    let currentPageApksgi = 1;
+    let searchQueryIndapk = '';
+    let searchQueryApksgi = '';
+    let currentPlatformIndapk = 'all';
+    let currentPlatformApksgi = 'all';
+    let currentCategoryIndapk = 'all';
+    let currentCategoryApksgi = 'all';
 
     // ====== FUNGSI TRACKING KLIK GAME ======
     async function trackGameClick(gameId, platform, gameName) {
@@ -2409,10 +2619,51 @@
       };
     }
 
+    // Fungsi khusus untuk APKsgi dengan proxy gambar
+    function normalizeApksgiGame(game) {
+      const category_list = splitCategories(game.category || '');
+      const name = (game.nama_game || '').trim();
+      const ts_num = toTime(game.timestamp);
+      
+      // Gunakan proxy untuk thumbnail APKsgi
+      let thumbnail_url = game.thumbnail_url || '';
+      if (thumbnail_url && !thumbnail_url.includes('placehold.co') && !thumbnail_url.includes('images.weserv.nl')) {
+        thumbnail_url = IMAGE_PROXY_URL + '?url=' + encodeURIComponent(thumbnail_url) + '&w=600&h=300&fit=cover';
+      }
+
+      return {
+        ...game,
+        thumbnail_url: thumbnail_url,
+        platform: 'apksgi',
+        platform_name: 'APKsgi 18+',
+        api_url: APKSGI_API_URL,
+        access_action: 'accessOriginalLink',
+        category_list,
+        ts_num,
+        __searchText: (
+          name + ' ' +
+          category_list.join(' ') + ' ' +
+          (game.language || '')
+        ).toLowerCase()
+      };
+    }
+
     async function fetchPlatformGames({ platform, name, url, accessAction }, signal) {
       const result = await postAction(url, 'getAllGames', signal);
       if (result.status !== 'success' || !Array.isArray(result.data)) return [];
       return result.data.map(g => normalizeGame(g, platform, name, url, accessAction));
+    }
+
+    // Fungsi untuk mengambil game APKsgi
+    async function fetchApksgiGames(signal) {
+      try {
+        const result = await postAction(APKSGI_API_URL, 'getAllGames', signal);
+        if (result.status !== 'success' || !Array.isArray(result.data)) return [];
+        return result.data.map(g => normalizeApksgiGame(g));
+      } catch (error) {
+        console.error('Error fetching APKsgi games:', error);
+        return [];
+      }
     }
 
     function rebuildCategoriesFromAllGames() {
@@ -2438,7 +2689,44 @@
     document.addEventListener('DOMContentLoaded', () => {
       const y = document.getElementById('yearNow');
       if (y) y.textContent = new Date().getFullYear();
+      
+      // Setup tab event listeners
+      setupTabListeners();
     });
+
+    // ====== TAB MANAGEMENT ======
+    function setupTabListeners() {
+      const mainTabs = document.querySelectorAll('#mainTabs button[data-bs-toggle="tab"]');
+      mainTabs.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function (event) {
+          const targetId = event.target.getAttribute('data-bs-target').replace('#', '');
+          currentTab = targetId;
+          
+          switch(targetId) {
+            case 'beranda':
+              updateTabCounts();
+              filterGames({ resetPage: true });
+              break;
+            case 'indapk':
+              loadIndapkGames();
+              break;
+            case 'apksgi':
+              loadApksgiGamesTab();
+              break;
+          }
+        });
+      });
+    }
+
+    function updateTabCounts() {
+      const indapkCount = indapkGames.length;
+      const apksgiCount = apksgiGames.length;
+      const berandaCount = indapkCount + apksgiCount;
+      
+      document.getElementById('beranda-count').textContent = berandaCount;
+      document.getElementById('indapk-count').textContent = indapkCount;
+      document.getElementById('apksgi-count').textContent = apksgiCount;
+    }
 
     // ====== UTILITY FUNCTIONS ======
     function getUrlParam(key) {
@@ -2582,7 +2870,8 @@
         'android': 'bi-phone',
         'java': 'bi-cup',
         'ios': 'bi-apple',
-        'pc': 'bi-pc'
+        'pc': 'bi-pc',
+        'apksgi': 'bi-18-circle'
       };
       return icons[platform] || 'bi-controller';
     }
@@ -2603,6 +2892,7 @@
         case 'java': return 'Java';
         case 'ios': return 'Ios';
         case 'pc': return 'PC';
+        case 'apksgi': return 'APKsgi';
         default: return 'Semua';
       }
     }
@@ -2612,7 +2902,7 @@
       if (!raw) return;
 
       const hash = raw.toLowerCase();
-      const allowed = new Set(['all','ps1','ps2','ps3','ps4', 'switch','psp','psvita','wii','3ds','java','ios','android','pc', 'gamecube']);
+      const allowed = new Set(['all','ps1','ps2','ps3','ps4', 'switch','psp','psvita','wii','3ds','java','ios','android','pc', 'gamecube', 'apksgi']);
       if (!allowed.has(hash)) return;
 
       currentPlatform = hash;
@@ -2676,6 +2966,7 @@
         }
       } catch (e) {}
     }
+    
     // ====== DOM CONTENT LOADED ======
     document.addEventListener('DOMContentLoaded', function () {
       checkLoginStatus();
@@ -2693,16 +2984,27 @@
 
     // ====== EVENT LISTENERS SETUP ======
     function setupEventListeners() {
+      // Event listeners untuk tab Beranda (utama)
+      setupHomeTabListeners();
+      
+      // Event listeners untuk tab INDapk
+      setupIndapkTabListeners();
+      
+      // Event listeners untuk tab APKsgi
+      setupApksgiTabListeners();
+    }
+    
+    function setupHomeTabListeners() {
       // 1. ELEMEN UTAMA
       const searchInput = document.getElementById('searchInput');
       const searchReveal = document.getElementById('searchReveal');
       const searchIconBtn = document.getElementById('searchIconBtn');
-      const platformDropdownItems = document.querySelectorAll('[data-platform]');
+      const platformDropdownItems = document.querySelectorAll('.dropdown-menu a[data-platform]');
       const categoryDropdown = document.getElementById('categoryList');
       const refreshBtn = document.getElementById('btnRefreshGames');
       const paginationContainer = document.getElementById('paginationContainer');
 
-      // 2. SEARCH FUNCTIONALITY - FIXED
+      // 2. SEARCH FUNCTIONALITY
       if (searchIconBtn && searchReveal && searchInput) {
         searchIconBtn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -2899,14 +3201,6 @@
         });
       }
 
-      // 7. WINDOW EVENTS
-      window.addEventListener('hashchange', applyHashPlatform);
-      
-      window.addEventListener('popstate', () => {
-        applySearchFromUrl();
-        applyHashPlatform();
-      });
-
       // 8. DOCUMENT CLICK HANDLERS
       document.addEventListener('click', function (e) {
         const categoryBadge = e.target.closest('.category-badge');
@@ -2933,43 +3227,188 @@
           }
         }
       });
-
-      // 9. KEYBOARD SHORTCUTS
-      document.addEventListener('keydown', function (e) {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-          e.preventDefault();
-          if (searchInput) {
-            searchReveal?.classList.add('is-open');
-            setTimeout(() => searchInput.focus(), 10);
-          }
-        }
-        
-        if (e.key === 'Escape') {
-          if (searchInput && document.activeElement === searchInput) {
-            if (!searchInput.value.trim()) {
-              searchReveal?.classList.remove('is-open');
-            }
-            searchInput.blur();
-          }
-        }
-      });
-
-      // 10. RESIZE HANDLER
-      let resizeTimer;
-      window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          if (window.innerWidth < 768) {
-            if (searchReveal?.classList.contains('is-open') && !searchInput?.value.trim()) {
-              searchReveal.classList.remove('is-open');
-            }
-          }
-        }, 250);
-      });
-
-      console.log('✅ Event listeners setup completed');
     }
     
+    function setupIndapkTabListeners() {
+      const searchInput = document.getElementById('searchInputIndapk');
+      const searchReveal = document.getElementById('searchRevealIndapk');
+      const searchIconBtn = document.getElementById('searchIconBtnIndapk');
+      const refreshBtn = document.getElementById('btnRefreshGamesIndapk');
+      const platformDropdownItems = document.querySelectorAll('#indapk .dropdown-menu a[data-platform]');
+      
+      if (searchIconBtn && searchReveal && searchInput) {
+        searchIconBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          searchReveal.classList.toggle('is-open');
+          
+          if (searchReveal.classList.contains('is-open')) {
+            setTimeout(() => {
+              searchInput.focus();
+            }, 10);
+          }
+        });
+
+        searchInput.addEventListener('input', function (e) {
+          const raw = e.target.value || '';
+          searchQueryIndapk = raw.trim().toLowerCase();
+
+          clearTimeout(searchTypingTimer);
+          
+          searchTypingTimer = setTimeout(() => {
+            filterIndapkGames({ resetPage: true });
+          }, 300);
+        });
+
+        searchInput.addEventListener('keypress', function (e) {
+          if (e.key === 'Enter') {
+            clearTimeout(searchTypingTimer);
+            const raw = this.value || '';
+            searchQueryIndapk = raw.trim().toLowerCase();
+            filterIndapkGames({ resetPage: true });
+          }
+        });
+      }
+      
+      if (platformDropdownItems) {
+        platformDropdownItems.forEach(item => {
+          item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const platform = this.dataset.platform;
+            const platformText = this.textContent || getPlatformLabel(platform);
+            
+            currentPlatformIndapk = platform;
+            document.getElementById('platformTextIndapk').textContent = platformText;
+            
+            if (searchInput) {
+              searchInput.value = '';
+              searchQueryIndapk = '';
+            }
+            
+            filterIndapkGames({ resetPage: true });
+          });
+        });
+      }
+      
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', async function () {
+          const btn = this;
+          if (btn.dataset.loading === '1') return;
+
+          setButtonLoading(btn, true, 'Refreshing...');
+          
+          try {
+            await loadIndapkGames();
+            showTempMessage('✅ INDapk games refreshed successfully!', 'success');
+          } catch (error) {
+            console.error('Refresh error:', error);
+            showTempMessage('❌ Failed to refresh INDapk games', 'danger');
+          } finally {
+            setButtonLoading(btn, false);
+          }
+        });
+      }
+    }
+    
+    function setupApksgiTabListeners() {
+      const searchInput = document.getElementById('searchInputApksgi');
+      const searchReveal = document.getElementById('searchRevealApksgi');
+      const searchIconBtn = document.getElementById('searchIconBtnApksgi');
+      const refreshBtn = document.getElementById('btnRefreshGamesApksgi');
+      const platformDropdownItems = document.querySelectorAll('#apksgi .dropdown-menu a[data-platform]');
+      
+      if (searchIconBtn && searchReveal && searchInput) {
+        searchIconBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          searchReveal.classList.toggle('is-open');
+          
+          if (searchReveal.classList.contains('is-open')) {
+            setTimeout(() => {
+              searchInput.focus();
+            }, 10);
+          }
+        });
+
+        searchInput.addEventListener('input', function (e) {
+          const raw = e.target.value || '';
+          searchQueryApksgi = raw.trim().toLowerCase();
+
+          clearTimeout(searchTypingTimer);
+          
+          searchTypingTimer = setTimeout(() => {
+            filterApksgiGames({ resetPage: true });
+          }, 300);
+        });
+
+        searchInput.addEventListener('keypress', function (e) {
+          if (e.key === 'Enter') {
+            clearTimeout(searchTypingTimer);
+            const raw = this.value || '';
+            searchQueryApksgi = raw.trim().toLowerCase();
+            filterApksgiGames({ resetPage: true });
+          }
+        });
+      }
+      
+      if (platformDropdownItems) {
+        platformDropdownItems.forEach(item => {
+          item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const platform = this.dataset.platform;
+            const platformText = this.textContent || getPlatformLabel(platform);
+            
+            currentPlatformApksgi = platform;
+            document.getElementById('platformTextApksgi').textContent = platformText;
+            
+            if (searchInput) {
+              searchInput.value = '';
+              searchQueryApksgi = '';
+            }
+            
+            filterApksgiGames({ resetPage: true });
+          });
+        });
+      }
+      
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', async function () {
+          const btn = this;
+          if (btn.dataset.loading === '1') return;
+
+          setButtonLoading(btn, true, 'Refreshing...');
+          
+          try {
+            await loadApksgiGamesTab();
+            showTempMessage('✅ APKsgi games refreshed successfully!', 'success');
+          } catch (error) {
+            console.error('Refresh error:', error);
+            showTempMessage('❌ Failed to refresh APKsgi games', 'danger');
+          } finally {
+            setButtonLoading(btn, false);
+          }
+        });
+      }
+    }
+
+    function showTempMessage(message, type = 'info') {
+      // Create temporary message element
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+      alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
+      alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+      `;
+      
+      document.body.appendChild(alertDiv);
+      
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        if (alertDiv.parentNode) {
+          alertDiv.remove();
+        }
+      }, 3000);
+    }
+
     // ====== LOGIN SYSTEM ======
     function checkLoginStatus() {
       const savedUser = localStorage.getItem(LS_USER_KEY);
@@ -3261,10 +3700,17 @@
           isGamesLoaded = true;
           filterGames({ resetPage: false });
           
+          // Pisahkan game INDapk dan APKsgi
+          separateGamesBySource();
+          
+          // Update tab counts
+          updateTabCounts();
+          
           // Load game stats setelah games dimuat
           setTimeout(() => {
             loadAllGameStats();
           }, 500);
+          return;
         }
       }
 
@@ -3291,16 +3737,28 @@
       ];
 
       try {
-        // 3) Fetch paralel
+        // 3) Fetch paralel untuk game INDapk
         const settled = await Promise.allSettled(
           configs.map(cfg => fetchPlatformGames(cfg, signal))
         );
 
-        // 4) Gabungkan semua hasil
+        // 4) Gabungkan semua hasil INDapk
         let merged = settled.flatMap(x => (x.status === 'fulfilled' ? x.value : []));
+        
+        // 5) Load game APKsgi
+        let apksgiGamesData = [];
+        try {
+          apksgiGamesData = await fetchApksgiGames(signal);
+        } catch (apksgiError) {
+          console.error('Error loading APKsgi games:', apksgiError);
+        }
+        
+        // 6) Gabungkan semua game
+        merged = [...merged, ...apksgiGamesData];
+        
         if (!merged.length) throw new Error('Data kosong');
 
-        // 5) Sorting terbaru dulu
+        // 7) Sorting terbaru dulu
         merged.sort((a, b) => (b.ts_num || 0) - (a.ts_num || 0));
         await loadPinnedRules(signal);
 
@@ -3308,18 +3766,24 @@
         pinnedGames = resultPin.pinned || [];
         merged = resultPin.cleaned || merged;
 
-        // 7) Simpan ke global state
+        // 9) Simpan ke global state
         allGames = merged;
 
-        // 8) Simpan cache
+        // 10) Pisahkan game INDapk dan APKsgi
+        separateGamesBySource();
+        
+        // 11) Update tab counts
+        updateTabCounts();
+
+        // 12) Simpan cache
         writeGamesCache(merged);
 
-        // 9) Rebuild kategori + render
+        // 13) Rebuild kategori + render
         rebuildCategoriesFromAllGames();
         isGamesLoaded = true;
         filterGames({ resetPage: false });
 
-        // 10) Load game stats setelah semua game dimuat
+        // 14) Load game stats setelah semua game dimuat
         setTimeout(() => {
           loadAllGameStats();
         }, 1000);
@@ -3341,6 +3805,136 @@
           }
         }
       }
+    }
+    
+    // Fungsi untuk memisahkan game berdasarkan sumber
+    function separateGamesBySource() {
+      indapkGames = allGames.filter(game => game.platform !== 'apksgi');
+      apksgiGames = allGames.filter(game => game.platform === 'apksgi');
+    }
+    
+    // Fungsi untuk memuat game INDapk di tab INDapk
+    async function loadIndapkGames() {
+      try {
+        const container = document.getElementById('indapkListContainer');
+        if (container) {
+          container.innerHTML = `
+            <div class="spinner-container">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          `;
+        }
+        
+        // Jika sudah ada data, gunakan data yang sudah ada
+        if (indapkGames.length > 0) {
+          filterIndapkGames({ resetPage: true });
+          return;
+        }
+        
+        // Jika belum ada data, load ulang semua game
+        await loadAllGames({ useCache: false });
+        filterIndapkGames({ resetPage: true });
+      } catch (error) {
+        console.error('Error loading INDapk games:', error);
+        const container = document.getElementById('indapkListContainer');
+        if (container) {
+          container.innerHTML = `
+            <div class="alert alert-danger">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              Gagal memuat game INDapk.
+            </div>
+          `;
+        }
+      }
+    }
+    
+    // Fungsi untuk memuat game APKsgi di tab APKsgi
+    async function loadApksgiGamesTab() {
+      try {
+        const container = document.getElementById('apksgiListContainer');
+        if (container) {
+          container.innerHTML = `
+            <div class="spinner-container">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          `;
+        }
+        
+        // Jika sudah ada data, gunakan data yang sudah ada
+        if (apksgiGames.length > 0) {
+          filterApksgiGames({ resetPage: true });
+          return;
+        }
+        
+        // Jika belum ada data, load ulang semua game
+        await loadAllGames({ useCache: false });
+        filterApksgiGames({ resetPage: true });
+      } catch (error) {
+        console.error('Error loading APKsgi games:', error);
+        const container = document.getElementById('apksgiListContainer');
+        if (container) {
+          container.innerHTML = `
+            <div class="alert alert-danger">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              Gagal memuat game APKsgi.
+            </div>
+          `;
+        }
+      }
+    }
+    
+    // Fungsi filter untuk tab INDapk
+    function filterIndapkGames({ resetPage = true } = {}) {
+      const q = (searchQueryIndapk || '').trim().toLowerCase();
+
+      let filtered = indapkGames.filter(game => {
+        if (currentPlatformIndapk !== 'all' && game.platform !== currentPlatformIndapk) return false;
+
+        if (currentCategoryIndapk !== 'all') {
+          if (!game.category_list?.includes(currentCategoryIndapk)) return false;
+        }
+
+        if (q) {
+          if (!game.__searchText?.includes(q)) return false;
+        }
+
+        return true;
+      });
+
+      if (resetPage) {
+        currentPageIndapk = 1;
+      }
+
+      renderIndapkGameList(filtered);
+    }
+    
+    // Fungsi filter untuk tab APKsgi
+    function filterApksgiGames({ resetPage = true } = {}) {
+      const q = (searchQueryApksgi || '').trim().toLowerCase();
+
+      let filtered = apksgiGames.filter(game => {
+        if (currentPlatformApksgi !== 'all' && game.platform !== currentPlatformApksgi) return false;
+
+        if (currentCategoryApksgi !== 'all') {
+          if (!game.category_list?.includes(currentCategoryApksgi)) return false;
+        }
+
+        if (q) {
+          if (!game.__searchText?.includes(q)) return false;
+        }
+
+        return true;
+      });
+
+      if (resetPage) {
+        currentPageApksgi = 1;
+      }
+
+      renderApksgiGameList(filtered);
     }
 
     function selectCategory(category) {
@@ -3478,6 +4072,42 @@
       currentPage = next;
       renderGameList();
       smoothScrollToListTop();
+    }
+    
+    function goToPageIndapk(page) {
+      const totalPages = Math.max(1, Math.ceil((indapkGames?.length || 0) / GAMES_PER_PAGE));
+      const next = clampPage(page, totalPages);
+      if (next === currentPageIndapk) return;
+
+      currentPageIndapk = next;
+      filterIndapkGames({ resetPage: false });
+      smoothScrollToIndapkList();
+    }
+    
+    function goToPageApksgi(page) {
+      const totalPages = Math.max(1, Math.ceil((apksgiGames?.length || 0) / GAMES_PER_PAGE));
+      const next = clampPage(page, totalPages);
+      if (next === currentPageApksgi) return;
+
+      currentPageApksgi = next;
+      filterApksgiGames({ resetPage: false });
+      smoothScrollToApksgiList();
+    }
+    
+    function smoothScrollToIndapkList() {
+      const el = document.getElementById('indapkListContainer');
+      if (!el) return;
+
+      const y = el.getBoundingClientRect().top + window.pageYOffset - 90;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    }
+    
+    function smoothScrollToApksgiList() {
+      const el = document.getElementById('apksgiListContainer');
+      if (!el) return;
+
+      const y = el.getBoundingClientRect().top + window.pageYOffset - 90;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
     }
 
     function renderPinnedGamesTable(pinnedGames) {
@@ -4091,8 +4721,8 @@
       }
     }
 
-    function renderPagination(totalItems) {
-      const container = document.getElementById('paginationContainer');
+    function renderPagination(totalItems, currentPageNum, containerId, pageFunction) {
+      const container = document.getElementById(containerId);
       if (!container) return;
 
       if (!totalItems || totalItems <= GAMES_PER_PAGE) {
@@ -4101,7 +4731,7 @@
       }
 
       const totalPages = Math.ceil(totalItems / GAMES_PER_PAGE);
-      currentPage = clampPage(currentPage, totalPages);
+      const currentPage = clampPage(currentPageNum, totalPages);
 
       const start = (currentPage - 1) * GAMES_PER_PAGE + 1;
       const end = Math.min(currentPage * GAMES_PER_PAGE, totalItems);
@@ -4186,6 +4816,18 @@
           </nav>
         </div>
       `;
+
+      // Add event listeners to pagination buttons
+      container.addEventListener('click', function (e) {
+        const pageBtn = e.target.closest('[data-page]');
+        if (!pageBtn) return;
+
+        e.preventDefault();
+        const page = parseInt(pageBtn.dataset.page, 10);
+        if (!Number.isFinite(page) || page < 1) return;
+
+        pageFunction(page);
+      });
     }
 
     // ====== INISIALISASI SETELAH LOAD GAMES ======
@@ -4262,6 +4904,187 @@
               onclick="event.stopPropagation(); selectCategory('${escapeHTML(cat).replace(/'/g, "\\'")}')">
               ${escapeHTML(cat)}
             </button>
+          `)
+          .join('');
+
+        const langHtml = game.language
+          ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
+          : '';
+
+        const regionHtml = game.region
+          ? `<span class="category-badge">${escapeHTML(game.region)}</span>`
+          : '';
+
+        const modHtml = game.game_type === 'ori-mod' || game.game_type === 'only-mod'
+          ? `<span class="category-badge">MOD</span>`
+          : '';
+
+        const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
+
+        const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
+
+        const sumberUrl = (typeof buildSumberLinkUrl === 'function') ? buildSumberLinkUrl(game) : '';
+
+        // Tentukan kelas popularitas
+        let popularityClass = '';
+        if (clickCount >= 100) {
+          popularityClass = 'high-popularity';
+        } else if (clickCount >= 50) {
+          popularityClass = 'medium-popularity';
+        }
+
+        // Khusus untuk APKsgi, tambahkan class untuk blur
+        const isApksgi = game.platform === 'apksgi';
+        const apksgiClass = isApksgi ? 'platform-apksgi' : '';
+
+        html += `
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="game-card card h-100 platform-${game.platform} ${apksgiClass} ${popularityClass}"
+                 onclick="goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')"
+                 data-game-id="${game.download_id}"
+                 data-platform="${game.platform}">
+
+              <!-- THUMBNAIL SECTION -->
+              <div class="thumbnail-container position-relative">
+                <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
+                     class="card-img-top game-thumbnail" 
+                     alt="${escapeHTML(gameName)}"
+                     loading="lazy">
+
+                <!-- BADGE PLATFORM DI ATAS THUMBNAIL (POJOK KIRI ATAS) -->
+                <span class="platform-badge ${platformClass} thumbnail-badge"
+                      style="top: 10px; left: 10px;">
+                  <span class="platform-icon ${platformIconClass}">
+                    <i class="bi ${getPlatformIcon(game.platform)}"></i>
+                  </span>
+                  ${escapeHTML(game.platform_name || '')}
+                </span>
+
+                <!-- BADGE CLICK COUNT (POJOK KANAN ATAS) -->
+                ${showBadge ? `
+                  <span class="click-count-badge badge bg-danger position-absolute"
+                        style="top: 10px; right: 10px; z-index: 3;">
+                    <i class="bi bi-eye-fill me-1"></i>${clickCount}
+                  </span>
+                ` : ''}
+
+                <!-- ADMIN THUMBNAIL CONTROLS -->
+                ${isAdminUser() ? `
+                  <div class="thumbnail-admin-overlay">
+                    <button class="btn btn-sm btn-outline-light" 
+                            onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
+                            title="Kelola Thumbnail">
+                      <i class="bi bi-image"></i>
+                    </button>
+                  </div>
+                ` : ''}
+              </div>
+
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
+                  <small class="text-muted">${dateHtml}</small>
+                </div>
+
+                <p class="card-text small mb-3">
+                  ${categoriesHtml}
+                <br><br>
+                  ${regionHtml}
+                  ${modHtml}
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center mt-auto">
+                  <div>
+                    ${sumberUrl ? `
+                      <small class="text-muted d-block mt-1">
+                        <i class="bi bi-link-45deg me-1"></i>
+                        <a href="${escapeHTML(sumberUrl)}" target="_blank" rel="noopener"
+                           style="color: rgba(231,234,242,0.85); text-decoration: none;"
+                           onclick="event.stopPropagation()">
+                          Source Link
+                        </a>
+                      </small>
+                    ` : ''}
+
+                    ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
+                  </div>
+
+                  <button class="btn btn-sm btn-outline-primary"
+                    onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')">
+                    Download
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+
+      renderPagination(filteredGames.length, currentPage, 'paginationContainer', goToPage);
+      animateCardReveal();
+    }
+    
+    // Fungsi untuk render game INDapk di tab INDapk
+    function renderIndapkGameList(filteredGames) {
+      const container = document.getElementById('indapkListContainer');
+      if (!container) return;
+
+      if (!filteredGames || filteredGames.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-emoji-frown"></i>
+            <h5>Tidak ada game INDapk yang ditemukan</h5>
+            <p class="text-muted">Coba ubah filter pencarian Anda</p>
+          </div>
+        `;
+        const pag = document.getElementById('paginationIndapkContainer');
+        if (pag) pag.innerHTML = '';
+        return;
+      }
+
+      let html = '<div class="row g-4">';
+
+      const totalItems = filteredGames.length;
+      const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
+      currentPageIndapk = clampPage(currentPageIndapk, totalPages);
+
+      const startIndex = (currentPageIndapk - 1) * GAMES_PER_PAGE;
+      const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+
+      // Ambil data stats dari cache untuk render awal
+      let cachedStats = {};
+      try {
+        const cache = localStorage.getItem('game_stats_cache');
+        if (cache) {
+          const { data, timestamp } = JSON.parse(cache);
+          if (Date.now() - timestamp < 5 * 60 * 1000) { // 5 menit
+            data.forEach(stat => {
+              const key = `${stat.game_id}|${stat.platform}`;
+              cachedStats[key] = stat.total_clicks;
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error reading cache:', error);
+      }
+
+      pageGames.forEach(game => {
+        const platformClass = `badge-${game.platform}`;
+        const platformIconClass = `platform-${game.platform}`;
+
+        const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
+
+        // Cek click count dari cache
+        const cacheKey = `${game.download_id}|${game.platform}`;
+        const clickCount = cachedStats[cacheKey] || 0;
+        const showBadge = clickCount > 0;
+
+        const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
+          .map(cat => `
+            <span class="category-badge">${escapeHTML(cat)}</span>
           `)
           .join('');
 
@@ -4377,7 +5200,161 @@
       html += '</div>';
       container.innerHTML = html;
 
-      renderPagination(filteredGames.length);
+      renderPagination(filteredGames.length, currentPageIndapk, 'paginationIndapkContainer', goToPageIndapk);
+      animateCardReveal();
+    }
+    
+    // Fungsi untuk render game APKsgi di tab APKsgi
+    function renderApksgiGameList(filteredGames) {
+      const container = document.getElementById('apksgiListContainer');
+      if (!container) return;
+
+      if (!filteredGames || filteredGames.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-emoji-frown"></i>
+            <h5>Tidak ada game APKsgi yang ditemukan</h5>
+            <p class="text-muted">Coba ubah filter pencarian Anda</p>
+          </div>
+        `;
+        const pag = document.getElementById('paginationApksgiContainer');
+        if (pag) pag.innerHTML = '';
+        return;
+      }
+
+      let html = '<div class="row g-4">';
+
+      const totalItems = filteredGames.length;
+      const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
+      currentPageApksgi = clampPage(currentPageApksgi, totalPages);
+
+      const startIndex = (currentPageApksgi - 1) * GAMES_PER_PAGE;
+      const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+
+      // Ambil data stats dari cache untuk render awal
+      let cachedStats = {};
+      try {
+        const cache = localStorage.getItem('game_stats_cache');
+        if (cache) {
+          const { data, timestamp } = JSON.parse(cache);
+          if (Date.now() - timestamp < 5 * 60 * 1000) { // 5 menit
+            data.forEach(stat => {
+              const key = `${stat.game_id}|${stat.platform}`;
+              cachedStats[key] = stat.total_clicks;
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error reading cache:', error);
+      }
+
+      pageGames.forEach(game => {
+        const platformClass = `badge-${game.platform}`;
+        const platformIconClass = `platform-${game.platform}`;
+
+        const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
+
+        // Cek click count dari cache
+        const cacheKey = `${game.download_id}|${game.platform}`;
+        const clickCount = cachedStats[cacheKey] || 0;
+        const showBadge = clickCount > 0;
+
+        const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
+          .map(cat => `
+            <span class="category-badge">${escapeHTML(cat)}</span>
+          `)
+          .join('');
+
+        const langHtml = game.language
+          ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
+          : '';
+
+        const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
+
+        const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
+
+        // Tentukan kelas popularitas
+        let popularityClass = '';
+        if (clickCount >= 100) {
+          popularityClass = 'high-popularity';
+        } else if (clickCount >= 50) {
+          popularityClass = 'medium-popularity';
+        }
+
+        html += `
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="game-card card h-100 platform-${game.platform} platform-apksgi ${popularityClass}"
+                 onclick="goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')"
+                 data-game-id="${game.download_id}"
+                 data-platform="${game.platform}">
+
+              <!-- THUMBNAIL SECTION -->
+              <div class="thumbnail-container position-relative">
+                <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
+                     class="card-img-top game-thumbnail" 
+                     alt="${escapeHTML(gameName)}"
+                     loading="lazy">
+
+                <!-- BADGE PLATFORM DI ATAS THUMBNAIL (POJOK KIRI ATAS) -->
+                <span class="platform-badge ${platformClass} thumbnail-badge"
+                      style="top: 10px; left: 10px;">
+                  <span class="platform-icon ${platformIconClass}">
+                    <i class="bi ${getPlatformIcon(game.platform)}"></i>
+                  </span>
+                  ${escapeHTML(game.platform_name || '')}
+                </span>
+
+                <!-- BADGE CLICK COUNT (POJOK KANAN ATAS) -->
+                ${showBadge ? `
+                  <span class="click-count-badge badge bg-danger position-absolute"
+                        style="top: 10px; right: 10px; z-index: 3;">
+                    <i class="bi bi-eye-fill me-1"></i>${clickCount}
+                  </span>
+                ` : ''}
+
+                <!-- ADMIN THUMBNAIL CONTROLS -->
+                ${isAdminUser() ? `
+                  <div class="thumbnail-admin-overlay">
+                    <button class="btn btn-sm btn-outline-light" 
+                            onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
+                            title="Kelola Thumbnail">
+                      <i class="bi bi-image"></i>
+                    </button>
+                  </div>
+                ` : ''}
+              </div>
+
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
+                  <small class="text-muted">${dateHtml}</small>
+                </div>
+
+                <p class="card-text small mb-3">
+                  ${categoriesHtml}
+                  ${langHtml}
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center mt-auto">
+                  <div>
+                    ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
+                  </div>
+
+                  <button class="btn btn-sm btn-outline-primary"
+                    onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')">
+                    Download
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+
+      renderPagination(filteredGames.length, currentPageApksgi, 'paginationApksgiContainer', goToPageApksgi);
       animateCardReveal();
     }
 
@@ -4596,7 +5573,9 @@
           case 'ios':
             apiUrl = GAMEIOS_API_URL;
             break;
-
+          case 'apksgi':
+            apiUrl = APKSGI_API_URL;
+            break;
           default:
             throw new Error('Platform tidak didukung');
         }
@@ -4802,6 +5781,16 @@
           break;
         case 'ios':
           apiUrl = GAMEIOS_API_URL;
+          payload = {
+            action: 'updateThumbnail',
+            download_id: downloadId,
+            thumbnail_url: '',
+            telegram_id: currentUser.wa_number,
+            key: currentUser.key
+          };
+          break;
+        case 'apksgi':
+          apiUrl = APKSGI_API_URL;
           payload = {
             action: 'updateThumbnail',
             download_id: downloadId,
