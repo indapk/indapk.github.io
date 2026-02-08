@@ -1022,7 +1022,21 @@
       filter: blur(15px);
       transition: filter 0.4s ease, transform 0.6s ease;
     }
-    
+    /* ATURAN ASAL - HANYA BERLAKU UNTUK BERANDA */
+    #beranda .game-card.platform-apksgi .game-thumbnail {
+      filter: blur(15px);
+      transition: filter 0.4s ease, transform 0.6s ease;
+    }
+
+    #beranda .game-card.platform-apksgi:hover .game-thumbnail {
+      filter: blur(0);
+    }
+
+    /* ATURAN UNTUK TAB APKSGI - TIDAK BLUR */
+    #apksgi .game-card.platform-apksgi .game-thumbnail {
+      filter: none !important;
+      transition: transform 0.6s ease;
+    }
     .game-card.platform-apksgi:hover .game-thumbnail {
       filter: blur(0);
     }
@@ -5361,160 +5375,281 @@ function renderIndapkGameList(filteredGames) {
   animateCardReveal();
 }
     
-    // Fungsi untuk render game APKsgi di tab APKsgi
-    function renderApksgiGameList(filteredGames) {
-      const container = document.getElementById('apksgiListContainer');
-      if (!container) return;
+// Fungsi untuk render game APKsgi di tab APKsgi
+function renderApksgiGameList(filteredGames) {
+  const container = document.getElementById('apksgiListContainer');
+  if (!container) return;
 
-      if (!filteredGames || filteredGames.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <i class="bi bi-emoji-frown"></i>
-            <h5>Tidak ada game APKsgi yang ditemukan</h5>
-            <p class="text-muted">Coba ubah filter pencarian Anda</p>
-          </div>
-        `;
-        const pag = document.getElementById('paginationApksgiContainer');
-        if (pag) pag.innerHTML = '';
-        return;
+  if (!filteredGames || filteredGames.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="bi bi-emoji-frown"></i>
+        <h5>Tidak ada game APKsgi yang ditemukan</h5>
+        <p class="text-muted">Coba ubah filter pencarian Anda</p>
+      </div>
+    `;
+    const pag = document.getElementById('paginationApksgiContainer');
+    if (pag) pag.innerHTML = '';
+    return;
+  }
+
+  let html = '<div class="row g-4">';
+
+  const totalItems = filteredGames.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
+  currentPageApksgi = clampPage(currentPageApksgi, totalPages);
+
+  const startIndex = (currentPageApksgi - 1) * GAMES_PER_PAGE;
+  const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+
+  // Ambil data stats dari cache untuk render awal
+  let cachedStats = {};
+  try {
+    const cache = localStorage.getItem('game_stats_cache');
+    if (cache) {
+      const { data, timestamp } = JSON.parse(cache);
+      if (Date.now() - timestamp < 5 * 60 * 1000) { // 5 menit
+        data.forEach(stat => {
+          const key = `${stat.game_id}|${stat.platform}`;
+          cachedStats[key] = stat.total_clicks;
+        });
       }
+    }
+  } catch (error) {
+    console.error('Error reading cache:', error);
+  }
 
-      let html = '<div class="row g-4">';
+  pageGames.forEach(game => {
+    const platformClass = `badge-${game.platform}`;
+    const platformIconClass = `platform-${game.platform}`;
 
-      const totalItems = filteredGames.length;
-      const totalPages = Math.max(1, Math.ceil(totalItems / GAMES_PER_PAGE));
-      currentPageApksgi = clampPage(currentPageApksgi, totalPages);
+    const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
 
-      const startIndex = (currentPageApksgi - 1) * GAMES_PER_PAGE;
-      const pageGames = filteredGames.slice(startIndex, startIndex + GAMES_PER_PAGE);
+    // Cek click count dari cache
+    const cacheKey = `${game.download_id}|${game.platform}`;
+    const clickCount = cachedStats[cacheKey] || 0;
+    const showBadge = clickCount > 0;
 
-      // Ambil data stats dari cache untuk render awal
-      let cachedStats = {};
-      try {
-        const cache = localStorage.getItem('game_stats_cache');
-        if (cache) {
-          const { data, timestamp } = JSON.parse(cache);
-          if (Date.now() - timestamp < 5 * 60 * 1000) { // 5 menit
-            data.forEach(stat => {
-              const key = `${stat.game_id}|${stat.platform}`;
-              cachedStats[key] = stat.total_clicks;
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error reading cache:', error);
-      }
+    // PERBAIKAN DI SINI: Batasi kategori seperti di Beranda
+    const categories = game.category_list || splitCategories(game.category || game.ori_category);
+    const hasManyCategories = categories.length > 3;
+    const displayCategories = hasManyCategories ? categories.slice(0, 3) : categories;
 
-      pageGames.forEach(game => {
-        const platformClass = `badge-${game.platform}`;
-        const platformIconClass = `platform-${game.platform}`;
+    const categoriesHtml = `
+      <div class="category-container ${hasManyCategories ? 'limited' : ''}">
+        ${displayCategories.map(cat => `
+          <button type="button"
+            class="category-badge"
+            onclick="event.stopPropagation(); selectCategoryApksgi('${escapeHTML(cat).replace(/'/g, "\\'")}')">
+            ${escapeHTML(cat)}
+          </button>
+        `).join('')}
+        ${hasManyCategories ? `
+          <button type="button" 
+                  class="lihat-selengkapnya"
+                  onclick="event.stopPropagation(); showAllCategoriesApksgi(this, '${escapeHTML(JSON.stringify(categories)).replace(/'/g, "\\'")}')">
+            <i class="bi bi-chevron-down"></i> lihat ${categories.length - 3} lainnya
+          </button>
+        ` : ''}
+      </div>
+    `;
 
-        const gameName = escapeHTML(game.nama_game || game.ori_name || 'Unknown Game');
+    const langHtml = game.language
+      ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
+      : '';
 
-        // Cek click count dari cache
-        const cacheKey = `${game.download_id}|${game.platform}`;
-        const clickCount = cachedStats[cacheKey] || 0;
-        const showBadge = clickCount > 0;
+    const regionHtml = game.region
+      ? `<span class="category-badge">${escapeHTML(game.region)}</span>`
+      : '';
 
-        const categoriesHtml = (game.category_list || splitCategories(game.category || game.ori_category))
-          .map(cat => `
-            <span class="category-badge">${escapeHTML(cat)}</span>
-          `)
-          .join('');
+    const modHtml = game.game_type === 'ori-mod' || game.game_type === 'only-mod'
+      ? `<span class="category-badge">MOD</span>`
+      : '';
 
-        const langHtml = game.language
-          ? `<span class="category-badge">${escapeHTML(game.language)}</span>`
-          : '';
+    const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
 
-        const dateHtml = `<small class="text-muted">${formatDate(game.timestamp)}</small>`;
+    const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
 
-        const isNewToday = typeof isToday === 'function' ? isToday(game.timestamp) : false;
-
-        // Tentukan kelas popularitas
-        let popularityClass = '';
-        if (clickCount >= 100) {
-          popularityClass = 'high-popularity';
-        } else if (clickCount >= 50) {
-          popularityClass = 'medium-popularity';
-        }
-
-        html += `
-          <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="game-card card h-100 platform-${game.platform} platform-apksgi ${popularityClass}"
-                 onclick="goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')"
-                 data-game-id="${game.download_id}"
-                 data-platform="${game.platform}">
-
-              <!-- THUMBNAIL SECTION -->
-              <div class="thumbnail-container position-relative">
-                <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
-                     class="card-img-top game-thumbnail" 
-                     alt="${escapeHTML(gameName)}"
-                     loading="lazy">
-
-                <!-- BADGE PLATFORM DI ATAS THUMBNAIL (POJOK KIRI ATAS) -->
-                <span class="platform-badge ${platformClass} thumbnail-badge"
-                      style="top: 10px; left: 10px;">
-                  <span class="platform-icon ${platformIconClass}">
-                    <i class="bi ${getPlatformIcon(game.platform)}"></i>
-                  </span>
-                  ${escapeHTML(game.platform_name || '')}
-                </span>
-
-                <!-- BADGE CLICK COUNT (POJOK KANAN ATAS) -->
-                ${showBadge ? `
-                  <span class="click-count-badge badge bg-danger position-absolute"
-                        style="top: 10px; right: 10px; z-index: 3;">
-                    <i class="bi bi-eye-fill me-1"></i>${clickCount}
-                  </span>
-                ` : ''}
-
-                <!-- ADMIN THUMBNAIL CONTROLS -->
-                ${isAdminUser() ? `
-                  <div class="thumbnail-admin-overlay">
-                    <button class="btn btn-sm btn-outline-light" 
-                            onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
-                            title="Kelola Thumbnail">
-                      <i class="bi bi-image"></i>
-                    </button>
-                  </div>
-                ` : ''}
-              </div>
-
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                  <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
-                  <small class="text-muted">${dateHtml}</small>
-                </div>
-
-                <p class="card-text small mb-3">
-                  ${categoriesHtml}
-                  ${langHtml}
-                </p>
-
-                <div class="d-flex justify-content-between align-items-center mt-auto">
-                  <div>
-                    ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
-                  </div>
-
-                  <button class="btn btn-sm btn-outline-primary"
-                    onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')">
-                    Download
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      html += '</div>';
-      container.innerHTML = html;
-
-      renderPagination(filteredGames.length, currentPageApksgi, 'paginationApksgiContainer', goToPageApksgi);
-      animateCardReveal();
+    // Tentukan kelas popularitas
+    let popularityClass = '';
+    if (clickCount >= 100) {
+      popularityClass = 'high-popularity';
+    } else if (clickCount >= 50) {
+      popularityClass = 'medium-popularity';
     }
 
+    html += `
+      <div class="col-md-6 col-lg-4 col-xl-3">
+        <div class="game-card card h-100 platform-${game.platform} platform-apksgi ${popularityClass}"
+             onclick="goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')"
+             data-game-id="${game.download_id}"
+             data-platform="${game.platform}">
+
+          <!-- THUMBNAIL SECTION -->
+          <div class="thumbnail-container position-relative">
+            <img src="${game.thumbnail_url || 'https://placehold.co/300x150/1a1a2e/ffffff?text=No+Image'}" 
+                 class="card-img-top game-thumbnail" 
+                 alt="${escapeHTML(gameName)}"
+                 loading="lazy">
+
+            <!-- BADGE PLATFORM DI ATAS THUMBNAIL (POJOK KIRI ATAS) -->
+            <span class="platform-badge ${platformClass} thumbnail-badge"
+                  style="top: 10px; left: 10px;">
+              <span class="platform-icon ${platformIconClass}">
+                <i class="bi ${getPlatformIcon(game.platform)}"></i>
+              </span>
+              ${escapeHTML(game.platform_name || '')}
+            </span>
+
+            <!-- BADGE CLICK COUNT (POJOK KANAN ATAS) -->
+            ${showBadge ? `
+              <span class="click-count-badge badge bg-danger position-absolute"
+                    style="top: 10px; right: 10px; z-index: 3;">
+                <i class="bi bi-eye-fill me-1"></i>${clickCount}
+              </span>
+            ` : ''}
+
+            <!-- ADMIN THUMBNAIL CONTROLS -->
+            ${isAdminUser() ? `
+              <div class="thumbnail-admin-overlay">
+                <button class="btn btn-sm btn-outline-light" 
+                        onclick="event.stopPropagation(); manageThumbnail('${game.download_id}', '${game.platform}', '${game.thumbnail_url || ''}', '${escapeHTML(gameName)}')"
+                        title="Kelola Thumbnail">
+                  <i class="bi bi-image"></i>
+                </button>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title mb-0 flex-grow-1">${gameName}</h6>
+              <small class="text-muted">${dateHtml}</small>
+            </div>
+
+            <!-- PERBAIKAN: Kategori dengan batasan -->
+            ${categoriesHtml}
+            
+            <div class="additional-info mb-3">
+              ${regionHtml}
+              ${modHtml}
+              ${langHtml}
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div>
+                ${isNewToday ? `<span class="new-badge mt-1"><i class="bi bi-stars"></i> NEW</span>` : ''}
+              </div>
+
+              <button class="btn btn-sm btn-outline-primary"
+                onclick="event.stopPropagation(); goToGameDetail('${game.download_id}', '${game.platform}', '${escapeHTML(gameName).replace(/'/g, "\\'")}')">
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+
+  renderPagination(filteredGames.length, currentPageApksgi, 'paginationApksgiContainer', goToPageApksgi);
+  animateCardReveal();
+}
+// Fungsi untuk memilih kategori di tab APKsgi
+function selectCategoryApksgi(category) {
+  if (!category) return;
+
+  // Update filter kategori untuk tab APKsgi
+  currentCategoryApksgi = category;
+  const textEl = document.getElementById('categoryTextApksgi');
+  if (textEl) {
+    textEl.textContent = category;
+    textEl.title = category;
+  }
+
+  // Filter ulang game APKsgi
+  filterApksgiGames({ resetPage: true });
+}
+
+// Fungsi untuk menampilkan semua kategori di tab APKsgi
+function showAllCategoriesApksgi(buttonElement, categoriesJson) {
+  try {
+    const categories = JSON.parse(categoriesJson);
+    const container = buttonElement.closest('.category-container');
+    
+    if (!container) return;
+    
+    // Tampilkan semua kategori
+    container.classList.remove('limited');
+    
+    // Hapus semua kategori yang ada
+    const existingBadges = container.querySelectorAll('.category-badge');
+    existingBadges.forEach(badge => badge.remove());
+    
+    // Render semua kategori
+    categories.forEach(cat => {
+      const badge = document.createElement('button');
+      badge.type = 'button';
+      badge.className = 'category-badge';
+      badge.textContent = cat;
+      badge.onclick = function(e) {
+        e.stopPropagation();
+        selectCategoryApksgi(cat);
+      };
+      container.insertBefore(badge, buttonElement);
+    });
+    
+    // Ganti tombol "lihat selengkapnya" menjadi "sembunyikan"
+    buttonElement.innerHTML = '<i class="bi bi-chevron-up"></i> sembunyikan';
+    buttonElement.onclick = function(e) {
+      e.stopPropagation();
+      hideExtraCategoriesApksgi(buttonElement, categories);
+    };
+    
+  } catch (error) {
+    console.error('Error showing categories (APKsgi):', error);
+  }
+}
+
+// Fungsi untuk menyembunyikan kategori ekstra di tab APKsgi
+function hideExtraCategoriesApksgi(buttonElement, categories) {
+  const container = buttonElement.closest('.category-container');
+  
+  if (!container) return;
+  
+  // Hanya tampilkan 3 kategori pertama
+  const displayCategories = categories.slice(0, 3);
+  
+  // Hapus semua kategori yang ada
+  const existingBadges = container.querySelectorAll('.category-badge');
+  existingBadges.forEach(badge => badge.remove());
+  
+  // Render hanya 3 kategori pertama
+  displayCategories.forEach(cat => {
+    const badge = document.createElement('button');
+    badge.type = 'button';
+    badge.className = 'category-badge';
+    badge.textContent = cat;
+    badge.onclick = function(e) {
+      e.stopPropagation();
+      selectCategoryApksgi(cat);
+    };
+    container.insertBefore(badge, buttonElement);
+  });
+  
+  // Tambahkan class limited
+  container.classList.add('limited');
+  
+  // Ganti tombol kembali ke "lihat selengkapnya"
+  buttonElement.innerHTML = `<i class="bi bi-chevron-down"></i> lihat ${categories.length - 3} lainnya`;
+  buttonElement.onclick = function(e) {
+    e.stopPropagation();
+    showAllCategoriesApksgi(buttonElement, JSON.stringify(categories));
+  };
+}
     /* ===== SMOOTH SCROLLING (DESKTOP WHEEL INERTIA) ===== */
     (function () {
       // Hormati preferensi user yang minta minim animasi
