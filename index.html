@@ -2136,28 +2136,22 @@ async function initNotificationSystem() {
   console.log("Initializing notification system...");
   
   try {
-    // 1. Load saved preference
+    // Load preference
     loadNotificationPreference();
     
-    // 2. Setup toggle listener
+    // Setup toggle
     setupNotificationToggle();
     
-    // 3. Setup service worker messages
+    // Setup message listener
     setupServiceWorkerMessageListener();
     
-    // 4. Cache game details di background
-    setTimeout(() => {
-      if (allGames && allGames.length > 0) {
-        cacheGameDetails().catch(err => {
-          console.log('Cache game details error:', err);
-        });
-      }
-    }, 3000);
-    
-    // 5. JANGAN register sync di sini - sudah di registerServiceWorker()
+    // Register sync on first click anywhere
+    document.addEventListener('click', async function initSync() {
+      await registerSyncOnUserInteraction();
+      document.removeEventListener('click', initSync);
+    }, { once: true });
     
     console.log("✅ Notification system initialized");
-    
   } catch (error) {
     console.error("Error initializing notification system:", error);
   }
@@ -2198,41 +2192,41 @@ function setupNotificationToggle() {
     const isEnabled = this.checked;
     
     try {
-      // Save preference
       localStorage.setItem(NOTIFICATION_PREFS_KEY, isEnabled);
       updateNotificationIcon(isEnabled);
       
-      // If enabling, request permission (only on user action)
       if (isEnabled) {
         const granted = await requestNotificationPermissionWithPrompt();
+        
         if (!granted) {
-          // If denied, revert toggle
           this.checked = false;
           localStorage.setItem(NOTIFICATION_PREFS_KEY, 'false');
           updateNotificationIcon(false);
-          showTempMessage('❌ Izin notifikasi ditolak', 'danger');
+          showNotification('❌ Izin notifikasi ditolak', 'danger');
           return;
         }
         
-        showTempMessage('✅ Notifikasi diaktifkan', 'success');
+        showNotification('✅ Notifikasi diaktifkan', 'success');
         
-        // Check for new games immediately
+        // Register sync immediately
+        await registerSyncOnUserInteraction();
+        
+        // Check for new games
         await checkNewGamesManually();
       } else {
-        showTempMessage('🔕 Notifikasi dinonaktifkan', 'info');
+        showNotification('🔕 Notifikasi dinonaktifkan', 'info');
       }
       
-      // Send to service worker
+      // Send to SW
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           type: 'NOTIFICATION_PREFS',
           enabled: isEnabled
         });
       }
-      
     } catch (error) {
-      console.error('Error toggling notifications:', error);
-      showTempMessage('❌ Gagal mengubah pengaturan notifikasi', 'danger');
+      console.error('Error:', error);
+      showNotification('❌ Gagal mengubah pengaturan', 'danger');
     }
   });
 }
@@ -2356,42 +2350,60 @@ async function checkNewGamesManually() {
   const isEnabled = localStorage.getItem(NOTIFICATION_PREFS_KEY) !== 'false';
   
   if (!isEnabled) {
-    showTempMessage('🔕 Aktifkan notifikasi terlebih dahulu', 'warning');
+    showNotification('🔕 Aktifkan notifikasi terlebih dahulu', 'warning');
     return;
   }
   
   if (Notification.permission !== 'granted') {
     const granted = await requestNotificationPermissionWithPrompt();
     if (!granted) {
-      showTempMessage('❌ Izin notifikasi diperlukan', 'danger');
+      showNotification('❌ Izin notifikasi diperlukan', 'danger');
       return;
     }
   }
   
-  showTempMessage('🔍 Mencari game baru...', 'info');
+  showNotification('🔍 Mencari game baru...', 'info');
   
   try {
-    // Update cache first
+    // Cache game details
     await cacheGameDetails();
     
-    // Trigger SW to check for new games
-    if (navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'CHECK_NEW_GAMES'
-      });
+    // Get current games
+    const currentGames = allGames.map(game => 
+      `${game.platform}_${game.download_id}`
+    );
+    
+    // Call Shared Games API DIRECTLY
+    const response = await fetch(SHARED_GAMES_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        action: 'checkNewGames',
+        currentGames: JSON.stringify(currentGames)
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success' && result.data.new_games_count > 0) {
+      const newGames = result.data.new_games || [];
+      console.log(`🎮 Found ${newGames.length} new games!`, newGames);
       
-      showTempMessage('✅ Pengecekan dimulai', 'success');
+      // Show notifications
+      await showGameNotifications(newGames);
+      
+      // Mark as shared
+      await markGamesAsShared(newGames);
+      
+      showNotification(`🎮 ${newGames.length} game baru ditemukan!`, 'success');
     } else {
-      // Try to register sync directly
-      const registration = await navigator.serviceWorker.ready;
-      if ('sync' in registration) {
-        await registration.sync.register('check-new-games');
-        showTempMessage('✅ Pengecekan dimulai via sync', 'success');
-      }
+      showNotification('✅ Tidak ada game baru', 'info');
     }
   } catch (error) {
     console.error('Error checking new games:', error);
-    showTempMessage('❌ Gagal mengecek game baru', 'danger');
+    showNotification('❌ Gagal mengecek game baru', 'danger');
   }
 }
 
@@ -2554,17 +2566,25 @@ async function registerServiceWorker() {
   }
   
   try {
-    // 1. Register service worker
-    const registration = await navigator.serviceWorker.register('/sw.js');
+    // Unregister existing SW first (clean slate)
+    const existing = await navigator.serviceWorker.getRegistration();
+    if (existing) {
+      await existing.unregister();
+      console.log('Unregistered existing SW');
+    }
+    
+    // Register new SW
+    const registration = await navigator.serviceWorker.register('/sw.js', {
+      scope: '/'
+    });
+    
     console.log('✅ SW registered:', registration.scope);
     
-    // 2. WAIT UNTIL SERVICE WORKER IS ACTIVATED
+    // Wait for activation with timeout
     await waitForServiceWorkerActivation(registration);
     
-    // 3. NOW register background sync - AMAN
-    await registerBackgroundSync(registration);
-    
-    // 4. Setup message listener
+    // DON'T register sync here - wait for user interaction
+    // Just setup message listener
     setupServiceWorkerMessageListener();
     
     return registration;
@@ -2573,31 +2593,61 @@ async function registerServiceWorker() {
     return null;
   }
 }
+
+
 async function waitForServiceWorkerActivation(registration) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    // Timeout after 5 seconds
+    const timeout = setTimeout(() => {
+      console.log('SW activation timeout - continuing anyway');
+      resolve();
+    }, 5000);
+    
     // Check if already active
     if (registration.active) {
+      clearTimeout(timeout);
       console.log('✅ SW already active');
       resolve();
       return;
     }
     
-    // Wait for activation
+    // Wait for installation/activation
     const sw = registration.installing || registration.waiting;
     if (sw) {
       sw.addEventListener('statechange', function onStateChange(e) {
         if (e.target.state === 'activated') {
           console.log('✅ SW activated');
+          clearTimeout(timeout);
           sw.removeEventListener('statechange', onStateChange);
           resolve();
         }
       });
     } else {
-      // Fallback - wait a bit
-      setTimeout(resolve, 2000);
+      clearTimeout(timeout);
+      resolve();
     }
   });
 }
+
+async function registerSyncOnUserInteraction() {
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    
+    if (!('sync' in registration)) {
+      console.log('Background sync not supported');
+      return false;
+    }
+    
+    await registration.sync.register('check-new-games');
+    console.log('✅ Background sync registered via user interaction');
+    return true;
+  } catch (error) {
+    console.log('Sync registration failed:', error);
+    return false;
+  }
+}
+
+
 async function registerBackgroundSync(registration) {
   if (!('sync' in registration)) {
     console.log('Background sync not supported');
@@ -2658,12 +2708,61 @@ function setupServiceWorkerMessageListener() {
   navigator.serviceWorker.addEventListener('message', (event) => {
     console.log('📨 Message from SW:', event.data);
     
-    if (event.data.type === 'NEW_GAMES_FOUND') {
+    if (event.data?.type === 'NEW_GAMES_FOUND') {
       const count = event.data.data?.count || 0;
-      showTempMessage(`🎮 Ditemukan ${count} game baru!`, 'success');
-      updateNotificationBadge(count);
+      showNotification(`🎮 Ditemukan ${count} game baru!`, 'success');
+      
+      // Show actual notifications if enabled
+      if (event.data.data?.games?.length > 0) {
+        showGameNotifications(event.data.data.games);
+      }
     }
   });
+}
+async function showGameNotifications(games) {
+  if (!games || games.length === 0) return;
+  if (Notification.permission !== 'granted') return;
+  
+  // Show notification for first 3 games
+  const showCount = Math.min(games.length, 3);
+  
+  for (let i = 0; i < showCount; i++) {
+    const game = games[i];
+    
+    const title = i === 0 
+      ? `🎮 ${games.length} Game Baru Tersedia!`
+      : `📱 ${game.nama_game || 'Game Baru'}`;
+    
+    const body = i === 0
+      ? `Klik untuk melihat ${games.length} game baru di INDapk`
+      : `Platform: ${getPlatformLabel(game.platform)}`;
+    
+    const notification = new Notification(title, {
+      body: body,
+      icon: game.thumbnail_url || '/icons/icon-192x192.png',
+      badge: '/icons/icon-192x192.png',
+      tag: `new-game-${game.id || Date.now()}`,
+      renotify: i === 0,
+      data: {
+        url: '/',
+        gameId: game.download_id,
+        platform: game.platform
+      }
+    });
+    
+    notification.onclick = (e) => {
+      e.preventDefault();
+      window.focus();
+      notification.close();
+      
+      if (game.download_id && game.platform) {
+        window.location.href = `/download.html?game=${game.download_id}&platform=${game.platform}`;
+      }
+    };
+    
+    // Small delay between notifications
+    await new Promise(r => setTimeout(r, 500));
+  }
 }
 
 // Update notification badge
@@ -2869,9 +2968,9 @@ async function showNewGameNotification(count, games) {
 
 // Function to mark games as shared
 async function markGamesAsShared(gameIds) {
+  if (!gameIds || gameIds.length === 0) return;
+  
   try {
-    if (!gameIds || gameIds.length === 0) return;
-    
     const response = await fetch(SHARED_GAMES_API_URL, {
       method: 'POST',
       headers: {
@@ -2884,15 +2983,13 @@ async function markGamesAsShared(gameIds) {
     });
     
     const result = await response.json();
-    
-    if (result.status === 'success') {
-      console.log(`Marked ${result.data.added_count} games as shared`);
-    }
-    
+    console.log(`✅ Marked ${result.data?.added_count || 0} games as shared`);
   } catch (error) {
     console.error('Error marking games as shared:', error);
   }
 }
+
+
 
 // Function to highlight new games in the UI
 function highlightNewGames(gameIds) {
@@ -3922,9 +4019,7 @@ async function enableNotifications() {
     document.addEventListener('DOMContentLoaded', function () {
       checkLoginStatus();
       setupEventListeners();
-  registerServiceWorker().then(() => {
-    console.log('Service worker registration complete');
-  });
+registerServiceWorker();
   setTimeout(() => {
     initNotificationSystem();
   }, 1000);
