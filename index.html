@@ -2135,45 +2135,66 @@ const SHARED_GAMES_API_URL = "https://script.google.com/macros/s/AKfycbzyKOC3Km0
 async function initNotificationSystem() {
   console.log("Initializing notification system...");
   
-  // Load saved preference
-  loadNotificationPreference();
-  
-  // Setup toggle listener
-  setupNotificationToggle();
-  
-  // Request permission if not decided yet
-  if (Notification.permission === 'default') {
-    // Don't auto-request, wait for user action
-    console.log("Notification permission not set");
-  }
-  
-  // Register service worker message handler
-  setupServiceWorkerMessages();
-  
-  // Cache game details for notifications
-  await cacheGameDetails();
-  
-  // Check for new games on startup if enabled
-  const isEnabled = localStorage.getItem(NOTIFICATION_PREFS_KEY) !== 'false';
-  if (isEnabled && Notification.permission === 'granted') {
-    setTimeout(() => checkNewGamesManually(), 5000);
+  try {
+    // 1. Load saved preference
+    loadNotificationPreference();
+    
+    // 2. Setup toggle listener
+    setupNotificationToggle();
+    
+    // 3. Setup service worker messages
+    setupServiceWorkerMessages();
+    
+    // 4. Cache game details di background (jangan await)
+    cacheGameDetails().catch(err => {
+      console.log('Cache game details non-critical error:', err);
+    });
+    
+    // 5. Register background sync saja (NO PERIODIC SYNC)
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        if ('sync' in registration) {
+          await registration.sync.register('check-new-games');
+          console.log('✅ Background sync registered successfully');
+        }
+      } catch (syncError) {
+        console.log('Background sync registration failed:', syncError);
+      }
+    }
+    
+    // 6. JANGAN auto-request permission
+    // JANGAN auto-check new games
+    console.log("✅ Notification system initialized");
+    
+  } catch (error) {
+    console.error("Error initializing notification system:", error);
   }
 }
 
 // Load notification preference
 function loadNotificationPreference() {
-  const saved = localStorage.getItem(NOTIFICATION_PREFS_KEY);
-  const isEnabled = saved !== 'false'; // Default true
-  
-  const toggle = document.getElementById('notificationToggle');
-  if (toggle) {
-    toggle.checked = isEnabled;
+  try {
+    const saved = localStorage.getItem(NOTIFICATION_PREFS_KEY);
+    const isEnabled = saved !== 'false'; // Default true
+    
+    const toggle = document.getElementById('notificationToggle');
+    if (toggle) {
+      toggle.checked = isEnabled;
+    }
+    
+    updateNotificationIcon(isEnabled);
+    
+    // Save preference to SW (async, jangan await)
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'NOTIFICATION_PREFS',
+        enabled: isEnabled
+      });
+    }
+  } catch (e) {
+    console.error('Error loading notification preference:', e);
   }
-  
-  updateNotificationIcon(isEnabled);
-  
-  // Save preference to SW
-  saveNotificationPrefsToSW(isEnabled);
 }
 
 // Setup notification toggle
@@ -2184,32 +2205,43 @@ function setupNotificationToggle() {
   toggle.addEventListener('change', async function(e) {
     const isEnabled = this.checked;
     
-    // Save preference
-    localStorage.setItem(NOTIFICATION_PREFS_KEY, isEnabled);
-    updateNotificationIcon(isEnabled);
-    
-    // Request permission if enabling
-    if (isEnabled) {
-      const granted = await requestNotificationPermissionWithPrompt();
-      if (!granted) {
-        // If denied, revert toggle
-        this.checked = false;
-        localStorage.setItem(NOTIFICATION_PREFS_KEY, 'false');
-        updateNotificationIcon(false);
-        showTempMessage('❌ Izin notifikasi ditolak', 'danger');
-        return;
+    try {
+      // Save preference
+      localStorage.setItem(NOTIFICATION_PREFS_KEY, isEnabled);
+      updateNotificationIcon(isEnabled);
+      
+      // If enabling, request permission (only on user action)
+      if (isEnabled) {
+        const granted = await requestNotificationPermissionWithPrompt();
+        if (!granted) {
+          // If denied, revert toggle
+          this.checked = false;
+          localStorage.setItem(NOTIFICATION_PREFS_KEY, 'false');
+          updateNotificationIcon(false);
+          showTempMessage('❌ Izin notifikasi ditolak', 'danger');
+          return;
+        }
+        
+        showTempMessage('✅ Notifikasi diaktifkan', 'success');
+        
+        // Check for new games immediately
+        await checkNewGamesManually();
+      } else {
+        showTempMessage('🔕 Notifikasi dinonaktifkan', 'info');
       }
       
-      showTempMessage('✅ Notifikasi diaktifkan', 'success');
+      // Send to service worker
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'NOTIFICATION_PREFS',
+          enabled: isEnabled
+        });
+      }
       
-      // Check for new games immediately
-      await checkNewGamesManually();
-    } else {
-      showTempMessage('🔕 Notifikasi dinonaktifkan', 'info');
+    } catch (error) {
+      console.error('Error toggling notifications:', error);
+      showTempMessage('❌ Gagal mengubah pengaturan notifikasi', 'danger');
     }
-    
-    // Save to service worker
-    await saveNotificationPrefsToSW(isEnabled);
   });
 }
 
@@ -2267,6 +2299,7 @@ async function requestNotificationPermissionWithPrompt() {
   }
 }
 
+
 // Save notification preference to Service Worker
 async function saveNotificationPrefsToSW(enabled) {
   if (!navigator.serviceWorker.controller) return;
@@ -2320,7 +2353,7 @@ async function cacheGameDetails() {
       new Response(JSON.stringify({ games: currentGames }))
     );
     
-    console.log(`Cached ${Object.keys(gameDetails).length} game details`);
+    console.log(`✅ Cached ${Object.keys(gameDetails).length} game details`);
   } catch (error) {
     console.error('Error caching game details:', error);
   }
@@ -2468,6 +2501,83 @@ function setupServiceWorkerMessages() {
       console.log('Shared games updated');
     }
   });
+}
+// ====== SERVICE WORKER UTILITY FUNCTIONS ======
+async function isPeriodicSyncSupported() {
+  // Check if feature exists
+  if (!('periodicSync' in ServiceWorkerRegistration.prototype)) {
+    return false;
+  }
+  
+  // Check if running on HTTPS
+  if (window.location.protocol !== 'https:') {
+    return false;
+  }
+  
+  try {
+    // Check permission status
+    const status = await navigator.permissions.query({
+      name: 'periodic-background-sync',
+    });
+    
+    return status.state === 'granted';
+  } catch (error) {
+    // Permission query not supported or denied
+    console.log('Periodic sync permission check failed:', error);
+    return false;
+  }
+}
+
+async function registerPeriodicSyncSafely(registration) {
+  try {
+    // First check if supported
+    const supported = await isPeriodicSyncSupported();
+    if (!supported) {
+      console.log('Periodic sync not supported or no permission');
+      return false;
+    }
+    
+    // Try to register with appropriate interval
+    await registration.periodicSync.register('check-games-periodic', {
+      minInterval: 24 * 60 * 60 * 1000 // 24 hours - minimal untuk periodic sync
+    });
+    
+    console.log('✅ Periodic sync registered successfully');
+    return true;
+  } catch (error) {
+    console.log('Periodic sync registration failed:', error);
+    return false;
+  }
+}
+
+/**
+ * Register service worker - WITHOUT periodic sync by default
+ * Gunakan ini di event listener load
+ */
+async function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) {
+    console.log('Service Worker not supported');
+    return;
+  }
+  
+  try {
+    const registration = await navigator.serviceWorker.register('/sw.js');
+    console.log('✅ SW registered:', registration.scope);
+    
+    // Register background sync (always works)
+    if ('sync' in registration) {
+      await registration.sync.register('check-new-games');
+      console.log('✅ Background sync registered');
+    }
+    
+    // OPTIONAL: Register periodic sync ONLY if you really need it
+    // HAPUS bagian ini jika tidak benar-benar diperlukan
+    // await registerPeriodicSyncSafely(registration);
+    
+    return registration;
+  } catch (error) {
+    console.error('❌ SW registration failed:', error);
+  }
 }
 
 // Update notification badge
@@ -3136,18 +3246,7 @@ if ('serviceWorker' in navigator) {
       .then((reg) => {
         console.log('SW registered:', reg.scope);
         
-        // Request periodic sync (requires HTTPS)
-        if ('periodicSync' in reg) {
-          try {
-            reg.periodicSync.register('check-games-periodic', {
-              minInterval: 10 * 60 * 1000 // 10 minutes
-            });
-          } catch (error) {
-            console.log('Periodic sync not supported:', error);
-          }
-        }
-        
-        // Request background sync
+        // HAPUS periodic sync - GANTI dengan normal sync
         if ('sync' in reg) {
           reg.sync.register('check-new-games');
         }
@@ -3190,6 +3289,16 @@ if ('serviceWorker' in navigator) {
     function normalizeText(s) {
       return String(s || '').trim().toLowerCase();
     }
+
+async function enableNotifications() {
+  if (!('Notification' in window)) {
+    alert('Browser tidak mendukung notifikasi');
+    return false;
+  }
+  
+  const permission = await Notification.requestPermission();
+  return permission === 'granted';
+}
 
     function findPinnedGames(list) {
       const rules = (PINNED_GAMES_RULES || []).map(r => ({
@@ -3727,6 +3836,7 @@ if ('serviceWorker' in navigator) {
     document.addEventListener('DOMContentLoaded', function () {
       checkLoginStatus();
       setupEventListeners();
+      registerServiceWorker();
 
       applySearchFromUrl();
       applyHashPlatform();
