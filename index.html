@@ -1540,6 +1540,45 @@
             <i class="bi bi-bar-chart me-1"></i>View Stats
           </button>
         </div>
+
+      <div class="dropdown" id="notificationDropdown">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-bell" id="notificationIcon"></i>
+      <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="font-size: 0.6rem;">
+        0
+      </span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li>
+        <div class="dropdown-item d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-bell me-2"></i>Notifikasi Game</span>
+          <div class="form-check form-switch d-inline-block">
+            <input class="form-check-input" type="checkbox" id="notificationToggle" style="cursor: pointer;">
+          </div>
+        </div>
+      </li>
+      <li><hr class="dropdown-divider"></li>
+      <li>
+        <button class="dropdown-item" onclick="testNotification()">
+          <i class="bi bi-question-circle me-2"></i>Test Notifikasi
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" onclick="checkNewGamesManually()">
+          <i class="bi bi-arrow-repeat me-2"></i>Cek Game Baru
+        </button>
+      </li>
+      <li><hr class="dropdown-divider"></li>
+      <li>
+        <small class="text-muted px-3 py-2 d-block">
+          <i class="bi bi-info-circle me-1"></i>
+          Notifikasi akan muncul jika ada game baru
+        </small>
+      </li>
+    </ul>
+  </div>
+
+
     </div>
   </nav>
 
@@ -2089,7 +2128,416 @@
 
 
 // ====== NOTIFICATION SYSTEM ======
+const NOTIFICATION_PREFS_KEY = 'indapk_notification_enabled';
 const SHARED_GAMES_API_URL = "https://script.google.com/macros/s/AKfycbzyKOC3Km01_rrCefuF0VX9foplZnmBGrwnozQrd_FIvOgwZ5bkYpfFoxFVmVO8li_juw/exec";
+
+// Initialize notification system
+async function initNotificationSystem() {
+  console.log("Initializing notification system...");
+  
+  // Load saved preference
+  loadNotificationPreference();
+  
+  // Setup toggle listener
+  setupNotificationToggle();
+  
+  // Request permission if not decided yet
+  if (Notification.permission === 'default') {
+    // Don't auto-request, wait for user action
+    console.log("Notification permission not set");
+  }
+  
+  // Register service worker message handler
+  setupServiceWorkerMessages();
+  
+  // Cache game details for notifications
+  await cacheGameDetails();
+  
+  // Check for new games on startup if enabled
+  const isEnabled = localStorage.getItem(NOTIFICATION_PREFS_KEY) !== 'false';
+  if (isEnabled && Notification.permission === 'granted') {
+    setTimeout(() => checkNewGamesManually(), 5000);
+  }
+}
+
+// Load notification preference
+function loadNotificationPreference() {
+  const saved = localStorage.getItem(NOTIFICATION_PREFS_KEY);
+  const isEnabled = saved !== 'false'; // Default true
+  
+  const toggle = document.getElementById('notificationToggle');
+  if (toggle) {
+    toggle.checked = isEnabled;
+  }
+  
+  updateNotificationIcon(isEnabled);
+  
+  // Save preference to SW
+  saveNotificationPrefsToSW(isEnabled);
+}
+
+// Setup notification toggle
+function setupNotificationToggle() {
+  const toggle = document.getElementById('notificationToggle');
+  if (!toggle) return;
+  
+  toggle.addEventListener('change', async function(e) {
+    const isEnabled = this.checked;
+    
+    // Save preference
+    localStorage.setItem(NOTIFICATION_PREFS_KEY, isEnabled);
+    updateNotificationIcon(isEnabled);
+    
+    // Request permission if enabling
+    if (isEnabled) {
+      const granted = await requestNotificationPermissionWithPrompt();
+      if (!granted) {
+        // If denied, revert toggle
+        this.checked = false;
+        localStorage.setItem(NOTIFICATION_PREFS_KEY, 'false');
+        updateNotificationIcon(false);
+        showTempMessage('❌ Izin notifikasi ditolak', 'danger');
+        return;
+      }
+      
+      showTempMessage('✅ Notifikasi diaktifkan', 'success');
+      
+      // Check for new games immediately
+      await checkNewGamesManually();
+    } else {
+      showTempMessage('🔕 Notifikasi dinonaktifkan', 'info');
+    }
+    
+    // Save to service worker
+    await saveNotificationPrefsToSW(isEnabled);
+  });
+}
+
+// Update notification icon
+function updateNotificationIcon(enabled) {
+  const icon = document.getElementById('notificationIcon');
+  if (icon) {
+    if (enabled && Notification.permission === 'granted') {
+      icon.className = 'bi bi-bell-fill';
+      icon.style.color = 'var(--neon-cyan)';
+    } else {
+      icon.className = 'bi bi-bell';
+      icon.style.color = '';
+    }
+  }
+}
+
+// Request notification permission with user prompt
+async function requestNotificationPermissionWithPrompt() {
+  if (!('Notification' in window)) {
+    alert('Browser Anda tidak mendukung notifikasi');
+    return false;
+  }
+  
+  if (Notification.permission === 'granted') {
+    return true;
+  }
+  
+  if (Notification.permission === 'denied') {
+    const confirm = window.confirm(
+      '❌ Izin notifikasi ditolak.\n\n' +
+      'Untuk mengaktifkan notifikasi:\n' +
+      '1. Klik ikon 🔒 di address bar\n' +
+      '2. Cari "Notifications"\n' +
+      '3. Pilih "Allow"\n\n' +
+      'Buka pengaturan sekarang?'
+    );
+    
+    if (confirm) {
+      if (navigator.brave) {
+        alert('Silakan atur notifikasi di pengaturan Brave');
+      } else {
+        window.open('chrome://settings/content/notifications', '_blank');
+      }
+    }
+    return false;
+  }
+  
+  try {
+    const permission = await Notification.requestPermission();
+    return permission === 'granted';
+  } catch (error) {
+    console.error('Error requesting permission:', error);
+    return false;
+  }
+}
+
+// Save notification preference to Service Worker
+async function saveNotificationPrefsToSW(enabled) {
+  if (!navigator.serviceWorker.controller) return;
+  
+  try {
+    // Save to cache for SW to read
+    const cache = await caches.open('indapk-runtime-v1.2.0');
+    await cache.put('/notification-prefs', 
+      new Response(JSON.stringify({ enabled, timestamp: Date.now() }))
+    );
+    
+    // Send message to SW
+    navigator.serviceWorker.controller.postMessage({
+      type: 'NOTIFICATION_PREFS',
+      enabled: enabled
+    });
+  } catch (error) {
+    console.error('Error saving prefs to SW:', error);
+  }
+}
+
+// Cache game details for notifications
+async function cacheGameDetails() {
+  if (!allGames || allGames.length === 0) return;
+  
+  try {
+    const gameDetails = {};
+    
+    allGames.forEach(game => {
+      const gameId = `${game.platform}_${game.download_id}`;
+      gameDetails[gameId] = {
+        id: gameId,
+        download_id: game.download_id,
+        platform: game.platform,
+        nama_game: game.nama_game || game.ori_name || 'Unknown Game',
+        thumbnail_url: game.thumbnail_url || null
+      };
+    });
+    
+    const cache = await caches.open('indapk-runtime-v1.2.0');
+    await cache.put('/games-details', 
+      new Response(JSON.stringify(gameDetails))
+    );
+    
+    // Also cache current games list
+    const currentGames = allGames.map(game => 
+      `${game.platform}_${game.download_id}`
+    );
+    
+    await cache.put('/current-games', 
+      new Response(JSON.stringify({ games: currentGames }))
+    );
+    
+    console.log(`Cached ${Object.keys(gameDetails).length} game details`);
+  } catch (error) {
+    console.error('Error caching game details:', error);
+  }
+}
+
+// Check for new games manually
+async function checkNewGamesManually() {
+  const isEnabled = localStorage.getItem(NOTIFICATION_PREFS_KEY) !== 'false';
+  
+  if (!isEnabled) {
+    showTempMessage('🔕 Aktifkan notifikasi terlebih dahulu', 'warning');
+    return;
+  }
+  
+  if (Notification.permission !== 'granted') {
+    const granted = await requestNotificationPermissionWithPrompt();
+    if (!granted) {
+      showTempMessage('❌ Izin notifikasi diperlukan', 'danger');
+      return;
+    }
+  }
+  
+  showTempMessage('🔍 Mencari game baru...', 'info');
+  
+  try {
+    // Update cache first
+    await cacheGameDetails();
+    
+    // Trigger SW to check for new games
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'CHECK_NEW_GAMES'
+      });
+      
+      showTempMessage('✅ Pengecekan dimulai', 'success');
+    } else {
+      showTempMessage('⚠️ Service worker tidak aktif', 'warning');
+    }
+  } catch (error) {
+    console.error('Error checking new games:', error);
+    showTempMessage('❌ Gagal mengecek game baru', 'danger');
+  }
+}
+
+// Test notification
+async function testNotification() {
+  const isEnabled = localStorage.getItem(NOTIFICATION_PREFS_KEY) !== 'false';
+  
+  if (!isEnabled) {
+    showTempMessage('🔕 Aktifkan notifikasi terlebih dahulu', 'warning');
+    return;
+  }
+  
+  if (Notification.permission !== 'granted') {
+    const granted = await requestNotificationPermissionWithPrompt();
+    if (!granted) return;
+  }
+  
+  // Get a random game for test
+  let testGame = null;
+  if (allGames && allGames.length > 0) {
+    const randomIndex = Math.floor(Math.random() * allGames.length);
+    const game = allGames[randomIndex];
+    testGame = {
+      id: `${game.platform}_${game.download_id}`,
+      download_id: game.download_id,
+      platform: game.platform,
+      nama_game: game.nama_game || game.ori_name || 'Test Game',
+      thumbnail_url: game.thumbnail_url
+    };
+  } else {
+    testGame = {
+      id: 'test_game_123',
+      download_id: '123',
+      platform: 'android',
+      nama_game: 'Test Game INDapk',
+      thumbnail_url: null
+    };
+  }
+  
+  // Send to service worker
+  if (navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'TEST_NOTIFICATION',
+      game: testGame
+    });
+    
+    showTempMessage('📨 Mengirim notifikasi test...', 'info');
+  } else {
+    // Fallback: show notification directly
+    showDirectTestNotification(testGame);
+  }
+}
+
+// Direct notification test (fallback)
+function showDirectTestNotification(testGame) {
+  const title = `🎮 Test: ${testGame.nama_game}`;
+  const options = {
+    body: `Platform: ${getPlatformLabel(testGame.platform)}\nIni adalah notifikasi test!`,
+    icon: testGame.thumbnail_url || '/icons/icon-192x192.png',
+    badge: '/icons/icon-192x192.png',
+    vibrate: [200, 100, 200],
+    tag: 'test-notification',
+    renotify: true,
+    silent: false,
+    data: {
+      url: window.location.href,
+      gameId: testGame.download_id,
+      platform: testGame.platform
+    }
+  };
+  
+  try {
+    const notification = new Notification(title, options);
+    
+    notification.onclick = function(e) {
+      e.preventDefault();
+      window.focus();
+      this.close();
+    };
+    
+    showTempMessage('✅ Notifikasi test dikirim!', 'success');
+  } catch (error) {
+    console.error('Error showing test notification:', error);
+    showTempMessage('❌ Gagal mengirim notifikasi', 'danger');
+  }
+}
+
+// Setup service worker message handler
+function setupServiceWorkerMessages() {
+  if (!navigator.serviceWorker) return;
+  
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    console.log('Message from SW:', event.data);
+    
+    if (event.data.type === 'NEW_GAMES_FOUND') {
+      const count = event.data.data.count;
+      showTempMessage(`🎮 Ditemukan ${count} game baru!`, 'success');
+      
+      // Update badge
+      updateNotificationBadge(count);
+    }
+    
+    if (event.data.type === 'UPDATE_SHARED_GAMES') {
+      console.log('Shared games updated');
+    }
+  });
+}
+
+// Update notification badge
+function updateNotificationBadge(count) {
+  const badge = document.getElementById('notificationBadge');
+  if (!badge) return;
+  
+  if (count > 0) {
+    badge.textContent = count;
+    badge.classList.remove('d-none');
+  } else {
+    badge.classList.add('d-none');
+  }
+}
+
+// Add notification button to DOM
+function addNotificationButton() {
+  const navActions = document.querySelector('.nav-actions');
+  if (!navActions) return;
+  
+  // Check if button already exists
+  if (document.getElementById('notificationDropdown')) return;
+  
+  const notificationHtml = `
+    <div class="dropdown" id="notificationDropdown">
+      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-bell" id="notificationIcon"></i>
+        <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="font-size: 0.6rem;">
+          0
+        </span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+          <div class="dropdown-item d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-bell me-2"></i>Notifikasi Game</span>
+            <div class="form-check form-switch d-inline-block">
+              <input class="form-check-input" type="checkbox" id="notificationToggle" style="cursor: pointer;">
+            </div>
+          </div>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <button class="dropdown-item" onclick="testNotification()">
+            <i class="bi bi-question-circle me-2"></i>Test Notifikasi
+          </button>
+        </li>
+        <li>
+          <button class="dropdown-item" onclick="checkNewGamesManually()">
+            <i class="bi bi-arrow-repeat me-2"></i>Cek Game Baru
+          </button>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <small class="text-muted px-3 py-2 d-block">
+            <i class="bi bi-info-circle me-1"></i>
+            Notifikasi akan muncul jika ada game baru
+          </small>
+        </li>
+      </ul>
+    </div>
+  `;
+  
+  // Insert at beginning of nav-actions
+  navActions.insertAdjacentHTML('afterbegin', notificationHtml);
+  
+  // Initialize toggle
+  loadNotificationPreference();
+  setupNotificationToggle();
+}
+
 
 // Function to request notification permission
 async function requestNotificationPermission() {
@@ -3283,6 +3731,10 @@ if ('serviceWorker' in navigator) {
       applySearchFromUrl();
       applyHashPlatform();
       loadAllGames();
+  setTimeout(() => {
+    addNotificationButton();
+  }, 500);
+
 
       window.addEventListener('hashchange', applyHashPlatform);
       window.addEventListener('popstate', () => {
@@ -4022,8 +4474,9 @@ if ('serviceWorker' in navigator) {
         }
       }
 
-  setTimeout(() => {
-    initializeNotificationSystem();
+  setTimeout(async () => {
+    await cacheGameDetails();
+    initNotificationSystem();
   }, 3000);
 
       // 2) Abort request lama
