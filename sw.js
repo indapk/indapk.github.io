@@ -193,9 +193,8 @@ self.addEventListener("sync", (event) => {
 });
 
 // ===== PERIODIC SYNC =====
-self.addEventListener("periodicsync", (event) => {
-  if (event.tag === "check-games-periodic") {
-    console.log("Periodic sync: Checking for new games");
+self.addEventListener("sync", (event) => {
+  if (event.tag === "check-new-games") {
     event.waitUntil(checkForNewGames());
   }
 });
