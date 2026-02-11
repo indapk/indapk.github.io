@@ -2071,6 +2071,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsonp@0.2.1/index.min.js"></script>
   <script>
     // ====== KONFIGURASI URL API ======
     const GAMEPS1_API_URL = "https://script.google.com/macros/s/AKfycbxExg-rUr-CcJUYZ786k57e5E7JO2mSrGdRppr6JWbb7fHoTTAJs7x7AnYEmcOOK-49/exec";
@@ -2140,6 +2141,8 @@
 // =====================================================
 
 let jsonpCounter = 0;
+let jsonpScripts = [];
+let jsonpTimeouts = [];
 
 // Konfigurasi Notifikasi - GANTI DENGAN URL DEPLOY GAS ANDA
 const NOTIFICATION_API_URL = "https://script.google.com/macros/s/AKfycbzcVDAcVxcWQ7yL8LBRb1mrPSmu8qr-9T_ykg925vu7o2_kUO7QmWtv_10XyImNu--A/exec";
@@ -2294,84 +2297,161 @@ function stopGamePolling() {
 
 
 // Fungsi untuk fetch dengan JSONP (bypass CORS)
-function jsonpFetch(url, params, callbackName = 'jsonpCallback') {
+function jsonpFetch(url, params, callbackName = 'callback') {
     return new Promise((resolve, reject) => {
-        // Buat nama callback unik
-        const callbackFunc = `jsonp_${Date.now()}_${jsonpCounter++}`;
+        // 1. Buat callback ID unik
+        const callbackId = `jsonp_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
         
-        // Tambahkan callback ke parameter
-        const queryParams = new URLSearchParams(params);
-        queryParams.append('callback', callbackFunc);
+        // 2. Hapus callback lama dengan ID yang sama (jika ada)
+        if (window[callbackId]) {
+            delete window[callbackId];
+        }
         
-        const fullUrl = `${url}?${queryParams.toString()}`;
-        
-        // Buat script element
-        const script = document.createElement('script');
-        script.src = fullUrl;
-        
-        // Global callback function
-        window[callbackFunc] = function(data) {
-            // Clean up
-            delete window[callbackFunc];
-            document.body.removeChild(script);
+        // 3. Registrasi callback di global scope
+        window[callbackId] = function(data) {
+            // Cleanup
+            cleanup(callbackId);
             
             if (data) {
                 resolve(data);
             } else {
-                reject(new Error('No data received'));
+                reject(new Error('Empty response'));
             }
         };
         
-        // Error handling
-        script.onerror = function() {
-            delete window[callbackFunc];
-            document.body.removeChild(script);
-            reject(new Error('JSONP request failed'));
+        // 4. Buat URL dengan format JSONP yang benar
+        const queryParams = new URLSearchParams({
+            ...params,
+            callback: callbackId
+        });
+        
+        const fullUrl = url.includes('?') 
+            ? `${url}&${queryParams.toString()}`
+            : `${url}?${queryParams.toString()}`;
+        
+        // 5. Buat script element
+        const script = document.createElement('script');
+        script.src = fullUrl;
+        script.id = callbackId;
+        script.async = true;
+        
+        // 6. Error handler
+        script.onerror = function(error) {
+            cleanup(callbackId);
+            reject(new Error(`JSONP request failed: ${error.message || 'Unknown error'}`));
         };
         
-        // Timeout
-        setTimeout(() => {
-            if (window[callbackFunc]) {
-                delete window[callbackFunc];
-                document.body.removeChild(script);
-                reject(new Error('JSONP timeout'));
-            }
-        }, 10000);
+        // 7. Timeout handler (8 detik)
+        const timeoutId = setTimeout(() => {
+            cleanup(callbackId);
+            reject(new Error('JSONP timeout after 8 seconds'));
+        }, 8000);
         
+        jsonpTimeouts.push(timeoutId);
+        
+        // 8. Append ke body
         document.body.appendChild(script);
+        jsonpScripts.push(script);
+        
+        // 9. Fungsi cleanup
+        function cleanup(cbId) {
+            // Hapus timeout
+            clearTimeout(timeoutId);
+            
+            // Hapus dari array
+            jsonpTimeouts = jsonpTimeouts.filter(t => t !== timeoutId);
+            
+            // Hapus script
+            const scriptEl = document.getElementById(cbId);
+            if (scriptEl) {
+                scriptEl.remove();
+            }
+            jsonpScripts = jsonpScripts.filter(s => s.id !== cbId);
+            
+            // Hapus callback dari window
+            if (window[cbId]) {
+                delete window[cbId];
+            }
+        }
     });
 }
+
+// Bersihkan semua JSONP (panggil saat page unload)
+window.addEventListener('beforeunload', function() {
+    jsonpTimeouts.forEach(clearTimeout);
+    jsonpScripts.forEach(script => {
+        if (script.parentNode) script.remove();
+    });
+});
 
 // Cek game baru menggunakan JSONP
 async function checkForNewGames() {
     console.log('🔍 Mengecek game baru (JSONP)...');
     
     try {
+        // GUNAKAN jsonpFetch yang sudah diperbaiki
         const result = await jsonpFetch(NOTIFICATION_API_URL, {
             action: 'checkNewGames'
         });
         
-        if (result.status === 'success' && result.count > 0) {
-            console.log(`🎮 ${result.count} game baru ditemukan!`);
-            
-            result.data.forEach((game, index) => {
-                setTimeout(() => {
-                    sendNewGameNotification(game);
-                }, index * 1000);
-            });
-            
-            updateNotificationBadge(result.count);
-        } else {
-            console.log('✨ Tidak ada game baru');
+        // Validasi respons
+        if (!result) {
+            console.log('⚠️ Respons kosong');
+            return null;
         }
         
-        return result;
+        if (result.status === 'success') {
+            if (result.count > 0) {
+                console.log(`🎮 ${result.count} game baru ditemukan!`);
+                
+                // Kirim notifikasi
+                if (result.data && Array.isArray(result.data)) {
+                    result.data.forEach((game, index) => {
+                        setTimeout(() => {
+                            sendNewGameNotification(game);
+                        }, index * 1000);
+                    });
+                }
+                
+                updateNotificationBadge(result.count);
+            } else {
+                console.log('✨ Tidak ada game baru');
+            }
+            
+            return result;
+        } else {
+            console.warn('⚠️ Gagal cek game:', result.message || 'Unknown error');
+            return null;
+        }
+        
     } catch (error) {
-        console.error('❌ Gagal cek game baru:', error);
+        console.error('❌ Gagal cek game baru:', error.message);
+        
+        // 🔥 FALLBACK: Coba dengan fetch biasa (jika CORS diizinkan)
+        tryFallbackCheck();
+        
         return null;
     }
 }
 
+// Fallback dengan fetch biasa
+async function tryFallbackCheck() {
+    try {
+        console.log('🔄 Mencoba fallback dengan fetch biasa...');
+        
+        const response = await fetch(NOTIFICATION_API_URL + '?action=checkNewGames', {
+            method: 'GET',
+            mode: 'no-cors' // Mencegah CORS error, tapi tidak bisa baca response
+        });
+        
+        console.log('Fallback request sent (no-cors mode)');
+        // Dengan no-cors, kita tidak bisa baca response
+        // Tapi setidaknya request terkirim
+        
+    } catch (e) {
+        console.log('Fallback juga gagal:', e.message);
+    }
+}
 
 // Kirim notifikasi game baru
 function sendNewGameNotification(game) {
