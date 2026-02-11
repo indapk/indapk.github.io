@@ -2087,6 +2087,220 @@
     let currentCategoryIndapk = 'all';
     let currentCategoryApksgi = 'all';
 
+
+// ====== NOTIFICATION SYSTEM ======
+const SHARED_GAMES_API_URL = "https://script.google.com/macros/s/AKfycbzyKOC3Km01_rrCefuF0VX9foplZnmBGrwnozQrd_FIvOgwZ5bkYpfFoxFVmVO8li_juw/exec";
+
+// Function to request notification permission
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    console.log('This browser does not support notifications');
+    return false;
+  }
+  
+  if (Notification.permission === 'granted') {
+    console.log('Notification permission already granted');
+    return true;
+  }
+  
+  if (Notification.permission === 'denied') {
+    console.log('Notification permission denied');
+    return false;
+  }
+  
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      console.log('Notification permission granted');
+      return true;
+    } else {
+      console.log('Notification permission denied');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error requesting notification permission:', error);
+    return false;
+  }
+}
+
+// Function to check for new games and show notification
+async function checkForNewGamesAndNotify() {
+  try {
+    console.log('Checking for new games...');
+    
+    // Get current games
+    const currentGames = allGames.map(game => 
+      `${game.platform}_${game.download_id}`
+    );
+    
+    // Check with server for new games
+    const response = await fetch(SHARED_GAMES_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        action: 'checkNewGames',
+        currentGames: JSON.stringify(currentGames)
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success') {
+      const newGamesCount = result.data.new_games_count || 0;
+      const newGames = result.data.new_games || [];
+      
+      if (newGamesCount > 0) {
+        console.log(`Found ${newGamesCount} new games:`, newGames);
+        
+        // Show notification
+        await showNewGameNotification(newGamesCount, newGames);
+        
+        // Mark as shared
+        await markGamesAsShared(newGames);
+        
+        return {
+          new: true,
+          count: newGamesCount,
+          games: newGames
+        };
+      }
+    }
+    
+    return { new: false, count: 0, games: [] };
+    
+  } catch (error) {
+    console.error('Error checking for new games:', error);
+    return { new: false, count: 0, games: [] };
+  }
+}
+
+// Function to show notification
+async function showNewGameNotification(count, games) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') {
+    return;
+  }
+  
+  const title = count === 1 ? '1 Game Baru!' : `${count} Game Baru!`;
+  const body = count === 1 
+    ? 'Ada game baru tersedia di INDapk' 
+    : `Ada ${count} game baru tersedia di INDapk`;
+  
+  const options = {
+    body: body,
+    icon: '/icons/icon-192x192.png',
+    badge: '/icons/icon-192x192.png',
+    tag: 'new-game',
+    renotify: true,
+    requireInteraction: false,
+    data: {
+      url: window.location.href,
+      type: 'new-games',
+      count: count,
+      games: games.slice(0, 5) // Limit to 5 games for data
+    }
+  };
+  
+  // Close existing notifications
+  const notifications = await self.registration?.getNotifications() || [];
+  notifications.forEach(notification => notification.close());
+  
+  // Show new notification
+  const notification = new Notification(title, options);
+  
+  // Handle notification click
+  notification.onclick = function(event) {
+    event.preventDefault();
+    window.focus();
+    notification.close();
+    
+    // Scroll to top to show new games
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Optional: Highlight new games
+    highlightNewGames(games);
+  };
+}
+
+// Function to mark games as shared
+async function markGamesAsShared(gameIds) {
+  try {
+    if (!gameIds || gameIds.length === 0) return;
+    
+    const response = await fetch(SHARED_GAMES_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        action: 'addSharedGames',
+        gameIds: JSON.stringify(gameIds)
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success') {
+      console.log(`Marked ${result.data.added_count} games as shared`);
+    }
+    
+  } catch (error) {
+    console.error('Error marking games as shared:', error);
+  }
+}
+
+// Function to highlight new games in the UI
+function highlightNewGames(gameIds) {
+  gameIds.forEach(gameId => {
+    const [platform, id] = gameId.split('_');
+    const card = document.querySelector(`.game-card[data-game-id="${id}"][data-platform="${platform}"]`);
+    
+    if (card) {
+      // Add highlight effect
+      card.style.boxShadow = '0 0 30px rgba(0, 240, 255, 0.7)';
+      card.style.border = '2px solid var(--neon-cyan)';
+      
+      // Remove highlight after 5 seconds
+      setTimeout(() => {
+        card.style.boxShadow = '';
+        card.style.border = '';
+      }, 5000);
+    }
+  });
+}
+
+// Function to initialize notification system
+async function initializeNotificationSystem() {
+  // Request permission on page load
+  await requestNotificationPermission();
+  
+  // Check for new games immediately
+  const checkResult = await checkForNewGamesAndNotify();
+  
+  if (checkResult.new) {
+    console.log(`Found ${checkResult.count} new games on load`);
+  }
+  
+  // Set up periodic checking (every 10 minutes)
+  setInterval(async () => {
+    const result = await checkForNewGamesAndNotify();
+    if (result.new) {
+      console.log(`Found ${result.count} new games during periodic check`);
+    }
+  }, 10 * 60 * 1000); // 10 minutes
+  
+  // Also check when user comes back online
+  window.addEventListener('online', async () => {
+    console.log('Back online, checking for new games...');
+    const result = await checkForNewGamesAndNotify();
+    if (result.new) {
+      console.log(`Found ${result.count} new games after reconnecting`);
+    }
+  });
+}
+
+
     // ====== FUNGSI TRACKING KLIK GAME ======
     async function trackGameClick(gameId, platform, gameName) {
       try {
@@ -2116,6 +2330,22 @@
         console.error('Error tracking click:', error);
       }
     }
+
+// ====== TOGGLE NOTIFICATIONS FUNCTION ======
+async function toggleNotifications() {
+  const hasPermission = await requestNotificationPermission();
+  
+  if (hasPermission) {
+    // Check for new games immediately
+    const result = await checkForNewGamesAndNotify();
+    
+    if (result.new) {
+      alert(`Ditemukan ${result.count} game baru!`);
+    } else {
+      alert('Belum ada game baru.');
+    }
+  }
+}
 
     // ====== FUNGSI UNTUK MENDAPATKAN STATS GAME ======
     async function getGameStats(gameId, platform) {
@@ -2452,13 +2682,31 @@
       }
     }
 
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/sw.js")
-          .then((reg) => console.log("SW registered:", reg.scope))
-          .catch((err) => console.log("SW failed:", err));
-      });
-    }
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((reg) => {
+        console.log('SW registered:', reg.scope);
+        
+        // Request periodic sync (requires HTTPS)
+        if ('periodicSync' in reg) {
+          try {
+            reg.periodicSync.register('check-games-periodic', {
+              minInterval: 10 * 60 * 1000 // 10 minutes
+            });
+          } catch (error) {
+            console.log('Periodic sync not supported:', error);
+          }
+        }
+        
+        // Request background sync
+        if ('sync' in reg) {
+          reg.sync.register('check-new-games');
+        }
+      })
+      .catch((err) => console.log('SW failed:', err));
+  });
+}
 
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
@@ -3773,6 +4021,10 @@
           return;
         }
       }
+
+  setTimeout(() => {
+    initializeNotificationSystem();
+  }, 3000);
 
       // 2) Abort request lama
       if (loadAbort) loadAbort.abort();
