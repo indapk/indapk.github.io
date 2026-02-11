@@ -2168,6 +2168,7 @@
     let currentPlatformApksgi = 'all';
     let currentCategoryIndapk = 'all';
     let currentCategoryApksgi = 'all';
+    let enhancedCheckInterval = null;
 
 
   // ====== NOTIFICATION SYSTEM CONFIG ======
@@ -2175,22 +2176,320 @@
   const NOTIFICATION_STORAGE_KEY = 'indapk_notification_preferences';
   
   // ====== NOTIFICATION INITIALIZATION ======
-  async function initNotificationSystem() {
-    console.log('🔔 Initializing notification system...');
-    
-    // Request notification permission
-    await requestNotificationPermission();
-    
-    // Check if user has already set preferences
-    loadNotificationPreferences();
-    
-    // Add notification toggle button to UI
-    addNotificationToggleButton();
-    
-    // Start periodic check for new games if enabled
-    startNotificationChecker();
+async function initNotificationSystem() {
+  console.log('🔔 [ENHANCED] Initializing notification system...');
+  
+  // Request notification permission
+  await requestNotificationPermission();
+  
+  // Check if user has already set preferences
+  loadNotificationPreferences();
+  
+  // Add notification toggle button to UI
+  addNotificationToggleButton();
+  
+  // ✅ PERUBAHAN: Start periodic check for new games - setiap 15 detik!
+  startEnhancedNotificationChecker();
+  
+  // ✅ PERUBAHAN: Register service worker untuk push notifications
+  registerServiceWorkerForPush();
+  
+  // ✅ PERUBAHAN: Cek notifikasi yang belum terbaca
+  checkUnreadNotifications();
+}
+
+// ✅ FUNGSI BARU: Register service worker untuk push
+async function registerServiceWorkerForPush() {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      
+      // Subscribe ke push notifications
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(
+          'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U'
+        )
+      });
+      
+      console.log('✅ Push notification subscribed:', subscription.endpoint);
+      
+      // Kirim subscription ke server (opsional)
+      // await fetch('/api/save-subscription', { method: 'POST', body: JSON.stringify(subscription) });
+      
+    } catch (error) {
+      console.log('❌ Push notification subscription failed:', error);
+    }
+  }
+}
+
+function startEnhancedNotificationChecker() {
+  // Clear existing interval
+  if (enhancedCheckInterval) {
+    clearInterval(enhancedCheckInterval);
   }
   
+  // ✅ CEK NOTIFIKASI BARU SETIAP 15 DETIK!
+  enhancedCheckInterval = setInterval(async () => {
+    if (window.notificationPrefs?.enabled) {
+      console.log('🔍 [15s] Checking for new notifications...');
+      await checkForNewGamesEnhanced();
+    }
+  }, 15000); // 15 detik
+  
+  // Initial check after 1 second
+  setTimeout(() => {
+    if (window.notificationPrefs?.enabled) {
+      checkForNewGamesEnhanced();
+    }
+  }, 1000);
+  
+  console.log('✅ Enhanced notification checker started (interval: 15 seconds)');
+}
+
+// ✅ FUNGSI BARU: Check for new games - AMBIL DARI QUEUE SERVER
+async function checkForNewGamesEnhanced() {
+  if (isCheckingNewGames) return;
+  
+  try {
+    isCheckingNewGames = true;
+    
+    // ✅ PERUBAHAN: Panggil endpoint getPendingNotifications
+    const response = await fetch(NOTIFICATION_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        action: 'getPendingNotifications'
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success' && result.count > 0) {
+      const pendingGames = result.data;
+      console.log(`🎮 Found ${pendingGames.length} new pending games!`);
+      
+      // Kirim notifikasi untuk setiap game baru
+      for (const game of pendingGames) {
+        // Tampilkan notifikasi
+        sendNewGameNotificationEnhanced(game);
+        
+        // Mark as notified di server
+        await fetch(NOTIFICATION_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            action: 'markNotificationSent',
+            game_id: game.game_id
+          })
+        });
+      }
+      
+      // Update unread count badge
+      updateUnreadCountBadge();
+    }
+    
+  } catch (error) {
+    console.error('❌ Error checking new games:', error);
+  } finally {
+    isCheckingNewGames = false;
+  }
+}
+
+// ✅ FUNGSI BARU: Enhanced notification dengan lebih banyak informasi
+function sendNewGameNotificationEnhanced(game) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') {
+    return;
+  }
+  
+  const platformLabels = {
+    'ps1': '🎮 PS1', 'ps2': '🎮 PS2', 'ps3': '🎮 PS3', 'ps4': '🎮 PS4',
+    'switch': '🕹️ Switch', 'psp': '📱 PSP', 'psvita': '📱 PS Vita',
+    'android': '🤖 Android', 'pc': '💻 PC', 'wii': '🎮 Wii',
+    'gamecube': '📦 Gamecube', '3ds': '📟 3DS', 'java': '☕ Java',
+    'ios': '🍎 iOS', 'apksgi': '🔞 APKsgi'
+  };
+  
+  const icon = platformLabels[game.platform] || '🎯';
+  const platformName = platformLabels[game.platform] || game.platform.toUpperCase();
+  
+  // ✅ PERUBAHAN: Notifikasi dengan thumbnail!
+  const notificationOptions = {
+    body: `${icon} ${platformName}\n🎯 ${game.game_name}\n\nKlik untuk lihat detail`,
+    icon: game.thumbnail_url || '/icons/icon-192x192.png',
+    badge: '/icons/icon-192x192.png',
+    tag: `new-game-${game.game_id}`,
+    renotify: true,
+    silent: false,
+    requireInteraction: true,
+    vibrate: [200, 100, 200],
+    data: {
+      url: `/?game=${game.download_id}&platform=${game.platform}`,
+      gameId: game.download_id,
+      platform: game.platform,
+      gameName: game.game_name,
+      timestamp: Date.now()
+    },
+    actions: [
+      { action: 'open', title: '🔍 Lihat Game' },
+      { action: 'download', title: '⬇️ Download' },
+      { action: 'close', title: '✖️ Tutup' }
+    ]
+  };
+  
+  // ✅ Kirim notifikasi push via Service Worker
+  navigator.serviceWorker.ready.then(registration => {
+    registration.showNotification(
+      `🎮 Game Baru: ${game.platform.toUpperCase()}`,
+      notificationOptions
+    );
+  });
+  
+  // ✅ Juga tampilkan in-app notification (toast)
+  showInAppNotificationEnhanced(game, platformName);
+}
+
+
+// ✅ FUNGSI BARU: Enhanced in-app notification dengan thumbnail
+function showInAppNotificationEnhanced(game, platformName) {
+  const notificationHtml = `
+    <div class="toast show position-fixed bottom-0 end-0 m-4" 
+         style="z-index: 9999; min-width: 350px; background: linear-gradient(135deg, rgba(10,14,26,0.98), rgba(20,25,45,0.98)); 
+                backdrop-filter: blur(15px); border: 2px solid var(--neon-cyan);
+                box-shadow: 0 0 40px rgba(0,240,255,0.5), 0 10px 30px rgba(0,0,0,0.8);
+                border-radius: 20px; animation: slideInRight 0.5s;"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         id="newGameNotification-${game.game_id}">
+      <div class="toast-header" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: white; border-radius: 18px 18px 0 0; padding: 12px 15px;">
+        <i class="bi bi-controller me-2"></i>
+        <strong class="me-auto" style="font-size: 1rem;">🎮 GAME BARU DITEMUKAN!</strong>
+        <small style="opacity: 0.9;">${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</small>
+        <button type="button" class="btn-close btn-close-white" 
+                onclick="this.closest('.toast').remove()" style="margin-left: 10px;"></button>
+      </div>
+      <div class="toast-body" style="color: white; padding: 15px;">
+        <div class="d-flex align-items-start">
+          <div class="flex-shrink-0">
+            <div style="width: 80px; height: 80px; border-radius: 15px; overflow: hidden; border: 2px solid var(--neon-cyan); box-shadow: 0 0 20px rgba(0,240,255,0.3);">
+              <img src="${game.thumbnail_url || 'https://placehold.co/80x80/1a1a2e/00f0ff?text=No+Image'}" 
+                   style="width: 100%; height: 100%; object-fit: cover;" 
+                   alt="${escapeHTML(game.game_name)}"
+                   onerror="this.src='https://placehold.co/80x80/1a1a2e/ff2e97?text=No+Image'">
+            </div>
+          </div>
+          <div class="flex-grow-1 ms-3">
+            <span class="badge badge-${game.platform}" style="padding: 6px 12px; font-size: 0.7rem; margin-bottom: 8px;">
+              <i class="bi ${getPlatformIcon(game.platform)} me-1"></i>
+              ${platformName}
+            </span>
+            <h6 style="color: var(--neon-cyan); margin-bottom: 5px; font-size: 0.95rem; font-weight: 700;">
+              ${escapeHTML(game.game_name)}
+            </h6>
+            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.8); margin-bottom: 10px;">
+              <i class="bi bi-hash me-1"></i> ID: ${game.game_id}
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-neon" style="padding: 5px 15px; font-size: 0.8rem;"
+                      onclick="window.location.href = 'download.html?game=${game.download_id}&platform=${game.platform}'">
+                <i class="bi bi-download me-1"></i>Download
+              </button>
+              <button class="btn btn-sm btn-outline-secondary" style="padding: 5px 15px; font-size: 0.8rem;"
+                      onclick="this.closest('.toast').remove()">
+                <i class="bi bi-x-lg me-1"></i>Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Remove old notification if exists
+  const oldNotif = document.getElementById(`newGameNotification-${game.game_id}`);
+  if (oldNotif) oldNotif.remove();
+  
+  document.body.insertAdjacentHTML('beforeend', notificationHtml);
+  
+  // Auto remove after 20 seconds (lebih lama)
+  setTimeout(() => {
+    const notif = document.getElementById(`newGameNotification-${game.game_id}`);
+    if (notif) notif.remove();
+  }, 20000);
+}
+
+// ✅ FUNGSI BARU: Update unread count badge
+function updateUnreadCountBadge() {
+  const notifBtn = document.getElementById('notificationToggleBtn');
+  if (!notifBtn) return;
+  
+  // Hapus badge lama jika ada
+  const oldBadge = notifBtn.querySelector('.notification-badge');
+  if (oldBadge) oldBadge.remove();
+  
+  // Ambil jumlah notifikasi belum dibaca dari localStorage
+  const unread = parseInt(localStorage.getItem('indapk_unread_notifications') || '0');
+  
+  if (unread > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'notification-badge';
+    badge.textContent = unread > 9 ? '9+' : unread;
+    notifBtn.style.position = 'relative';
+    notifBtn.appendChild(badge);
+  }
+}
+
+// ✅ FUNGSI BARU: Cek notifikasi yang belum terbaca
+function checkUnreadNotifications() {
+  const lastSeen = localStorage.getItem('indapk_last_notification_check');
+  const now = Date.now();
+  
+  if (!lastSeen || (now - parseInt(lastSeen)) > 3600000) { // Reset setiap jam
+    // Ambil notifikasi dari server
+    fetch(NOTIFICATION_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        action: 'getNotificationHistory',
+        user_id: window.notificationPrefs?.userId || ''
+      })
+    })
+    .then(res => res.json())
+    .then(result => {
+      if (result.status === 'success') {
+        const recent = result.data.filter(n => {
+          const notifTime = new Date(n.timestamp).getTime();
+          return now - notifTime < 86400000; // 24 jam
+        });
+        
+        localStorage.setItem('indapk_unread_notifications', recent.length.toString());
+        updateUnreadCountBadge();
+      }
+    });
+  }
+  
+  localStorage.setItem('indapk_last_notification_check', now.toString());
+}
+
+// ✅ FUNGSI UTILITY: urlBase64ToUint8Array (untuk push subscription)
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
   // ====== REQUEST NOTIFICATION PERMISSION ======
   async function requestNotificationPermission() {
     if (!('Notification' in window)) {
@@ -2291,64 +2590,76 @@
   }
   
   // ====== TOGGLE NOTIFICATION ======
-  async function toggleNotification() {
-    const btn = document.getElementById('notificationToggleBtn');
-    
-    if (!window.notificationPrefs) {
-      window.notificationPrefs = { enabled: false, userId: generateAnonymousUserId() };
-    }
-    
-    const isEnabled = window.notificationPrefs.enabled;
-    
-    if (!isEnabled) {
-      // Request permission first
-      const hasPermission = await requestNotificationPermission();
-      
-      if (!hasPermission) {
-        showNotificationMessage('❌ Izin notifikasi ditolak. Aktifkan di pengaturan browser Anda.', 'warning');
-        return;
-      }
-      
-      // Subscribe ke server
-      const result = await subscribeToNotifications();
-      
-      if (result.status === 'success') {
-        window.notificationPrefs.enabled = true;
-        window.notificationPrefs.subscribedAt = new Date().toISOString();
-        saveNotificationPreferences();
-        
-        btn.innerHTML = '<i class="bi bi-bell-fill"></i> Notifikasi Aktif';
-        btn.classList.add('btn-success');
-        btn.classList.remove('btn-neon');
-        
-        showNotificationMessage('✅ Notifikasi berhasil diaktifkan! Anda akan mendapat notifikasi game baru.', 'success');
-        
-        // Show test notification
-        sendTestNotification();
-      } else {
-        showNotificationMessage('❌ Gagal mengaktifkan notifikasi: ' + (result.message || 'Unknown error'), 'danger');
-      }
-      
-    } else {
-      // Unsubscribe dari server
-      const result = await unsubscribeFromNotifications();
-      
-      if (result.status === 'success') {
-        window.notificationPrefs.enabled = false;
-        saveNotificationPreferences();
-        
-        btn.innerHTML = '<i class="bi bi-bell-slash"></i> Notifikasi';
-        btn.classList.add('btn-neon');
-        btn.classList.remove('btn-success');
-        
-        showNotificationMessage('🔕 Notifikasi berhasil dinonaktifkan', 'info');
-      } else {
-        showNotificationMessage('❌ Gagal menonaktifkan notifikasi', 'danger');
-      }
-    }
-    
-    updateNotificationUI(window.notificationPrefs.enabled);
+async function toggleNotification() {
+  const btn = document.getElementById('notificationToggleBtn');
+  
+  if (!window.notificationPrefs) {
+    window.notificationPrefs = { 
+      enabled: false, 
+      userId: generateAnonymousUserId() 
+    };
   }
+  
+  const isEnabled = window.notificationPrefs.enabled;
+  
+  if (!isEnabled) {
+    // Request permission
+    const hasPermission = await requestNotificationPermission();
+    
+    if (!hasPermission) {
+      showNotificationMessage('❌ Izin notifikasi ditolak. Aktifkan di pengaturan browser Anda.', 'warning');
+      return;
+    }
+    
+    // Subscribe ke server
+    const result = await subscribeToNotifications();
+    
+    if (result.status === 'success') {
+      window.notificationPrefs.enabled = true;
+      window.notificationPrefs.subscribedAt = new Date().toISOString();
+      saveNotificationPreferences();
+      
+      btn.innerHTML = '<i class="bi bi-bell-fill"></i> Notifikasi Aktif';
+      btn.classList.add('btn-success');
+      btn.classList.remove('btn-neon');
+      
+      showNotificationMessage('✅ Notifikasi berhasil diaktifkan! Anda akan mendapat notifikasi game baru.', 'success');
+      
+      // ✅ ENHANCED: Start 15-second checker
+      startEnhancedNotificationChecker();
+      
+      // Send test notification
+      sendTestNotification();
+    } else {
+      showNotificationMessage('❌ Gagal mengaktifkan notifikasi: ' + (result.message || 'Unknown error'), 'danger');
+    }
+    
+  } else {
+    // Unsubscribe dari server
+    const result = await unsubscribeFromNotifications();
+    
+    if (result.status === 'success') {
+      window.notificationPrefs.enabled = false;
+      saveNotificationPreferences();
+      
+      btn.innerHTML = '<i class="bi bi-bell-slash"></i> Notifikasi';
+      btn.classList.add('btn-neon');
+      btn.classList.remove('btn-success');
+      
+      showNotificationMessage('🔕 Notifikasi berhasil dinonaktifkan', 'info');
+      
+      // ✅ ENHANCED: Stop checker
+      if (enhancedCheckInterval) {
+        clearInterval(enhancedCheckInterval);
+        enhancedCheckInterval = null;
+      }
+    } else {
+      showNotificationMessage('❌ Gagal menonaktifkan notifikasi', 'danger');
+    }
+  }
+  
+  updateNotificationUI(window.notificationPrefs.enabled);
+}
   
   // ====== SUBSCRIBE TO NOTIFICATIONS ======
   async function subscribeToNotifications() {
@@ -2568,18 +2879,23 @@
   }
   
   // ====== SEND TEST NOTIFICATION ======
-  function sendTestNotification() {
-    if (!('Notification' in window) || Notification.permission !== 'granted') {
-      return;
-    }
-    
-    const notification = new Notification('✅ Notifikasi Aktif!', {
-      body: 'Anda akan menerima notifikasi saat ada game baru',
-      icon: '/icons/icon-192x192.png',
-      tag: 'notification-test',
-      silent: false
-    });
+function sendTestNotification() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') {
+    return;
   }
+  
+  navigator.serviceWorker.ready.then(registration => {
+    registration.showNotification('✅ Notifikasi Aktif!', {
+      body: 'Anda akan menerima notifikasi saat ada game baru. Pengecekan setiap 15 detik.',
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/icon-192x192.png',
+      vibrate: [200, 100, 200],
+      tag: 'notification-test',
+      silent: false,
+      requireInteraction: false
+    });
+  });
+}
   
   // ====== SHOW IN-APP NOTIFICATION ======
   function showInAppNotification(game) {
@@ -2739,7 +3055,7 @@
     setTimeout(initNotificationSystem, 1000);
   });
 
-  
+
     // ====== FUNGSI TRACKING KLIK GAME ======
     async function trackGameClick(gameId, platform, gameName) {
       try {
@@ -3688,6 +4004,17 @@
       applySearchFromUrl();
       applyHashPlatform();
       loadAllGames();
+  setTimeout(initNotificationSystem, 1000);
+  
+  // ✅ TAMBAHKAN: Event listener untuk visibility change
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible' && window.notificationPrefs?.enabled) {
+      console.log('📱 Tab aktif, mengecek notifikasi...');
+      checkForNewGamesEnhanced();
+      updateUnreadCountBadge();
+    }
+  });
+
 
       window.addEventListener('hashchange', applyHashPlatform);
       window.addEventListener('popstate', () => {
