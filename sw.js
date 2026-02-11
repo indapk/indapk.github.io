@@ -45,7 +45,6 @@ const NOTIFICATION_OPTIONS = {
 // ===== INSTALL =====
 self.addEventListener("install", (event) => {
   console.log("Service Worker: Installing...");
-  
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then((cache) => cache.addAll(PRECACHE))
@@ -53,19 +52,21 @@ self.addEventListener("install", (event) => {
   );
 });
 
+
 // ===== ACTIVATE =====
 self.addEventListener("activate", (event) => {
   console.log("Service Worker: Activating...");
-  
   event.waitUntil(
     Promise.all([
-      caches.keys().then((keys) => Promise.all(
-        keys.map((key) => {
-          if (![STATIC_CACHE, RUNTIME_CACHE].includes(key)) {
-            return caches.delete(key);
-          }
-        })
-      )),
+      caches.keys().then((keys) => 
+        Promise.all(
+          keys.map((key) => {
+            if (![STATIC_CACHE, RUNTIME_CACHE].includes(key)) {
+              return caches.delete(key);
+            }
+          })
+        )
+      ),
       self.clients.claim()
     ])
   );
@@ -75,27 +76,23 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
-
-  const url = new URL(req.url);
-
-  if (req.mode === "navigate") {
-    event.respondWith(networkFirst(req));
-    return;
-  }
-
-  if (url.origin === self.location.origin) {
-    const dest = req.destination;
-    if (["script", "style", "image", "font"].includes(dest)) {
-      event.respondWith(cacheFirst(req));
-      return;
-    }
-    event.respondWith(staleWhileRevalidate(req));
-    return;
-  }
-
-  if (["script", "style", "image", "font"].includes(req.destination)) {
-    event.respondWith(staleWhileRevalidate(req));
-  }
+  
+  event.respondWith(
+    caches.match(req).then(cached => {
+      return cached || fetch(req).then(response => {
+        // Cache successful responses
+        if (response.status === 200) {
+          const resClone = response.clone();
+          caches.open(RUNTIME_CACHE).then(cache => {
+            cache.put(req, resClone);
+          });
+        }
+        return response;
+      }).catch(() => {
+        return caches.match(OFFLINE_URL);
+      });
+    })
+  );
 });
 
 // ===== CACHE STRATEGIES =====
@@ -185,12 +182,6 @@ self.addEventListener("notificationclick", (event) => {
 });
 
 // ===== BACKGROUND SYNC =====
-self.addEventListener("sync", (event) => {
-  if (event.tag === "check-new-games") {
-    console.log("Background sync: Checking for new games");
-    event.waitUntil(checkForNewGames());
-  }
-});
 // Tambahkan di awal sw.js
 self.addEventListener('install', (event) => {
   console.log('Service Worker: Installing...');
@@ -220,19 +211,33 @@ self.addEventListener('activate', (event) => {
 // ===== PERIODIC SYNC =====
 self.addEventListener("sync", (event) => {
   if (event.tag === "check-new-games") {
+    console.log("Background sync triggered");
     event.waitUntil(checkForNewGames());
   }
 });
 
 // ===== MESSAGE FROM CLIENT =====
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "CHECK_NEW_GAMES") {
+  if (event.data?.type === "CHECK_NEW_GAMES") {
     event.waitUntil(checkForNewGames());
   }
   
-  if (event.data && event.data.type === "TEST_NOTIFICATION") {
-    const game = event.data.game;
-    event.waitUntil(showDetailedGameNotification(game));
+  if (event.data?.type === "TEST_NOTIFICATION") {
+    event.waitUntil(showTestNotification(event.data.game));
+  }
+  
+  if (event.data?.type === "NOTIFICATION_PREFS") {
+    // Store preference
+    event.waitUntil(
+      caches.open(RUNTIME_CACHE).then(cache => {
+        return cache.put('/notification-prefs', 
+          new Response(JSON.stringify({ 
+            enabled: event.data.enabled,
+            timestamp: Date.now() 
+          }))
+        );
+      })
+    );
   }
 });
 
@@ -241,40 +246,23 @@ async function checkForNewGames() {
   try {
     console.log("Checking for new games...");
     
-    // Get user notification preference
-    const userPrefs = await getUserNotificationPrefs();
-    if (!userPrefs.enabled) {
-      console.log("Notifications are disabled");
-      return 0;
-    }
+    // Get clients to send message
+    const clients = await self.clients.matchAll();
     
-    // Get current games from Shared Games API
-    const sharedGames = await getSharedGamesFromAPI();
+    // Just notify client to check
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'CHECK_GAMES_REQUEST'
+      });
+    });
     
-    // Fetch current games from all APIs via your main site
-    const currentGames = await fetchCurrentGamesFromSite();
-    
-    // Find new games
-    const newGames = findNewGames(currentGames, sharedGames);
-    
-    if (newGames.length > 0) {
-      console.log(`Found ${newGames.length} new games:`, newGames);
-      
-      // Mark as shared
-      await markGamesAsShared(newGames);
-      
-      // Show detailed notifications for each new game
-      for (const gameId of newGames) {
-        await showNewGameDetailNotification(gameId);
-      }
-    }
-    
-    return newGames.length;
+    return 0;
   } catch (error) {
     console.error("Error checking new games:", error);
     return 0;
   }
 }
+
 
 // ===== GET SHARED GAMES FROM API =====
 async function getSharedGamesFromAPI() {
@@ -495,6 +483,24 @@ function getPlatformName(platform) {
   return names[platform] || platform.toUpperCase();
 }
 
+// ===== SHOW TEST NOTIFICATION =====
+async function showTestNotification(game) {
+  const title = `🎮 Test: ${game.nama_game || 'INDapk Game'}`;
+  const options = {
+    body: `Platform: ${getPlatformName(game.platform)}`,
+    icon: game.thumbnail_url || '/icons/icon-192x192.png',
+    badge: '/icons/icon-192x192.png',
+    vibrate: [200, 100, 200],
+    tag: `test-${Date.now()}`,
+    data: {
+      url: '/',
+      gameId: game.download_id,
+      platform: game.platform
+    }
+  };
+  
+  await self.registration.showNotification(title, options);
+}
 
 async function getSharedGames() {
   // Get from cache first
