@@ -99,125 +99,102 @@ self.addEventListener("fetch", (event) => {
   }
 });
 
-// =====================================================
-// PUSH NOTIFICATION HANDLER
-// =====================================================
+// ====== PUSH NOTIFICATION HANDLER ======
 
-// Push event listener untuk notifikasi
 self.addEventListener('push', function(event) {
-    if (!event.data) return;
-    
-    try {
-        const data = event.data.json();
-        
-        const options = {
-            body: data.body || 'Game baru telah ditambahkan ke INDapk!',
-            icon: data.icon || '/icons/icon-192x192.png',
-            badge: '/icons/icon-192x192.png',
-            vibrate: [200, 100, 200],
-            data: {
-                url: data.url || '/',
-                gameId: data.gameId,
-                platform: data.platform
-            },
-            actions: [
-                {
-                    action: 'open',
-                    title: '🔍 Lihat Game'
-                },
-                {
-                    action: 'close',
-                    title: '❌ Tutup'
-                }
-            ],
-            silent: false,
-            renotify: true,
-            tag: data.tag || 'new-game',
-            requireInteraction: true
-        };
-        
-        event.waitUntil(
-            self.registration.showNotification(
-                data.title || '🎮 Game Baru di INDapk',
-                options
-            )
-        );
-    } catch (error) {
-        console.error('Error showing push notification:', error);
-    }
-});
+  if (!event.data) {
+    console.log('Push event but no data');
+    return;
+  }
 
-// Notification click handler
-self.addEventListener('notificationclick', function(event) {
-    event.notification.close();
-    
-    if (event.action === 'close') {
-        return;
-    }
-    
-    const urlToOpen = event.notification.data?.url || '/';
-    
+  try {
+    const data = event.data.json();
+    console.log('Push data received:', data);
+
+    const options = {
+      body: data.body || 'Game baru tersedia!',
+      icon: data.icon || '/icons/icon-192x192.png',
+      badge: '/icons/icon-192x192.png',
+      vibrate: [200, 100, 200],
+      data: {
+        url: data.url || '/',
+        gameId: data.gameId,
+        platform: data.platform,
+        timestamp: Date.now()
+      },
+      actions: data.actions || [
+        { action: 'open', title: 'Lihat Game' },
+        { action: 'close', title: 'Tutup' }
+      ],
+      requireInteraction: true,
+      silent: false,
+      renotify: true,
+      tag: data.tag || `game-${Date.now()}`
+    };
+
     event.waitUntil(
-        clients.matchAll({
-            type: 'window',
-            includeUncontrolled: true
-        }).then(function(clientList) {
-            // Cek apakah sudah ada tab yang terbuka
-            for (let i = 0; i < clientList.length; i++) {
-                const client = clientList[i];
-                if (client.url === urlToOpen && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            
-            // Buka tab baru
-            if (clients.openWindow) {
-                return clients.openWindow(urlToOpen);
-            }
-        })
+      self.registration.showNotification(
+        data.title || '🎮 Game Baru INDapk',
+        options
+      )
     );
+
+  } catch (error) {
+    console.error('Error showing push notification:', error);
+  }
 });
 
-// Background sync untuk cek game baru
-self.addEventListener('sync', function(event) {
-    if (event.tag === 'check-new-games') {
-        event.waitUntil(checkNewGamesInBackground());
-    }
-});
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
 
-// Fungsi untuk cek game baru di background
-async function checkNewGamesInBackground() {
-    try {
-        const NOTIFICATION_API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_URL/exec";
-        
-        const response = await fetch(NOTIFICATION_API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'action=checkNewGames'
-        });
-        
-        const result = await response.json();
-        
-        if (result.status === 'success' && result.count > 0) {
-            // Kirim notifikasi untuk setiap game baru
-            result.data.forEach(game => {
-                self.registration.showNotification(`🎮 Game Baru: ${game.name}`, {
-                    body: `Platform: ${game.platform}\nKlik untuk melihat detail`,
-                    icon: game.thumbnail || '/icons/icon-192x192.png',
-                    badge: '/icons/icon-192x192.png',
-                    vibrate: [200, 100, 200],
-                    data: {
-                        url: `https://indapk.github.io/download.html?game=${game.download_id}&platform=${game.platform}`,
-                        gameId: game.id
-                    }
-                });
-            });
+  const action = event.action;
+  const data = event.notification.data;
+
+  if (action === 'close') {
+    return;
+  }
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then(function(clientList) {
+        // Cek apakah sudah ada tab yang terbuka
+        for (let i = 0; i < clientList.length; i++) {
+          const client = clientList[i];
+          if (client.url.includes(data.url) && 'focus' in client) {
+            return client.focus();
+          }
         }
-        
-        return result;
-    } catch (error) {
-        console.error('Background sync error:', error);
-    }
-}
+        // Buka tab baru
+        if (clients.openWindow) {
+          return clients.openWindow(data.url || '/');
+        }
+      })
+  );
+});
+
+// Notification close handler
+self.addEventListener('notificationclose', function(event) {
+  console.log('Notification was closed', event.notification.tag);
+});
+
+// ====== PERIODIC BACKGROUND SYNC ======
+// Untuk cek notifikasi periodik (experimental)
+
+self.addEventListener('periodicsync', function(event) {
+  if (event.tag === 'check-new-games') {
+    event.waitUntil(
+      fetch('/api/check-notifications')
+        .then(response => response.json())
+        .then(data => {
+          if (data.notifications && data.notifications.length > 0) {
+            return self.registration.showNotification('Game Baru!', {
+              body: `Ada ${data.notifications.length} game baru tersedia`,
+              icon: '/icons/icon-192x192.png',
+              badge: '/icons/icon-192x192.png'
+            });
+          }
+        })
+        .catch(err => console.error('Periodic sync error:', err))
+    );
+  }
+});
