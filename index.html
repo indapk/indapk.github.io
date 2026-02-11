@@ -2305,6 +2305,7 @@ async function checkForNewGames() {
     try {
         const response = await fetch(NOTIFICATION_API_URL, {
             method: 'POST',
+            mode: 'cors', // Ubah dari 'no-cors' ke 'cors'
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
@@ -2314,6 +2315,11 @@ async function checkForNewGames() {
             cache: 'no-cache'
         });
         
+        // Cek response status
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const result = await response.json();
         
         if (result.status === 'success' && result.count > 0) {
@@ -2321,15 +2327,12 @@ async function checkForNewGames() {
             
             // Kirim notifikasi untuk setiap game baru
             result.data.forEach((game, index) => {
-                // Delay antar notifikasi
                 setTimeout(() => {
                     sendNewGameNotification(game);
                 }, index * 1000);
             });
             
-            // Update UI jika ada badge notifikasi
             updateNotificationBadge(result.count);
-            
         } else {
             console.log('✨ Tidak ada game baru');
         }
