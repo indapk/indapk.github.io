@@ -2254,43 +2254,62 @@ async function checkForNewGamesEnhanced() {
   try {
     isCheckingNewGames = true;
     
-    // ✅ PERUBAHAN: Panggil endpoint getPendingNotifications
+    // ✅ AMBIL SEMUA NOTIFIKASI YANG STATUSNYA 'SENT'
     const response = await fetch(NOTIFICATION_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
-        action: 'getPendingNotifications'
+        action: 'getNotificationHistory',
+        user_id: window.notificationPrefs?.userId || ''
       })
     });
     
     const result = await response.json();
     
     if (result.status === 'success' && result.count > 0) {
-      const pendingGames = result.data;
-      console.log(`🎮 Found ${pendingGames.length} new pending games!`);
+      // Filter notifikasi dalam 24 jam terakhir
+      const now = Date.now();
+      const oneDayAgo = now - 86400000; // 24 jam
       
-      // Kirim notifikasi untuk setiap game baru
-      for (const game of pendingGames) {
-        // Tampilkan notifikasi
-        sendNewGameNotificationEnhanced(game);
+      const recentNotifications = result.data.filter(notif => {
+        const notifTime = new Date(notif.timestamp).getTime();
+        return notifTime > oneDayAgo;
+      });
+      
+      if (recentNotifications.length > 0) {
+        console.log(`🎮 Found ${recentNotifications.length} recent notifications!`);
         
-        // Mark as notified di server
-        await fetch(NOTIFICATION_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            action: 'markNotificationSent',
-            game_id: game.game_id
-          })
-        });
+        // Simpan ke localStorage untuk badge
+        localStorage.setItem('indapk_unread_notifications', recentNotifications.length.toString());
+        updateUnreadCountBadge();
+        
+        // Tampilkan notifikasi untuk yang belum dilihat
+        const seenIds = JSON.parse(localStorage.getItem('indapk_seen_notifications') || '[]');
+        
+        for (const notif of recentNotifications) {
+          if (!seenIds.includes(notif.game_id)) {
+            // Buat objek game dari data notifikasi
+            const game = {
+              game_id: notif.game_id,
+              platform: notif.platform,
+              game_name: notif.game_name,
+              download_id: notif.download_id,
+              thumbnail_url: notif.thumbnail_url || ''
+            };
+            
+            // ✅ KIRIM NOTIFIKASI!
+            sendNewGameNotificationEnhanced(game);
+            
+            // Tandai sudah dilihat
+            seenIds.push(notif.game_id);
+          }
+        }
+        
+        // Simpan ID yang sudah dilihat
+        localStorage.setItem('indapk_seen_notifications', JSON.stringify(seenIds.slice(-50))); // max 50
       }
-      
-      // Update unread count badge
-      updateUnreadCountBadge();
     }
     
   } catch (error) {
