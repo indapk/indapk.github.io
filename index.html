@@ -2139,6 +2139,8 @@
 // NOTIFIKASI GAME BARU
 // =====================================================
 
+let jsonpCounter = 0;
+
 // Konfigurasi Notifikasi - GANTI DENGAN URL DEPLOY GAS ANDA
 const NOTIFICATION_API_URL = "https://script.google.com/macros/s/AKfycbzcVDAcVxcWQ7yL8LBRb1mrPSmu8qr-9T_ykg925vu7o2_kUO7QmWtv_10XyImNu--A/exec";
 const NOTIFICATION_PERMISSION_KEY = 'game_notification_permission';
@@ -2179,22 +2181,14 @@ async function initNotificationSystem() {
 // Inisialisasi database game yang sudah dishare
 async function initGameDatabase() {
     try {
-        const response = await fetch(NOTIFICATION_API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                action: 'initSharedGames'
-            })
+        const result = await jsonpFetch(NOTIFICATION_API_URL, {
+            action: 'initSharedGames'
         });
         
-        const result = await response.json();
         console.log('📊 Database game diinisialisasi:', result.message);
         
-        // Simpan total game di localStorage
         if (result.status === 'success') {
-            localStorage.setItem('total_shared_games', result.data.total_in_sheet);
+            localStorage.setItem('total_shared_games', result.data?.total_in_sheet || 0);
         }
         
         return result;
@@ -2298,34 +2292,68 @@ function stopGamePolling() {
     }
 }
 
-// Cek game baru dari semua API
+
+// Fungsi untuk fetch dengan JSONP (bypass CORS)
+function jsonpFetch(url, params, callbackName = 'jsonpCallback') {
+    return new Promise((resolve, reject) => {
+        // Buat nama callback unik
+        const callbackFunc = `jsonp_${Date.now()}_${jsonpCounter++}`;
+        
+        // Tambahkan callback ke parameter
+        const queryParams = new URLSearchParams(params);
+        queryParams.append('callback', callbackFunc);
+        
+        const fullUrl = `${url}?${queryParams.toString()}`;
+        
+        // Buat script element
+        const script = document.createElement('script');
+        script.src = fullUrl;
+        
+        // Global callback function
+        window[callbackFunc] = function(data) {
+            // Clean up
+            delete window[callbackFunc];
+            document.body.removeChild(script);
+            
+            if (data) {
+                resolve(data);
+            } else {
+                reject(new Error('No data received'));
+            }
+        };
+        
+        // Error handling
+        script.onerror = function() {
+            delete window[callbackFunc];
+            document.body.removeChild(script);
+            reject(new Error('JSONP request failed'));
+        };
+        
+        // Timeout
+        setTimeout(() => {
+            if (window[callbackFunc]) {
+                delete window[callbackFunc];
+                document.body.removeChild(script);
+                reject(new Error('JSONP timeout'));
+            }
+        }, 10000);
+        
+        document.body.appendChild(script);
+    });
+}
+
+// Cek game baru menggunakan JSONP
 async function checkForNewGames() {
-    console.log('🔍 Mengecek game baru...');
+    console.log('🔍 Mengecek game baru (JSONP)...');
     
     try {
-        const response = await fetch(NOTIFICATION_API_URL, {
-            method: 'POST',
-            mode: 'cors', // Ubah dari 'no-cors' ke 'cors'
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                action: 'checkNewGames'
-            }),
-            cache: 'no-cache'
+        const result = await jsonpFetch(NOTIFICATION_API_URL, {
+            action: 'checkNewGames'
         });
-        
-        // Cek response status
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
         
         if (result.status === 'success' && result.count > 0) {
             console.log(`🎮 ${result.count} game baru ditemukan!`);
             
-            // Kirim notifikasi untuk setiap game baru
             result.data.forEach((game, index) => {
                 setTimeout(() => {
                     sendNewGameNotification(game);
@@ -2343,6 +2371,7 @@ async function checkForNewGames() {
         return null;
     }
 }
+
 
 // Kirim notifikasi game baru
 function sendNewGameNotification(game) {
@@ -2409,19 +2438,11 @@ function sendNewGameNotification(game) {
 // Tandai game sudah dishare ke database
 async function markGameAsShared(gameId, gameName) {
     try {
-        const response = await fetch(NOTIFICATION_API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                action: 'addSharedGame',
-                game_id: gameId,
-                game_name: gameName
-            })
+        await jsonpFetch(NOTIFICATION_API_URL, {
+            action: 'addSharedGame',
+            game_id: gameId,
+            game_name: gameName
         });
-        
-        return await response.json();
     } catch (error) {
         console.error('Gagal menandai game sebagai shared:', error);
     }
