@@ -1432,7 +1432,89 @@
       .nav-actions .btn{white-space:normal;text-align:center;line-height:1.2}
       #categoryText{max-width:120px}
     }
+/* ===== NOTIFICATION TOAST STYLES ===== */
+.toast {
+  animation: slideInRight 0.5s ease, pulseGlow 2s infinite;
+}
 
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(0, 240, 255, 0.6);
+  }
+}
+
+#notificationToggleBtn {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#notificationToggleBtn.btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+  border: 2px solid #16a34a !important;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+}
+
+#notificationToggleBtn.btn-success:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 30px rgba(34, 197, 94, 0.6);
+}
+
+#notificationToggleBtn i {
+  transition: transform 0.3s ease;
+}
+
+#notificationToggleBtn:hover i {
+  transform: rotate(15deg);
+}
+
+/* Notification badge for unread count */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, var(--neon-pink), #ff0000);
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.6rem;
+  font-weight: bold;
+  border: 2px solid var(--bg-dark);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Toast close button */
+.toast .btn-close-white {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.toast .btn-close-white:hover {
+  opacity: 1;
+}
   </style>
 </head>
 <body>
@@ -2087,414 +2169,577 @@
     let currentCategoryIndapk = 'all';
     let currentCategoryApksgi = 'all';
 
-// Konfigurasi
-const NOTIFICATION_API_URL = "https://script.google.com/macros/s/AKfycbzcVDAcVxcWQ7yL8LBRb1mrPSmu8qr-9T_ykg925vu7o2_kUO7QmWtv_10XyImNu--A/exec"; // Ganti dengan URL script notifikasi Anda
 
-// State notifikasi
-let notificationPermission = false;
-let notificationCheckInterval = null;
-let lastCheckTimestamp = 0;
-
-// ====== CEK STATUS NOTIFIKASI ======
-
-/**
- * Cek apakah browser mendukung notifikasi
- */
-function isNotificationSupported() {
-  return 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window;
-}
-
-/**
- * Cek status permission notifikasi
- */
-async function checkNotificationPermission() {
-  if (!isNotificationSupported()) {
-    console.log('Notifikasi tidak didukung di browser ini');
-    return false;
-  }
+  // ====== NOTIFICATION SYSTEM CONFIG ======
+  const NOTIFICATION_API_URL = "https://script.google.com/macros/s/AKfycbzcVDAcVxcWQ7yL8LBRb1mrPSmu8qr-9T_ykg925vu7o2_kUO7QmWtv_10XyImNu--A/exec";
+  const NOTIFICATION_STORAGE_KEY = 'indapk_notification_preferences';
   
-  const permission = await Notification.requestPermission();
-  notificationPermission = permission === 'granted';
-  
-  // Update UI
-  updateNotificationUI();
-  
-  // Mulai polling notifikasi jika diizinkan
-  if (notificationPermission) {
-    startNotificationPolling();
-  } else {
-    stopNotificationPolling();
-  }
-  
-  return notificationPermission;
-}
-
-/**
- * Request izin notifikasi dari user
- */
-async function requestNotificationPermission() {
-  if (!isNotificationSupported()) {
-    alert('Browser Anda tidak mendukung notifikasi. Silakan update browser terbaru.');
-    return false;
-  }
-  
-  try {
-    const permission = await Notification.requestPermission();
-    notificationPermission = permission === 'granted';
+  // ====== NOTIFICATION INITIALIZATION ======
+  async function initNotificationSystem() {
+    console.log('🔔 Initializing notification system...');
     
-    if (notificationPermission) {
-      // Register ke server
-      await registerNotificationSubscriber();
-      
-      // Mulai polling
-      startNotificationPolling();
-      
-      showTempMessage('✅ Notifikasi diaktifkan! Anda akan menerima pemberitahuan game baru.', 'success');
+    // Request notification permission
+    await requestNotificationPermission();
+    
+    // Check if user has already set preferences
+    loadNotificationPreferences();
+    
+    // Add notification toggle button to UI
+    addNotificationToggleButton();
+    
+    // Start periodic check for new games if enabled
+    startNotificationChecker();
+  }
+  
+  // ====== REQUEST NOTIFICATION PERMISSION ======
+  async function requestNotificationPermission() {
+    if (!('Notification' in window)) {
+      console.log('❌ Browser does not support notifications');
+      return false;
+    }
+    
+    if (Notification.permission === 'granted') {
+      console.log('✅ Notification permission already granted');
+      return true;
+    }
+    
+    if (Notification.permission !== 'denied') {
+      const permission = await Notification.requestPermission();
+      console.log('📱 Notification permission:', permission);
+      return permission === 'granted';
+    }
+    
+    return false;
+  }
+  
+  // ====== LOAD NOTIFICATION PREFERENCES ======
+  function loadNotificationPreferences() {
+    const saved = localStorage.getItem(NOTIFICATION_STORAGE_KEY);
+    
+    if (saved) {
+      try {
+        window.notificationPrefs = JSON.parse(saved);
+      } catch (e) {
+        window.notificationPrefs = { enabled: false, userId: null };
+      }
     } else {
-      showTempMessage('❌ Notifikasi ditolak. Aktifkan melalui pengaturan browser.', 'warning');
+      // Generate anonymous user ID
+      const userId = generateAnonymousUserId();
+      window.notificationPrefs = {
+        enabled: false,
+        userId: userId,
+        subscribedAt: null,
+        lastCheck: null,
+        platformPreferences: {
+          ps1: true, ps2: true, ps3: true, ps4: true,
+          switch: true, psp: true, psvita: true,
+          android: true, pc: true, wii: true,
+          gamecube: true, '3ds': true, java: true,
+          ios: true, apksgi: true
+        }
+      };
+      saveNotificationPreferences();
     }
     
-    updateNotificationUI();
-    return notificationPermission;
-    
-  } catch (error) {
-    console.error('Error requesting notification permission:', error);
-    showTempMessage('❌ Gagal mengaktifkan notifikasi', 'danger');
-    return false;
-  }
-}
-
-/**
- * Daftarkan user sebagai subscriber notifikasi
- */
-async function registerNotificationSubscriber() {
-  if (!currentUser) {
-    console.log('User belum login, tidak bisa register notifikasi');
-    return false;
+    // If user has already subscribed, update UI
+    if (window.notificationPrefs.enabled) {
+      updateNotificationUI(true);
+    }
   }
   
-  try {
-    const response = await fetch(NOTIFICATION_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams({
-        action: 'subscribeNotification',
-        user_id: currentUser.wa_number,
-        username: currentUser.nama_user || currentUser.wa_number,
-        device_info: navigator.userAgent,
-        platforms: 'all' // Bisa diubah sesuai preferensi user
-      })
-    });
+  // ====== GENERATE ANONYMOUS USER ID ======
+  function generateAnonymousUserId() {
+    const randomStr = Math.random().toString(36).substring(2, 15);
+    const timestamp = Date.now().toString(36);
+    const browserInfo = navigator.userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)/i)?.[1] || 'Unknown';
+    return `user_${browserInfo}_${randomStr}_${timestamp}`;
+  }
+  
+  // ====== SAVE NOTIFICATION PREFERENCES ======
+  function saveNotificationPreferences() {
+    localStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(window.notificationPrefs));
+  }
+  
+  // ====== ADD NOTIFICATION TOGGLE BUTTON ======
+  function addNotificationToggleButton() {
+    // Check if button already exists
+    if (document.getElementById('notificationToggleBtn')) return;
     
-    const result = await response.json();
-    console.log('Notification subscription result:', result);
+    const navActions = document.querySelector('.nav-actions');
+    if (!navActions) return;
     
-    if (result.status === 'success') {
-      localStorage.setItem('notification_subscribed', 'true');
-      return true;
+    const notifBtn = document.createElement('button');
+    notifBtn.id = 'notificationToggleBtn';
+    notifBtn.className = 'btn btn-neon me-2';
+    notifBtn.innerHTML = '<i class="bi bi-bell-slash"></i> Notifikasi';
+    
+    if (window.notificationPrefs?.enabled) {
+      notifBtn.innerHTML = '<i class="bi bi-bell-fill"></i> Notifikasi Aktif';
+      notifBtn.classList.add('btn-success');
+      notifBtn.classList.remove('btn-neon');
     }
     
-    return false;
+    notifBtn.addEventListener('click', toggleNotification);
     
-  } catch (error) {
-    console.error('Error registering notification:', error);
-    return false;
+    // Insert before login button
+    const loginBtn = document.getElementById('loginButton');
+    if (loginBtn) {
+      navActions.insertBefore(notifBtn, loginBtn);
+    } else {
+      navActions.prepend(notifBtn);
+    }
   }
-}
-
-/**
- * Nonaktifkan notifikasi
- */
-async function unsubscribeNotification() {
-  if (!currentUser) return false;
   
-  try {
-    const response = await fetch(NOTIFICATION_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams({
-        action: 'unsubscribeNotification',
-        user_id: currentUser.wa_number
-      })
-    });
+  // ====== TOGGLE NOTIFICATION ======
+  async function toggleNotification() {
+    const btn = document.getElementById('notificationToggleBtn');
     
-    const result = await response.json();
-    
-    if (result.status === 'success') {
-      localStorage.removeItem('notification_subscribed');
-      stopNotificationPolling();
-      notificationPermission = false;
-      updateNotificationUI();
-      showTempMessage('🔕 Notifikasi dinonaktifkan', 'info');
-      return true;
+    if (!window.notificationPrefs) {
+      window.notificationPrefs = { enabled: false, userId: generateAnonymousUserId() };
     }
     
-    return false;
+    const isEnabled = window.notificationPrefs.enabled;
     
-  } catch (error) {
-    console.error('Error unsubscribing notification:', error);
-    return false;
-  }
-}
-
-// ====== POLLING NOTIFIKASI ======
-
-/**
- * Mulai polling notifikasi setiap 30 detik
- */
-function startNotificationPolling() {
-  if (!currentUser || !notificationPermission) return;
-  
-  stopNotificationPolling();
-  
-  console.log('Starting notification polling...');
-  notificationCheckInterval = setInterval(() => {
-    checkPendingNotifications();
-  }, 30000); // Cek setiap 30 detik
-  
-  // Cek langsung sekali
-  checkPendingNotifications();
-}
-
-/**
- * Hentikan polling notifikasi
- */
-function stopNotificationPolling() {
-  if (notificationCheckInterval) {
-    clearInterval(notificationCheckInterval);
-    notificationCheckInterval = null;
-    console.log('Notification polling stopped');
-  }
-}
-
-/**
- * Cek notifikasi pending dari server
- */
-async function checkPendingNotifications() {
-  if (!currentUser || !notificationPermission) return;
-  
-  try {
-    const response = await fetch(NOTIFICATION_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams({
-        action: 'getPendingNotifications',
-        user_id: currentUser.wa_number
-      })
-    });
-    
-    const result = await response.json();
-    
-    if (result.status === 'success' && result.notifications && result.notifications.length > 0) {
-      console.log(`Received ${result.notifications.length} new notifications`);
+    if (!isEnabled) {
+      // Request permission first
+      const hasPermission = await requestNotificationPermission();
       
-      result.notifications.forEach(notification => {
-        showDesktopNotification(notification);
-      });
-    }
-    
-  } catch (error) {
-    console.error('Error checking notifications:', error);
-  }
-}
-
-// ====== TAMPILKAN NOTIFIKASI ======
-
-/**
- * Tampilkan notifikasi desktop
- */
-function showDesktopNotification(notification) {
-  if (!notificationPermission) return;
-  
-  const options = {
-    body: notification.body,
-    icon: notification.thumbnail || '/icons/icon-192x192.png',
-    badge: '/icons/icon-192x192.png',
-    vibrate: [200, 100, 200],
-    tag: notification.id || `game-${Date.now()}`,
-    renotify: true,
-    silent: false,
-    data: {
-      url: window.location.href,
-      gameId: notification.id,
-      platform: notification.platform
-    },
-    actions: [
-      { action: 'open', title: 'Lihat Game' },
-      { action: 'close', title: 'Tutup' }
-    ]
-  };
-  
-  try {
-    const title = notification.title || '🎮 Game Baru Tersedia!';
-    const notif = new Notification(title, options);
-    
-    notif.onclick = function(event) {
-      event.preventDefault();
-      window.focus();
-      
-      // Buka tab game jika ada
-      if (notification.platform && notification.id) {
-        const gameId = notification.id.split('_').pop();
-        window.location.href = `download.html?game=${gameId}&platform=${notification.platform}`;
+      if (!hasPermission) {
+        showNotificationMessage('❌ Izin notifikasi ditolak. Aktifkan di pengaturan browser Anda.', 'warning');
+        return;
       }
       
-      this.close();
-    };
+      // Subscribe ke server
+      const result = await subscribeToNotifications();
+      
+      if (result.status === 'success') {
+        window.notificationPrefs.enabled = true;
+        window.notificationPrefs.subscribedAt = new Date().toISOString();
+        saveNotificationPreferences();
+        
+        btn.innerHTML = '<i class="bi bi-bell-fill"></i> Notifikasi Aktif';
+        btn.classList.add('btn-success');
+        btn.classList.remove('btn-neon');
+        
+        showNotificationMessage('✅ Notifikasi berhasil diaktifkan! Anda akan mendapat notifikasi game baru.', 'success');
+        
+        // Show test notification
+        sendTestNotification();
+      } else {
+        showNotificationMessage('❌ Gagal mengaktifkan notifikasi: ' + (result.message || 'Unknown error'), 'danger');
+      }
+      
+    } else {
+      // Unsubscribe dari server
+      const result = await unsubscribeFromNotifications();
+      
+      if (result.status === 'success') {
+        window.notificationPrefs.enabled = false;
+        saveNotificationPreferences();
+        
+        btn.innerHTML = '<i class="bi bi-bell-slash"></i> Notifikasi';
+        btn.classList.add('btn-neon');
+        btn.classList.remove('btn-success');
+        
+        showNotificationMessage('🔕 Notifikasi berhasil dinonaktifkan', 'info');
+      } else {
+        showNotificationMessage('❌ Gagal menonaktifkan notifikasi', 'danger');
+      }
+    }
     
-    notif.onclose = function() {
-      console.log('Notification closed');
-    };
+    updateNotificationUI(window.notificationPrefs.enabled);
+  }
+  
+  // ====== SUBSCRIBE TO NOTIFICATIONS ======
+  async function subscribeToNotifications() {
+    try {
+      const userId = window.notificationPrefs.userId;
+      const userAgent = navigator.userAgent;
+      const browser = getBrowserName();
+      const platform = getPlatform();
+      
+      // Get IP via free API (optional)
+      let ipAddress = '';
+      try {
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        ipAddress = ipData.ip;
+      } catch (e) {
+        console.log('Could not get IP address:', e);
+      }
+      
+      const payload = {
+        action: 'subscribe',
+        user_id: userId,
+        user_agent: userAgent,
+        ip_address: ipAddress,
+        browser: browser,
+        platform: platform
+      };
+      
+      const response = await fetch(NOTIFICATION_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(payload)
+      });
+      
+      const result = await response.json();
+      return result;
+      
+    } catch (error) {
+      console.error('❌ Error subscribing:', error);
+      return { status: 'error', message: error.message };
+    }
+  }
+  
+  // ====== UNSUBSCRIBE FROM NOTIFICATIONS ======
+  async function unsubscribeFromNotifications() {
+    try {
+      const userId = window.notificationPrefs.userId;
+      
+      const payload = {
+        action: 'unsubscribe',
+        user_id: userId
+      };
+      
+      const response = await fetch(NOTIFICATION_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(payload)
+      });
+      
+      const result = await response.json();
+      return result;
+      
+    } catch (error) {
+      console.error('❌ Error unsubscribing:', error);
+      return { status: 'error', message: error.message };
+    }
+  }
+  
+  // ====== CHECK SUBSCRIPTION STATUS ======
+  async function checkSubscriptionStatus() {
+    try {
+      const userId = window.notificationPrefs?.userId;
+      if (!userId) return { subscribed: false };
+      
+      const payload = {
+        action: 'checkSubscription',
+        user_id: userId
+      };
+      
+      const response = await fetch(NOTIFICATION_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(payload)
+      });
+      
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        return result.data;
+      }
+      
+      return { subscribed: false };
+      
+    } catch (error) {
+      console.error('❌ Error checking subscription:', error);
+      return { subscribed: false };
+    }
+  }
+  
+  // ====== CHECK FOR NEW GAMES ======
+  let isCheckingNewGames = false;
+  let notificationCheckInterval = null;
+  
+  async function checkForNewGames() {
+    if (isCheckingNewGames) return;
     
-  } catch (error) {
-    console.error('Error showing notification:', error);
-    
-    // Fallback ke alert biasa
-    alert(`🎮 ${notification.title}\n${notification.body}`);
+    try {
+      isCheckingNewGames = true;
+      
+      const response = await fetch(NOTIFICATION_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          action: 'checkNewGames'
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.status === 'success' && result.data.count > 0) {
+        const newGames = result.data.new_games;
+        
+        // Kirim notifikasi untuk setiap game baru
+        for (const game of newGames) {
+          sendNewGameNotification(game);
+          
+          // Mark as notified di server
+          await fetch(NOTIFICATION_API_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+              action: 'markNotified',
+              game_id: game.game_id
+            })
+          });
+        }
+        
+        // Update last check timestamp
+        if (window.notificationPrefs) {
+          window.notificationPrefs.lastCheck = new Date().toISOString();
+          saveNotificationPreferences();
+        }
+      }
+      
+    } catch (error) {
+      console.error('❌ Error checking new games:', error);
+    } finally {
+      isCheckingNewGames = false;
+    }
   }
-}
-
-// ====== UI COMPONENT NOTIFIKASI ======
-
-/**
- * Update UI berdasarkan status notifikasi
- */
-function updateNotificationUI() {
-  // Cek apakah elemen notifikasi sudah ada di navbar
-  let notificationBtn = document.getElementById('notificationToggleBtn');
   
-  if (!notificationBtn) {
-    // Buat tombol notifikasi jika belum ada
-    notificationBtn = createNotificationButton();
-  }
-  
-  // Update status tombol
-  const isSubscribed = localStorage.getItem('notification_subscribed') === 'true' && 
-                       notificationPermission && 
-                       currentUser;
-  
-  if (isSubscribed) {
-    notificationBtn.innerHTML = `
-      <i class="bi bi-bell-fill me-1"></i> Notifikasi ON
-    `;
-    notificationBtn.classList.remove('btn-outline-secondary');
-    notificationBtn.classList.add('btn-neon');
-  } else {
-    notificationBtn.innerHTML = `
-      <i class="bi bi-bell-slash me-1"></i> Notifikasi OFF
-    `;
-    notificationBtn.classList.remove('btn-neon');
-    notificationBtn.classList.add('btn-outline-secondary');
-  }
-}
-
-/**
- * Buat tombol notifikasi di navbar
- */
-function createNotificationButton() {
-  const navActions = document.querySelector('.nav-actions');
-  if (!navActions) return null;
-  
-  const btn = document.createElement('button');
-  btn.id = 'notificationToggleBtn';
-  btn.className = 'btn btn-outline-secondary btn-sm';
-  btn.innerHTML = '<i class="bi bi-bell me-1"></i> Notifikasi';
-  
-  btn.onclick = async function() {
-    if (!currentUser) {
-      alert('Silakan login terlebih dahulu untuk mengaktifkan notifikasi');
-      openLoginModal();
+  // ====== SEND NEW GAME NOTIFICATION ======
+  function sendNewGameNotification(game) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') {
       return;
     }
     
-    const isSubscribed = localStorage.getItem('notification_subscribed') === 'true';
+    const platformIcons = {
+      'ps1': '🎮', 'ps2': '🎮', 'ps3': '🎮', 'ps4': '🎮',
+      'switch': '🕹️', 'psp': '📱', 'psvita': '📱',
+      'android': '🤖', 'pc': '💻', 'wii': '🎮',
+      'gamecube': '📦', '3ds': '📟', 'java': '☕',
+      'ios': '🍎', 'apksgi': '🔞'
+    };
     
-    if (isSubscribed) {
-      // Nonaktifkan
-      if (confirm('Nonaktifkan notifikasi game baru?')) {
-        await unsubscribeNotification();
+    const icon = platformIcons[game.platform] || '🎯';
+    
+    const notification = new Notification(`🎮 Game Baru: ${game.platform.toUpperCase()}`, {
+      body: `${icon} ${game.game_name}\nKlik untuk lihat detail`,
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/icon-192x192.png',
+      tag: `new-game-${game.game_id}`,
+      renotify: true,
+      silent: false,
+      requireInteraction: true
+    });
+    
+    notification.onclick = function() {
+      window.focus();
+      
+      // Filter platform dan search
+      if (window.currentPlatform) {
+        window.currentPlatform = game.platform;
+        const platformText = document.getElementById('platformText');
+        if (platformText) {
+          platformText.textContent = getPlatformLabel(game.platform);
+        }
       }
-    } else {
-      // Aktifkan
-      await requestNotificationPermission();
+      
+      // Clear search
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.value = '';
+        window.searchQuery = '';
+      }
+      
+      // Filter games
+      if (typeof filterGames === 'function') {
+        filterGames({ resetPage: true });
+      }
+      
+      notification.close();
+    };
+    
+    // Also show in-app notification
+    showInAppNotification(game);
+  }
+  
+  // ====== SEND TEST NOTIFICATION ======
+  function sendTestNotification() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') {
+      return;
     }
-  };
-  
-  // Insert setelah login button
-  const loginBtn = document.getElementById('loginButton');
-  if (loginBtn) {
-    loginBtn.insertAdjacentElement('afterend', btn);
-  } else {
-    navActions.appendChild(btn);
+    
+    const notification = new Notification('✅ Notifikasi Aktif!', {
+      body: 'Anda akan menerima notifikasi saat ada game baru',
+      icon: '/icons/icon-192x192.png',
+      tag: 'notification-test',
+      silent: false
+    });
   }
   
-  return btn;
-}
-
-// ====== INITIALIZATION ======
-
-/**
- * Inisialisasi sistem notifikasi saat halaman dimuat
- */
-function initNotificationSystem() {
-  console.log('Initializing notification system...');
-  
-  // Cek support
-  if (!isNotificationSupported()) {
-    console.log('Notifications not supported in this browser');
-    return;
+  // ====== SHOW IN-APP NOTIFICATION ======
+  function showInAppNotification(game) {
+    const platformLabels = {
+      'ps1': 'PlayStation 1', 'ps2': 'PlayStation 2', 'ps3': 'PlayStation 3', 'ps4': 'PlayStation 4',
+      'switch': 'Nintendo Switch', 'psp': 'PSP', 'psvita': 'PS Vita',
+      'android': 'Android', 'pc': 'PC', 'wii': 'Wii',
+      'gamecube': 'Gamecube', '3ds': '3DS', 'java': 'Java',
+      'ios': 'iOS', 'apksgi': 'APKsgi 18+'
+    };
+    
+    const platformName = platformLabels[game.platform] || game.platform.toUpperCase();
+    
+    const notificationHtml = `
+      <div class="toast show position-fixed bottom-0 end-0 m-4" 
+           style="z-index: 9999; min-width: 300px; background: rgba(10,14,26,0.95); 
+                  backdrop-filter: blur(10px); border: 1px solid var(--neon-cyan);
+                  box-shadow: 0 0 30px rgba(0,240,255,0.3);"
+           role="alert" aria-live="assertive" aria-atomic="true"
+           id="newGameNotification-${game.game_id}">
+        <div class="toast-header" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: white;">
+          <i class="bi bi-controller me-2"></i>
+          <strong class="me-auto">Game Baru!</strong>
+          <small>${new Date().toLocaleTimeString()}</small>
+          <button type="button" class="btn-close btn-close-white" 
+                  onclick="this.closest('.toast').remove()"></button>
+        </div>
+        <div class="toast-body" style="color: white;">
+          <div class="d-flex align-items-start">
+            <div class="flex-shrink-0">
+              <span class="badge badge-${game.platform}" style="padding: 6px 10px;">
+                ${platformName}
+              </span>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 style="color: var(--neon-cyan); margin-bottom: 5px;">${escapeHTML(game.game_name)}</h6>
+              <small>Platform: ${platformName}</small>
+              <div class="mt-2">
+                <button class="btn btn-sm btn-neon" 
+                        onclick="window.location.href = 'download.html?game=${game.download_id}&platform=${game.platform}'">
+                  <i class="bi bi-download me-1"></i>Lihat Game
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Remove old notification if exists
+    const oldNotif = document.getElementById(`newGameNotification-${game.game_id}`);
+    if (oldNotif) oldNotif.remove();
+    
+    document.body.insertAdjacentHTML('beforeend', notificationHtml);
+    
+    // Auto remove after 10 seconds
+    setTimeout(() => {
+      const notif = document.getElementById(`newGameNotification-${game.game_id}`);
+      if (notif) notif.remove();
+    }, 10000);
   }
   
-  // Cek permission
-  notificationPermission = Notification.permission === 'granted';
-  
-  // Cek apakah user sudah subscribe
-  const isSubscribed = localStorage.getItem('notification_subscribed') === 'true';
-  
-  if (currentUser && notificationPermission && isSubscribed) {
-    startNotificationPolling();
+  // ====== SHOW NOTIFICATION MESSAGE ======
+  function showNotificationMessage(message, type = 'info') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 80px; right: 20px; z-index: 9999; max-width: 350px;';
+    alertDiv.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+      if (alertDiv.parentNode) {
+        alertDiv.remove();
+      }
+    }, 5000);
   }
   
-  // Update UI
-  setTimeout(() => {
-    updateNotificationUI();
-  }, 500);
-}
-
-// Override fungsi login/logout untuk integrasi notifikasi
-const originalLogin = window.login;
-window.login = async function(btn) {
-  await originalLogin(btn);
-  
-  // Setelah login sukses, cek permission notifikasi
-  if (currentUser) {
-    initNotificationSystem();
-  }
-};
-
-const originalLogout = window.logout;
-window.logout = function() {
-  // Nonaktifkan notifikasi saat logout
-  if (localStorage.getItem('notification_subscribed') === 'true') {
-    unsubscribeNotification();
+  // ====== UPDATE NOTIFICATION UI ======
+  function updateNotificationUI(isEnabled) {
+    const notifBtn = document.getElementById('notificationToggleBtn');
+    
+    if (notifBtn) {
+      if (isEnabled) {
+        notifBtn.innerHTML = '<i class="bi bi-bell-fill"></i> Notifikasi Aktif';
+        notifBtn.classList.add('btn-success');
+        notifBtn.classList.remove('btn-neon');
+      } else {
+        notifBtn.innerHTML = '<i class="bi bi-bell-slash"></i> Notifikasi';
+        notifBtn.classList.add('btn-neon');
+        notifBtn.classList.remove('btn-success');
+      }
+    }
   }
   
-  originalLogout();
-};
+  // ====== START NOTIFICATION CHECKER ======
+  function startNotificationChecker() {
+    // Clear existing interval
+    if (notificationCheckInterval) {
+      clearInterval(notificationCheckInterval);
+    }
+    
+    // Check every 30 seconds if notifications are enabled
+    notificationCheckInterval = setInterval(async () => {
+      if (window.notificationPrefs?.enabled) {
+        await checkForNewGames();
+      }
+    }, 30000); // 30 detik
+    
+    // Initial check after 2 seconds
+    setTimeout(() => {
+      if (window.notificationPrefs?.enabled) {
+        checkForNewGames();
+      }
+    }, 2000);
+  }
+  
+  // ====== STOP NOTIFICATION CHECKER ======
+  function stopNotificationChecker() {
+    if (notificationCheckInterval) {
+      clearInterval(notificationCheckInterval);
+      notificationCheckInterval = null;
+    }
+  }
+  
+  // ====== UTILITY FUNCTIONS ======
+  function getBrowserName() {
+    const userAgent = navigator.userAgent;
+    
+    if (userAgent.includes('Chrome')) return 'Chrome';
+    if (userAgent.includes('Firefox')) return 'Firefox';
+    if (userAgent.includes('Safari')) return 'Safari';
+    if (userAgent.includes('Edge')) return 'Edge';
+    if (userAgent.includes('Opera') || userAgent.includes('OPR')) return 'Opera';
+    
+    return 'Unknown';
+  }
+  
+  function getPlatform() {
+    const userAgent = navigator.userAgent;
+    
+    if (userAgent.includes('Windows')) return 'Windows';
+    if (userAgent.includes('Mac')) return 'macOS';
+    if (userAgent.includes('Linux')) return 'Linux';
+    if (userAgent.includes('Android')) return 'Android';
+    if (userAgent.includes('iPhone') || userAgent.includes('iPad')) return 'iOS';
+    
+    return 'Unknown';
+  }
+  
+  // ====== INITIALIZE ON PAGE LOAD ======
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize notification system after a short delay
+    setTimeout(initNotificationSystem, 1000);
+  });
 
-// Jalankan inisialisasi saat DOM siap
-document.addEventListener('DOMContentLoaded', function() {
-  // Inisialisasi notifikasi setelah 2 detik
-  setTimeout(initNotificationSystem, 2000);
-});
-
-
+  
     // ====== FUNGSI TRACKING KLIK GAME ======
     async function trackGameClick(gameId, platform, gameName) {
       try {
@@ -2860,16 +3105,13 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', async () => {
-    try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      console.log('Service Worker registered for notifications:', registration.scope);
-    } catch (err) {
-      console.error('Service Worker registration failed:', err);
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js")
+          .then((reg) => console.log("SW registered:", reg.scope))
+          .catch((err) => console.log("SW failed:", err));
+      });
     }
-  });
-}
 
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
