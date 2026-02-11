@@ -191,6 +191,31 @@ self.addEventListener("sync", (event) => {
     event.waitUntil(checkForNewGames());
   }
 });
+// Tambahkan di awal sw.js
+self.addEventListener('install', (event) => {
+  console.log('Service Worker: Installing...');
+  event.waitUntil(
+    caches.open(STATIC_CACHE)
+      .then((cache) => cache.addAll(PRECACHE))
+      .then(() => self.skipWaiting()) // Langsung activate
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker: Activating...');
+  event.waitUntil(
+    Promise.all([
+      caches.keys().then((keys) => Promise.all(
+        keys.map((key) => {
+          if (![STATIC_CACHE, RUNTIME_CACHE].includes(key)) {
+            return caches.delete(key);
+          }
+        })
+      )),
+      self.clients.claim() // Langsung control clients
+    ])
+  );
+});
 
 // ===== PERIODIC SYNC =====
 self.addEventListener("sync", (event) => {
