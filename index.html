@@ -2192,6 +2192,7 @@ function setupNotificationToggle() {
     const isEnabled = this.checked;
     
     try {
+      // Save preference
       localStorage.setItem(NOTIFICATION_PREFS_KEY, isEnabled);
       updateNotificationIcon(isEnabled);
       
@@ -2202,22 +2203,22 @@ function setupNotificationToggle() {
           this.checked = false;
           localStorage.setItem(NOTIFICATION_PREFS_KEY, 'false');
           updateNotificationIcon(false);
-          showNotification('❌ Izin notifikasi ditolak', 'danger');
+          showTempMessage('❌ Izin notifikasi ditolak', 'danger');
           return;
         }
         
-        showNotification('✅ Notifikasi diaktifkan', 'success');
+        showTempMessage('✅ Notifikasi diaktifkan', 'success');
         
-        // Register sync immediately
-        await registerSyncOnUserInteraction();
+        // Register sync - AMAN
+        await registerSyncSafely();
         
         // Check for new games
-        await checkNewGamesManually();
+        setTimeout(() => checkNewGamesManually(), 1000);
       } else {
-        showNotification('🔕 Notifikasi dinonaktifkan', 'info');
+        showTempMessage('🔕 Notifikasi dinonaktifkan', 'info');
       }
       
-      // Send to SW
+      // Send to service worker
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           type: 'NOTIFICATION_PREFS',
@@ -2226,7 +2227,7 @@ function setupNotificationToggle() {
       }
     } catch (error) {
       console.error('Error:', error);
-      showNotification('❌ Gagal mengubah pengaturan', 'danger');
+      showTempMessage('❌ Gagal mengubah pengaturan', 'danger');
     }
   });
 }
@@ -2350,30 +2351,29 @@ async function checkNewGamesManually() {
   const isEnabled = localStorage.getItem(NOTIFICATION_PREFS_KEY) !== 'false';
   
   if (!isEnabled) {
-    showNotification('🔕 Aktifkan notifikasi terlebih dahulu', 'warning');
+    showTempMessage('🔕 Aktifkan notifikasi terlebih dahulu', 'warning');
     return;
   }
   
   if (Notification.permission !== 'granted') {
     const granted = await requestNotificationPermissionWithPrompt();
     if (!granted) {
-      showNotification('❌ Izin notifikasi diperlukan', 'danger');
+      showTempMessage('❌ Izin notifikasi diperlukan', 'danger');
       return;
     }
   }
   
-  showNotification('🔍 Mencari game baru...', 'info');
+  showTempMessage('🔍 Mencari game baru...', 'info');
   
   try {
-    // Cache game details
-    await cacheGameDetails();
-    
     // Get current games
     const currentGames = allGames.map(game => 
       `${game.platform}_${game.download_id}`
     );
     
-    // Call Shared Games API DIRECTLY
+    console.log('Checking with API...');
+    
+    // Call Shared Games API
     const response = await fetch(SHARED_GAMES_API_URL, {
       method: 'POST',
       headers: {
@@ -2386,24 +2386,100 @@ async function checkNewGamesManually() {
     });
     
     const result = await response.json();
+    console.log('API Response:', result);
     
-    if (result.status === 'success' && result.data.new_games_count > 0) {
+    if (result.status === 'success') {
+      const newGamesCount = result.data.new_games_count || 0;
       const newGames = result.data.new_games || [];
-      console.log(`🎮 Found ${newGames.length} new games!`, newGames);
       
-      // Show notifications
-      await showGameNotifications(newGames);
-      
-      // Mark as shared
-      await markGamesAsShared(newGames);
-      
-      showNotification(`🎮 ${newGames.length} game baru ditemukan!`, 'success');
+      if (newGamesCount > 0) {
+        console.log(`🎮 Found ${newGamesCount} new games!`, newGames);
+        showTempMessage(`🎮 ${newGamesCount} game baru ditemukan!`, 'success');
+        
+        // Show browser notifications
+        await showNewGameNotifications(newGames);
+        
+        // Mark as shared
+        await markGamesAsShared(newGames);
+      } else {
+        showTempMessage('✅ Tidak ada game baru', 'info');
+      }
     } else {
-      showNotification('✅ Tidak ada game baru', 'info');
+      throw new Error(result.message || 'API Error');
     }
   } catch (error) {
     console.error('Error checking new games:', error);
-    showNotification('❌ Gagal mengecek game baru', 'danger');
+    showTempMessage('❌ Gagal mengecek game baru: ' + error.message, 'danger');
+  }
+}
+
+async function showNewGameNotifications(games) {
+  if (!games || games.length === 0) return;
+  if (Notification.permission !== 'granted') return;
+  
+  // Get game details
+  const gameDetails = [];
+  
+  for (const gameId of games.slice(0, 3)) {
+    const [platform, id] = gameId.split('_');
+    const game = allGames.find(g => 
+      g.platform === platform && g.download_id === id
+    );
+    
+    if (game) {
+      gameDetails.push({
+        id: gameId,
+        download_id: game.download_id,
+        platform: game.platform,
+        nama_game: game.nama_game || game.ori_name || 'Game Baru',
+        thumbnail_url: game.thumbnail_url
+      });
+    } else {
+      gameDetails.push({
+        id: gameId,
+        download_id: id,
+        platform: platform,
+        nama_game: `Game ${platform} Baru`,
+        thumbnail_url: null
+      });
+    }
+  }
+  
+  // Show notification for first game
+  const firstGame = gameDetails[0];
+  await showBrowserNotification(
+    `🎮 ${games.length} Game Baru Tersedia!`,
+    {
+      body: `${firstGame.nama_game} dan ${games.length - 1} game lainnya`,
+      icon: firstGame.thumbnail_url || '/icons/icon-192x192.png',
+      tag: 'new-games',
+      data: { games: gameDetails },
+      onClick: () => {
+        // Refresh page to show new games
+        window.location.reload();
+      }
+    }
+  );
+  
+  // Show individual notifications for next 2 games
+  for (let i = 1; i < Math.min(gameDetails.length, 3); i++) {
+    const game = gameDetails[i];
+    setTimeout(() => {
+      showBrowserNotification(
+        `📱 ${game.nama_game}`,
+        {
+          body: `Platform: ${getPlatformLabel(game.platform)}`,
+          icon: game.thumbnail_url || '/icons/icon-192x192.png',
+          tag: `new-game-${game.id}`,
+          data: game,
+          onClick: () => {
+            if (game.download_id && game.platform) {
+              window.location.href = `/download.html?game=${game.download_id}&platform=${game.platform}`;
+            }
+          }
+        }
+      );
+    }, i * 500);
   }
 }
 
@@ -2566,7 +2642,7 @@ async function registerServiceWorker() {
   }
   
   try {
-    // Unregister existing SW first (clean slate)
+    // Unregister existing SW first
     const existing = await navigator.serviceWorker.getRegistration();
     if (existing) {
       await existing.unregister();
@@ -2580,12 +2656,11 @@ async function registerServiceWorker() {
     
     console.log('✅ SW registered:', registration.scope);
     
-    // Wait for activation with timeout
+    // Wait for activation
     await waitForServiceWorkerActivation(registration);
     
-    // DON'T register sync here - wait for user interaction
-    // Just setup message listener
-    setupServiceWorkerMessageListener();
+    // Setup message listener
+    setupSWMessageListener();
     
     return registration;
   } catch (error) {
@@ -2596,37 +2671,67 @@ async function registerServiceWorker() {
 
 
 async function waitForServiceWorkerActivation(registration) {
-  return new Promise((resolve, reject) => {
-    // Timeout after 5 seconds
-    const timeout = setTimeout(() => {
-      console.log('SW activation timeout - continuing anyway');
-      resolve();
-    }, 5000);
-    
+  return new Promise((resolve) => {
     // Check if already active
     if (registration.active) {
-      clearTimeout(timeout);
       console.log('✅ SW already active');
       resolve();
       return;
     }
     
-    // Wait for installation/activation
+    // Wait for activation
     const sw = registration.installing || registration.waiting;
     if (sw) {
       sw.addEventListener('statechange', function onStateChange(e) {
         if (e.target.state === 'activated') {
           console.log('✅ SW activated');
-          clearTimeout(timeout);
           sw.removeEventListener('statechange', onStateChange);
           resolve();
         }
       });
     } else {
-      clearTimeout(timeout);
-      resolve();
+      // Fallback
+      setTimeout(resolve, 2000);
     }
   });
+}
+
+
+async function registerSyncSafely() {
+  try {
+    // 1. Check if service worker supported
+    if (!('serviceWorker' in navigator)) {
+      console.log('Service Worker not supported');
+      return false;
+    }
+    
+    // 2. Get registration - WAIT UNTIL READY
+    const registration = await navigator.serviceWorker.ready;
+    
+    // 3. Check if sync is supported
+    if (!registration || !('sync' in registration)) {
+      console.log('Background sync not supported in this browser');
+      return false;
+    }
+    
+    // 4. Check if service worker is active
+    if (!registration.active) {
+      console.log('SW not active yet, will retry...');
+      setTimeout(() => registerSyncSafely(), 2000);
+      return false;
+    }
+    
+    // 5. Register sync
+    await registration.sync.register('check-new-games');
+    console.log('✅ Background sync registered successfully');
+    return true;
+  } catch (error) {
+    console.log('Sync registration failed:', error.message);
+    
+    // Retry once after delay
+    setTimeout(() => registerSyncSafely(), 3000);
+    return false;
+  }
 }
 
 async function registerSyncOnUserInteraction() {
@@ -4025,6 +4130,11 @@ registerServiceWorker();
   }, 1000);
 
 
+  document.addEventListener('click', function onFirstClick() {
+    registerSyncSafely();
+    document.removeEventListener('click', onFirstClick);
+  }, { once: true });
+
       applySearchFromUrl();
       applyHashPlatform();
       loadAllGames();
@@ -4446,26 +4556,65 @@ registerServiceWorker();
       }
     }
 
-    function showTempMessage(message, type = 'info') {
-      // Create temporary message element
-      const alertDiv = document.createElement('div');
-      alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-      alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
-      alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-      `;
-      
-      document.body.appendChild(alertDiv);
-      
-      // Auto remove after 3 seconds
-      setTimeout(() => {
-        if (alertDiv.parentNode) {
-          alertDiv.remove();
-        }
-      }, 3000);
+function showTempMessage(message, type = 'info') {
+  // Create temporary message element
+  const alertDiv = document.createElement('div');
+  alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+  alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
+  alertDiv.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+  
+  document.body.appendChild(alertDiv);
+  
+  // Auto remove after 3 seconds
+  setTimeout(() => {
+    if (alertDiv.parentNode) {
+      alertDiv.remove();
     }
+  }, 3000);
+}
 
+async function showBrowserNotification(title, options = {}) {
+  if (!('Notification' in window)) {
+    console.log('Notifications not supported');
+    return false;
+  }
+  
+  if (Notification.permission !== 'granted') {
+    console.log('Notification permission not granted');
+    return false;
+  }
+  
+  try {
+    const notification = new Notification(title, {
+      body: options.body || '',
+      icon: options.icon || '/icons/icon-192x192.png',
+      badge: '/icons/icon-192x192.png',
+      vibrate: [200, 100, 200],
+      tag: options.tag || 'indapk-notification',
+      ...options
+    });
+    
+    notification.onclick = (e) => {
+      e.preventDefault();
+      window.focus();
+      notification.close();
+      
+      if (options.onClick) {
+        options.onClick();
+      } else if (options.url) {
+        window.location.href = options.url;
+      }
+    };
+    
+    return true;
+  } catch (error) {
+    console.error('Error showing notification:', error);
+    return false;
+  }
+}
     // ====== LOGIN SYSTEM ======
     function checkLoginStatus() {
       const savedUser = localStorage.getItem(LS_USER_KEY);
