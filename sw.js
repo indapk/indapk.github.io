@@ -1,10 +1,9 @@
 // ============================================
-// sw.js - INDapk PWA v2.0
-// PUSH NOTIFICATION WITHOUT VAPID
-// MENGGUNAKAN BACKGROUND SYNC & FETCH POLLING
+// sw.js - INDapk PWA v3.0
+// FIXED: REAL-TIME NOTIFICATION RECEIVER
 // ============================================
 
-const VERSION = "v2.0.0";
+const VERSION = "v3.0.0";
 const STATIC_CACHE = `indapk-static-${VERSION}`;
 const RUNTIME_CACHE = `indapk-runtime-${VERSION}`;
 const OFFLINE_URL = "/offline.html";
@@ -19,11 +18,13 @@ const PRECACHE = [
   "/icons/icon-512x512.png"
 ];
 
+const NOTIFICATION_API_URL = "https://script.google.com/macros/s/AKfycbzcVDAcVxcWQ7yL8LBRb1mrPSmu8qr-9T_ykg925vu7o2_kUO7QmWtv_10XyImNu--A/exec";
+
 // ============================================
 // INSTALL - PRECACHE STATIC ASSETS
 // ============================================
 self.addEventListener("install", (event) => {
-  console.log("✅ SW Installing...");
+  console.log("✅ SW v3.0 Installing...");
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then((cache) => cache.addAll(PRECACHE))
@@ -35,7 +36,7 @@ self.addEventListener("install", (event) => {
 // ACTIVATE - CLEAN OLD CACHES
 // ============================================
 self.addEventListener("activate", (event) => {
-  console.log("✅ SW Activating...");
+  console.log("✅ SW v3.0 Activated");
   event.waitUntil(
     caches.keys().then((keys) => Promise.all(
       keys.map((key) => {
@@ -82,7 +83,6 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(req.url);
 
-  // Navigasi halaman: Network First
   if (req.mode === "navigate") {
     event.respondWith((async () => {
       try {
@@ -98,7 +98,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Same-origin asset: cache-first
   if (url.origin === self.location.origin) {
     const dest = req.destination;
     if (["script", "style", "image", "font"].includes(dest)) {
@@ -109,20 +108,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Cross-origin assets
   if (["script", "style", "image", "font"].includes(req.destination)) {
     event.respondWith(staleWhileRevalidate(req));
   }
 });
 
 // ============================================
-// 🚨 PUSH NOTIFICATION HANDLER
-// MENERIMA NOTIFIKASI DARI ADMIN VIA POST MESSAGE
+// FIX: MESSAGE HANDLER - TERIMA NOTIF DARI PAGE
 // ============================================
-
-// LISTENER UNTUK MENERIMA NOTIFIKASI DARI HALAMAN
 self.addEventListener('message', function(event) {
-  console.log('📨 SW Received message:', event.data);
+  console.log('📨 SW Received:', event.data);
   
   const data = event.data;
   
@@ -130,34 +125,125 @@ self.addEventListener('message', function(event) {
     showGameNotification(data.payload);
   }
   
-  if (data && data.type === 'CHECK_NEW_GAMES') {
-    checkNewGames();
+  if (data && data.type === 'NEW_NOTIFICATIONS') {
+    const notifications = data.payload;
+    notifications.forEach(notif => {
+      const game = {
+        game_id: notif.game_id,
+        platform: notif.platform,
+        game_name: notif.game_name,
+        download_id: notif.download_id,
+        thumbnail_url: notif.thumbnail_url || ''
+      };
+      showGameNotification(game);
+    });
+  }
+  
+  if (data && data.type === 'GET_PENDING_NOTIFICATIONS') {
+    fetchPendingNotifications();
+  }
+  
+  if (data && data.type === 'PUSH_NOTIFICATION') {
+    const game = data.payload;
+    showGameNotification(game);
   }
 });
 
-// FUNCTION UNTUK MENAMPILKAN NOTIFIKASI GAME
+// ============================================
+// FIX: FETCH PENDING NOTIFICATIONS DARI SERVER
+// ============================================
+async function fetchPendingNotifications() {
+  try {
+    console.log('🔍 SW: Checking for pending notifications...');
+    
+    const response = await fetch(NOTIFICATION_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        action: 'getPendingNotifications'
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success' && result.count > 0) {
+      const pending = result.data;
+      
+      console.log(`🎮 SW: Found ${pending.length} pending notifications!`);
+      
+      if (pending.length > 0) {
+        const clientsList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+        
+        clientsList.forEach(client => {
+          client.postMessage({
+            type: 'PENDING_NOTIFICATIONS',
+            payload: pending
+          });
+        });
+        
+        pending.forEach(notif => {
+          const game = {
+            game_id: notif.game_id,
+            platform: notif.platform,
+            game_name: notif.game_name,
+            download_id: notif.download_id,
+            thumbnail_url: notif.thumbnail_url || ''
+          };
+          showGameNotification(game);
+        });
+        
+        for (const notif of pending) {
+          try {
+            await fetch(NOTIFICATION_API_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: new URLSearchParams({
+                action: 'markNotificationSent',
+                game_id: notif.game_id
+              })
+            });
+          } catch (e) {
+            console.error('❌ SW: Failed to mark notification as sent:', e);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('❌ SW: Error fetching notifications:', error);
+  }
+}
+
+// ============================================
+// SHOW NOTIFICATION
+// ============================================
 async function showGameNotification(game) {
-  console.log('🎮 Showing notification for:', game);
+  console.log('🎮 Showing notification:', game);
   
-  // Format platform untuk display
+  if (!game || !game.game_name) {
+    console.error('❌ Invalid game data:', game);
+    return;
+  }
+  
   const platformIcons = {
-    'ps1': '🎮 PS1', 'ps2': '🎮 PS2', 'ps3': '🎮 PS3', 'ps4': '🎮 PS4', 'ps5': '🎮 PS5',
-    'psvita': '📱 PS Vita', 'psp': '📱 PSP',
-    'switch': '🕹️ Switch', '3ds': '📟 3DS', 'wii': '🎮 Wii', 'wiiu': '🎮 Wii U', 'gamecube': '📦 GameCube',
-    'android': '🤖 Android', 'ios': '🍎 iOS', 'pc': '💻 PC',
-    'java': '☕ Java', 'apksgi': '🔞 APKsgi'
+    'ps1': '🎮 PS1', 'ps2': '🎮 PS2', 'ps3': '🎮 PS3', 'ps4': '🎮 PS4',
+    'switch': '🕹️ Switch', 'psp': '📱 PSP', 'psvita': '📱 PS Vita',
+    'android': '🤖 Android', 'pc': '💻 PC', 'wii': '🎮 Wii',
+    'gamecube': '📦 Gamecube', '3ds': '📟 3DS', 'java': '☕ Java',
+    'ios': '🍎 iOS', 'apksgi': '🔞 APKsgi'
   };
   
   const platformDisplay = platformIcons[game.platform] || `🎯 ${game.platform.toUpperCase()}`;
-  
-  // Buat thumbnail URL (pakai proxy jika perlu)
   let thumbnailUrl = game.thumbnail_url || '/icons/icon-192x192.png';
-  if (!thumbnailUrl || thumbnailUrl.includes('placehold.co')) {
+  
+  if (thumbnailUrl.includes('placehold.co') || !thumbnailUrl) {
     thumbnailUrl = '/icons/icon-192x192.png';
   }
   
-  // Buat URL untuk dibuka
-  const gameUrl = game.url || `https://indapk.github.io/download.html?game=${game.download_id}&platform=${game.platform}`;
+  const gameUrl = `https://indapk.github.io/download.html?game=${game.download_id}&platform=${game.platform}`;
   
   const options = {
     body: `${platformDisplay}\n🎯 ${game.game_name}`,
@@ -192,26 +278,7 @@ async function showGameNotification(game) {
 }
 
 // ============================================
-// 🔍 CHECK NEW GAMES FROM SERVER (POLLING)
-// ============================================
-async function checkNewGames() {
-  console.log('🔍 SW: Checking for new games...');
-  
-  try {
-    // AMBIL DARI LOCALSTORAGE VIA CLIENTS
-    const clientsList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
-    
-    for (const client of clientsList) {
-      client.postMessage({ type: 'GET_PENDING_NOTIFICATIONS' });
-    }
-    
-  } catch (error) {
-    console.error('❌ SW: Error checking new games:', error);
-  }
-}
-
-// ============================================
-// 👆 NOTIFICATION CLICK HANDLER
+// NOTIFICATION CLICK HANDLER
 // ============================================
 self.addEventListener('notificationclick', function(event) {
   console.log('👆 Notification clicked:', event.action);
@@ -222,27 +289,23 @@ self.addEventListener('notificationclick', function(event) {
   
   notification.close();
   
-  // Handle actions
   let url = data.url || '/';
   
   if (action === 'open' || action === 'download' || action === '') {
-    // Default action: buka halaman game
     url = data.url || `https://indapk.github.io/download.html?game=${data.download_id}&platform=${data.platform}`;
   } else if (action === 'close') {
-    return; // Tutup notifikasi, tidak buka apa2
+    return;
   }
   
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then(function(clientList) {
-        // Cek apakah sudah ada tab dengan URL yang sama
         for (let i = 0; i < clientList.length; i++) {
           const client = clientList[i];
           if (client.url.includes(data.download_id) && 'focus' in client) {
             return client.focus();
           }
         }
-        // Buka tab baru
         if (clients.openWindow) {
           return clients.openWindow(url);
         }
@@ -251,34 +314,34 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 // ============================================
-// ❌ NOTIFICATION CLOSE HANDLER
+// NOTIFICATION CLOSE HANDLER
 // ============================================
 self.addEventListener('notificationclose', function(event) {
   console.log('❌ Notification closed:', event.notification.tag);
 });
 
 // ============================================
-// 📱 PERIODIC BACKGROUND SYNC (EXPERIMENTAL)
+// PERIODIC SYNC (EXPERIMENTAL)
 // ============================================
 self.addEventListener('periodicsync', function(event) {
-  if (event.tag === 'check-indapk-games') {
-    console.log('🔄 Periodic sync: checking games...');
-    event.waitUntil(checkNewGames());
+  if (event.tag === 'check-indapk-notifications') {
+    console.log('🔄 Periodic sync: checking notifications...');
+    event.waitUntil(fetchPendingNotifications());
   }
 });
 
 // ============================================
-// 🔄 SYNC EVENT - UNTUK RETRY GAGAL
+// SYNC EVENT - UNTUK RETRY
 // ============================================
 self.addEventListener('sync', function(event) {
   if (event.tag === 'retry-notifications') {
     console.log('🔄 Sync: retry failed notifications');
-    event.waitUntil(checkNewGames());
+    event.waitUntil(fetchPendingNotifications());
   }
 });
 
 // ============================================
-// 📨 PUSH EVENT (TANPA VAPID - HANYA UNTUK COMPATIBILITY)
+// PUSH EVENT (FALLBACK)
 // ============================================
 self.addEventListener('push', function(event) {
   console.log('📨 Push event received (fallback)');
@@ -296,7 +359,7 @@ self.addEventListener('push', function(event) {
 });
 
 // ============================================
-// 💾 BACKGROUND FETCH (UNTUK DOWNLOAD)
+// BACKGROUND FETCH
 // ============================================
 self.addEventListener('backgroundfetchsuccess', function(event) {
   console.log('✅ Background fetch succeeded:', event.registration.id);
@@ -307,7 +370,6 @@ self.addEventListener('backgroundfetchsuccess', function(event) {
       const response = await records[0].responseReady;
       const blob = await response.blob();
       
-      // Trigger download di client
       const clientsList = await clients.matchAll({ type: 'window' });
       for (const client of clientsList) {
         client.postMessage({
@@ -323,10 +385,17 @@ self.addEventListener('backgroundfetchsuccess', function(event) {
 });
 
 // ============================================
-// 🆘 OFFLINE FALLBACK
+// AUTO CHECK EVERY 15 SECONDS
 // ============================================
-self.addEventListener('offline', function() {
-  console.log('📴 App is offline');
-});
+setInterval(() => {
+  console.log('🔄 SW: Auto-checking for notifications...');
+  fetchPendingNotifications();
+}, 15000); // 15 DETIK!
 
-console.log('🚀 Service Worker v2.0.0 loaded - Ready for notifications!');
+// Initial check after 3 seconds
+setTimeout(() => {
+  console.log('🔄 SW: Initial notification check...');
+  fetchPendingNotifications();
+}, 3000);
+
+console.log('🚀 SW v3.0 Ready - Real-time notifications enabled! (Check every 15 seconds)');
