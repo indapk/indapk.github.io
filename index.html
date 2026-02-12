@@ -2177,24 +2177,24 @@
   
   // ====== NOTIFICATION INITIALIZATION ======
 async function initNotificationSystem() {
-  console.log('🔔 [ENHANCED] Initializing notification system...');
+  console.log('🔔 [FIXED] Initializing notification system...');
   
-  // Request notification permission
+  // Request permission
   await requestNotificationPermission();
   
-  // Check if user has already set preferences
+  // Load preferences
   loadNotificationPreferences();
   
-  // Add notification toggle button to UI
+  // Add toggle button
   addNotificationToggleButton();
   
-  // ✅ PERUBAHAN: Start periodic check for new games - setiap 15 detik!
-  startEnhancedNotificationChecker();
+  // ✅ FIX: Register service worker dengan handle message
+  await registerServiceWorkerWithHandler();
   
-  // ✅ PERUBAHAN: Register service worker untuk push notifications
-  registerServiceWorkerForPush();
+  // ✅ FIX: Mulai polling REAL-TIME (SETIAP 5 DETIK!)
+  startRealTimeNotificationPoller();
   
-  // ✅ PERUBAHAN: Cek notifikasi yang belum terbaca
+  // ✅ FIX: Cek notifikasi yang belum dibaca
   checkUnreadNotifications();
 }
 async function sendNotificationViaSW(game) {
@@ -2208,6 +2208,138 @@ async function sendNotificationViaSW(game) {
     });
     
     console.log('📨 Notification sent to SW:', game);
+  }
+}
+async function registerServiceWorkerWithHandler() {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      console.log('✅ Service Worker registered:', registration.scope);
+      
+      // Setup message listener
+      navigator.serviceWorker.addEventListener('message', function(event) {
+        console.log('📩 Message from SW:', event.data);
+        
+        if (event.data.type === 'PENDING_NOTIFICATIONS') {
+          // Ada notifikasi pending dari server!
+          const notifications = event.data.payload || [];
+          notifications.forEach(notif => {
+            showInAppNotificationEnhanced(notif, getPlatformLabel(notif.platform));
+          });
+          
+          // Update badge
+          localStorage.setItem('indapk_unread_notifications', notifications.length.toString());
+          updateUnreadCountBadge();
+        }
+        
+        if (event.data.type === 'PUSH_NOTIFICATION') {
+          // Notifikasi langsung dari admin
+          const game = event.data.payload;
+          showInAppNotificationEnhanced(game, getPlatformLabel(game.platform));
+          
+          // Update badge
+          const current = parseInt(localStorage.getItem('indapk_unread_notifications') || '0');
+          localStorage.setItem('indapk_unread_notifications', (current + 1).toString());
+          updateUnreadCountBadge();
+        }
+      });
+      
+      return registration;
+    } catch (error) {
+      console.error('❌ Service Worker registration failed:', error);
+    }
+  }
+  return null;
+}
+
+
+// ============================================
+// FIX: REAL-TIME POLLING (SETIAP 5 DETIK)
+// ============================================
+let pollerInterval = null;
+
+function startRealTimeNotificationPoller() {
+  // Stop existing poller
+  if (pollerInterval) {
+    clearInterval(pollerInterval);
+  }
+  
+  // ✅ POLLING SETIAP 5 DETIK!
+  pollerInterval = setInterval(async () => {
+    if (window.notificationPrefs?.enabled) {
+      console.log('🔄 [5s] Polling for new notifications...');
+      await fetchPendingNotificationsFromServer();
+    }
+  }, 5000); // 5 DETIK!
+  
+  // Initial check
+  setTimeout(() => {
+    fetchPendingNotificationsFromServer();
+  }, 1000);
+  
+  console.log('✅ Real-time notification poller started (5s interval)');
+}
+
+// ============================================
+// FIX: FETCH PENDING NOTIFICATIONS DARI SERVER
+// ============================================
+async function fetchPendingNotificationsFromServer() {
+  try {
+    const userId = window.notificationPrefs?.userId || '';
+    
+    const response = await fetch('https://script.google.com/macros/s/AKfycbzcVDAcVxcWQ7yL8LBRb1mrPSmu8qr-9T_ykg925vu7o2_kUO7QmWtv_10XyImNu--A/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        action: 'getNotificationHistory',
+        user_id: userId
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.status === 'success' && result.count > 0) {
+      // Filter notifikasi dalam 1 jam terakhir yang belum dikirim
+      const now = Date.now();
+      const oneHourAgo = now - 3600000;
+      
+      const pendingNotifs = result.data.filter(notif => {
+        const notifTime = new Date(notif.timestamp).getTime();
+        return notifTime > oneHourAgo && notif.status !== 'Sent';
+      });
+      
+      if (pendingNotifs.length > 0) {
+        console.log(`🎮 Found ${pendingNotifs.length} new notifications!`);
+        
+        // Kirim ke semua client via Service Worker
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'NEW_NOTIFICATIONS',
+            payload: pendingNotifs
+          });
+        }
+        
+        // Tampilkan notifikasi
+        pendingNotifs.forEach(notif => {
+          const game = {
+            game_id: notif.game_id,
+            platform: notif.platform,
+            game_name: notif.game_name,
+            download_id: notif.download_id,
+            thumbnail_url: notif.thumbnail_url || ''
+          };
+          showInAppNotificationEnhanced(game, getPlatformLabel(game.platform));
+        });
+        
+        // Update unread count
+        localStorage.setItem('indapk_unread_notifications', pendingNotifs.length.toString());
+        updateUnreadCountBadge();
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error polling notifications:', error);
   }
 }
 
