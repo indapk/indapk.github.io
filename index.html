@@ -2254,7 +2254,9 @@ async function checkForNewGamesEnhanced() {
   try {
     isCheckingNewGames = true;
     
-    // ✅ AMBIL SEMUA NOTIFIKASI YANG STATUSNYA 'SENT'
+    console.log('🔍 Checking for new notifications from server...');
+    
+    // ✅ PASTIKAN URL INI BENAR (sama dengan deployment Apps Script)
     const response = await fetch(NOTIFICATION_API_URL, {
       method: 'POST',
       headers: {
@@ -2266,7 +2268,12 @@ async function checkForNewGamesEnhanced() {
       })
     });
     
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     const result = await response.json();
+    console.log('📨 Notification response:', result);
     
     if (result.status === 'success' && result.count > 0) {
       // Filter notifikasi dalam 24 jam terakhir
@@ -2274,6 +2281,7 @@ async function checkForNewGamesEnhanced() {
       const oneDayAgo = now - 86400000; // 24 jam
       
       const recentNotifications = result.data.filter(notif => {
+        if (!notif.timestamp) return false;
         const notifTime = new Date(notif.timestamp).getTime();
         return notifTime > oneDayAgo;
       });
@@ -2282,14 +2290,15 @@ async function checkForNewGamesEnhanced() {
         console.log(`🎮 Found ${recentNotifications.length} recent notifications!`);
         
         // Simpan ke localStorage untuk badge
-        localStorage.setItem('indapk_unread_notifications', recentNotifications.length.toString());
+        const unreadCount = recentNotifications.filter(n => n.status !== 'Sent').length;
+        localStorage.setItem('indapk_unread_notifications', unreadCount.toString());
         updateUnreadCountBadge();
         
         // Tampilkan notifikasi untuk yang belum dilihat
         const seenIds = JSON.parse(localStorage.getItem('indapk_seen_notifications') || '[]');
         
         for (const notif of recentNotifications) {
-          if (!seenIds.includes(notif.game_id)) {
+          if (!seenIds.includes(notif.game_id) && notif.status !== 'Sent') {
             // Buat objek game dari data notifikasi
             const game = {
               game_id: notif.game_id,
@@ -2307,8 +2316,8 @@ async function checkForNewGamesEnhanced() {
           }
         }
         
-        // Simpan ID yang sudah dilihat
-        localStorage.setItem('indapk_seen_notifications', JSON.stringify(seenIds.slice(-50))); // max 50
+        // Simpan ID yang sudah dilihat (max 50)
+        localStorage.setItem('indapk_seen_notifications', JSON.stringify(seenIds.slice(-50)));
       }
     }
     
