@@ -107,6 +107,178 @@
       margin-bottom: 10px;
     }
 
+    /* ===== LOADING ANIMATIONS ===== */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-darker);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .loading-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loading-container {
+      text-align: center;
+      position: relative;
+    }
+
+    .loading-controller {
+      font-size: 80px;
+      color: var(--neon-cyan);
+      animation: controllerShake 1.5s infinite ease-in-out;
+      text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-purple);
+      margin-bottom: 20px;
+    }
+
+    @keyframes controllerShake {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(15deg) scale(1.1); }
+      75% { transform: rotate(-15deg) scale(1.1); }
+    }
+
+    .loading-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      letter-spacing: 4px;
+    }
+
+    .loading-progress {
+      width: 300px;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .loading-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+      border-radius: 10px;
+      animation: loadingProgress 2s infinite ease-in-out;
+      box-shadow: 0 0 20px var(--neon-cyan);
+    }
+
+    @keyframes loadingProgress {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+
+    .platform-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      margin: 20px 0;
+    }
+
+    .platform-loading .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(0,240,255,0.1);
+      border-top: 4px solid var(--neon-cyan);
+      border-right: 4px solid var(--neon-purple);
+      border-bottom: 4px solid var(--neon-pink);
+      border-radius: 50%;
+      animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+      margin-bottom: 20px;
+    }
+
+    .platform-loading .spinner-pulse {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, var(--neon-cyan) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .loading-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--neon-cyan);
+      border-radius: 50%;
+      animation: dotPulse 1.5s ease-in-out infinite;
+    }
+
+    .loading-dot:nth-child(2) {
+      animation-delay: 0.2s;
+      background: var(--neon-purple);
+    }
+
+    .loading-dot:nth-child(3) {
+      animation-delay: 0.4s;
+      background: var(--neon-pink);
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.5); opacity: 1; }
+    }
+
+    .skeleton-loader {
+      background: linear-gradient(90deg, 
+        rgba(255,255,255,0.05) 25%, 
+        rgba(0,240,255,0.1) 50%, 
+        rgba(255,255,255,0.05) 75%);
+      background-size: 200% 100%;
+      animation: skeleton 1.5s infinite;
+    }
+
+    @keyframes skeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .game-skeleton {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(0,240,255,0.1);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
     /* ===== PLATFORM GRID ===== */
     .platform-grid-section {
       padding: 30px 0 40px;
@@ -170,7 +342,6 @@
     .platform-card[data-platform="ps2"] .platform-icon { background: rgba(0,102,204,0.2); color: #0066cc; }
     .platform-card[data-platform="psvita"] .platform-icon { background: rgba(0,55,145,0.2); color: #003791; }
     .platform-card[data-platform="switch"] .platform-icon { background: rgba(230,0,18,0.2); color: #e60012; }
-    /* Tambahkan platform lainnya sesuai kebutuhan */
 
     /* ===== GAME LIST SECTION ===== */
     .game-list-section {
@@ -294,14 +465,34 @@
       .platform-grid { grid-template-columns: repeat(2, 1fr); }
       .alphabet-filter { gap: 5px; }
       .alphabet-btn { width: 35px; height: 35px; font-size: 0.9rem; }
+      .loading-progress { width: 250px; }
     }
   </style>
 </head>
 <body>
-  <!-- ===== NAVIGATION (Copy dari index.html dengan penyesuaian) ===== -->
+  <!-- ===== FULL PAGE LOADING OVERLAY ===== -->
+  <div id="pageLoadingOverlay" class="loading-overlay">
+    <div class="loading-container">
+      <div class="loading-controller">
+        <i class="bi bi-controller"></i>
+      </div>
+      <div class="loading-text">INDapk</div>
+      <div class="loading-progress">
+        <div class="loading-bar"></div>
+      </div>
+      <div class="loading-dots">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <p class="mt-3 text-muted">Memuat Platform Game...</p>
+    </div>
+  </div>
+
+  <!-- ===== NAVIGATION ===== -->
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
-      <a class="navbar-brand" href="index.html">
+      <a class="navbar-brand" href="listgame.html">
         <i class="bi bi-controller me-2"></i>INDapk
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -336,13 +527,13 @@
       <p class="lead text-muted">Pilih platform untuk melihat koleksi game lengkap</p>
     </div>
 
-    <!-- ===== PLATFORM GRID (Hanya muncul jika tidak ada hash/platform yang dipilih) ===== -->
+    <!-- ===== PLATFORM GRID ===== -->
     <div id="platformSelection" class="platform-grid-section">
       <h4 class="text-center mb-4"><i class="bi bi-controller me-2"></i>Pilih Platform Game</h4>
       <div class="platform-grid" id="platformGrid"></div>
     </div>
 
-    <!-- ===== GAME LIST (Muncul jika hash/platform dipilih) ===== -->
+    <!-- ===== GAME LIST CONTENT ===== -->
     <div id="gameListContent" style="display: none;">
       <div class="platform-header">
         <a href="listgame.html" class="back-button">
@@ -357,14 +548,8 @@
       <!-- Alphabet Filter -->
       <div class="alphabet-filter" id="alphabetFilter"></div>
 
-      <!-- Games Container -->
-      <div id="gamesContainer">
-        <div class="spinner-container text-center py-5">
-          <div class="spinner-border text-info" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </div>
+      <!-- Games Container with Loading State -->
+      <div id="gamesContainer"></div>
     </div>
   </div>
 
@@ -435,6 +620,72 @@
       return colors[platform] || '#00f0ff';
     }
 
+    // ===== LOADING FUNCTIONS =====
+    function showPageLoader() {
+      const overlay = document.getElementById('pageLoadingOverlay');
+      if (overlay) {
+        overlay.classList.remove('fade-out');
+      }
+    }
+
+    function hidePageLoader() {
+      const overlay = document.getElementById('pageLoadingOverlay');
+      if (overlay) {
+        overlay.classList.add('fade-out');
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 500);
+      }
+    }
+
+    function showPlatformLoader() {
+      const container = document.getElementById('gamesContainer');
+      if (!container) return;
+      
+      container.innerHTML = `
+        <div class="platform-loading">
+          <div class="spinner-pulse"></div>
+          <div class="spinner"></div>
+          <h5 class="mt-3" style="color: var(--neon-cyan);">Memuat Data Game</h5>
+          <p class="text-muted">Mohon tunggu, sedang mengambil data dari server...</p>
+          <div class="loading-dots">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function showSkeletonLoader() {
+      const container = document.getElementById('gamesContainer');
+      if (!container) return;
+      
+      let skeletonHTML = '<div class="mt-4">';
+      for (let i = 0; i < 8; i++) {
+        skeletonHTML += `
+          <div class="game-skeleton">
+            <div class="row align-items-center">
+              <div class="col-md-8">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="skeleton-loader" style="width: 50px; height: 30px; border-radius: 5px;"></div>
+                  <div style="flex: 1;">
+                    <div class="skeleton-loader" style="width: 200px; height: 20px; border-radius: 5px; margin-bottom: 10px;"></div>
+                    <div class="skeleton-loader" style="width: 150px; height: 15px; border-radius: 5px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                <div class="skeleton-loader" style="width: 100px; height: 35px; border-radius: 5px; float: right;"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      skeletonHTML += '</div>';
+      container.innerHTML = skeletonHTML;
+    }
+
     // ===== LOAD PLATFORM COUNTS =====
     async function loadAllPlatformCounts() {
       try {
@@ -488,14 +739,8 @@
 
       currentPlatform = platform;
       
-      // Tampilkan loading
-      document.getElementById('gamesContainer').innerHTML = `
-        <div class="spinner-container text-center py-5">
-          <div class="spinner-border text-info" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      `;
+      // Show platform loader
+      showPlatformLoader();
 
       try {
         const response = await fetch(cfg.url, {
@@ -523,10 +768,10 @@
         console.error('Error loading games:', error);
         document.getElementById('gamesContainer').innerHTML = `
           <div class="empty-state">
-            <i class="bi bi-exclamation-triangle" style="font-size: 3rem;"></i>
-            <h5 class="mt-3">Gagal Memuat Data</h5>
+            <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: var(--neon-pink);"></i>
+            <h5 class="mt-3" style="color: var(--neon-pink);">Gagal Memuat Data</h5>
             <p class="text-muted">Silakan coba lagi nanti</p>
-            <button onclick="location.reload()" class="btn btn-neon mt-3">
+            <button onclick="location.reload()" class="btn btn-outline-info mt-3">
               <i class="bi bi-arrow-repeat me-2"></i>Muat Ulang
             </button>
           </div>
@@ -572,21 +817,26 @@
 
     // ===== FILTER GAMES BY LETTER =====
     function filterGamesByLetter(letter) {
-      if (letter === 'ALL') {
-        filteredGames = [...gamesData];
-      } else if (letter === '#') {
-        filteredGames = gamesData.filter(game => {
-          const firstChar = (game.nama_game || '').trim().charAt(0);
-          return /[0-9]/.test(firstChar);
-        });
-      } else {
-        filteredGames = gamesData.filter(game => {
-          const firstChar = (game.nama_game || '').trim().charAt(0).toUpperCase();
-          return firstChar === letter;
-        });
-      }
+      // Show skeleton loader while filtering
+      showSkeletonLoader();
+      
+      setTimeout(() => {
+        if (letter === 'ALL') {
+          filteredGames = [...gamesData];
+        } else if (letter === '#') {
+          filteredGames = gamesData.filter(game => {
+            const firstChar = (game.nama_game || '').trim().charAt(0);
+            return /[0-9]/.test(firstChar);
+          });
+        } else {
+          filteredGames = gamesData.filter(game => {
+            const firstChar = (game.nama_game || '').trim().charAt(0).toUpperCase();
+            return firstChar === letter;
+          });
+        }
 
-      renderGameList();
+        renderGameList();
+      }, 300); // Simulasi loading untuk efek smooth
     }
 
     // ===== RENDER GAME LIST =====
@@ -643,6 +893,9 @@
     // ===== INITIALIZATION =====
     document.addEventListener('DOMContentLoaded', async function() {
       document.getElementById('yearNow').textContent = new Date().getFullYear();
+      
+      // Show page loader
+      showPageLoader();
 
       // Cek hash URL
       const hash = window.location.hash.replace('#', '').trim().toLowerCase();
@@ -650,16 +903,19 @@
       if (hash) {
         const validPlatform = API_CONFIGS.some(cfg => cfg.platform === hash);
         if (validPlatform) {
-          await loadPlatformCounts();
+          await loadAllPlatformCounts();
           await loadGamesByPlatform(hash);
         } else {
           // Hash tidak valid, tampilkan platform grid
-          await loadPlatformCounts();
+          await loadAllPlatformCounts();
         }
       } else {
         // Tidak ada hash, tampilkan platform grid
-        await loadPlatformCounts();
+        await loadAllPlatformCounts();
       }
+
+      // Hide page loader after everything is loaded
+      setTimeout(hidePageLoader, 1000);
 
       // Listen for hash changes
       window.addEventListener('hashchange', async function() {
@@ -675,35 +931,15 @@
           document.getElementById('platformSelection').style.display = 'block';
           document.getElementById('gameListContent').style.display = 'none';
           currentPlatform = null;
-          await loadPlatformCounts();
+          await loadAllPlatformCounts();
         }
       });
     });
 
-    // Helper untuk load platform counts
-    async function loadPlatformCounts() {
-      try {
-        const promises = API_CONFIGS.map(async (cfg) => {
-          try {
-            const response = await fetch(cfg.url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: 'action=getAllGames'
-            });
-            const result = await response.json();
-            if (result.status === 'success' && Array.isArray(result.data)) {
-              platformCounts[cfg.platform] = result.data.length;
-            }
-          } catch (e) {
-            platformCounts[cfg.platform] = 0;
-          }
-        });
-        await Promise.allSettled(promises);
-        renderPlatformGrid();
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
+    // Simulate loading when page refreshes
+    window.addEventListener('beforeunload', function() {
+      showPageLoader();
+    });
   </script>
 </body>
 </html>
