@@ -584,72 +584,6 @@
         color: #000;
     }
 
-    /* =========================================
-       SEE IMAGE BUTTON FOR ANDROID/TOUCH DEVICES
-    ========================================= */
-    .btn-see-image {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(4px);
-        border: 1px solid var(--neon-cyan);
-        color: var(--neon-cyan);
-        font-size: 0.7rem;
-        padding: 4px 12px;
-        border-radius: 20px;
-        z-index: 10;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        white-space: nowrap;
-        display: none; /* Hidden by default, shown only on touch devices */
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .btn-see-image i {
-        margin-right: 4px;
-        font-size: 0.8rem;
-    }
-
-    .btn-see-image:hover {
-        background: var(--neon-cyan);
-        color: #000;
-        transform: translateX(-50%) scale(1.05);
-    }
-
-    /* Show on touch devices (using hover: none as detection) */
-    @media (hover: none) and (pointer: coarse) {
-        .game-card .btn-see-image {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-        }
-    }
-
-    /* Also show on devices with max-width: 768px (mobile) */
-    @media (max-width: 768px) {
-        .game-card .btn-see-image {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-        }
-    }
-
-    /* When button is clicked/pressed, give visual feedback */
-    .btn-see-image:active {
-        background: var(--neon-cyan);
-        color: #000;
-        transform: translateX(-50%) scale(0.95);
-    }
-
-    /* Prevent card click when clicking on the button */
-    .btn-see-image {
-        pointer-events: auto;
-    }
-
     /* Pinned Section */
     .pinned-section {
         border: 1px solid rgba(255, 0, 85, 0.3);
@@ -1525,24 +1459,6 @@
     </div>
   </div>
 
-  <!-- Image Preview Modal (untuk melihat gambar tanpa blur) -->
-  <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-dark border-secondary text-light">
-        <div class="modal-header">
-          <h5 class="modal-title" id="imagePreviewTitle">Preview Gambar</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body text-center p-0">
-          <img id="imagePreviewFull" src="" class="img-fluid w-100" style="max-height: 80vh; object-fit: contain;">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- SCRIPTS -->
   <script src="https://quge5.com/88/tag.min.js" data-zone="210839" async data-cfasync="false"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -1983,7 +1899,7 @@
             
             html += `
             <div class="col-6 col-md-4 col-lg-3">
-                <div class="game-card platform-${platformClass}" style="animation-delay: ${index * 50}ms">
+                <div class="game-card platform-${platformClass}" style="animation-delay: ${index * 50}ms" onclick="trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g,"")}')">
                     <div class="card-img-wrap">
                         ${viewBadge}
                         ${newBadge}
@@ -1991,12 +1907,8 @@
                         <div class="platform-tag ${platformClass}">
                             ${getPlatformIcon(g.platform)} ${g.platform_name}
                         </div>
-                        <!-- BUTTON SEE IMAGE UNTUK ANDROID -->
-                        <button class="btn-see-image" onclick="event.stopPropagation(); showImagePreview('${thumb.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}')">
-                            <i class="bi bi-eye"></i> See image
-                        </button>
                     </div>
-                    <div class="game-card-body" onclick="trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g,"")}')">
+                    <div class="game-card-body">
                         <h3 class="game-title" title="${name}">${name}</h3>
                         <!-- === Teks Upload By INDapk Ditambahkan di Sini === -->
                         <small class="upload-by-text">Upload By INDapk</small>
@@ -2017,19 +1929,6 @@
         
         container.innerHTML = html;
         renderPaginationUI(pagination, filtered.length, page, tabId);
-    }
-
-    // Fungsi untuk menampilkan preview gambar
-    function showImagePreview(imageUrl, gameName) {
-        const modalEl = document.getElementById('imagePreviewModal');
-        const modalImg = document.getElementById('imagePreviewFull');
-        const modalTitle = document.getElementById('imagePreviewTitle');
-        
-        modalImg.src = imageUrl;
-        modalTitle.textContent = `Preview: ${gameName}`;
-        
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
     }
 
     function trackAndNavigate(id, plat, name) {
@@ -2076,12 +1975,8 @@
                         <div class="position-absolute top-0 end-0 m-2 pinned-badge">
                             <i class="bi bi-pin-angle-fill"></i> #${p.slot}
                         </div>
-                        <!-- BUTTON SEE IMAGE UNTUK ANDROID (PINNED) -->
-                        <button class="btn-see-image" onclick="event.stopPropagation(); showImagePreview('${thumb.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}')">
-                            <i class="bi bi-eye"></i> See image
-                        </button>
                      </div>
-                     <div class="game-card-body" ${game ? `onclick="trackAndNavigate('${game.download_id}', '${game.platform}', '${name.replace(/'/g,"")}')"` : ''}>
+                     <div class="game-card-body">
                         <h3 class="game-title text-warning">${name}</h3>
                         <!-- === Teks Upload By INDapk untuk Pinned Card (Konsistensi) === -->
                         <small class="upload-by-text">Upload By INDapk</small>
