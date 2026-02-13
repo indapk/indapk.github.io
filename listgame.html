@@ -107,6 +107,92 @@
       margin-bottom: 10px;
     }
 
+    /* ===== SEARCH SECTION ===== */
+    .search-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(0,240,255,0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+    }
+
+    .search-container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 15px 50px 15px 20px;
+      background: rgba(0,0,0,0.5);
+      border: 2px solid rgba(0,240,255,0.3);
+      border-radius: 50px;
+      color: white;
+      font-size: 16px;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 30px rgba(0,240,255,0.3);
+      background: rgba(0,0,0,0.7);
+    }
+
+    .search-input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+
+    .search-btn {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      border: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: var(--transition-smooth);
+    }
+
+    .search-btn:hover {
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 0 20px rgba(0,240,255,0.5);
+    }
+
+    .search-results-info {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: rgba(0,240,255,0.1);
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--neon-cyan);
+    }
+
+    .clear-search {
+      color: var(--neon-pink);
+      text-decoration: none;
+      padding: 5px 15px;
+      border-radius: 20px;
+      border: 1px solid var(--neon-pink);
+      transition: var(--transition-smooth);
+    }
+
+    .clear-search:hover {
+      background: rgba(255,46,151,0.2);
+      color: white;
+    }
+
     /* ===== LOADING ANIMATIONS ===== */
     .loading-overlay {
       position: fixed;
@@ -268,7 +354,6 @@
       0%, 100% { transform: scale(1); opacity: 0.5; }
       50% { transform: scale(1.5); opacity: 1; }
     }
-
 
     /* ===== SIMPLE PLATFORM LOADING ===== */
     .simple-loading {
@@ -479,6 +564,67 @@
       margin-bottom: 15px;
       transition: var(--transition-smooth);
     }
+
+    .game-title {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .game-title:hover {
+      color: var(--neon-cyan);
+    }
+    
+    .game-meta {
+      display: flex;
+      gap: 15px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 20px;
+      color: var(--text-muted);
+    }
+
+    .highlight {
+      background: linear-gradient(120deg, rgba(0,240,255,0.3) 0%, rgba(181,55,242,0.3) 100%);
+      padding: 0 2px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      background: rgba(5, 8, 18, 0.95);
+      backdrop-filter: var(--glass-blur);
+      padding: 30px 0;
+      margin-top: 50px;
+      border-top: 1px solid rgba(0,240,255,0.15);
+    }
+
+    .footer-brand {
+      font-family: Orbitron, sans-serif;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .site-footer a {
+      transition: var(--transition-smooth);
+    }
+    
+    .site-footer a:hover {
+      color: var(--neon-cyan) !important;
+    }
   </style>
 </head>
 <body>
@@ -497,7 +643,7 @@
         <div class="loading-dot"></div>
         <div class="loading-dot"></div>
       </div>
-<p class="mt-3 text-muted">Memuat Platform Game...</p>
+      <p class="mt-3 text-muted">Memuat Platform Game...</p>
     </div>
   </div>
 
@@ -557,6 +703,22 @@
         </div>
       </div>
 
+      <!-- ===== SEARCH BAR PER PLATFORM ===== -->
+      <div class="search-section">
+        <div class="search-container">
+          <input type="text" class="search-input" id="searchInput" placeholder="🔍 Cari game di platform ini..." autocomplete="off">
+          <button class="search-btn" id="searchBtn">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+        <div id="searchResultsInfo" class="search-results-info" style="display: none;">
+          <span id="searchResultText"></span>
+          <a href="#" id="clearSearchBtn" class="clear-search">
+            <i class="bi bi-x-circle me-1"></i>Hapus
+          </a>
+        </div>
+      </div>
+
       <!-- Alphabet Filter -->
       <div class="alphabet-filter" id="alphabetFilter"></div>
 
@@ -582,7 +744,6 @@
       </div>
     </div>
   </footer>
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -610,6 +771,7 @@
     let gamesData = [];
     let filteredGames = [];
     let currentLetter = 'ALL';
+    let currentSearchQuery = '';
     let platformCounts = {};
 
     // ===== HELPER FUNCTIONS =====
@@ -717,12 +879,122 @@
       grid.innerHTML = html;
     }
 
+    // ===== FUNGSI SEARCH =====
+    function initializeSearch() {
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      
+      if (!searchInput || !searchBtn) return;
+
+      // Fungsi untuk melakukan pencarian
+      const performSearch = () => {
+        const query = searchInput.value.trim();
+        currentSearchQuery = query;
+        
+        if (query === '') {
+          clearSearch();
+          return;
+        }
+
+        filterGamesBySearch(query);
+      };
+
+      // Fungsi untuk menghapus pencarian
+      const clearSearch = () => {
+        searchInput.value = '';
+        currentSearchQuery = '';
+        document.getElementById('searchResultsInfo').style.display = 'none';
+        filterGamesByLetter(currentLetter);
+      };
+
+      // Event listeners
+      searchBtn.addEventListener('click', performSearch);
+      
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+
+      clearSearchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearSearch();
+      });
+    }
+
+    // ===== FILTER GAMES BY SEARCH =====
+    function filterGamesBySearch(query) {
+      const searchTerm = normalizeText(query);
+      
+      // Tampilkan loading
+      const container = document.getElementById('gamesContainer');
+      container.innerHTML = `
+        <div class="simple-loading" style="padding: 40px 20px;">
+          <div class="simple-spinner" style="width: 35px; height: 35px;"></div>
+          <div class="simple-text" style="font-size: 16px;">Mencari "${escapeHTML(query)}"...</div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        // Filter berdasarkan huruf yang dipilih dulu, lalu search
+        let gamesToSearch = gamesData;
+        
+        if (currentLetter !== 'ALL') {
+          if (currentLetter === '#') {
+            gamesToSearch = gamesData.filter(game => {
+              const firstChar = (game.nama_game || '').trim().charAt(0);
+              return /[0-9]/.test(firstChar);
+            });
+          } else {
+            gamesToSearch = gamesData.filter(game => {
+              const firstChar = (game.nama_game || '').trim().charAt(0).toUpperCase();
+              return firstChar === currentLetter;
+            });
+          }
+        }
+
+        // Lakukan pencarian
+        filteredGames = gamesToSearch.filter(game => {
+          const gameName = normalizeText(game.nama_game || '');
+          const category = normalizeText(game.category || '');
+          const language = normalizeText(game.language || '');
+          const region = normalizeText(game.region || '');
+          
+          return gameName.includes(searchTerm) || 
+                 category.includes(searchTerm) || 
+                 language.includes(searchTerm) || 
+                 region.includes(searchTerm);
+        });
+
+        // Update info hasil pencarian
+        const searchResultsInfo = document.getElementById('searchResultsInfo');
+        const searchResultText = document.getElementById('searchResultText');
+        
+        if (currentSearchQuery) {
+          searchResultsInfo.style.display = 'flex';
+          searchResultText.innerHTML = `
+            <i class="bi bi-search me-2"></i>
+            Menampilkan <strong>${filteredGames.length}</strong> hasil pencarian untuk "${escapeHTML(currentSearchQuery)}"
+            ${currentLetter !== 'ALL' ? ` (filter huruf: ${currentLetter})` : ''}
+          `;
+        }
+
+        renderGameList(true); // true = highlight search query
+      }, 300);
+    }
+
     // ===== LOAD GAMES BY PLATFORM =====
     async function loadGamesByPlatform(platform) {
       const cfg = API_CONFIGS.find(p => p.platform === platform);
       if (!cfg) return;
 
       currentPlatform = platform;
+      
+      // Reset search state
+      currentSearchQuery = '';
+      document.getElementById('searchResultsInfo').style.display = 'none';
+      document.getElementById('searchInput').value = '';
       
       // Tampilkan loading sederhana
       showSimplePlatformLoader(cfg.name);
@@ -795,7 +1067,13 @@
           this.classList.add('active');
           const letter = this.dataset.letter;
           currentLetter = letter;
-          filterGamesByLetter(letter);
+          
+          // Jika sedang dalam mode search, update search dengan filter baru
+          if (currentSearchQuery) {
+            filterGamesBySearch(currentSearchQuery);
+          } else {
+            filterGamesByLetter(letter);
+          }
         });
       });
     }
@@ -826,12 +1104,12 @@
           });
         }
 
-        renderGameList();
-      }, 300); // Simulasi loading sebentar
+        renderGameList(false);
+      }, 300);
     }
 
-    // ===== RENDER GAME LIST =====
-    function renderGameList() {
+    // ===== RENDER GAME LIST DENGAN HIGHLIGHT SEARCH =====
+    function renderGameList(highlightSearch = false) {
       const container = document.getElementById('gamesContainer');
 
       if (filteredGames.length === 0) {
@@ -839,7 +1117,11 @@
           <div class="empty-state">
             <i class="bi bi-emoji-frown" style="font-size: 3rem;"></i>
             <h5 class="mt-3">Tidak Ada Game</h5>
-            <p class="text-muted">Tidak ditemukan game dengan huruf "${currentLetter}"</p>
+            <p class="text-muted">
+              ${currentSearchQuery ? 
+                `Tidak ditemukan game dengan kata "${escapeHTML(currentSearchQuery)}"` : 
+                `Tidak ditemukan game dengan huruf "${currentLetter}"`}
+            </p>
           </div>
         `;
         return;
@@ -848,7 +1130,14 @@
       let html = `<p class="mb-3 text-muted">Menampilkan ${filteredGames.length} game</p>`;
 
       filteredGames.forEach((game, index) => {
-        const gameName = escapeHTML(game.nama_game || 'Unknown Game');
+        let gameName = game.nama_game || 'Unknown Game';
+        
+        // Highlight search query jika diperlukan
+        if (highlightSearch && currentSearchQuery) {
+          const regex = new RegExp(`(${currentSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+          gameName = gameName.replace(regex, '<span class="highlight">$1</span>');
+        }
+        
         const platformColor = getPlatformColor(currentPlatform);
         const downloadUrl = `download.html?game=${game.download_id}&platform=${currentPlatform}`;
 
@@ -887,6 +1176,9 @@
       
       // Show page loader
       showPageLoader();
+
+      // Inisialisasi search
+      initializeSearch();
 
       // Cek hash URL
       const hash = window.location.hash.replace('#', '').trim().toLowerCase();
