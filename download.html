@@ -1149,6 +1149,25 @@ body.theme-dark .note-item .card.border-secondary{background-color:rgba(108,117,
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
   }
+
+  .screenshot-item img[src$=".gif"] {
+      /* GIF mungkin lebih berat, kasih indikator */
+      position: relative;
+  }
+
+  .screenshot-item img[src$=".gif"]::after {
+      content: "GIF";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 2;
+  }
 </style>
 
 
@@ -2073,42 +2092,42 @@ function getProxiedScreenshotUrl(originalUrl, forLightbox = false) {
         return 'https://placehold.co/400x225?text=No+Screenshot';
     }
     
+    // Deteksi apakah ini GIF
+    const isGif = originalUrl.toLowerCase().includes('.gif');
+    
     // Daftar domain yang memerlukan proxy
     const proxyDomains = [
         'fap-nation.org',
         'googleusercontent.com',
         'blogspot.com',
         'apksgi.com',
-        'apksgi.net',
-        'apksgi.org',
-        'drive.google.com',
-        'dropbox.com',
-        'mega.nz',
-        'mediafire.com',
-        // Tambahkan domain lain yang memerlukan proxy
+        // ... domain lain
     ];
     
-    // Cek apakah URL berasal dari domain yang memerlukan proxy
     const needsProxy = proxyDomains.some(domain => 
         originalUrl.toLowerCase().includes(domain.toLowerCase())
     );
     
-    // Parameter proxy berbeda untuk thumbnail dan lightbox
     if (needsProxy) {
+        // 🔥 PERBAIKAN: Jika GIF, JANGAN GUNAKAN PROXY SAMA SEKALI
+        if (isGif) {
+            // GIF langsung dari sumber asli biar tetap animasi
+            return originalUrl;
+        }
+        
+        // Untuk non-GIF, gunakan proxy seperti biasa
         if (forLightbox) {
-            // Untuk lightbox (ukuran lebih besar)
             return IMAGE_PROXY_URL + '?url=' + encodeURIComponent(originalUrl) + 
                    '&w=1200&h=675&fit=contain&output=webp&q=90';
         } else {
-            // Untuk thumbnail (ukuran kecil)
             return IMAGE_PROXY_URL + '?url=' + encodeURIComponent(originalUrl) + 
                    '&w=400&h=225&fit=cover&output=webp&q=80';
         }
     }
     
-    // Jika tidak, gunakan URL asli
     return originalUrl;
 }
+
 // Fungsi untuk menampilkan pesan jika tidak ada screenshot
 function showNoScreenshotsMessage() {
     const container = document.getElementById('screenshotsContent');
@@ -2280,15 +2299,17 @@ function previewScreenshots() {
     let html = '';
     
     links.forEach((link, index) => {
-        // Gunakan proxy untuk preview juga
+        // ✅ DETEKSI GIF
+        const isGif = link.toLowerCase().includes('.gif');
         const proxiedUrl = getProxiedScreenshotUrl(link);
         
         html += `
-            <div class="preview-item">
+            <div class="preview-item ${isGif ? 'is-gif' : ''}">
                 <img src="${escapeHTML(proxiedUrl)}" 
                      alt="Preview ${index + 1}"
                      data-original-url="${escapeHTML(link)}"
                      onerror="this.src='https://placehold.co/120x68?text=Error'">
+                ${isGif ? '<span class="gif-badge">GIF</span>' : ''}
                 <button class="remove-preview" onclick="removePreview(${index})">
                     <i class="bi bi-x"></i>
                 </button>
