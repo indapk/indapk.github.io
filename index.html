@@ -842,7 +842,130 @@
         margin-top: 2px;
         margin-bottom: 6px;
     }
+    /* Modal text fixes for both themes */
+    .modal .text-light {
+        color: var(--text-main) !important;
+    }
 
+    .modal .text-light-emphasis {
+        color: color-mix(in srgb, var(--text-main), transparent 20%) !important;
+    }
+
+    /* Ensure form labels are always visible */
+    .modal .form-label {
+        color: var(--text-main) !important;
+        opacity: 1 !important;
+    }
+
+    /* Light mode adjustments */
+    body.light-mode .modal .text-light,
+    body.light-mode .modal .form-label,
+    body.light-mode .modal .text-light-emphasis {
+        color: #1a1a2e !important;
+    }
+
+    body.light-mode .modal .form-text {
+        color: #4a5568 !important;
+    }
+    /* Dropdown dengan scroll */
+    .dropdown-menu.dropdown-scroll {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: var(--neon-cyan) var(--bg-dark);
+    }
+
+    /* Styling scrollbar untuk Webkit (Chrome, Safari, Edge) */
+    .dropdown-menu.dropdown-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .dropdown-menu.dropdown-scroll::-webkit-scrollbar-track {
+        background: var(--bg-dark);
+        border-radius: 10px;
+    }
+
+    .dropdown-menu.dropdown-scroll::-webkit-scrollbar-thumb {
+        background: var(--neon-cyan);
+        border-radius: 10px;
+    }
+
+    .dropdown-menu.dropdown-scroll::-webkit-scrollbar-thumb:hover {
+        background: var(--neon-purple);
+    }
+
+    /* Menyesuaikan lebar dropdown agar tidak terlalu lebar */
+    .dropdown-menu.dropdown-scroll {
+        min-width: 250px;
+        max-width: 300px;
+    }
+
+    /* Untuk mobile, dropdown bisa lebih lebar */
+    @media (max-width: 768px) {
+        .dropdown-menu.dropdown-scroll {
+            max-width: 100%;
+            max-height: 300px;
+        }
+    }
+
+    /* Styling untuk item dropdown */
+    .dropdown-menu.dropdown-scroll .dropdown-item {
+        white-space: normal;
+        word-wrap: break-word;
+        padding: 8px 16px;
+    }
+
+    /* Divider styling */
+    .dropdown-menu.dropdown-scroll .dropdown-divider {
+        margin: 4px 0;
+        opacity: 0.5;
+    }
+
+    /* Efek hover yang smooth */
+    .dropdown-menu.dropdown-scroll .dropdown-item {
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-menu.dropdown-scroll .dropdown-item:hover {
+        padding-left: 20px;
+        background: rgba(0, 240, 255, 0.1);
+    }
+    /* Styling untuk button toggle password di modal */
+    .modal .input-group .btn-outline-secondary {
+        background: var(--input-bg);
+        border-color: var(--glass-border);
+        color: var(--text-muted);
+    }
+
+    .modal .input-group .btn-outline-secondary:hover {
+        background: rgba(0, 240, 255, 0.1);
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+    }
+
+    /* Light mode adjustments */
+    body.light-mode .modal .input-group .btn-outline-secondary {
+        background: #f0f2f5;
+        border-color: #dee2e6;
+        color: #495057;
+    }
+
+    body.light-mode .modal .input-group .btn-outline-secondary:hover {
+        background: var(--neon-cyan);
+        color: #000;
+    }
+
+    /* Memastikan input password memiliki padding yang cukup untuk button */
+    .modal .input-group .form-control:last-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .modal .input-group .btn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
   </style>
 </head>
 <body>
@@ -893,35 +1016,62 @@
 
       <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navbarMain">
         <ul class="navbar-nav mx-auto gap-2">
-          <li class="nav-item dropdown">
+        <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-grid"></i> Platform</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ps4">PlayStation 4</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ps5">PlayStation 5</a></li>
-              <li><hr class="dropdown-divider bg-secondary"></li>
-              <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
-              <li><hr class="dropdown-divider bg-secondary"></li>
-              <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="3ds">Nintendo 3DS</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="wii">Nintendo Wii</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="wiiu">Nintendo Wii-U</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="gamecube">Nintendo GameCube</a></li>
-              <li><hr class="dropdown-divider bg-secondary"></li>
-              <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="ios">iOS</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="java">Java</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="pc">PC Games</a></li>
-              <li><a class="dropdown-item" href="#" data-platform="apksgi">APKsgi (18+)</a></li>
-              <li><hr class="dropdown-divider bg-secondary"></li>
-              <li><a class="dropdown-item" href="#" data-platform="all">All Platforms</a></li>
+            <ul class="dropdown-menu dropdown-scroll"> <!-- Tambah class dropdown-scroll -->
+                <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="ps4">PlayStation 4</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="ps5">PlayStation 5</a></li>
+                <li><hr class="dropdown-divider bg-secondary"></li>
+                <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
+                <li><hr class="dropdown-divider bg-secondary"></li>
+                <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="3ds">Nintendo 3DS</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="wii">Nintendo Wii</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="wiiu">Nintendo Wii-U</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="gamecube">Nintendo GameCube</a></li>
+                <li><hr class="dropdown-divider bg-secondary"></li>
+                <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="ios">iOS</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="java">Java</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="pc">PC Games</a></li>
+                <li><a class="dropdown-item" href="#" data-platform="apksgi">APKsgi (18+)</a></li>
+                <li><hr class="dropdown-divider bg-secondary"></li>
+                <li><a class="dropdown-item" href="#" data-platform="all">All Platforms</a></li>
             </ul>
-          </li>
+        </li>
+
+        <!-- Navbar bagian dropdown List Game A-Z -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownList" role="button" data-bs-toggle="dropdown">
+                <i class="bi bi-list-columns me-1"></i> List Game A-Z
+            </a>
+            <ul class="dropdown-menu dropdown-scroll"> <!-- Tambah class dropdown-scroll -->
+                <li><a class="dropdown-item" href="listgame.html#ps1"><span class="badge bg-secondary me-2">PS1</span> PlayStation 1 A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#ps2"><span class="badge bg-secondary me-2">PS2</span> PlayStation 2 A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#ps3"><span class="badge bg-secondary me-2">PS3</span> PlayStation 3 A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#ps4"><span class="badge bg-secondary me-2">PS4</span> PlayStation 4 A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#psp"><span class="badge bg-secondary me-2">PSP</span> PSP A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#psvita"><span class="badge bg-secondary me-2">PSVita</span> PS Vita A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#switch"><span class="badge bg-secondary me-2">Switch</span> Nintendo Switch A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#wii"><span class="badge bg-secondary me-2">Wii</span> Wii A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#gamecube"><span class="badge bg-secondary me-2">GameCube</span> GameCube A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#3ds"><span class="badge bg-secondary me-2">3DS</span> 3DS A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#android"><span class="badge bg-secondary me-2">Android</span> Android A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#ios"><span class="badge bg-secondary me-2">iOS</span> iOS A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#java"><span class="badge bg-secondary me-2">Java</span> Java A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#pc"><span class="badge bg-secondary me-2">PC</span> PC A-Z</a></li>
+                <li><a class="dropdown-item" href="listgame.html#apksgi"><span class="badge bg-secondary me-2">18+</span> APKsgi A-Z</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-center fw-bold" href="listgame.html"><i class="bi bi-grid-3x3-gap-fill"></i> Lihat Semua Platform</a></li>
+            </ul>
+        </li>
+
           <li class="nav-item"><a class="nav-link" href="https://indapk.com/requestgame.html"><i class="bi bi-plus-circle"></i> Request</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://apksgi.github.io" style="color: var(--neon-pink) !important;"><i class="bi bi-18-circle"></i> 18+ Games</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://indapk.com/topup.html"><i class="bi bi-credit-card"></i> Top Up</a></li>
           
           <!-- Admin Tools -->
           <li class="nav-item dropdown d-none" id="adminMenu">
@@ -965,7 +1115,7 @@
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="apksgi-tab" data-bs-toggle="tab" data-bs-target="#apksgi" type="button" style="color: var(--neon-pink) !important;">
-                    <i class="bi bi-fire me-1"></i> 18+ <span class="badge bg-secondary ms-1" id="apksgi-count">0</span>
+                    <i class="bi bi-fire me-1"></i> Game 18+ (Adult)<span class="badge bg-secondary ms-1" id="apksgi-count">0</span>
                 </button>
             </li>
         </ul>
@@ -992,11 +1142,11 @@
                         <ul class="dropdown-menu w-100" style="max-height: 300px; overflow-y: auto;">
                             <li><a class="dropdown-item" href="#" data-platform="all">All Platforms</a></li>
                             <li><hr class="dropdown-divider bg-secondary"></li>
-                            <li><a class="dropdown-item" href="#" data-platform="ps5">PlayStation 5</a></li>
-                            <li><a class="dropdown-item" href="#" data-platform="ps4">PlayStation 4</a></li>
-                            <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
-                            <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
+                            <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
+                            <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
+                            <li><a class="dropdown-item" href="#" data-platform="ps4">PlayStation 4</a></li>
+                            <li><a class="dropdown-item" href="#" data-platform="ps5">PlayStation 5</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="psvita">PS Vita</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="psp">PSP</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="switch">Nintendo Switch</a></li>
@@ -1004,9 +1154,9 @@
                             <li><a class="dropdown-item" href="#" data-platform="wii">Wii</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="gamecube">GameCube</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="3ds">3DS</a></li>
-                            <li><a class="dropdown-item" href="#" data-platform="pc">PC Games</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="android">Android</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="ios">iOS</a></li>
+                            <li><a class="dropdown-item" href="#" data-platform="pc">PC Games</a></li>
                             <li><a class="dropdown-item" href="#" data-platform="java">Java</a></li>
                         </ul>
                     </div>
@@ -1168,8 +1318,8 @@
               <span class="fs-4 fw-bold" style="font-family: var(--font-display);">INDapk</span>
           </div>
           <div class="d-flex justify-content-center gap-4 text-muted mb-3">
-              <a href="#" class="hover-text-white">Request Game</a>
-              <a href="#" class="hover-text-white">Top Up</a>
+              <a href="https://indapk.com/requestgame.html" class="hover-text-white">Request Game</a>
+              <a href="https://indapk.com/topup.html" class="hover-text-white">Top Up</a>
               <a href="#" class="hover-text-white">Terms</a>
           </div>
           <small class="text-muted opacity-50">&copy; <span id="yearNow">2024</span> INDapk Library. All rights reserved.</small>
@@ -1178,46 +1328,49 @@
 
   <!-- MODALS -->
   <!-- Login Modal -->
-  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content text-light">
-              <div class="modal-header">
-                  <h5 class="modal-title font-monospace" style="color: var(--neon-cyan); letter-spacing: 2px;">
-                    <i class="bi bi-shield-lock me-2"></i>SYSTEM ACCESS
-                  </h5>
-                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body p-4">
-                  <form id="loginForm" onsubmit="event.preventDefault(); login(this);">
-                      <div class="mb-3">
-                          <label class="form-label text-muted small text-uppercase">Username / Telegram ID</label>
-                          <div class="input-group">
-                              <span class="input-group-text"><i class="bi bi-person"></i></span>
-                              <input type="text" id="telegramIdInput" class="form-control shadow-none" required>
-                          </div>
-                      </div>
-                      <div class="mb-4">
-                          <label class="form-label text-muted small text-uppercase">Access Key</label>
-                          <div class="input-group">
-                              <span class="input-group-text"><i class="bi bi-key"></i></span>
-                              <input type="password" id="telegramKeyInput" class="form-control shadow-none" required>
-                          </div>
-                      </div>
-                      <button type="submit" id="btnLoginAction" class="btn btn-custom w-100 py-2">
-                          <i class="bi bi-box-arrow-in-right me-2"></i>AUTHENTICATE
-                      </button>
-                  </form>
-                  <div class="text-center mt-3">
-                      <small class="text-muted">Don't have an account?</small>
-                      <a href="#" onclick="switchModal('loginModal', 'registerModal')" class="text-info ms-1" style="text-decoration: none;">Register</a>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-light">
+            <div class="modal-header">
+                <h5 class="modal-title font-monospace" style="color: var(--neon-cyan); letter-spacing: 2px;">
+                  <i class="bi bi-shield-lock me-2"></i>Login Account
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="loginForm" onsubmit="event.preventDefault(); login(this);">
+                    <div class="mb-3">
+                        <label class="form-label text-light small text-uppercase fw-semibold">Username / Telegram ID</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" id="telegramIdInput" class="form-control shadow-none" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-light small text-uppercase fw-semibold">Password (Key)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <input type="password" id="telegramKeyInput" class="form-control shadow-none" required>
+                            <button class="btn btn-outline-secondary" type="button" onclick="toggleLoginKeyVisibility()">
+                                <i class="bi bi-eye" id="toggleLoginKeyIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" id="btnLoginAction" class="btn btn-custom w-100 py-2">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </button>
+                </form>
+                <div class="text-center mt-3">
+                    <small class="text-light-emphasis">Don't have an account?</small>
+                    <a href="#" onclick="switchModal('loginModal', 'registerModal')" class="text-info ms-1" style="text-decoration: none;">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-  <!-- Register Modal -->
-  <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content text-light">
             <div class="modal-header">
@@ -1229,30 +1382,30 @@
             <div class="modal-body p-4">
                 <form id="registerForm" onsubmit="event.preventDefault(); register(this);">
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase">Full Name</label>
+                        <label class="form-label text-light small text-uppercase fw-semibold">Full Name</label>
                         <input type="text" id="regName" class="form-control shadow-none" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase">Telegram ID (Username)</label>
+                        <label class="form-label text-light small text-uppercase fw-semibold">Telegram ID (Username)</label>
                         <input type="text" id="regTelegramId" class="form-control shadow-none" required>
-                        <div class="form-text text-secondary" style="font-size: 0.75rem;">This will be your login ID.</div>
+                        <div class="form-text text-light-emphasis" style="font-size: 0.75rem;">This will be your login ID.</div>
                     </div>
                     <div class="mb-4">
-                        <label class="form-label text-muted small text-uppercase">Create Key</label>
+                        <label class="form-label text-light small text-uppercase fw-semibold">Create Password (Key)</label>
                         <div class="input-group">
                             <input type="password" id="regKey" class="form-control shadow-none" required>
                             <button class="btn btn-outline-secondary" type="button" onclick="toggleRegisterKeyVisibility()">
                                 <i class="bi bi-eye" id="toggleRegKeyIcon"></i>
                             </button>
                         </div>
-                        <div class="form-text text-secondary" style="font-size: 0.75rem;">Keep this key safe for login.</div>
+                        <div class="form-text text-light-emphasis" style="font-size: 0.75rem;">Keep this key safe for login.</div>
                     </div>
                     <button type="submit" id="btnRegisterAction" class="btn btn-custom w-100 py-2" style="background: linear-gradient(135deg, var(--neon-pink), #ff5e00);">
                         <i class="bi bi-check-circle me-2"></i>REGISTER ACCOUNT
                     </button>
                 </form>
                 <div class="text-center mt-3">
-                    <small class="text-muted">Already registered?</small>
+                    <small class="text-light-emphasis">Already registered?</small>
                     <a href="#" onclick="switchModal('registerModal', 'loginModal')" class="text-info ms-1" style="text-decoration: none;">Login</a>
                 </div>
             </div>
@@ -1913,6 +2066,19 @@
         }
     }
     
+// Toggle Login Key Visibility
+function toggleLoginKeyVisibility() {
+    const input = document.getElementById('telegramKeyInput');
+    const icon = document.getElementById('toggleLoginKeyIcon');
+    if(input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('bi-eye', 'bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('bi-eye-slash', 'bi-eye');
+    }
+}
+
     // Toggle Register Key Visibility
     function toggleRegisterKeyVisibility() {
         const input = document.getElementById('regKey');
