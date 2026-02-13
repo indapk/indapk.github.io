@@ -207,7 +207,6 @@
       animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
       margin-bottom: 20px;
     }
-
     .platform-loading .spinner-pulse {
       width: 80px;
       height: 80px;
@@ -251,12 +250,6 @@
       animation-delay: 0.4s;
       background: var(--neon-pink);
     }
-
-    @keyframes dotPulse {
-      0%, 100% { transform: scale(1); opacity: 0.5; }
-      50% { transform: scale(1.5); opacity: 1; }
-    }
-
     .skeleton-loader {
       background: linear-gradient(90deg, 
         rgba(255,255,255,0.05) 25%, 
@@ -271,12 +264,86 @@
       100% { background-position: -200% 0; }
     }
 
-    .game-skeleton {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(0,240,255,0.1);
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 15px;
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.5); opacity: 1; }
+    }
+
+
+    /* ===== SIMPLE PLATFORM LOADING ===== */
+    .simple-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 20px;
+      margin: 30px 0;
+      backdrop-filter: blur(5px);
+    }
+
+    .simple-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(0,240,255,0.1);
+      border-top: 4px solid var(--neon-cyan);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .simple-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--neon-cyan);
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px rgba(0,240,255,0.5);
+    }
+
+    .simple-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .simple-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--neon-cyan);
+      border-radius: 50%;
+      animation: simplePulse 1.5s infinite;
+    }
+
+    .simple-dot:nth-child(2) {
+      animation-delay: 0.2s;
+      background: var(--neon-purple);
+    }
+
+    .simple-dot:nth-child(3) {
+      animation-delay: 0.4s;
+      background: var(--neon-pink);
+    }
+
+    @keyframes simplePulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
+    /* Platform Card Loading State */
+    .platform-card.loading {
+      pointer-events: none;
+      opacity: 0.7;
+      animation: cardPulse 1.5s infinite;
+    }
+
+    @keyframes cardPulse {
+      0%, 100% { border-color: rgba(0,240,255,0.2); }
+      50% { border-color: rgba(0,240,255,0.8); box-shadow: 0 0 20px rgba(0,240,255,0.3); }
     }
 
     /* ===== PLATFORM GRID ===== */
@@ -412,61 +479,6 @@
       margin-bottom: 15px;
       transition: var(--transition-smooth);
     }
-
-    .game-item:hover {
-      transform: translateX(10px);
-      border-color: var(--neon-cyan);
-      background: rgba(0,240,255,0.05);
-    }
-
-    .game-title {
-      font-weight: 700;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 1.1rem;
-    }
-
-    .game-title:hover { color: var(--neon-cyan); }
-
-    .game-meta {
-      display: flex;
-      gap: 20px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 5px;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
-    }
-
-    /* ===== FOOTER ===== */
-    .site-footer {
-      margin-top: 60px;
-      padding: 30px 0;
-      background: rgba(10,14,26,0.8);
-      border-top: 1px solid rgba(0,240,255,0.2);
-      backdrop-filter: var(--glass-blur);
-    }
-
-    .footer-brand {
-      font-family: Orbitron,sans-serif;
-      font-weight: 700;
-      background: linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      .platform-grid { grid-template-columns: repeat(2, 1fr); }
-      .alphabet-filter { gap: 5px; }
-      .alphabet-btn { width: 35px; height: 35px; font-size: 0.9rem; }
-      .loading-progress { width: 250px; }
-    }
   </style>
 </head>
 <body>
@@ -485,7 +497,7 @@
         <div class="loading-dot"></div>
         <div class="loading-dot"></div>
       </div>
-      <p class="mt-3 text-muted">Memuat Platform Game...</p>
+<p class="mt-3 text-muted">Memuat Platform Game...</p>
     </div>
   </div>
 
@@ -571,6 +583,7 @@
     </div>
   </footer>
 
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // ===== KONFIGURASI API =====
@@ -624,6 +637,7 @@
     function showPageLoader() {
       const overlay = document.getElementById('pageLoadingOverlay');
       if (overlay) {
+        overlay.style.display = 'flex';
         overlay.classList.remove('fade-out');
       }
     }
@@ -638,52 +652,23 @@
       }
     }
 
-    function showPlatformLoader() {
+    // ===== SIMPLE LOADING UNTUK PLATFORM =====
+    function showSimplePlatformLoader(platformName) {
       const container = document.getElementById('gamesContainer');
       if (!container) return;
       
       container.innerHTML = `
-        <div class="platform-loading">
-          <div class="spinner-pulse"></div>
-          <div class="spinner"></div>
-          <h5 class="mt-3" style="color: var(--neon-cyan);">Memuat Data Game</h5>
-          <p class="text-muted">Mohon tunggu, sedang mengambil data dari server...</p>
-          <div class="loading-dots">
-            <div class="loading-dot"></div>
-            <div class="loading-dot"></div>
-            <div class="loading-dot"></div>
+        <div class="simple-loading">
+          <div class="simple-spinner"></div>
+          <div class="simple-text">Memuat ${platformName}</div>
+          <div class="simple-dots">
+            <div class="simple-dot"></div>
+            <div class="simple-dot"></div>
+            <div class="simple-dot"></div>
           </div>
+          <p class="text-muted mt-3" style="font-size: 14px;">Mengambil data game dari server...</p>
         </div>
       `;
-    }
-
-    function showSkeletonLoader() {
-      const container = document.getElementById('gamesContainer');
-      if (!container) return;
-      
-      let skeletonHTML = '<div class="mt-4">';
-      for (let i = 0; i < 8; i++) {
-        skeletonHTML += `
-          <div class="game-skeleton">
-            <div class="row align-items-center">
-              <div class="col-md-8">
-                <div class="d-flex align-items-center gap-3">
-                  <div class="skeleton-loader" style="width: 50px; height: 30px; border-radius: 5px;"></div>
-                  <div style="flex: 1;">
-                    <div class="skeleton-loader" style="width: 200px; height: 20px; border-radius: 5px; margin-bottom: 10px;"></div>
-                    <div class="skeleton-loader" style="width: 150px; height: 15px; border-radius: 5px;"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                <div class="skeleton-loader" style="width: 100px; height: 35px; border-radius: 5px; float: right;"></div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      skeletonHTML += '</div>';
-      container.innerHTML = skeletonHTML;
     }
 
     // ===== LOAD PLATFORM COUNTS =====
@@ -739,8 +724,8 @@
 
       currentPlatform = platform;
       
-      // Show platform loader
-      showPlatformLoader();
+      // Tampilkan loading sederhana
+      showSimplePlatformLoader(cfg.name);
 
       try {
         const response = await fetch(cfg.url, {
@@ -817,9 +802,15 @@
 
     // ===== FILTER GAMES BY LETTER =====
     function filterGamesByLetter(letter) {
-      // Show skeleton loader while filtering
-      showSkeletonLoader();
-      
+      // Loading sederhana untuk filter
+      const container = document.getElementById('gamesContainer');
+      container.innerHTML = `
+        <div class="simple-loading" style="padding: 40px 20px;">
+          <div class="simple-spinner" style="width: 35px; height: 35px;"></div>
+          <div class="simple-text" style="font-size: 16px;">Memfilter game...</div>
+        </div>
+      `;
+
       setTimeout(() => {
         if (letter === 'ALL') {
           filteredGames = [...gamesData];
@@ -836,7 +827,7 @@
         }
 
         renderGameList();
-      }, 300); // Simulasi loading untuk efek smooth
+      }, 300); // Simulasi loading sebentar
     }
 
     // ===== RENDER GAME LIST =====
@@ -914,7 +905,7 @@
         await loadAllPlatformCounts();
       }
 
-      // Hide page loader after everything is loaded
+      // Hide page loader setelah semuanya selesai
       setTimeout(hidePageLoader, 1000);
 
       // Listen for hash changes
@@ -936,9 +927,18 @@
       });
     });
 
-    // Simulate loading when page refreshes
-    window.addEventListener('beforeunload', function() {
-      showPageLoader();
+    // Intercept klik pada platform card
+    document.addEventListener('click', function(e) {
+      const platformCard = e.target.closest('.platform-card');
+      if (platformCard) {
+        const platform = platformCard.dataset.platform;
+        const platformName = platformCard.querySelector('.platform-name').textContent;
+        
+        // Tampilkan loading sederhana sebelum hash change
+        document.getElementById('platformSelection').style.display = 'none';
+        document.getElementById('gameListContent').style.display = 'block';
+        showSimplePlatformLoader(platformName);
+      }
     });
   </script>
 </body>
