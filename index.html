@@ -585,10 +585,34 @@
         border-radius: 8px;
         border: 1px solid rgba(0, 240, 255, 0.2);
         transition: all 0.3s;
+        cursor: pointer;
     }
     .btn-download-sm:hover {
         background: var(--neon-cyan);
         color: #000;
+    }
+    
+    /* Tombol Add to My List */
+    .btn-add-list {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #fff;
+        background: rgba(188, 19, 254, 0.3);
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(188, 19, 254, 0.5);
+        transition: all 0.3s;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+    .btn-add-list:hover {
+        background: var(--neon-purple);
+        border-color: var(--neon-purple);
+    }
+    .btn-add-list.added {
+        background: var(--neon-pink);
+        border-color: var(--neon-pink);
+        color: #fff;
     }
 
     /* Pinned Section */
@@ -973,6 +997,397 @@
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
+    /* =========================================
+       TOAST NOTIFICATION - PREMIUM VERSION
+    ========================================= */
+    .toast-notification {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        min-width: 320px;
+        max-width: 400px;
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 16px 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 240, 255, 0.2);
+        z-index: 9999;
+        transform: translateX(120%);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-left: 4px solid var(--neon-cyan);
+    }
+
+    .toast-notification.show {
+        transform: translateX(0);
+    }
+
+    .toast-notification.success {
+        border-left-color: #10b981;
+    }
+
+    .toast-notification.warning {
+        border-left-color: #f59e0b;
+    }
+
+    .toast-notification.error {
+        border-left-color: #ef4444;
+    }
+
+    .toast-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #fff;
+        animation: toastIconPulse 2s infinite;
+    }
+
+    @keyframes toastIconPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .toast-content {
+        flex: 1;
+    }
+
+    .toast-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .toast-title i {
+        color: var(--neon-cyan);
+        font-size: 1rem;
+    }
+
+    .toast-message {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.4;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .toast-message strong {
+        color: var(--neon-cyan);
+        font-weight: 600;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+        border-radius: 0 0 0 16px;
+        animation: toastProgress 3s linear forwards;
+        width: 100%;
+    }
+
+    @keyframes toastProgress {
+        0% { width: 100%; }
+        100% { width: 0%; }
+    }
+
+    .toast-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 16px;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: all 0.3s;
+    }
+
+    .toast-close:hover {
+        color: var(--neon-cyan);
+        transform: rotate(90deg);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 576px) {
+        .toast-notification {
+            bottom: 20px;
+            right: 20px;
+            left: 20px;
+            min-width: auto;
+            max-width: none;
+            padding: 14px 16px;
+        }
+        
+        .toast-message strong {
+            max-width: 120px;
+        }
+    }
+
+    /* Toast untuk posisi kiri (alternatif) */
+    .toast-notification.left {
+        left: 30px;
+        right: auto;
+        transform: translateX(-120%);
+    }
+
+    .toast-notification.left.show {
+        transform: translateX(0);
+    }
+
+    /* Efek khusus untuk game 18+ */
+    .toast-notification.adult {
+        border-left-color: var(--neon-pink);
+        box-shadow: 0 10px 40px rgba(255, 0, 85, 0.3);
+    }
+
+    .toast-notification.adult .toast-icon {
+        background: linear-gradient(135deg, var(--neon-pink), #ff5e00);
+    }
+    /* =========================================
+       MY LIST MODAL IMPROVED STYLING
+    ========================================= */
+    .my-list-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .my-list-item {
+        background: var(--bg-card);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: var(--transition);
+        backdrop-filter: blur(8px);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .my-list-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        border-color: var(--neon-cyan);
+    }
+    
+    /* Header item dengan nama game dan status */
+    .my-list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .my-list-title {
+        flex: 1;
+    }
+    
+    .my-list-title h6 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 4px 0;
+        color: var(--text-main);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        padding-right: 5px;
+    }
+    
+    .my-list-title small {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: block;
+        margin-top: 2px;
+    }
+    
+    /* Container untuk badge platform dan status */
+    .my-list-badges {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    /* Platform badge yang lebih kecil dan rapi */
+    .platform-badge-sm {
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        color: #fff;
+        background: var(--col-ps4);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* Warna platform untuk badge */
+    .platform-badge-sm.ps1 { background: var(--col-ps1); }
+    .platform-badge-sm.ps2 { background: var(--col-ps2); }
+    .platform-badge-sm.ps3 { background: var(--col-ps3); }
+    .platform-badge-sm.ps4 { background: var(--col-ps4); }
+    .platform-badge-sm.ps5 { background: var(--col-ps5); }
+    .platform-badge-sm.psp { background: var(--col-psp); }
+    .platform-badge-sm.psvita { background: var(--col-psvita); }
+    .platform-badge-sm.switch { background: var(--col-switch); }
+    .platform-badge-sm.\33 ds { background: var(--col-3ds); }
+    .platform-badge-sm.wii { background: var(--col-wii); }
+    .platform-badge-sm.wiiu { background: var(--col-wiiu); }
+    .platform-badge-sm.gamecube { background: var(--col-gamecube); }
+    .platform-badge-sm.java { background: var(--col-java); }
+    .platform-badge-sm.ios { background: var(--col-ios); }
+    .platform-badge-sm.android { background: var(--col-android); }
+    .platform-badge-sm.pc { background: var(--col-pc); }
+    .platform-badge-sm.apksgi { background: var(--col-apksgi); }
+    
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    
+    .status-badge.available {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .status-badge.unavailable {
+        background: rgba(100, 116, 139, 0.2);
+        color: #94a3b8;
+        border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+    
+    /* Footer dengan action buttons */
+    .my-list-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 8px;
+        border-top: 1px solid var(--glass-border);
+        padding-top: 12px;
+        margin-top: 4px;
+    }
+    
+    .my-list-footer .btn-sm {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .btn-get-sm {
+        background: var(--neon-cyan);
+        color: #000;
+        border: none;
+    }
+    
+    .btn-get-sm:hover {
+        background: #00c8d4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 240, 255, 0.3);
+    }
+    
+    .btn-remove-sm {
+        background: transparent;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+    }
+    
+    .btn-remove-sm:hover {
+        background: #ef4444;
+        color: #fff;
+        border-color: #ef4444;
+    }
+    
+    /* Empty state styling */
+    .my-list-empty {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--bg-card);
+        border-radius: 24px;
+        border: 1px dashed var(--glass-border);
+    }
+    
+    .my-list-empty i {
+        font-size: 4rem;
+        color: var(--text-muted);
+        opacity: 0.5;
+        margin-bottom: 20px;
+    }
+    
+    .my-list-empty p {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+    }
+    
+    .my-list-empty small {
+        color: var(--text-muted);
+        opacity: 0.7;
+    }
+    
+    /* Grid view untuk item di modal */
+    .my-list-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    /* Responsive untuk tablet */
+    @media (min-width: 768px) {
+        .my-list-item {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+        }
+        
+        .my-list-header {
+            flex: 2;
+            margin-right: 20px;
+        }
+        
+        .my-list-footer {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+            flex-shrink: 0;
+        }
+    }
   </style>
 </head>
 <body>
@@ -1015,6 +1430,12 @@
             <button class="btn btn-sm btn-outline-danger" onclick="logout()"><i class="bi bi-power"></i></button>
         </div>
         <button id="loginButton" class="btn btn-custom btn-sm" onclick="openLoginModal()">Login</button>
+        
+        <!-- Tombol My List Game -->
+        <button class="btn btn-glass btn-sm" onclick="openMyListModal()" title="My List Game">
+            <i class="bi bi-bookmark-star"></i> <span class="d-none d-md-inline">My List</span>
+            <span class="badge bg-danger ms-1" id="myListCountBadge">0</span>
+        </button>
         
         <button class="navbar-toggler btn-glass ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
             <i class="bi bi-list"></i>
@@ -1466,6 +1887,26 @@
     </div>
   </div>
 
+  <!-- Modal My List Game -->
+<div class="modal fade" id="myListModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-bookmark-star-fill me-2" style="color: var(--neon-pink);"></i> My Game List</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-3" id="myListModalBody">
+                <!-- Konten akan diisi oleh JavaScript -->
+                <div class="text-center text-muted py-4">Memuat daftar game...</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
   <!-- SCRIPTS -->
   <script src="https://quge5.com/88/tag.min.js" data-zone="210839" async data-cfasync="false"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -1513,6 +1954,405 @@
     let gameStatsMap = new Map();
     
     /* =========================================
+       FITUR MY LIST (Tambahkan ke My List)
+    ========================================= */
+    let myGameList = []; // Array untuk menyimpan game yang ditambahkan ke list
+
+    // Load My List dari localStorage saat inisialisasi
+    function loadMyList() {
+        const stored = localStorage.getItem('indapk_myList');
+        if (stored) {
+            try {
+                myGameList = JSON.parse(stored);
+            } catch (e) {
+                myGameList = [];
+            }
+        } else {
+            myGameList = [];
+        }
+        updateMyListBadge();
+    }
+
+    // =========================================
+    // TOAST NOTIFICATION SYSTEM - PREMIUM VERSION
+    // =========================================
+    class ToastNotification {
+        constructor() {
+            this.toastContainer = null;
+            this.init();
+        }
+        
+        init() {
+            // Buat container untuk toast jika belum ada
+            if (!document.getElementById('toastContainer')) {
+                const container = document.createElement('div');
+                container.id = 'toastContainer';
+                container.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    z-index: 9999;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    pointer-events: none;
+                `;
+                document.body.appendChild(container);
+            }
+            this.toastContainer = document.getElementById('toastContainer');
+        }
+        
+        show(options = {}) {
+            const {
+                title = 'Success!',
+                message = 'Game added to your list',
+                gameName = '',
+                platform = '',
+                type = 'success', // success, warning, error
+                duration = 3000,
+                position = 'right',
+                isAdult = false
+            } = options;
+            
+            // Buat element toast
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type} ${isAdult ? 'adult' : ''} ${position}`;
+            
+            // Pilih icon berdasarkan platform
+            let iconHtml = '<i class="bi bi-check-circle-fill"></i>';
+            if (platform) {
+                const platformIcon = this.getPlatformIcon(platform);
+                if (platformIcon) iconHtml = platformIcon;
+            }
+            
+            // Format message dengan nama game
+            let displayMessage = message;
+            if (gameName) {
+                displayMessage = `
+                    <span>Berhasil ditambahkan ke</span>
+                    <strong title="${gameName}">My List</strong>
+                `;
+            }
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    ${iconHtml}
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">
+                        <i class="bi bi-check-circle-fill" style="color: var(--neon-cyan);"></i>
+                        ${title}
+                    </div>
+                    <div class="toast-message">
+                        "${gameName ? `<strong>${this.truncateText(gameName, 30)}</strong>` : ''}
+                        ${gameName ? 'ditambahkan ke My List' : displayMessage}
+                    </div>
+                </div>
+                <button class="toast-close" onclick="this.closest('.toast-notification').remove()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <div class="toast-progress" style="animation-duration: ${duration}ms"></div>
+            `;
+            
+            // Tambahkan ke container
+            this.toastContainer.appendChild(toast);
+            
+            // Trigger reflow untuk animasi
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Auto remove setelah duration
+            setTimeout(() => {
+                if (toast && toast.parentNode) {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast && toast.parentNode) {
+                            toast.remove();
+                        }
+                    }, 300);
+                }
+            }, duration);
+            
+            return toast;
+        }
+        
+        getPlatformIcon(platform) {
+            const icons = {
+                'ps1': '<i class="bi bi-playstation"></i>',
+                'ps2': '<i class="bi bi-playstation"></i>',
+                'ps3': '<i class="bi bi-playstation"></i>',
+                'ps4': '<i class="bi bi-playstation"></i>',
+                'ps5': '<i class="bi bi-playstation"></i>',
+                'psp': '<i class="bi bi-playstation"></i>',
+                'psvita': '<i class="bi bi-playstation"></i>',
+                'switch': '<i class="bi bi-nintendo-switch"></i>',
+                'android': '<i class="bi bi-android2"></i>',
+                'ios': '<i class="bi bi-apple"></i>',
+                'pc': '<i class="bi bi-pc-display"></i>',
+                'apksgi': '<i class="bi bi-fire"></i>',
+                'java': '<i class="bi bi-cup-hot"></i>',
+                'gamecube': '<i class="bi bi-box"></i>',
+                'wii': '<i class="bi bi-controller"></i>',
+                'wiiu': '<i class="bi bi-controller"></i>',
+                '3ds': '<i class="bi bi-controller"></i>'
+            };
+            return icons[platform] || '<i class="bi bi-bookmark-star-fill"></i>';
+        }
+        
+        truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substr(0, maxLength) + '...';
+        }
+        
+        success(gameName, platform) {
+            return this.show({
+                title: 'Added to My List!',
+                gameName: gameName,
+                platform: platform,
+                type: 'success',
+                isAdult: platform === 'apksgi'
+            });
+        }
+        
+        warning(message) {
+            return this.show({
+                title: 'Warning',
+                message: message,
+                type: 'warning'
+            });
+        }
+        
+        error(message) {
+            return this.show({
+                title: 'Error',
+                message: message,
+                type: 'error'
+            });
+        }
+        
+        info(message) {
+            return this.show({
+                title: 'Info',
+                message: message,
+                type: 'success'
+            });
+        }
+    }
+
+    // Inisialisasi Toast
+    const toast = new ToastNotification();
+
+    // Override function addToMyList dengan toast yang lebih keren
+    window.addToMyList = function(id, name, platform) {
+        // Escape name untuk mencegah masalah dengan quote
+        const safeName = name.replace(/[\\"']/g, '\\$&');
+        
+        // Cek apakah game sudah ada di list
+        if (!myGameList.some(item => item.id === id && item.platform === platform)) {
+            myGameList.push({
+                id: id,
+                name: name, // Simpan nama asli tanpa escape
+                platform: platform,
+                dateAdded: new Date().toISOString()
+            });
+            saveMyList();
+            
+            // Tampilkan toast keren
+            if (typeof toast !== 'undefined') {
+                toast.success(name, platform);
+            } else {
+                alert(`"${name}" ditambahkan ke My List`);
+            }
+            
+            // Update tampilan tombol
+            const buttons = document.querySelectorAll(`[onclick*="addToMyList('${id}'"][onclick*="${platform}"]`);
+            buttons.forEach(btn => {
+                btn.classList.add('added');
+                btn.innerHTML = '<i class="bi bi-check"></i>';
+                btn.setAttribute('disabled', 'disabled');
+            });
+            
+            // Update badge
+            updateMyListBadge();
+            
+            // Jika modal sedang terbuka, refresh tampilannya
+            const modalEl = document.getElementById('myListModal');
+            if (modalEl && modalEl.classList.contains('show')) {
+                renderMyListModal();
+            }
+            
+        } else {
+            if (typeof toast !== 'undefined') {
+                toast.warning(`"${name}" sudah ada di My List`);
+            } else {
+                alert(`"${name}" sudah ada di My List`);
+            }
+        }
+    };
+
+    // Simpan My List ke localStorage
+    function saveMyList() {
+        localStorage.setItem('indapk_myList', JSON.stringify(myGameList));
+        updateMyListBadge();
+    }
+
+    // Update badge count di navbar
+    function updateMyListBadge() {
+        const badge = document.getElementById('myListCountBadge');
+        if (badge) {
+            badge.textContent = myGameList.length;
+        }
+    }
+
+    // Hapus game dari list
+    function removeFromMyList(gameId, gamePlatform) {
+        const gameToRemove = myGameList.find(item => item.id === gameId && item.platform === gamePlatform);
+        
+        if (gameToRemove && confirm(`Hapus "${gameToRemove.name}" dari My List?`)) {
+            myGameList = myGameList.filter(item => !(item.id === gameId && item.platform === gamePlatform));
+            saveMyList();
+            
+            // Update tombol kembali ke normal
+            const buttons = document.querySelectorAll(`[onclick*="addToMyList('${gameId}'"][onclick*="${gamePlatform}"]`);
+            buttons.forEach(btn => {
+                btn.classList.remove('added');
+                btn.innerHTML = '<i class="bi bi-plus"></i>';
+                btn.removeAttribute('disabled');
+            });
+            
+            // Tampilkan notifikasi
+            if (typeof toast !== 'undefined') {
+                toast.info(`"${gameToRemove.name}" dihapus dari My List`);
+            }
+            
+            // Jika modal sedang terbuka, refresh tampilannya
+            const modalEl = document.getElementById('myListModal');
+            if (modalEl && modalEl.classList.contains('show')) {
+                renderMyListModal();
+            }
+        }
+    }
+
+    // Render konten modal My List - DIPERBAIKI
+    function renderMyListModal() {
+        const container = document.getElementById('myListModalBody');
+        if (!container) return;
+
+        if (myGameList.length === 0) {
+            container.innerHTML = `
+                <div class="my-list-empty">
+                    <i class="bi bi-inbox"></i>
+                    <p>My List kosong</p>
+                    <small class="text-muted">Tambahkan game favoritmu dengan klik tombol <i class="bi bi-plus"></i> pada card game</small>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '<div class="my-list-grid">';
+        
+        // Loop melalui setiap item di My List
+        myGameList.forEach((item, index) => {
+            // Cari game di allGames berdasarkan ID dan PLATFORM
+            const gameData = allGames.find(g => String(g.download_id) === String(item.id) && g.platform === item.platform);
+            
+            const isAvailable = !!gameData;
+            
+            // Nama platform yang lebih rapi untuk badge
+            const platformNames = {
+                'ps1': 'PS1', 'ps2': 'PS2', 'ps3': 'PS3', 'ps4': 'PS4', 'ps5': 'PS5',
+                'psp': 'PSP', 'psvita': 'PS Vita', 'switch': 'Switch', '3ds': '3DS',
+                'wii': 'Wii', 'wiiu': 'Wii U', 'gamecube': 'GameCube', 'android': 'Android',
+                'ios': 'iOS', 'java': 'Java', 'pc': 'PC', 'apksgi': '18+'
+            };
+            
+            const badgeName = platformNames[item.platform] || item.platform.toUpperCase();
+            
+            // Format tanggal ditambahkan
+            const dateAdded = item.dateAdded ? new Date(item.dateAdded).toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'short', year: 'numeric'
+            }) : '-';
+
+            html += `
+                <div class="my-list-item" style="animation: cardEntrance 0.4s ease backwards; animation-delay: ${index * 50}ms">
+                    <div class="my-list-header">
+                        <div class="my-list-title">
+                            <h6 title="${item.name}">${item.name}</h6>
+                            <small><i class="bi bi-calendar3 me-1"></i>Ditambahkan: ${dateAdded}</small>
+                        </div>
+                        <div class="my-list-badges">
+                            <span class="platform-badge-sm ${item.platform}">
+                                <i class="bi bi-controller"></i> ${badgeName}
+                            </span>
+                            <span class="status-badge ${isAvailable ? 'available' : 'unavailable'}">
+                                <i class="bi ${isAvailable ? 'bi-check-circle' : 'bi-clock'}"></i>
+                                ${isAvailable ? 'Avaible' : 'Not Avaible'}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="my-list-footer">
+                        ${isAvailable 
+                            ? `<button class="btn-sm btn-get-sm" onclick="event.stopPropagation(); trackAndNavigate('${item.id}', '${item.platform}', '${item.name.replace(/'/g, "\\'")}')">
+                                    <i class="bi bi-download"></i> Download
+                               </button>`
+                            : `<button class="btn-sm btn-secondary" disabled style="opacity:0.5; pointer-events:none;">
+                                    <i class="bi bi-x-circle"></i> Unavailable
+                               </button>`
+                        }
+                        <button class="btn-sm btn-remove-sm" onclick="removeFromMyList('${item.id}', '${item.platform}')">
+                            <i class="bi bi-trash"></i> Hapus
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        
+        // Tambahkan informasi total game
+        html += `
+            <div class="text-end text-muted small mt-3">
+                Total: ${myGameList.length} game
+            </div>
+        `;
+        
+        container.innerHTML = html;
+    }
+
+    // Buka modal My List
+    function openMyListModal() {
+        renderMyListModal();
+        const modal = new bootstrap.Modal(document.getElementById('myListModal'));
+        modal.show();
+    }
+
+    // Tambahkan style tambahan untuk platform badge
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tambahkan style untuk badge platform yang lebih lengkap
+        const style = document.createElement('style');
+        style.textContent = `
+            .platform-badge-sm.ps1 { background: var(--col-ps1); }
+            .platform-badge-sm.ps2 { background: var(--col-ps2); }
+            .platform-badge-sm.ps3 { background: var(--col-ps3); }
+            .platform-badge-sm.ps4 { background: var(--col-ps4); }
+            .platform-badge-sm.ps5 { background: var(--col-ps5); }
+            .platform-badge-sm.psp { background: var(--col-psp); }
+            .platform-badge-sm.psvita { background: var(--col-psvita); }
+            .platform-badge-sm.switch { background: var(--col-switch); }
+            .platform-badge-sm.\\33 ds { background: var(--col-3ds); }
+            .platform-badge-sm.wii { background: var(--col-wii); }
+            .platform-badge-sm.wiiu { background: var(--col-wiiu); }
+            .platform-badge-sm.gamecube { background: var(--col-gamecube); }
+            .platform-badge-sm.java { background: var(--col-java); }
+            .platform-badge-sm.ios { background: var(--col-ios); }
+            .platform-badge-sm.android { background: var(--col-android); }
+            .platform-badge-sm.pc { background: var(--col-pc); }
+            .platform-badge-sm.apksgi { background: var(--col-apksgi); }
+        `;
+        document.head.appendChild(style);
+    });
+
+    /* =========================================
        INIT & EVENTS
     ========================================= */
     document.addEventListener('DOMContentLoaded', () => {
@@ -1526,6 +2366,7 @@
         }
 
         checkLoginStatus();
+        loadMyList(); // Load My List dari localStorage
         loadAllGames();
         setupEventListeners();
         
@@ -1847,7 +2688,7 @@
     }
 
     /* =========================================
-       RENDERING
+       RENDERING (Dengan Tombol Add to My List)
     ========================================= */
     function renderGames(tabId) {
         const container = document.getElementById(tabId === 'beranda' ? 'gameListContainer' : (tabId === 'indapk' ? 'indapkListContainer' : 'apksgiListContainer'));
@@ -1879,7 +2720,6 @@
         const paged = filtered.slice(start, start + GAMES_PER_PAGE);
         
         // Pinned Section (Only on Page 1 of Beranda/Indapk & no search & no platform filter)
-        // Bug fix logic: Ensure pinned only shows on clean state
         let html = '';
         if(tabId !== 'apksgi' && page === 1 && !currentFilters.query && currentFilters.platform === 'all' && currentFilters.category === 'all') {
             html += renderPinnedSection(pinnedGames);
@@ -1904,10 +2744,15 @@
                 newBadge = `<div class="new-badge platform-tag ${platformClass}">NEW</div>`;
             }
             
+            // Cek apakah game sudah ada di My List
+            const isInList = myGameList.some(item => item.id === id && item.platform === g.platform);
+            const addButtonClass = isInList ? 'btn-add-list added' : 'btn-add-list';
+            const addButtonText = isInList ? '<i class="bi bi-check"></i>' : '<i class="bi bi-plus"></i> ADD';
+            
             html += `
             <div class="col-6 col-md-4 col-lg-3">
-                <div class="game-card platform-${platformClass}" style="animation-delay: ${index * 50}ms" onclick="trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g,"")}')">
-                    <div class="card-img-wrap">
+                <div class="game-card platform-${platformClass}" style="animation-delay: ${index * 50}ms">
+                    <div class="card-img-wrap" onclick="trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g,"")}')">
                         ${viewBadge}
                         ${newBadge}
                         <img src="${thumb}" loading="lazy" alt="${name}">
@@ -1925,7 +2770,12 @@
                         </div>
                         <div class="card-actions">
                             <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>${new Date(g.timestamp).toLocaleDateString()}</span>
-                            <button class="btn-download-sm">GET</button>
+                            <div>
+                            <button class="${addButtonClass}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>';">
+                                    ${addButtonText}
+                                </button>
+                                <button class="btn-download-sm" onclick="event.stopPropagation(); trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g, "\\\\'")}')">GET</button>
+                            </div>
                         </div>
                         ${isAdminUser() ? `<button class="btn btn-sm btn-link text-warning mt-2 p-0" onclick="event.stopPropagation(); manageThumbnail('${id}', '${g.platform}', '${thumb}', '${name.replace(/'/g,"")}')">Edit Thumb</button>` : ''}
                     </div>
@@ -2073,18 +2923,18 @@
         }
     }
     
-// Toggle Login Key Visibility
-function toggleLoginKeyVisibility() {
-    const input = document.getElementById('telegramKeyInput');
-    const icon = document.getElementById('toggleLoginKeyIcon');
-    if(input.type === 'password') {
-        input.type = 'text';
-        icon.classList.replace('bi-eye', 'bi-eye-slash');
-    } else {
-        input.type = 'password';
-        icon.classList.replace('bi-eye-slash', 'bi-eye');
+    // Toggle Login Key Visibility
+    function toggleLoginKeyVisibility() {
+        const input = document.getElementById('telegramKeyInput');
+        const icon = document.getElementById('toggleLoginKeyIcon');
+        if(input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
     }
-}
 
     // Toggle Register Key Visibility
     function toggleRegisterKeyVisibility() {
