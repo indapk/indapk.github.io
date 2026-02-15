@@ -1422,6 +1422,44 @@
         margin: 0;
         letter-spacing: 1px;
     }
+    /* =========================================
+         LIBRARY SECTION
+      ========================================= */
+      .library-section {
+          background: var(--bg-card);
+          border: 1px solid rgba(0, 170, 255, 0.3);
+          border-radius: 20px;
+          padding: 20px;
+          margin-bottom: 30px;
+          backdrop-filter: blur(10px);
+      }
+
+      .library-section .library-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 20px;
+          border-bottom: 1px solid rgba(0,170,255,0.2);
+          padding-bottom: 10px;
+      }
+
+      .library-header i {
+          font-size: 2rem;
+          color: #00c3ff;
+          filter: drop-shadow(0 0 10px #009dff);
+      }
+
+      .library-header h4 {
+          font-family: var(--font-display);
+          font-weight: 800;
+          background: linear-gradient(135deg, #00c3ff, #0066ff);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          margin: 0;
+          letter-spacing: 1px;
+      }
+
   </style>
 </head>
 <body>
@@ -2774,7 +2812,7 @@
 
             if (hotGames.length > 0) {
                 html += `<div class="hot-game-section">`;
-                html += `<div class="hot-header"><i class="bi bi-fire"></i><h4>🔥 HOT GAME 🔥</h4></div>`;
+                html += `<div class="hot-header"><i class="bi bi-fire"></i><h4>HOT GAME</h4></div>`;
                 html += `<div class="row g-4">`;
                 hotGames.forEach((g, idx) => {
                     const name = g.nama_game || g.ori_name;
@@ -2826,6 +2864,8 @@
         }
 
         // ===== REGULAR GAMES (selanjutnya) =====
+        html += `<div class="library-section">`;
+        html += `<div class="library-header"> <i class="bi bi-collection-fill"></i> <h4> Game Library </h4></div>`;
         html += `<div class="row g-4">`;
         paged.forEach((g, index) => {
             const name = g.nama_game || g.ori_name;
