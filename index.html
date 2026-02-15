@@ -1459,7 +1459,63 @@
           margin: 0;
           letter-spacing: 1px;
       }
+    /* Modal Delete Confirmation Styling */
+    .modal-content {
+        animation: modalSlideIn 0.3s ease;
+    }
 
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    #deleteConfirmModal .modal-content {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 20px 60px rgba(239, 68, 68, 0.3), 0 0 30px rgba(239, 68, 68, 0.2);
+    }
+
+    #deleteConfirmModal .btn-glass:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    #deleteConfirmModal #confirmDeleteBtn:hover {
+        background: #dc2626 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+    }
+
+    /* Pulse animation for trash icon */
+    @keyframes pulseBadge {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    /* Light mode adjustments */
+    body.light-mode #deleteConfirmModal .modal-content {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    body.light-mode #deleteConfirmModal .modal-header {
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    body.light-mode #deleteConfirmModal h5,
+    body.light-mode #deleteConfirmModal p {
+        color: #1a1a2e !important;
+    }
+
+    body.light-mode #deleteConfirmModal .text-muted {
+        color: #64748b !important;
+    }
   </style>
 </head>
 <body>
@@ -2277,33 +2333,117 @@
     }
 
     // Hapus game dari list
-    function removeFromMyList(gameId, gamePlatform) {
-        const gameToRemove = myGameList.find(item => item.id === gameId && item.platform === gamePlatform);
+function removeFromMyList(gameId, gamePlatform) {
+    const gameToRemove = myGameList.find(item => item.id === gameId && item.platform === gamePlatform);
+    
+    if (!gameToRemove) return;
+    
+    // Buat modal hapus yang keren
+    const gameName = gameToRemove.name;
+    const modalId = 'deleteConfirmModal';
+    
+    // Hapus modal yang sudah ada jika ada
+    const existingModal = document.getElementById(modalId);
+    if (existingModal) existingModal.remove();
+    
+    // Buat modal HTML
+    const modalHTML = `
+    <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 24px; overflow: hidden;">
+                <div class="modal-header" style="border-bottom: 1px solid var(--glass-border); background: rgba(239, 68, 68, 0.1);">
+                    <h5 class="modal-title" style="color: #ef4444;">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Konfirmasi Hapus
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <div class="mb-4" style="font-size: 4rem; color: #ef4444; animation: pulseBadge 1.5s infinite;">
+                        <i class="bi bi-trash3-fill"></i>
+                    </div>
+                    <h5 class="mb-3" style="color: var(--text-main);">Hapus dari My List?</h5>
+                    <p class="mb-2" style="color: var(--text-muted);">Game yang akan dihapus:</p>
+                    <div class="p-3 mb-3" style="background: rgba(239, 68, 68, 0.1); border-radius: 16px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                        <strong style="color: #ef4444; font-size: 1.2rem;">"${gameName}"</strong>
+                    </div>
+                    <p class="small text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Game akan dihapus permanen dari daftar Anda
+                    </p>
+                </div>
+                <div class="modal-footer d-flex justify-content-center gap-3" style="border-top: 1px solid var(--glass-border);">
+                    <button type="button" class="btn btn-glass" data-bs-dismiss="modal" style="min-width: 120px;">
+                        <i class="bi bi-x-lg me-2"></i>Batal
+                    </button>
+                    <button type="button" class="btn" id="confirmDeleteBtn" style="background: #ef4444; color: white; min-width: 120px; border: none; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
+                        <i class="bi bi-trash-fill me-2"></i>Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    
+    // Tambahkan modal ke body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Tampilkan modal
+    const modalElement = document.getElementById(modalId);
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+    
+    // Handle konfirmasi hapus
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        // Hapus dari array
+        myGameList = myGameList.filter(item => !(item.id === gameId && item.platform === gamePlatform));
+        saveMyList();
         
-        if (gameToRemove && confirm(`Hapus "${gameToRemove.name}" dari My List?`)) {
-            myGameList = myGameList.filter(item => !(item.id === gameId && item.platform === gamePlatform));
-            saveMyList();
-            
-            // Update tombol kembali ke normal
-            const buttons = document.querySelectorAll(`[onclick*="addToMyList('${gameId}'"][onclick*="${gamePlatform}"]`);
-            buttons.forEach(btn => {
-                btn.classList.remove('added');
-                btn.innerHTML = '<i class="bi bi-plus"></i>';
-                btn.removeAttribute('disabled');
+        // Update tombol kembali ke normal
+        const buttons = document.querySelectorAll(`[onclick*="addToMyList('${gameId}'"][onclick*="${gamePlatform}"]`);
+        buttons.forEach(btn => {
+            btn.classList.remove('added');
+            btn.innerHTML = '<i class="bi bi-plus"></i> ADD';
+            btn.removeAttribute('disabled');
+        });
+        
+        // Tutup modal
+        modal.hide();
+        
+        // Tampilkan toast sukses
+        if (typeof toast !== 'undefined') {
+            toast.show({
+                title: 'Deleted!',
+                message: `"${gameName}" dihapus dari My List`,
+                gameName: gameName,
+                type: 'error',
+                duration: 2000
             });
-            
-            // Tampilkan notifikasi
-            if (typeof toast !== 'undefined') {
-                toast.info(`"${gameToRemove.name}" dihapus dari My List`);
-            }
-            
-            // Jika modal sedang terbuka, refresh tampilannya
-            const modalEl = document.getElementById('myListModal');
-            if (modalEl && modalEl.classList.contains('show')) {
-                renderMyListModal();
-            }
         }
-    }
+        
+        // Jika modal My List sedang terbuka, refresh tampilannya
+        const myListModalEl = document.getElementById('myListModal');
+        if (myListModalEl && myListModalEl.classList.contains('show')) {
+            renderMyListModal();
+        }
+        
+        // Hapus modal setelah ditutup
+        setTimeout(() => {
+            if (modalElement && modalElement.parentNode) {
+                modalElement.remove();
+            }
+        }, 500);
+    });
+    
+    // Bersihkan modal saat ditutup
+    modalElement.addEventListener('hidden.bs.modal', function() {
+        setTimeout(() => {
+            if (modalElement && modalElement.parentNode) {
+                modalElement.remove();
+            }
+        }, 500);
+    });
+}
 
     // Render konten modal My List - DIPERBAIKI
     function renderMyListModal() {
@@ -2372,9 +2512,9 @@
                                     <i class="bi bi-x-circle"></i> Unavailable
                                </button>`
                         }
-                        <button class="btn-sm btn-remove-sm" onclick="removeFromMyList('${item.id}', '${item.platform}')">
-                            <i class="bi bi-trash"></i> Hapus
-                        </button>
+                          <button class="btn-sm btn-remove-sm" onclick="removeFromMyList('${item.id}', '${item.platform}')">
+                              <i class="bi bi-trash"></i> Hapus
+                          </button>
                     </div>
                 </div>
             `;
