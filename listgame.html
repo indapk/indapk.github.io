@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>List Game A-Z INDapk</title>
+  <title>A-Z Game List - INDapk</title>
+  <link rel="icon" href="favicon.png" type="image/png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,710 +12,721 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ===== GLOBAL THEME ===== */
-    :root{
-      --bg-dark:#0a0e1a;
-      --bg-darker:#050812;
-      --card-bg:rgba(255,255,255,.03);
-      --text:#fff;
-      --text-muted:rgba(255,255,255,.6);
-      --neon-cyan:#00f0ff;
-      --neon-purple:#b537f2;
-      --neon-pink:#ff2e97;
-      --glass-blur:blur(20px);
-      --transition-smooth:all .4s cubic-bezier(.4,0,.2,1);
+    :root {
+      /* Dark Theme (Default) */
+      --bg-body: #0a0e1a;
+      --bg-overlay: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      --navbar-bg: rgba(10, 14, 26, 0.85);
+      --text-primary: #fff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.05);
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --hero-overlay-start: rgba(10,14,26,0.3);
+      --hero-overlay-mid: rgba(10,14,26,0.8);
+      
+      --neon-cyan: #00f0ff;
+      --neon-purple: #b537f2;
+      --neon-pink: #ff2e97;
+      --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       
       /* Platform Colors */
-      --ps1-color:#8a2be2; --ps2-color:#0066cc; --ps3-color:#00439c; --ps4-color:#0070cc;
-      --psp-color:#8b4513; --psvita-color:#003791; --switch-color:#e60012; --wii-color:#009ac7;
-      --gamecube-color:#6a5acd; --n3ds-color:#d12229; --android-color:#3ddc84;
-      --ios-color:#0a84ff; --java-color:#f89820; --pc-color:#00a4ef; --apksgi-color:#ff2e97;
+      --ps1-color: #949494;
+      --ps2-color: #003791;
+      --ps3-color: #CE181E;
+      --ps4-color: #003087;
+      --ps5-color: #FFFFFF;
+      --psp-color: #FFD700;
+      --psvita-color: #00A0E9;
+      --switch-color: #E60012;
+      --wii-color: #009AC7;
+      --wiiu-color: #009AC7;
+      --gamecube-color: #6A5ACD;
+      --3ds-color: #D12229;
+      --android-color: #3DDC84;
+      --ios-color: #A2AAAD;
+      --java-color: #F89820;
+      --pc-color: #0078D7;
+      --apksgi-color: #FF2E97;
     }
 
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(181,55,242,.15),transparent),
-                 radial-gradient(ellipse 60% 50% at 0% 100%,rgba(0,240,255,.1),transparent),
-                 radial-gradient(ellipse 60% 50% at 100% 100%,rgba(255,46,151,.1),transparent),
-                 linear-gradient(180deg,var(--bg-darker) 0%,var(--bg-dark) 100%);
-      color:var(--text);
-      font-family:Inter,sans-serif;
-      min-height:100vh;
+    [data-theme="light"] {
+      --bg-body: #f0f4f8;
+      --bg-overlay: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+      --navbar-bg: rgba(255, 255, 255, 0.9);
+      --text-primary: #1a1a1a;
+      --text-secondary: #555555;
+      --card-bg: #ffffff;
+      --card-border: rgba(0, 0, 0, 0.08);
+      --input-bg: rgba(0, 0, 0, 0.05);
+      --hero-overlay-start: rgba(240,244,248,0.3);
+      --hero-overlay-mid: rgba(240,244,248,0.8);
     }
 
-    /* Background Grid */
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      background-image:linear-gradient(rgba(0,240,255,.03) 1px,transparent 1px),
-                      linear-gradient(90deg,rgba(0,240,255,.03) 1px,transparent 1px);
-      background-size:50px 50px;
-      pointer-events:none;
-      z-index:0;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
+
+    /* Grid Overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: var(--bg-overlay);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-body); }
+    ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
 
     /* ===== NAVBAR ===== */
     .navbar {
-      background: rgba(10, 14, 26, 0.95) !important;
-      backdrop-filter: var(--glass-blur);
-      border-bottom: 1px solid rgba(0, 240, 255, 0.15);
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.4);
+      background: var(--navbar-bg) !important;
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--card-border);
       position: sticky;
       top: 0;
       z-index: 1000;
+      transition: var(--transition-smooth);
     }
 
     .navbar-brand {
-      font-family: Orbitron, sans-serif;
+      font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, var(--text-primary), var(--neon-cyan));
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .nav-link { color: rgba(255,255,255,0.85) !important; font-weight: 600; }
-    .nav-link:hover { color: var(--neon-cyan) !important; background: rgba(0,240,255,0.1); }
-
-    .dropdown-menu {
-      background: rgba(10, 14, 26, 0.98);
-      border: 1px solid rgba(0, 240, 255, 0.25);
-      backdrop-filter: blur(20px);
-      border-radius: 15px;
-      max-height: 400px;
-      overflow-y: auto;
+    .nav-link { 
+      color: var(--text-secondary) !important; 
+      font-weight: 600; 
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
     }
-    
-    .dropdown-item { color: rgba(255,255,255,0.9); border-radius: 10px; padding: 8px 16px; }
-    .dropdown-item:hover { background: rgba(0,240,255,0.2); color: var(--neon-cyan); }
-    .dropdown-item .badge { width: 60px; }
+    .nav-link:hover { color: var(--neon-cyan) !important; }
+    .nav-link.active { color: var(--neon-cyan) !important; }
 
-    /* ===== HEADER ===== */
-    .page-header {
-      padding: 40px 0 20px;
-      text-align: center;
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      width: 40px; 
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      margin-left: 10px;
+    }
+    .theme-toggle:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      box-shadow: 0 0 15px var(--neon-cyan);
+    }
+
+    /* ===== HERO HEADER ===== */
+    .hero-container {
       position: relative;
-      z-index: 10;
+      width: 100%;
+      height: 420px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
     }
 
-    .page-header h1 {
-      font-family: Orbitron, sans-serif;
+    .hero-bg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: url('https://www.kuysocial.com/content/uploads/photos/2025/11/kuysocial_2e94906c5735f263e9de8a2ce662e715_cropped.jpg') no-repeat center 30%/cover;
+      z-index: 1;
+      filter: brightness(0.8);
+      animation: zoomEffect 20s infinite alternate;
+    }
+    @keyframes zoomEffect { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+    
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, var(--hero-overlay-start) 0%, var(--hero-overlay-mid) 60%, var(--bg-body) 100%);
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      padding-bottom: 50px;
+      width: 100%;
+      max-width: 800px;
+      padding-left: 15px;
+      padding-right: 15px;
+      animation: fadeUp 1s ease-out;
+    }
+
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      font-size: 3rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      background: linear-gradient(180deg, var(--text-primary) 0%, var(--text-secondary) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 10px;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .hero-subtitle {
+      color: var(--neon-cyan);
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+      background: rgba(0,0,0,0.4);
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 50px;
+      border: 1px solid rgba(0,240,255,0.2);
+      backdrop-filter: blur(5px);
+      margin-bottom: 20px;
+    }
+
+    .btn-hero-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+      color: #fff;
+      padding: 10px 30px;
+      border-radius: 30px;
+      font-weight: 700;
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
+      transition: var(--transition-smooth);
+      border: none;
+    }
+    .btn-hero-home:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(181, 55, 242, 0.5);
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .hero-container { height: 350px; }
+      .hero-title { font-size: 2rem; }
     }
 
     /* ===== SEARCH SECTION ===== */
-    .search-section {
-      margin-bottom: 30px;
-      padding: 20px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(0,240,255,0.2);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-    }
+    .search-section { margin-bottom: 30px; position: relative; animation: fadeUp 0.8s ease-out 0.2s backwards; }
 
-    .search-container {
-      position: relative;
-      max-width: 600px;
-      margin: 0 auto;
-    }
+    .search-input-wrapper { position: relative; max-width: 600px; margin: 0 auto; }
 
     .search-input {
       width: 100%;
-      padding: 15px 50px 15px 20px;
-      background: rgba(0,0,0,0.5);
-      border: 2px solid rgba(0,240,255,0.3);
-      border-radius: 50px;
-      color: white;
+      padding: 18px 60px 18px 25px;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 15px;
+      color: var(--text-primary);
       font-size: 16px;
       transition: var(--transition-smooth);
+      backdrop-filter: blur(10px);
     }
 
     .search-input:focus {
       outline: none;
+      background: rgba(0, 240, 255, 0.05);
       border-color: var(--neon-cyan);
-      box-shadow: 0 0 30px rgba(0,240,255,0.3);
-      background: rgba(0,0,0,0.7);
-    }
-
-    .search-input::placeholder {
-      color: rgba(255,255,255,0.5);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
     }
 
     .search-btn {
       position: absolute;
-      right: 5px;
-      top: 50%;
+      right: 8px; top: 50%;
       transform: translateY(-50%);
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      background: var(--neon-cyan);
       border: none;
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      color: #000;
+      display: flex; align-items: center; justify-content: center;
       font-size: 18px;
       transition: var(--transition-smooth);
+      cursor: pointer;
     }
 
-    .search-btn:hover {
-      transform: translateY(-50%) scale(1.1);
-      box-shadow: 0 0 20px rgba(0,240,255,0.5);
-    }
+    .search-btn:hover { background: #fff; box-shadow: 0 0 15px var(--neon-cyan); }
 
     .search-results-info {
       margin-top: 15px;
-      padding: 10px 20px;
-      background: rgba(0,240,255,0.1);
+      padding: 12px 20px;
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.1);
       border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       color: var(--neon-cyan);
-    }
-
-    .clear-search {
-      color: var(--neon-pink);
-      text-decoration: none;
-      padding: 5px 15px;
-      border-radius: 20px;
-      border: 1px solid var(--neon-pink);
-      transition: var(--transition-smooth);
-    }
-
-    .clear-search:hover {
-      background: rgba(255,46,151,0.2);
-      color: white;
-    }
-
-    /* ===== LOADING ANIMATIONS ===== */
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--bg-darker);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .loading-overlay.fade-out {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .loading-container {
-      text-align: center;
-      position: relative;
-    }
-
-    .loading-controller {
-      font-size: 80px;
-      color: var(--neon-cyan);
-      animation: controllerShake 1.5s infinite ease-in-out;
-      text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-purple);
-      margin-bottom: 20px;
-    }
-
-    @keyframes controllerShake {
-      0%, 100% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(15deg) scale(1.1); }
-      75% { transform: rotate(-15deg) scale(1.1); }
-    }
-
-    .loading-text {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 10px;
-      letter-spacing: 4px;
-    }
-
-    .loading-progress {
-      width: 300px;
-      height: 4px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 20px auto;
-      position: relative;
-    }
-
-    .loading-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-      border-radius: 10px;
-      animation: loadingProgress 2s infinite ease-in-out;
-      box-shadow: 0 0 20px var(--neon-cyan);
-    }
-
-    @keyframes loadingProgress {
-      0% { width: 0%; }
-      50% { width: 70%; }
-      100% { width: 100%; }
-    }
-
-    .platform-loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 50px 20px;
-      background: rgba(0,0,0,0.3);
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      margin: 20px 0;
-    }
-
-    .platform-loading .spinner {
-      width: 60px;
-      height: 60px;
-      border: 4px solid rgba(0,240,255,0.1);
-      border-top: 4px solid var(--neon-cyan);
-      border-right: 4px solid var(--neon-purple);
-      border-bottom: 4px solid var(--neon-pink);
-      border-radius: 50%;
-      animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-      margin-bottom: 20px;
-    }
-    .platform-loading .spinner-pulse {
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle, var(--neon-cyan) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: pulse 1.5s ease-in-out infinite;
-      margin-bottom: 20px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(0.8); opacity: 0.5; }
-      50% { transform: scale(1.2); opacity: 1; }
-    }
-
-    .loading-dots {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .loading-dot {
-      width: 12px;
-      height: 12px;
-      background: var(--neon-cyan);
-      border-radius: 50%;
-      animation: dotPulse 1.5s ease-in-out infinite;
-    }
-
-    .loading-dot:nth-child(2) {
-      animation-delay: 0.2s;
-      background: var(--neon-purple);
-    }
-
-    .loading-dot:nth-child(3) {
-      animation-delay: 0.4s;
-      background: var(--neon-pink);
-    }
-    .skeleton-loader {
-      background: linear-gradient(90deg, 
-        rgba(255,255,255,0.05) 25%, 
-        rgba(0,240,255,0.1) 50%, 
-        rgba(255,255,255,0.05) 75%);
-      background-size: 200% 100%;
-      animation: skeleton 1.5s infinite;
-    }
-
-    @keyframes skeleton {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    @keyframes dotPulse {
-      0%, 100% { transform: scale(1); opacity: 0.5; }
-      50% { transform: scale(1.5); opacity: 1; }
-    }
-
-    /* ===== SIMPLE PLATFORM LOADING ===== */
-    .simple-loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 20px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 20px;
-      margin: 30px 0;
-      backdrop-filter: blur(5px);
-    }
-
-    .simple-spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid rgba(0,240,255,0.1);
-      border-top: 4px solid var(--neon-cyan);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .simple-text {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--neon-cyan);
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(0,240,255,0.5);
-    }
-
-    .simple-dots {
-      display: flex;
-      gap: 8px;
-    }
-
-    .simple-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--neon-cyan);
-      border-radius: 50%;
-      animation: simplePulse 1.5s infinite;
-    }
-
-    .simple-dot:nth-child(2) {
-      animation-delay: 0.2s;
-      background: var(--neon-purple);
-    }
-
-    .simple-dot:nth-child(3) {
-      animation-delay: 0.4s;
-      background: var(--neon-pink);
-    }
-
-    @keyframes simplePulse {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.3); }
-    }
-
-    /* Platform Card Loading State */
-    .platform-card.loading {
-      pointer-events: none;
-      opacity: 0.7;
-      animation: cardPulse 1.5s infinite;
-    }
-
-    @keyframes cardPulse {
-      0%, 100% { border-color: rgba(0,240,255,0.2); }
-      50% { border-color: rgba(0,240,255,0.8); box-shadow: 0 0 20px rgba(0,240,255,0.3); }
+      font-size: 0.95rem;
     }
 
     /* ===== PLATFORM GRID ===== */
-    .platform-grid-section {
-      padding: 30px 0 40px;
-      position: relative;
-      z-index: 10;
+    .platform-grid-section { padding: 0 0 60px; animation: fadeUp 0.8s ease-out 0.4s backwards; }
+    
+    .section-title {
+      font-family: 'Orbitron';
+      color: var(--text-primary);
+      margin-bottom: 25px;
+      display: flex; align-items: center;
+      font-size: 1.5rem;
     }
 
     .platform-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 20px;
-      margin-top: 30px;
     }
 
     .platform-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(0,240,255,0.2);
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 25px 15px;
+      border-radius: 16px;
+      padding: 30px 15px;
       text-align: center;
       transition: var(--transition-smooth);
       cursor: pointer;
       text-decoration: none;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
+      color: var(--text-primary);
+      display: flex; flex-direction: column; align-items: center;
+      gap: 15px;
+      overflow: hidden;
+    }
+    
+    /* Shimmer Effect for Cards on Hover */
+    .platform-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: 0.5s;
+    }
+    .platform-card:hover::after { left: 100%; }
+
+    .platform-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
     .platform-card:hover {
-      transform: translateY(-10px);
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 30px rgba(0,240,255,0.3);
+      transform: translateY(-5px);
+      border-color: rgba(0, 240, 255, 0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
+    
+    .platform-card:hover::before { opacity: 1; }
 
     .platform-icon {
-      width: 64px;
-      height: 64px;
+      width: 60px; height: 60px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      background: rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      background: rgba(128,128,128,0.1);
+      transition: var(--transition-smooth);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .platform-card:hover .platform-icon {
+      transform: scale(1.1) rotate(5deg);
+      background: var(--text-primary);
+      color: var(--bg-body) !important;
     }
 
-    .platform-name {
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
+    .platform-name { font-weight: 700; font-size: 1rem; letter-spacing: 0.5px; }
 
     .game-count {
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: rgba(0,0,0,0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
     }
 
-    /* Platform Specific Colors */
-    .platform-card[data-platform="ps1"] .platform-icon { background: rgba(138,43,226,0.2); color: #8a2be2; }
-    .platform-card[data-platform="ps2"] .platform-icon { background: rgba(0,102,204,0.2); color: #0066cc; }
-    .platform-card[data-platform="psvita"] .platform-icon { background: rgba(0,55,145,0.2); color: #003791; }
-    .platform-card[data-platform="switch"] .platform-icon { background: rgba(230,0,18,0.2); color: #e60012; }
+    /* Platform Color Definitions */
+    .platform-card[data-platform="ps1"] .platform-icon { color: var(--ps1-color); border: 1px solid var(--ps1-color); }
+    .platform-card[data-platform="ps2"] .platform-icon { color: var(--ps2-color); border: 1px solid var(--ps2-color); }
+    .platform-card[data-platform="ps3"] .platform-icon { color: var(--ps3-color); border: 1px solid var(--ps3-color); }
+    .platform-card[data-platform="ps4"] .platform-icon { color: var(--ps4-color); border: 1px solid var(--ps4-color); }
+    .platform-card[data-platform="ps5"] .platform-icon { color: var(--ps5-color); border: 1px solid var(--ps5-color); }
+    .platform-card[data-platform="psp"] .platform-icon { color: var(--psp-color); border: 1px solid var(--psp-color); }
+    .platform-card[data-platform="psvita"] .platform-icon { color: var(--psvita-color); border: 1px solid var(--psvita-color); }
+    .platform-card[data-platform="switch"] .platform-icon { color: var(--switch-color); border: 1px solid var(--switch-color); }
+    .platform-card[data-platform="3ds"] .platform-icon { color: var(--3ds-color); border: 1px solid var(--3ds-color); }
+    .platform-card[data-platform="wii"] .platform-icon { color: var(--wii-color); border: 1px solid var(--wii-color); }
+    .platform-card[data-platform="wiiu"] .platform-icon { color: var(--wiiu-color); border: 1px solid var(--wiiu-color); }
+    .platform-card[data-platform="gamecube"] .platform-icon { color: var(--gamecube-color); border: 1px solid var(--gamecube-color); }
+    .platform-card[data-platform="android"] .platform-icon { color: var(--android-color); border: 1px solid var(--android-color); }
+    .platform-card[data-platform="ios"] .platform-icon { color: var(--ios-color); border: 1px solid var(--ios-color); }
+    .platform-card[data-platform="java"] .platform-icon { color: var(--java-color); border: 1px solid var(--java-color); }
+    .platform-card[data-platform="pc"] .platform-icon { color: var(--pc-color); border: 1px solid var(--pc-color); }
+    .platform-card[data-platform="apksgi"] .platform-icon { color: var(--apksgi-color); border: 1px solid var(--apksgi-color); }
 
     /* ===== GAME LIST SECTION ===== */
-    .game-list-section {
-      padding: 30px 0;
-      position: relative;
-      z-index: 10;
-    }
+    .game-list-section { padding-bottom: 50px; }
 
     .platform-header {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid rgba(0,240,255,0.3);
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 25px;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid var(--card-border);
+      animation: fadeUp 0.5s ease-out;
     }
 
     .back-button {
-      background: rgba(0,240,255,0.1);
-      border: 1px solid var(--neon-cyan);
-      color: var(--neon-cyan);
+      background: transparent;
+      border: 1px solid var(--text-secondary);
+      color: var(--text-primary);
       padding: 8px 16px;
-      border-radius: 20px;
+      border-radius: 10px;
       text-decoration: none;
       transition: var(--transition-smooth);
+      font-size: 0.9rem;
     }
 
-    .back-button:hover {
-      background: rgba(0,240,255,0.2);
-      color: white;
-    }
+    .back-button:hover { background: var(--text-primary); color: var(--bg-body); }
 
     .alphabet-filter {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 25px;
-      padding: 15px;
-      background: rgba(255,255,255,0.02);
-      border-radius: 15px;
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-bottom: 30px; padding: 10px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 12px;
       justify-content: center;
+      animation: fadeUp 0.6s ease-out;
     }
 
     .alphabet-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      border: 1px solid rgba(0,240,255,0.3);
+      min-width: 32px; height: 32px;
+      padding: 0 8px;
+      border-radius: 8px;
+      border: 1px solid transparent;
       background: transparent;
-      color: var(--text);
+      color: var(--text-secondary);
       font-weight: 600;
+      font-size: 0.85rem;
       transition: var(--transition-smooth);
     }
 
-    .alphabet-btn:hover,
+    .alphabet-btn:hover { color: var(--text-primary); background: rgba(128,128,128,0.2); }
+
     .alphabet-btn.active {
       background: var(--neon-cyan);
-      border-color: var(--neon-cyan);
-      color: black;
-      box-shadow: 0 0 20px rgba(0,240,255,0.5);
+      color: #000;
+      box-shadow: 0 0 10px rgba(0,240,255,0.4);
     }
 
     .game-item {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(0,240,255,0.1);
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 15px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
       transition: var(--transition-smooth);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 15px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.4s ease-out backwards;
     }
 
+    /* Shimmer animation for loading */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    .game-item:hover {
+      background: rgba(128,128,128,0.05);
+      transform: translateX(5px);
+      border-color: var(--neon-cyan);
+    }
+
+    /* Visual shimmer effect on hover for cards */
+    .game-item::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+      transform: skewX(-20deg);
+      transition: 0.5s;
+    }
+    .game-item:hover::after { left: 120%; transition: 0.7s; }
+
+    .game-info { flex: 1; }
+
     .game-title {
-      color: white;
+      color: var(--text-primary);
       text-decoration: none;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
+      display: block;
+      margin-bottom: 6px;
+      transition: color 0.3s;
     }
-    
-    .game-title:hover {
-      color: var(--neon-cyan);
-    }
+    .game-title:hover { color: var(--neon-cyan); }
     
     .game-meta {
-      display: flex;
-      gap: 15px;
-      margin-top: 8px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      display: flex; gap: 12px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
       flex-wrap: wrap;
+    }
+    
+    .meta-tag {
+      display: flex; align-items: center; gap: 4px;
+      background: rgba(128,128,128,0.1);
+      padding: 2px 8px; border-radius: 4px;
+    }
+
+    .download-btn {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: var(--transition-smooth);
+      display: flex; align-items: center; gap: 6px;
+    }
+    
+    .download-btn:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      box-shadow: 0 0 15px rgba(0,240,255,0.4);
     }
 
     .empty-state {
       text-align: center;
-      padding: 60px 20px;
-      background: rgba(255,255,255,0.02);
+      padding: 80px 20px;
+      background: var(--card-bg);
       border-radius: 20px;
-      color: var(--text-muted);
+      border: 1px dashed var(--card-border);
+      color: var(--text-secondary);
     }
 
-    .highlight {
-      background: linear-gradient(120deg, rgba(0,240,255,0.3) 0%, rgba(181,55,242,0.3) 100%);
-      padding: 0 2px;
-      border-radius: 4px;
-      font-weight: 700;
+    .highlight { background: rgba(255, 46, 151, 0.3); color: var(--text-primary); padding: 0 2px; border-radius: 2px; }
+
+    /* ===== COMMUNITY SECTION ===== */
+    .community-section {
+      padding: 50px 0;
+      margin-top: 40px;
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      animation: fadeUp 1s ease-out 0.5s backwards;
+    }
+    .community-title {
+      font-family: 'Orbitron';
+      color: var(--text-primary);
+      margin-bottom: 30px;
+      font-size: 1.8rem;
+    }
+    .community-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .community-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 20px;
+      border-radius: 16px;
+      width: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: var(--transition-smooth);
+    }
+    .community-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.05); }
+    .community-icon { font-size: 2.5rem; transition: 0.3s; }
+    .community-name { font-weight: 600; font-size: 0.9rem; }
+    
+    .community-card:hover .bi-youtube { color: #FF0000; }
+    .community-card:hover .bi-facebook { color: #1877F2; }
+    .community-card:hover .bi-whatsapp { color: #25D366; }
+    .community-card:hover .bi-telegram { color: #0088cc; }
+    .community-card:hover .bi-tiktok { color: var(--text-primary); text-shadow: 2px 2px 0px #FF0050; }
+
+    /* ===== LOADING ===== */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: var(--bg-body);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s;
+    }
+
+    .loading-overlay.fade-out { opacity: 0; pointer-events: none; }
+    
+    .spinner-box { width: 300px; text-align: center; }
+    
+    .cyber-spinner {
+      width: 60px; height: 60px;
+      border: 3px solid transparent;
+      border-top: 3px solid var(--neon-cyan);
+      border-right: 3px solid var(--neon-purple);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 20px rgba(0,240,255,0.2);
+    }
+    
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ===== FOOTER ===== */
     .site-footer {
-      background: rgba(5, 8, 18, 0.95);
-      backdrop-filter: var(--glass-blur);
-      padding: 30px 0;
-      margin-top: 50px;
-      border-top: 1px solid rgba(0,240,255,0.15);
+      background: var(--bg-body);
+      border-top: 1px solid var(--card-border);
+      padding: 40px 0;
+      margin-top: auto;
     }
 
-    .footer-brand {
-      font-family: Orbitron, sans-serif;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .site-footer a {
-      transition: var(--transition-smooth);
-    }
-    
-    .site-footer a:hover {
-      color: var(--neon-cyan) !important;
+    @media (max-width: 576px) {
+      .game-item { flex-direction: column; align-items: flex-start; }
+      .download-btn { width: 100%; justify-content: center; margin-top: 10px; }
+      .hero-title { font-size: 1.8rem; }
+      .search-input { padding: 15px 50px 15px 20px; }
     }
   </style>
 </head>
-<body>
-  <!-- ===== FULL PAGE LOADING OVERLAY ===== -->
+<body class="dark-mode">
+  <!-- ===== PAGE LOADING ===== -->
   <div id="pageLoadingOverlay" class="loading-overlay">
-    <div class="loading-container">
-      <div class="loading-controller">
-        <i class="bi bi-controller"></i>
-      </div>
-      <div class="loading-text">INDapk</div>
-      <div class="loading-progress">
-        <div class="loading-bar"></div>
-      </div>
-      <div class="loading-dots">
-        <div class="loading-dot"></div>
-        <div class="loading-dot"></div>
-        <div class="loading-dot"></div>
-      </div>
-      <p class="mt-3 text-muted">Memuat Platform Game...</p>
+    <div class="spinner-box">
+      <div class="cyber-spinner"></div>
+      <h3 style="font-family:Orbitron; letter-spacing:2px; margin-bottom:10px; color: var(--text-primary);">INDAPK</h3>
+      <p style="color:var(--text-secondary);">INITIALIZING SYSTEM...</p>
     </div>
   </div>
 
-  <!-- ===== NAVIGATION ===== -->
-  <nav class="navbar navbar-expand-lg navbar-light">
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar navbar-expand-lg">
     <div class="container">
-      <a class="navbar-brand" href="listgame.html">
-        <i class="bi bi-controller me-2"></i>INDapk
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-joystick me-2"></i>INDapk
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border:none; color:var(--text-primary);">
+        <i class="bi bi-list" style="font-size: 1.5rem;"></i>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-              <i class="bi bi-grid-3x3-gap me-1"></i> Platform
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="index.html#beranda">Beranda</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="listgame.html">📋 List Game A-Z</a></li>
-            </ul>
-          </li>
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item me-3"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item me-3"><a class="nav-link" href="listgame.html">Library</a></li>
+          <li class="nav-item me-3"><a class="nav-link" href="https://indapk.com/topup.html">Top Up</a></li>
+          <li class="nav-item me-3"><a class="nav-link" href="https://indapk.com/requestgame.html">Request Game</a></li>
           <li class="nav-item">
-            <a class="nav-link" href="listgame.html">
-              <i class="bi bi-list-columns"></i> List Game A-Z
-            </a>
+            <button id="themeToggle" class="theme-toggle" title="Toggle Theme">
+              <i class="bi bi-moon-fill" id="themeIcon"></i>
+            </button>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
+  <!-- ===== HERO HEADER ===== -->
+  <header class="hero-container">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">A-Z Game List</h1>
+      <div class="hero-subtitle">
+        <i class="bi bi-controller me-2"></i>Explore Thousands of Retro & Modern Games
+      </div>
+      <div>
+        <a href="index.html" class="btn-hero-home">
+            <i class="bi bi-house-fill"></i> Back to Home
+        </a>
+      </div>
+    </div>
+  </header>
+
   <!-- ===== MAIN CONTENT ===== -->
   <div class="container">
-    <div class="page-header">
-      <h1><i class="bi bi-list-columns me-3"></i>LIST GAME INDAPK A-Z</h1>
-      <p class="lead text-muted">Pilih platform untuk melihat koleksi game lengkap</p>
-    </div>
-
+    
     <!-- ===== PLATFORM GRID ===== -->
     <div id="platformSelection" class="platform-grid-section">
-      <h4 class="text-center mb-4"><i class="bi bi-controller me-2"></i>Pilih Platform Game</h4>
+      <div class="section-title justify-content-center">
+        <span>Select Console Platform</span>
+      </div>
       <div class="platform-grid" id="platformGrid"></div>
     </div>
 
     <!-- ===== GAME LIST CONTENT ===== -->
     <div id="gameListContent" style="display: none;">
+      
+      <!-- Platform Header & Search -->
       <div class="platform-header">
-        <a href="listgame.html" class="back-button">
-          <i class="bi bi-arrow-left me-1"></i> Semua Platform
-        </a>
         <div>
-          <h3 id="selectedPlatformTitle" class="mb-0"></h3>
-          <span id="selectedPlatformCount" class="text-muted"></span>
+          <h3 id="selectedPlatformTitle" class="mb-1 fw-bold" style="color:var(--text-primary)"></h3>
+          <span id="selectedPlatformCount" style="color:var(--text-secondary)" class="small"></span>
         </div>
+        <a href="listgame.html" class="back-button">
+          <i class="bi bi-grid me-2"></i>Change Platform
+        </a>
       </div>
 
-      <!-- ===== SEARCH BAR PER PLATFORM ===== -->
       <div class="search-section">
-        <div class="search-container">
-          <input type="text" class="search-input" id="searchInput" placeholder="🔍 Cari game di platform ini..." autocomplete="off">
-          <button class="search-btn" id="searchBtn">
-            <i class="bi bi-search"></i>
-          </button>
+        <div class="search-input-wrapper">
+          <input type="text" class="search-input" id="searchInput" placeholder="Search game title..." autocomplete="off">
+          <button class="search-btn" id="searchBtn"><i class="bi bi-search"></i></button>
         </div>
         <div id="searchResultsInfo" class="search-results-info" style="display: none;">
           <span id="searchResultText"></span>
-          <a href="#" id="clearSearchBtn" class="clear-search">
-            <i class="bi bi-x-circle me-1"></i>Hapus
+          <a href="#" id="clearSearchBtn" class="text-decoration-none text-danger fw-bold ms-3">
+            <i class="bi bi-x-circle me-1"></i>Reset
           </a>
         </div>
       </div>
@@ -722,26 +734,55 @@
       <!-- Alphabet Filter -->
       <div class="alphabet-filter" id="alphabetFilter"></div>
 
-      <!-- Games Container with Loading State -->
+      <!-- Games Container -->
       <div id="gamesContainer"></div>
+    </div>
+
+    <!-- ===== COMMUNITY SECTION ===== -->
+    <div class="community-section">
+      <h2 class="community-title">Join Our Community</h2>
+      <div class="community-grid">
+        <a href="https://www.youtube.com/c/indapk" target="_blank" class="community-card">
+          <i class="bi bi-youtube community-icon"></i>
+          <span class="community-name">YouTube</span>
+        </a>
+        <a href="https://www.facebook.com/IDNApk" target="_blank" class="community-card">
+          <i class="bi bi-facebook community-icon"></i>
+          <span class="community-name">Facebook</span>
+        </a>
+        <a href="https://chat.whatsapp.com/EQGL0y5OTwUGYWsbuoJ7pA" target="_blank" class="community-card">
+          <i class="bi bi-whatsapp community-icon"></i>
+          <span class="community-name">WhatsApp</span>
+        </a>
+        <a href="https://t.me/indapkgroup" target="_blank" class="community-card">
+          <i class="bi bi-telegram community-icon"></i>
+          <span class="community-name">Telegram Group</span>
+        </a>
+        <a href="https://t.me/indapkgroup" target="_blank" class="community-card">
+          <i class="bi bi-megaphone-fill community-icon"></i>
+          <span class="community-name">Telegram Channel</span>
+        </a>
+        <a href="https://t.me/INDapkBot" target="_blank" class="community-card">
+          <i class="bi bi-robot community-icon"></i>
+          <span class="community-name">Telegram Bot</span>
+        </a>
+        <a href="https://www.tiktok.com/@INDapk" target="_blank" class="community-card">
+          <i class="bi bi-tiktok community-icon"></i>
+          <span class="community-name">TikTok</span>
+        </a>
+      </div>
     </div>
   </div>
 
   <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
-        <div class="footer-brand">
-          <i class="bi bi-controller me-2"></i>List Game INDapk
-        </div>
-        <div class="d-flex gap-3">
-          <a href="index.html" class="text-muted text-decoration-none">Beranda</a>
-          <a href="listgame.html" class="text-muted text-decoration-none">List Game A-Z</a>
-        </div>
-        <div class="footer-copy text-muted">
-          © <span id="yearNow"></span> INDapk
-        </div>
+    <div class="container text-center">
+      <div class="mb-3">
+        <span class="navbar-brand fs-4">INDapk</span>
       </div>
+      <p class="small mb-0" style="color: var(--text-secondary);">
+        &copy; <span id="yearNow"></span> INDapk Gaming Library. All rights reserved.
+      </p>
     </div>
   </footer>
 
@@ -755,15 +796,15 @@
       { platform: 'ps4', name: 'PlayStation 4', icon: 'bi-playstation', url: 'https://script.google.com/macros/s/AKfycbwHLRSQiwAiqj-y2W4JA8QfD1oDA13BepnHQHqNjxWYLHJl4Z7IoKGkA12wN-nlOINEeQ/exec' },
       { platform: 'psp', name: 'PSP', icon: 'bi-phone', url: 'https://script.google.com/macros/s/AKfycbxCg1_l60T858d14WKA3N8c23VJ_YYj_XxX2H4Rqad1tSwaolutSrksSw9ippHu1QOA/exec' },
       { platform: 'psvita', name: 'PS Vita', icon: 'bi-phone', url: 'https://script.google.com/macros/s/AKfycbySh1tyONA4ib6wNwq6ZXoHKiMX1P4e0rZ-4IvMiZTEyjJ6XDm1hdPwakYcOeuWPE_IQg/exec' },
-      { platform: 'switch', name: 'Nintendo Switch', icon: 'bi-nintendo-switch', url: 'https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec' },
+      { platform: 'switch', name: 'Switch', icon: 'bi-nintendo-switch', url: 'https://script.google.com/macros/s/AKfycbytk1iwBYb2xGF2j3fjTmTFBNzQ_ifXsxrddlDWuPPNdMjWbHvyiRppEcoq0V1BGjn-/exec' },
       { platform: 'wii', name: 'Wii', icon: 'bi-controller', url: 'https://script.google.com/macros/s/AKfycbz8uhfQtYxyUmZSVloZlY0UDxkQayeYAemS6zDXS4zDKKJ-DYuq16pqFJLkNCYXg18a/exec' },
-      { platform: 'gamecube', name: 'GameCube', icon: 'bi-controller', url: 'https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec' },
+      { platform: 'gamecube', name: 'GameCube', icon: 'bi-box', url: 'https://script.google.com/macros/s/AKfycbzN2P7leht4d5IM_zHmevEi4-jhqL_CjzHF31dlrSvR1osR1COe3oocfKR5PC86wE6Oig/exec' },
       { platform: '3ds', name: '3DS', icon: 'bi-laptop', url: 'https://script.google.com/macros/s/AKfycbwvTthKe_U-lCNxMu4c4WtuJbfp3Xzt8aWyAT10hFU1LXsKmsTidBoCnTQfShokliVq/exec' },
-      { platform: 'android', name: 'Android', icon: 'bi-phone', url: 'https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec' },
+      { platform: 'android', name: 'Android', icon: 'bi-android2', url: 'https://script.google.com/macros/s/AKfycbwjF-qp6zHQGiBchoReCX3xLpWSLJysoUsRDDiXbm3nZ51RdaLWrpCh5jqno5A-Rmn4/exec' },
       { platform: 'ios', name: 'iOS', icon: 'bi-apple', url: 'https://script.google.com/macros/s/AKfycbxicykcCe_w26RZhwMf1o8oeTVz9aRFlhRjH1Aq_Em7KR5U-z31YzB8Co5KUhQYyqcDkw/exec' },
-      { platform: 'java', name: 'Java', icon: 'bi-cup', url: 'https://script.google.com/macros/s/AKfycbwvmH1CO1HV10KB6jftoXqJGbjCQSqykEauZbFbitNFkrNaPnbFNw779kH7n9XZX7t3/exec' },
-      { platform: 'pc', name: 'PC', icon: 'bi-pc', url: 'https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec' },
-      { platform: 'apksgi', name: 'APKsgi 18+', icon: 'bi-18-circle', url: 'https://script.google.com/macros/s/AKfycbw1-OmUFQ6awOwO4wCbKbvEqVqKQlVfixX7bY9mCL0LKDZ1yBAg2PVTA12WXoFz5f3C/exec' }
+      { platform: 'java', name: 'Java', icon: 'bi-cup-hot', url: 'https://script.google.com/macros/s/AKfycbwvmH1CO1HV10KB6jftoXqJGbjCQSqykEauZbFbitNFkrNaPnbFNw779kH7n9XZX7t3/exec' },
+      { platform: 'pc', name: 'PC', icon: 'bi-pc-display', url: 'https://script.google.com/macros/s/AKfycbxKEqdp8W2YOvP-s11-Py8mmt-qBStCFr6pdnV2kjTCX3tDI04xBtlfH5XDE3ldx2Kd3Q/exec' },
+      { platform: 'apksgi', name: 'Game 18+', icon: 'bi-fire', url: 'https://script.google.com/macros/s/AKfycbw1-OmUFQ6awOwO4wCbKbvEqVqKQlVfixX7bY9mCL0LKDZ1yBAg2PVTA12WXoFz5f3C/exec' }
     ];
 
     // ===== GLOBAL STATE =====
@@ -775,10 +816,7 @@
     let platformCounts = {};
 
     // ===== HELPER FUNCTIONS =====
-    function normalizeText(text) {
-      return String(text || '').trim().toLowerCase();
-    }
-
+    function normalizeText(text) { return String(text || '').trim().toLowerCase(); }
     function escapeHTML(text) {
       const div = document.createElement('div');
       div.textContent = text;
@@ -787,120 +825,122 @@
 
     function getPlatformColor(platform) {
       const colors = {
-        'ps1': '#8a2be2', 'ps2': '#0066cc', 'ps3': '#00439c', 'ps4': '#0070cc',
-        'psp': '#8b4513', 'psvita': '#003791', 'switch': '#e60012', 'wii': '#009ac7',
-        'gamecube': '#6a5acd', '3ds': '#d12229', 'android': '#3ddc84',
-        'ios': '#0a84ff', 'java': '#f89820', 'pc': '#00a4ef', 'apksgi': '#ff2e97'
+        'ps1': '#949494', 
+        'ps2': '#003791', 
+        'ps3': '#CE181E', 
+        'ps4': '#003087',
+        'ps5': '#FFFFFF',
+        'psp': '#FFD700', 
+        'psvita': '#00A0E9', 
+        'switch': '#E60012', 
+        'wii': '#009AC7',
+        'wiiu': '#009AC7',
+        'gamecube': '#6A5ACD', 
+        '3ds': '#D12229', 
+        'android': '#3DDC84',
+        'ios': '#A2AAAD', 
+        'java': '#F89820', 
+        'pc': '#0078D7', 
+        'apksgi': '#FF2E97'
       };
       return colors[platform] || '#00f0ff';
     }
 
-    // ===== LOADING FUNCTIONS =====
-    function showPageLoader() {
-      const overlay = document.getElementById('pageLoadingOverlay');
-      if (overlay) {
-        overlay.style.display = 'flex';
-        overlay.classList.remove('fade-out');
+    // ===== THEME MANAGEMENT =====
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+      
+      const themeToggle = document.getElementById('themeToggle');
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+      });
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (theme === 'dark') {
+        icon.className = 'bi bi-moon-fill';
+      } else {
+        icon.className = 'bi bi-sun-fill';
       }
     }
 
+    // ===== LOADING UI =====
+    function showPageLoader() {
+      const overlay = document.getElementById('pageLoadingOverlay');
+      if (overlay) { overlay.style.display = 'flex'; overlay.classList.remove('fade-out'); }
+    }
     function hidePageLoader() {
       const overlay = document.getElementById('pageLoadingOverlay');
       if (overlay) {
         overlay.classList.add('fade-out');
-        setTimeout(() => {
-          overlay.style.display = 'none';
-        }, 500);
+        setTimeout(() => { overlay.style.display = 'none'; }, 500);
       }
     }
-
-    // ===== SIMPLE LOADING UNTUK PLATFORM =====
-    function showSimplePlatformLoader(platformName) {
+    function showContentLoader(msg) {
       const container = document.getElementById('gamesContainer');
-      if (!container) return;
-      
       container.innerHTML = `
-        <div class="simple-loading">
-          <div class="simple-spinner"></div>
-          <div class="simple-text">Memuat ${platformName}</div>
-          <div class="simple-dots">
-            <div class="simple-dot"></div>
-            <div class="simple-dot"></div>
-            <div class="simple-dot"></div>
-          </div>
-          <p class="text-muted mt-3" style="font-size: 14px;">Mengambil data game dari server...</p>
-        </div>
-      `;
+        <div class="text-center py-5">
+          <div class="cyber-spinner" style="width:40px;height:40px;border-width:2px;"></div>
+          <p style="color:var(--text-secondary)">${msg}</p>
+        </div>`;
     }
 
-    // ===== LOAD PLATFORM COUNTS =====
+    // ===== DATA FETCHING =====
     async function loadAllPlatformCounts() {
       try {
         const promises = API_CONFIGS.map(async (cfg) => {
           try {
             const response = await fetch(cfg.url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: 'action=getAllGames'
+              method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'action=getAllGames'
             });
             const result = await response.json();
             if (result.status === 'success' && Array.isArray(result.data)) {
               platformCounts[cfg.platform] = result.data.length;
             }
-          } catch (e) {
-            platformCounts[cfg.platform] = 0;
-          }
+          } catch (e) { platformCounts[cfg.platform] = 0; }
         });
         await Promise.allSettled(promises);
         renderPlatformGrid();
-      } catch (error) {
-        console.error('Error loading counts:', error);
-      }
+      } catch (error) { console.error('Error loading counts:', error); }
     }
 
-    // ===== RENDER PLATFORM GRID =====
     function renderPlatformGrid() {
       const grid = document.getElementById('platformGrid');
       if (!grid) return;
-
       let html = '';
-      API_CONFIGS.forEach(cfg => {
+      API_CONFIGS.forEach((cfg, index) => {
         const count = platformCounts[cfg.platform] || 0;
+        const delay = index * 0.05;
         html += `
-          <a href="listgame.html#${cfg.platform}" class="platform-card" data-platform="${cfg.platform}">
-            <div class="platform-icon">
-              <i class="bi ${cfg.icon}"></i>
-            </div>
+          <a href="listgame.html#${cfg.platform}" class="platform-card" data-platform="${cfg.platform}" style="animation: fadeUp 0.6s ease-out ${delay}s backwards;">
+            <div class="platform-icon"><i class="bi ${cfg.icon}"></i></div>
             <div class="platform-name">${cfg.name}</div>
-            <div class="game-count">${count.toLocaleString()} Game${count !== 1 ? 's' : ''}</div>
-          </a>
-        `;
+            <div class="game-count">${count.toLocaleString()} Games</div>
+          </a>`;
       });
       grid.innerHTML = html;
     }
 
-    // ===== FUNGSI SEARCH =====
+    // ===== SEARCH LOGIC =====
     function initializeSearch() {
       const searchInput = document.getElementById('searchInput');
       const searchBtn = document.getElementById('searchBtn');
       const clearSearchBtn = document.getElementById('clearSearchBtn');
       
-      if (!searchInput || !searchBtn) return;
-
-      // Fungsi untuk melakukan pencarian
       const performSearch = () => {
         const query = searchInput.value.trim();
         currentSearchQuery = query;
-        
-        if (query === '') {
-          clearSearch();
-          return;
-        }
-
+        if (query === '') { clearSearch(); return; }
         filterGamesBySearch(query);
       };
-
-      // Fungsi untuk menghapus pencarian
+      
       const clearSearch = () => {
         searchInput.value = '';
         currentSearchQuery = '';
@@ -908,102 +948,59 @@
         filterGamesByLetter(currentLetter);
       };
 
-      // Event listeners
       searchBtn.addEventListener('click', performSearch);
-      
-      searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          performSearch();
-        }
-      });
-
-      clearSearchBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        clearSearch();
-      });
+      searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
+      clearSearchBtn.addEventListener('click', (e) => { e.preventDefault(); clearSearch(); });
     }
 
-    // ===== FILTER GAMES BY SEARCH =====
     function filterGamesBySearch(query) {
       const searchTerm = normalizeText(query);
-      
-      // Tampilkan loading
-      const container = document.getElementById('gamesContainer');
-      container.innerHTML = `
-        <div class="simple-loading" style="padding: 40px 20px;">
-          <div class="simple-spinner" style="width: 35px; height: 35px;"></div>
-          <div class="simple-text" style="font-size: 16px;">Mencari "${escapeHTML(query)}"...</div>
-        </div>
-      `;
+      showContentLoader(`Searching for "${escapeHTML(query)}"...`);
 
       setTimeout(() => {
-        // Filter berdasarkan huruf yang dipilih dulu, lalu search
         let gamesToSearch = gamesData;
-        
         if (currentLetter !== 'ALL') {
           if (currentLetter === '#') {
-            gamesToSearch = gamesData.filter(game => {
-              const firstChar = (game.nama_game || '').trim().charAt(0);
-              return /[0-9]/.test(firstChar);
-            });
+            gamesToSearch = gamesData.filter(g => /[0-9]/.test((g.nama_game||'').trim().charAt(0)));
           } else {
-            gamesToSearch = gamesData.filter(game => {
-              const firstChar = (game.nama_game || '').trim().charAt(0).toUpperCase();
-              return firstChar === currentLetter;
-            });
+            gamesToSearch = gamesData.filter(g => (g.nama_game||'').trim().charAt(0).toUpperCase() === currentLetter);
           }
         }
 
-        // Lakukan pencarian
         filteredGames = gamesToSearch.filter(game => {
-          const gameName = normalizeText(game.nama_game || '');
-          const category = normalizeText(game.category || '');
-          const language = normalizeText(game.language || '');
-          const region = normalizeText(game.region || '');
-          
-          return gameName.includes(searchTerm) || 
-                 category.includes(searchTerm) || 
-                 language.includes(searchTerm) || 
-                 region.includes(searchTerm);
+          return normalizeText(game.nama_game).includes(searchTerm) || 
+                 normalizeText(game.category).includes(searchTerm) || 
+                 normalizeText(game.region).includes(searchTerm);
         });
 
-        // Update info hasil pencarian
-        const searchResultsInfo = document.getElementById('searchResultsInfo');
-        const searchResultText = document.getElementById('searchResultText');
-        
+        const resInfo = document.getElementById('searchResultsInfo');
         if (currentSearchQuery) {
-          searchResultsInfo.style.display = 'flex';
-          searchResultText.innerHTML = `
-            <i class="bi bi-search me-2"></i>
-            Menampilkan <strong>${filteredGames.length}</strong> hasil pencarian untuk "${escapeHTML(currentSearchQuery)}"
-            ${currentLetter !== 'ALL' ? ` (filter huruf: ${currentLetter})` : ''}
-          `;
+          resInfo.style.display = 'flex';
+          document.getElementById('searchResultText').innerHTML = `Found ${filteredGames.length} matches for "<b>${escapeHTML(currentSearchQuery)}</b>"`;
         }
-
-        renderGameList(true); // true = highlight search query
+        renderGameList(true);
       }, 300);
     }
 
-    // ===== LOAD GAMES BY PLATFORM =====
+    // ===== LOAD & RENDER GAMES =====
     async function loadGamesByPlatform(platform) {
       const cfg = API_CONFIGS.find(p => p.platform === platform);
       if (!cfg) return;
 
       currentPlatform = platform;
-      
-      // Reset search state
       currentSearchQuery = '';
       document.getElementById('searchResultsInfo').style.display = 'none';
       document.getElementById('searchInput').value = '';
       
-      // Tampilkan loading sederhana
-      showSimplePlatformLoader(cfg.name);
+      showContentLoader(`Accessing ${cfg.name} Database...`);
+      document.getElementById('platformSelection').style.display = 'none';
+      document.getElementById('gameListContent').style.display = 'block';
+      document.getElementById('selectedPlatformTitle').innerHTML = `<i class="bi ${cfg.icon} me-2"></i>${cfg.name}`;
+      document.getElementById('selectedPlatformCount').textContent = `Loading...`;
 
       try {
         const response = await fetch(cfg.url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: 'action=getAllGames'
+          method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'action=getAllGames'
         });
         const result = await response.json();
 
@@ -1012,205 +1009,110 @@
             ...game,
             nama_game: game.nama_game || game.ori_name || 'Unknown Game',
             __sortTitle: (game.nama_game || game.ori_name || '').trim()
-          })).sort((a, b) => a.__sortTitle.localeCompare(b.__sortTitle, 'id'));
+          })).sort((a, b) => a.__sortTitle.localeCompare(b.__sortTitle, 'en')); // Sort EN
 
+          document.getElementById('selectedPlatformCount').textContent = `${gamesData.length} Items Available`;
           filteredGames = [...gamesData];
-          renderPlatformInfo(cfg);
           renderAlphabetFilter();
           filterGamesByLetter('ALL');
-        } else {
-          throw new Error('Invalid data format');
-        }
+        } else { throw new Error('Invalid data'); }
       } catch (error) {
-        console.error('Error loading games:', error);
         document.getElementById('gamesContainer').innerHTML = `
           <div class="empty-state">
-            <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: var(--neon-pink);"></i>
-            <h5 class="mt-3" style="color: var(--neon-pink);">Gagal Memuat Data</h5>
-            <p class="text-muted">Silakan coba lagi nanti</p>
-            <button onclick="location.reload()" class="btn btn-outline-info mt-3">
-              <i class="bi bi-arrow-repeat me-2"></i>Muat Ulang
-            </button>
-          </div>
-        `;
+            <i class="bi bi-x-octagon text-danger display-4"></i>
+            <h5 class="mt-3">Connection Failed</h5>
+            <button onclick="location.reload()" class="btn btn-outline-primary mt-3">Retry</button>
+          </div>`;
       }
     }
 
-    // ===== RENDER PLATFORM INFO =====
-    function renderPlatformInfo(cfg) {
-      document.getElementById('platformSelection').style.display = 'none';
-      document.getElementById('gameListContent').style.display = 'block';
-      document.getElementById('selectedPlatformTitle').innerHTML = `<i class="bi ${cfg.icon} me-2"></i>${cfg.name}`;
-      document.getElementById('selectedPlatformCount').textContent = `${gamesData.length} Game${gamesData.length !== 1 ? 's' : ''}`;
-    }
-
-    // ===== RENDER ALPHABET FILTER =====
     function renderAlphabetFilter() {
       const alphabet = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
       const container = document.getElementById('alphabetFilter');
-      
       let html = '<button class="alphabet-btn active" data-letter="ALL">ALL</button>';
-      alphabet.forEach(letter => {
-        if (letter === '#') {
-          html += `<button class="alphabet-btn" data-letter="#">#</button>`;
-        } else {
-          html += `<button class="alphabet-btn" data-letter="${letter}">${letter}</button>`;
-        }
-      });
-
+      alphabet.forEach(l => html += `<button class="alphabet-btn" data-letter="${l}">${l}</button>`);
       container.innerHTML = html;
 
-      // Event listeners
       container.querySelectorAll('.alphabet-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           container.querySelectorAll('.alphabet-btn').forEach(b => b.classList.remove('active'));
           this.classList.add('active');
-          const letter = this.dataset.letter;
-          currentLetter = letter;
-          
-          // Jika sedang dalam mode search, update search dengan filter baru
-          if (currentSearchQuery) {
-            filterGamesBySearch(currentSearchQuery);
-          } else {
-            filterGamesByLetter(letter);
-          }
+          currentLetter = this.dataset.letter;
+          currentSearchQuery ? filterGamesBySearch(currentSearchQuery) : filterGamesByLetter(currentLetter);
         });
       });
     }
 
-    // ===== FILTER GAMES BY LETTER =====
     function filterGamesByLetter(letter) {
-      // Loading sederhana untuk filter
-      const container = document.getElementById('gamesContainer');
-      container.innerHTML = `
-        <div class="simple-loading" style="padding: 40px 20px;">
-          <div class="simple-spinner" style="width: 35px; height: 35px;"></div>
-          <div class="simple-text" style="font-size: 16px;">Memfilter game...</div>
-        </div>
-      `;
-
+      showContentLoader('Filtering...');
       setTimeout(() => {
-        if (letter === 'ALL') {
-          filteredGames = [...gamesData];
-        } else if (letter === '#') {
-          filteredGames = gamesData.filter(game => {
-            const firstChar = (game.nama_game || '').trim().charAt(0);
-            return /[0-9]/.test(firstChar);
-          });
-        } else {
-          filteredGames = gamesData.filter(game => {
-            const firstChar = (game.nama_game || '').trim().charAt(0).toUpperCase();
-            return firstChar === letter;
-          });
-        }
-
-        renderGameList(false);
-      }, 300);
+        if (letter === 'ALL') filteredGames = [...gamesData];
+        else if (letter === '#') filteredGames = gamesData.filter(g => /[0-9]/.test((g.nama_game||'').trim().charAt(0)));
+        else filteredGames = gamesData.filter(g => (g.nama_game||'').trim().charAt(0).toUpperCase() === letter);
+        renderGameList();
+      }, 200);
     }
 
-    // ===== RENDER GAME LIST DENGAN HIGHLIGHT SEARCH =====
-    function renderGameList(highlightSearch = false) {
+    function renderGameList(highlight = false) {
       const container = document.getElementById('gamesContainer');
-
       if (filteredGames.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <i class="bi bi-emoji-frown" style="font-size: 3rem;"></i>
-            <h5 class="mt-3">Tidak Ada Game</h5>
-            <p class="text-muted">
-              ${currentSearchQuery ? 
-                `Tidak ditemukan game dengan kata "${escapeHTML(currentSearchQuery)}"` : 
-                `Tidak ditemukan game dengan huruf "${currentLetter}"`}
-            </p>
-          </div>
-        `;
+        container.innerHTML = `<div class="empty-state"><p>No games found matching criteria.</p></div>`;
         return;
       }
 
-      let html = `<p class="mb-3 text-muted">Menampilkan ${filteredGames.length} game</p>`;
+      let html = '';
+      const pColor = getPlatformColor(currentPlatform);
 
-      filteredGames.forEach((game, index) => {
-        let gameName = game.nama_game || 'Unknown Game';
-        
-        // Highlight search query jika diperlukan
-        if (highlightSearch && currentSearchQuery) {
+      filteredGames.forEach((game, idx) => {
+        let nameDisplay = game.nama_game;
+        if (highlight && currentSearchQuery) {
           const regex = new RegExp(`(${currentSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-          gameName = gameName.replace(regex, '<span class="highlight">$1</span>');
+          nameDisplay = nameDisplay.replace(regex, '<span class="highlight">$1</span>');
         }
         
-        const platformColor = getPlatformColor(currentPlatform);
-        const downloadUrl = `download.html?game=${game.download_id}&platform=${currentPlatform}`;
+        const dlUrl = `download.html?game=${game.download_id}&platform=${currentPlatform}`;
+        const delay = Math.min(idx * 0.05, 1.0); // Cap delay
 
         html += `
-          <div class="game-item" style="border-left: 4px solid ${platformColor};">
-            <div class="row align-items-center">
-              <div class="col-md-8">
-                <div class="d-flex align-items-center gap-3">
-                  <span class="badge bg-secondary" style="background: ${platformColor}80 !important;">${(index + 1).toString().padStart(3, '0')}</span>
-                  <div>
-                    <a href="${downloadUrl}" class="game-title" target="_blank">${gameName}</a>
-                    <div class="game-meta">
-                      ${game.category ? `<span><i class="bi bi-tag me-1"></i>${escapeHTML(game.category)}</span>` : ''}
-                      ${game.language ? `<span><i class="bi bi-translate me-1"></i>${escapeHTML(game.language)}</span>` : ''}
-                      ${game.region ? `<span><i class="bi bi-globe me-1"></i>${escapeHTML(game.region)}</span>` : ''}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary" target="_blank">
-                  <i class="bi bi-download me-1"></i> Download
-                </a>
+          <div class="game-item" style="border-left: 3px solid ${pColor}; animation-delay: ${delay}s">
+            <div class="game-info">
+              <a href="${dlUrl}" class="game-title" target="_blank">${nameDisplay}</a>
+              <div class="game-meta">
+                ${game.category ? `<span class="meta-tag"><i class="bi bi-tag-fill"></i> ${escapeHTML(game.category)}</span>` : ''}
+                ${game.region ? `<span class="meta-tag"><i class="bi bi-globe-americas"></i> ${escapeHTML(game.region)}</span>` : ''}
+                ${game.language ? `<span class="meta-tag"><i class="bi bi-translate"></i> ${escapeHTML(game.language)}</span>` : ''}
               </div>
             </div>
-          </div>
-        `;
+            <a href="${dlUrl}" class="download-btn" target="_blank">
+              <i class="bi bi-download"></i> <span class="d-none d-sm-inline">Get</span>
+            </a>
+          </div>`;
       });
-
       container.innerHTML = html;
     }
 
-    // ===== INITIALIZATION =====
-    document.addEventListener('DOMContentLoaded', async function() {
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', async () => {
+      initTheme();
       document.getElementById('yearNow').textContent = new Date().getFullYear();
-      
-      // Show page loader
       showPageLoader();
-
-      // Inisialisasi search
       initializeSearch();
 
-      // Cek hash URL
       const hash = window.location.hash.replace('#', '').trim().toLowerCase();
-
-      if (hash) {
-        const validPlatform = API_CONFIGS.some(cfg => cfg.platform === hash);
-        if (validPlatform) {
-          await loadAllPlatformCounts();
-          await loadGamesByPlatform(hash);
-        } else {
-          // Hash tidak valid, tampilkan platform grid
-          await loadAllPlatformCounts();
-        }
+      if (hash && API_CONFIGS.some(c => c.platform === hash)) {
+        await loadAllPlatformCounts();
+        await loadGamesByPlatform(hash);
       } else {
-        // Tidak ada hash, tampilkan platform grid
         await loadAllPlatformCounts();
       }
+      setTimeout(hidePageLoader, 800);
 
-      // Hide page loader setelah semuanya selesai
-      setTimeout(hidePageLoader, 1000);
-
-      // Listen for hash changes
-      window.addEventListener('hashchange', async function() {
+      window.addEventListener('hashchange', async () => {
         const newHash = window.location.hash.replace('#', '').trim().toLowerCase();
-        if (newHash) {
-          const validPlatform = API_CONFIGS.some(cfg => cfg.platform === newHash);
-          if (validPlatform) {
-            document.getElementById('platformSelection').style.display = 'none';
-            await loadGamesByPlatform(newHash);
-          }
+        if (newHash && API_CONFIGS.some(c => c.platform === newHash)) {
+          document.getElementById('platformSelection').style.display = 'none';
+          await loadGamesByPlatform(newHash);
         } else {
-          // Back to platform selection
           document.getElementById('platformSelection').style.display = 'block';
           document.getElementById('gameListContent').style.display = 'none';
           currentPlatform = null;
@@ -1219,17 +1121,13 @@
       });
     });
 
-    // Intercept klik pada platform card
-    document.addEventListener('click', function(e) {
-      const platformCard = e.target.closest('.platform-card');
-      if (platformCard) {
-        const platform = platformCard.dataset.platform;
-        const platformName = platformCard.querySelector('.platform-name').textContent;
-        
-        // Tampilkan loading sederhana sebelum hash change
+    // Platform card click intercept
+    document.addEventListener('click', e => {
+      const card = e.target.closest('.platform-card');
+      if (card) {
         document.getElementById('platformSelection').style.display = 'none';
         document.getElementById('gameListContent').style.display = 'block';
-        showSimplePlatformLoader(platformName);
+        showContentLoader(`Loading ${card.querySelector('.platform-name').textContent}...`);
       }
     });
   </script>
