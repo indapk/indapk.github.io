@@ -1388,6 +1388,40 @@
             flex-shrink: 0;
         }
     }
+    /* =========================================
+       HOT GAME SECTION (ADDED)
+    ========================================= */
+    .hot-game-section {
+        background: var(--bg-card);
+        border: 1px solid rgba(255, 0, 85, 0.3);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+    }
+    .hot-game-section .hot-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255,0,85,0.2);
+        padding-bottom: 10px;
+    }
+    .hot-header i {
+        font-size: 2rem;
+        color: #ff4400;
+        filter: drop-shadow(0 0 10px #ff5e00);
+    }
+    .hot-header h4 {
+        font-family: var(--font-display);
+        font-weight: 800;
+        background: linear-gradient(135deg, #ffaa00, #ff0055);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+        letter-spacing: 1px;
+    }
   </style>
 </head>
 <body>
@@ -1938,6 +1972,7 @@
     const ADMIN_TELEGRAM_ID = "1172835542";
     const GAMES_PER_PAGE = 24;
     const IMAGE_PROXY = "https://images.weserv.nl/?url=";
+    const HOT_GAME_COUNT = 4; // <-- UBAH ANGKA INI UNTUK MENGATUR JUMLAH HOT GAME
     
     // State
     let allGames = [], indapkGames = [], apksgiGames = [];
@@ -2688,7 +2723,7 @@
     }
 
     /* =========================================
-       RENDERING (Dengan Tombol Add to My List)
+       RENDERING (Dengan Tombol Add to My List dan HOT GAME)
     ========================================= */
     function renderGames(tabId) {
         const container = document.getElementById(tabId === 'beranda' ? 'gameListContainer' : (tabId === 'indapk' ? 'indapkListContainer' : 'apksgiListContainer'));
@@ -2719,12 +2754,78 @@
         const start = (page - 1) * GAMES_PER_PAGE;
         const paged = filtered.slice(start, start + GAMES_PER_PAGE);
         
-        // Pinned Section (Only on Page 1 of Beranda/Indapk & no search & no platform filter)
+        // Generate HTML
         let html = '';
-        if(tabId !== 'apksgi' && page === 1 && !currentFilters.query && currentFilters.platform === 'all' && currentFilters.category === 'all') {
+
+        // ===== PINNED SECTION (Featured Games) hanya untuk tab Library (beranda) =====
+        if(tabId === 'beranda' && page === 1 && !currentFilters.query && currentFilters.platform === 'all' && currentFilters.category === 'all') {
             html += renderPinnedSection(pinnedGames);
         }
 
+        // ===== HOT GAME SECTION (Hanya untuk INDapk dan APKsgi, TIDAK untuk Library) =====
+        if (tabId !== 'beranda') {
+            // Ambil game dengan view count tertinggi dari source (seluruh game di tab tersebut)
+            const topSource = tabId === 'apksgi' ? apksgiGames : indapkGames;
+            // Urutkan berdasarkan view count descending, ambil sejumlah HOT_GAME_COUNT teratas
+            const hotGames = [...topSource]
+                .map(g => ({ ...g, clicks: gameStatsMap.get(`${g.download_id}_${g.platform}`) || 0 }))
+                .sort((a, b) => b.clicks - a.clicks)
+                .slice(0, HOT_GAME_COUNT);
+
+            if (hotGames.length > 0) {
+                html += `<div class="hot-game-section">`;
+                html += `<div class="hot-header"><i class="bi bi-fire"></i><h4>🔥 HOT GAME 🔥</h4></div>`;
+                html += `<div class="row g-4">`;
+                hotGames.forEach((g, idx) => {
+                    const name = g.nama_game || g.ori_name;
+                    const thumb = g.thumbnail_url || 'https://placehold.co/600x400/1a1a2e/FFF?text=No+Cover';
+                    const id = g.download_id;
+                    const platformClass = g.platform;
+                    const clicks = g.clicks;
+                    
+                    const viewBadge = clicks > 0 ? `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>` : '';
+                    
+                    // Cek apakah game sudah ada di My List
+                    const isInList = myGameList.some(item => item.id === id && item.platform === g.platform);
+                    const addButtonClass = isInList ? 'btn-add-list added' : 'btn-add-list';
+                    const addButtonText = isInList ? '<i class="bi bi-check"></i>' : '<i class="bi bi-plus"></i> ADD';
+                    
+                    html += `
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="game-card platform-${platformClass}">
+                            <div class="card-img-wrap" onclick="trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g,"")}')">
+                                ${viewBadge}
+                                <img src="${thumb}" loading="lazy" alt="${name}">
+                                <div class="platform-tag ${platformClass}">
+                                    ${getPlatformIcon(g.platform)} ${g.platform_name}
+                                </div>
+                            </div>
+                            <div class="game-card-body">
+                                <h3 class="game-title" title="${name}">${name}</h3>
+                                <small class="upload-by-text">Upload By INDapk</small>
+                                <div class="game-meta">
+                                    ${g.region ? `<span class="meta-badge">${g.region}</span>` : ''}
+                                    ${g.language ? `<span class="meta-badge">${g.language}</span>` : ''}
+                                </div>
+                                <div class="card-actions">
+                                    <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>${new Date(g.timestamp).toLocaleDateString()}</span>
+                                    <div>
+                                        <button class="${addButtonClass}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>';">
+                                            ${addButtonText}
+                                        </button>
+                                        <button class="btn-download-sm" onclick="event.stopPropagation(); trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g, "\\'")}')">GET</button>
+                                    </div>
+                                </div>
+                                ${isAdminUser() ? `<button class="btn btn-sm btn-link text-warning mt-2 p-0" onclick="event.stopPropagation(); manageThumbnail('${id}', '${g.platform}', '${thumb}', '${name.replace(/'/g,"")}')">Edit Thumb</button>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                html += `</div></div>`;
+            }
+        }
+
+        // ===== REGULAR GAMES (selanjutnya) =====
         html += `<div class="row g-4">`;
         paged.forEach((g, index) => {
             const name = g.nama_game || g.ori_name;
@@ -2771,10 +2872,10 @@
                         <div class="card-actions">
                             <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>${new Date(g.timestamp).toLocaleDateString()}</span>
                             <div>
-                            <button class="${addButtonClass}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>';">
+                            <button class="${addButtonClass}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>';">
                                     ${addButtonText}
                                 </button>
-                                <button class="btn-download-sm" onclick="event.stopPropagation(); trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g, "\\\\'")}')">GET</button>
+                                <button class="btn-download-sm" onclick="event.stopPropagation(); trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g, "\\'")}')">GET</button>
                             </div>
                         </div>
                         ${isAdminUser() ? `<button class="btn btn-sm btn-link text-warning mt-2 p-0" onclick="event.stopPropagation(); manageThumbnail('${id}', '${g.platform}', '${thumb}', '${name.replace(/'/g,"")}')">Edit Thumb</button>` : ''}
