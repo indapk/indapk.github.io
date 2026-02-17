@@ -1516,6 +1516,11 @@
     body.light-mode #deleteConfirmModal .text-muted {
         color: #64748b !important;
     }
+
+    /* =========================================
+       FITUR HIDE ADULT CONTENT - CSS Hanya untuk styling, logika ada di JS
+    ========================================= */
+    /* Tidak ada CSS khusus untuk menyembunyikan, karena kita akan filter di JS */
   </style>
 </head>
 <body>
@@ -1730,6 +1735,17 @@
                 </div>
                 <div class="col-md-1 text-end">
                     <button class="btn btn-glass btn-sm" id="btnRefreshGames" title="Refresh Library"><i class="bi bi-arrow-clockwise"></i></button>
+                </div>
+            </div>
+            <!-- Baris baru untuk checkbox -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="hideAdultCheckbox">
+                        <label class="form-check-label" for="hideAdultCheckbox">
+                            <i class="bi bi-eye-slash me-1" style="color: var(--neon-pink);"></i> Hide Content Adult (18+)
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2630,6 +2646,39 @@ function removeFromMyList(gameId, gamePlatform) {
             else if(target === 'indapk') renderGames('indapk');
             else if(target === 'apksgi') renderGames('apksgi');
         }));
+
+        // =========================================
+        // FITUR HIDE ADULT CONTENT
+        // =========================================
+        const hideAdultCheckbox = document.getElementById('hideAdultCheckbox');
+
+        // Fungsi untuk memuat status dari localStorage
+        function loadHideAdultSetting() {
+            // Atur default di sini: true = centang, false = tidak centang
+            const defaultChecked = true; // Ubah ke 'false' jika ingin defaultnya tidak tercentang
+            const savedSetting = localStorage.getItem('hideAdultContent');
+            
+            if (savedSetting !== null) {
+                // Jika ada di localStorage, gunakan nilai itu
+                hideAdultCheckbox.checked = savedSetting === 'true';
+            } else {
+                // Jika belum ada, gunakan default
+                hideAdultCheckbox.checked = defaultChecked;
+            }
+        }
+
+        // Event listener untuk checkbox
+        hideAdultCheckbox.addEventListener('change', function() {
+            // Simpan status ke localStorage
+            localStorage.setItem('hideAdultContent', this.checked);
+            // Render ulang tab yang aktif (beranda) untuk menerapkan filter
+            if (getActiveTabId() === 'beranda') {
+                renderGames('beranda');
+            }
+        });
+
+        // Panggil fungsi untuk memuat setting saat halaman dimuat
+        loadHideAdultSetting();
     });
 
     function setupEventListeners() {
@@ -2909,8 +2958,20 @@ function removeFromMyList(gameId, gamePlatform) {
         
         let source = tabId === 'apksgi' ? apksgiGames : (tabId === 'indapk' ? indapkGames : allGames);
         
-        // Filter
-        let filtered = source.filter(g => {
+        // =========================================
+        // TERAPKAN FILTER HIDE ADULT CONTENT UNTUK TAB BERANDA
+        // =========================================
+        let sourceToRender = source;
+        if (tabId === 'beranda') {
+            const hideAdultCheckbox = document.getElementById('hideAdultCheckbox');
+            if (hideAdultCheckbox && hideAdultCheckbox.checked) {
+                // Filter untuk menghilangkan semua game dengan platform 'apksgi'
+                sourceToRender = source.filter(g => g.platform !== 'apksgi');
+            }
+        }
+        
+        // Filter berdasarkan pencarian, platform, dan kategori
+        let filtered = sourceToRender.filter(g => {
             if(currentFilters.platform !== 'all' && g.platform !== currentFilters.platform) return false;
             
             // Normalize game categories for comparison
@@ -2942,7 +3003,7 @@ function removeFromMyList(gameId, gamePlatform) {
 
         // ===== HOT GAME SECTION (Hanya untuk INDapk dan APKsgi, TIDAK untuk Library) =====
         if (tabId !== 'beranda') {
-            // Ambil game dengan view count tertinggi dari source (seluruh game di tab tersebut)
+            // Ambil game dengan view count tertinggi dari sourceToRender (yang sudah terfilter jika perlu)
             const topSource = tabId === 'apksgi' ? apksgiGames : indapkGames;
             // Urutkan berdasarkan view count descending, ambil sejumlah HOT_GAME_COUNT teratas
             const hotGames = [...topSource]
