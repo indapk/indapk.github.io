@@ -1232,6 +1232,34 @@ body.theme-dark .note-item .card.border-secondary{background-color:rgba(108,117,
 .text-light-emphasis {
     color: var(--text-muted) !important;
 }
+
+/* Modal dengan warna platform */
+.modal-login-platform .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+/* Tombol Login dengan warna platform */
+
+.btn-login-platform:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px var(--header-shadow) !important;
+}
+
+/* Tombol Register dengan warna platform */
+.btn-register-platform:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px var(--header-shadow) !important;
+}
+
+/* Link text dalam modal */
+.modal-login-platform + .modal-body a.text-info {
+    color: var(--accent1) !important;
+    font-weight: 600;
+}
+
+.modal-login-platform + .modal-body a.text-info:hover {
+    text-decoration: underline !important;
+}
 </style>
 
 
@@ -1341,7 +1369,7 @@ body.theme-dark .note-item .card.border-secondary{background-color:rgba(108,117,
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content text-light">
             <div class="modal-header">
-                <h5 class="modal-title font-monospace" style="color: var(--neon-cyan); letter-spacing: 2px;">
+                <h5 class="modal-title font-monospace">
                   <i class="bi bi-shield-lock me-2"></i>Login Account
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -1365,7 +1393,7 @@ body.theme-dark .note-item .card.border-secondary{background-color:rgba(108,117,
                             </button>
                         </div>
                     </div>
-                    <button type="submit" id="btnLoginAction" class="btn btn-primary w-100 py-2" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); border: none;">
+                    <button type="submit" id="btnLoginAction" class="btn btn-primary w-100 py-2">
                         <i class="bi bi-box-arrow-in-right me-2"></i>Login
                     </button>
                 </form>
@@ -1383,7 +1411,7 @@ body.theme-dark .note-item .card.border-secondary{background-color:rgba(108,117,
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content text-light">
             <div class="modal-header">
-                <h5 class="modal-title font-monospace" style="color: var(--neon-pink); letter-spacing: 2px;">
+                <h5 class="modal-title font-monospace">
                   <i class="bi bi-person-plus me-2"></i>NEW USER REGISTRATION
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -1409,7 +1437,7 @@ body.theme-dark .note-item .card.border-secondary{background-color:rgba(108,117,
                         </div>
                         <div class="form-text text-light-emphasis" style="font-size: 0.75rem;">Keep this key safe for login.</div>
                     </div>
-                    <button type="submit" id="btnRegisterAction" class="btn btn-primary w-100 py-2" style="background: linear-gradient(135deg, var(--neon-pink), #ff5e00); border: none;">
+                    <button type="submit" id="btnRegisterAction" class="btn btn-primary w-100 py-2">
                         <i class="bi bi-check-circle me-2"></i>REGISTER ACCOUNT
                     </button>
                 </form>
@@ -4240,7 +4268,133 @@ async function register() {
     }
 }
 
-
+// Fungsi untuk mengupdate warna modal Login dan Register sesuai platform
+// Fungsi untuk mengupdate warna modal Login dan Register sesuai platform
+function updateModalColors(platform) {
+    console.log('updateModalColors dipanggil dengan platform:', platform); // debugging
+    
+    const loginModalHeader = document.querySelector('#loginModal .modal-header');
+    const registerModalHeader = document.querySelector('#registerModal .modal-header');
+    const loginButton = document.getElementById('btnLoginAction');
+    const registerButton = document.getElementById('btnRegisterAction');
+    
+    if (!loginModalHeader || !registerModalHeader || !loginButton || !registerButton) {
+        console.log('Element modal tidak ditemukan');
+        return;
+    }
+    
+    // Hapus class yang sudah ada
+    loginModalHeader.classList.remove('modal-login-platform');
+    registerModalHeader.classList.remove('modal-login-platform');
+    loginButton.classList.remove('btn-login-platform');
+    registerButton.classList.remove('btn-register-platform');
+    
+    // Tambahkan class baru
+    loginModalHeader.classList.add('modal-login-platform');
+    registerModalHeader.classList.add('modal-login-platform');
+    loginButton.classList.add('btn-login-platform');
+    registerButton.classList.add('btn-register-platform');
+    
+    // Set CSS variable untuk gradient
+    let gradient, shadow, c1, c2;
+    switch(platform) {
+        case 'ps1':
+            gradient = 'linear-gradient(135deg, #6b5bff 0%, #3a2fb8 100%)';
+            shadow = 'rgba(107,91,255,0.3)';
+            c1 = '#6b5bff'; c2 = '#3a2fb8';
+            break;
+        case 'ps2':
+            gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
+            shadow = 'rgba(0,102,204,0.3)';
+            c1 = '#0066cc'; c2 = '#003366';
+            break;
+        case 'ps3':
+            gradient = 'linear-gradient(135deg, #00439c 0%, #002d6e 100%)';
+            shadow = 'rgba(0,67,156,0.3)';
+            c1 = '#00439c'; c2 = '#002d6e';
+            break;
+        case 'ps4':
+            gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
+            shadow = 'rgba(0,112,204,0.3)';
+            c1 = '#0070cc'; c2 = '#004080';
+            break;
+        case 'psp':
+            gradient = 'linear-gradient(135deg, #0070cc 0%, #004080 100%)';
+            shadow = 'rgba(0,112,204,0.3)';
+            c1 = '#0070cc'; c2 = '#004080';
+            break;
+        case 'psvita':
+            gradient = 'linear-gradient(135deg, #003791 0%, #001f4d 100%)';
+            shadow = 'rgba(0,55,145,0.3)';
+            c1 = '#003791'; c2 = '#001f4d';
+            break;
+        case 'switch':
+            gradient = 'linear-gradient(135deg, #e60012 0%, #8b0000 100%)';
+            shadow = 'rgba(230,0,18,0.3)';
+            c1 = '#e60012'; c2 = '#8b0000';
+            break;
+        case 'wii':
+            gradient = 'linear-gradient(135deg, #0099ff 0%, #0055cc 100%)';
+            shadow = 'rgba(0,153,255,0.3)';
+            c1 = '#0099ff'; c2 = '#0055cc';
+            break;
+        case 'gamecube':
+            gradient = 'linear-gradient(135deg, #6a5acd 0%, #4b3bb3 100%)';
+            shadow = 'rgba(106,90,205,0.3)';
+            c1 = '#6a5acd'; c2 = '#4b3bb3';
+            break;
+        case '3ds':
+            gradient = 'linear-gradient(135deg, #d12229 0%, #a01b1f 100%)';
+            shadow = 'rgba(209,34,41,0.3)';
+            c1 = '#d12229'; c2 = '#a01b1f';
+            break;
+        case 'java':
+            gradient = 'linear-gradient(135deg, #f89820 0%, #e68900 100%)';
+            shadow = 'rgba(248,152,32,0.3)';
+            c1 = '#f89820'; c2 = '#e68900';
+            break;
+        case 'ios':
+            gradient = 'linear-gradient(135deg, #0a84ff 0%, #0066cc 100%)';
+            shadow = 'rgba(10,132,255,0.3)';
+            c1 = '#0a84ff'; c2 = '#0066cc';
+            break;
+        case 'android':
+            gradient = 'linear-gradient(135deg, #3ddc84 0%, #1a8c4f 100%)';
+            shadow = 'rgba(61,220,132,0.3)';
+            c1 = '#3ddc84'; c2 = '#1a8c4f';
+            break;
+        case 'pc':
+            gradient = 'linear-gradient(135deg, #00a4ef 0%, #0082c4 100%)';
+            shadow = 'rgba(0,164,239,0.3)';
+            c1 = '#00a4ef'; c2 = '#0082c4';
+            break;
+        case 'apksgi':
+            gradient = 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)';
+            shadow = 'rgba(255,65,108,0.3)';
+            c1 = '#ff416c'; c2 = '#ff4b2b';
+            break;
+        default:
+            gradient = 'linear-gradient(135deg, #0066cc 0%, #003366 100%)';
+            shadow = 'rgba(0,102,204,0.3)';
+            c1 = '#0066cc'; c2 = '#003366';
+    }
+    
+    console.log('Menerapkan gradient:', gradient); // debugging
+    
+    // Apply CSS variables langsung ke element
+    loginModalHeader.style.background = gradient;
+    registerModalHeader.style.background = gradient;
+    loginButton.style.background = gradient;
+    registerButton.style.background = gradient;
+    
+    // Set box shadow
+    loginButton.style.boxShadow = `0 4px 15px ${shadow}`;
+    registerButton.style.boxShadow = `0 4px 15px ${shadow}`;
+    
+    // Set custom property untuk hover
+    loginButton.style.setProperty('--header-shadow', shadow);
+    registerButton.style.setProperty('--header-shadow', shadow);
+}
         
 // Override fungsi login yang sudah ada dengan yang lebih baik
 async function login(btn) {
@@ -4812,6 +4966,7 @@ case '3ds': gradient = 'linear-gradient(135deg, #d32f2f 0%, #9a0007 100%)'; badg
   root.style.setProperty('--community-shadow-hover', shadowHover);
   root.style.setProperty('--accent1', c1);
   root.style.setProperty('--accent2', c2);
+    updateModalColors(platform);
 
   return { badgeClass, platformName };
 }
