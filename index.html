@@ -2084,6 +2084,11 @@
     const IMAGE_PROXY = "https://images.weserv.nl/?url=";
     const HOT_GAME_COUNT = 4; // <-- UBAH ANGKA INI UNTUK MENGATUR JUMLAH HOT GAME
     
+    // =========================================
+    // SETTING COUNT VIEW - UBAH DI SINI
+    // =========================================
+    const SHOW_COUNT_VIEW = false; // default true, ubah ke false untuk menyembunyikan count view
+    
     // State
     let allGames = [], indapkGames = [], apksgiGames = [];
     let pinnedGames = [];
@@ -3022,7 +3027,7 @@ function removeFromMyList(gameId, gamePlatform) {
                     const platformClass = g.platform;
                     const clicks = g.clicks;
                     
-                    const viewBadge = clicks > 0 ? `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>` : '';
+                    const viewBadge = (SHOW_COUNT_VIEW && clicks > 0) ? `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>` : '';
                     
                     // Cek apakah game sudah ada di My List
                     const isInList = myGameList.some(item => item.id === id && item.platform === g.platform);
@@ -3076,7 +3081,7 @@ function removeFromMyList(gameId, gamePlatform) {
             
             // View Count
             const clicks = gameStatsMap.get(`${id}_${g.platform}`) || 0;
-            const viewBadge = clicks > 0 ? `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>` : '';
+            const viewBadge = (SHOW_COUNT_VIEW && clicks > 0) ? `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>` : '';
             
             // New Badge Logic (< 24 hours)
             let newBadge = '';
@@ -3162,7 +3167,7 @@ function removeFromMyList(gameId, gamePlatform) {
             let viewBadge = '';
             if(game) {
                 const clicks = gameStatsMap.get(`${game.download_id}_${game.platform}`) || 0;
-                if(clicks > 0) viewBadge = `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>`;
+                if(clicks > 0 && SHOW_COUNT_VIEW) viewBadge = `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>`;
             }
             
             cards += `
