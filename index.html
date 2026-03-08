@@ -77,17 +77,17 @@
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Light Mode Overrides */
+    /* Light Mode Overrides - DIPERBAIKI AGAR LEBIH GELAP */
     body.light-mode {
-      --bg-deep: #f0f2f5;
-      --bg-dark: #ffffff;
-      --bg-card: rgba(255, 255, 255, 0.85); /* White transparant */
-      --glass-border: rgba(0, 0, 0, 0.1);
-      --text-main: #1a1a2e;
-      --text-muted: #64748b;
-      --input-bg: rgba(0, 0, 0, 0.05);
-      --dropdown-bg: #ffffff;
-      --shadow-glow: 0 0 20px rgba(0, 0, 0, 0.1);
+      --bg-deep: #e4e6eb;        /* Lebih gelap dari sebelumnya */
+      --bg-dark: #ffffff;         /* Putih untuk elemen utama */
+      --bg-card: rgba(255, 255, 255, 0.75); /* White dengan transparansi */
+      --glass-border: rgba(0, 0, 0, 0.12);  /* Border lebih jelas */
+      --text-main: #121212;       /* Hitam pekat untuk kontras */
+      --text-muted: #4b5563;      /* Abu-abu lebih gelap untuk keterbacaan */
+      --input-bg: rgba(0, 0, 0, 0.03);
+      --dropdown-bg: #f8fafc;     /* Abu-abu sangat muda */
+      --shadow-glow: 0 0 20px rgba(0, 0, 0, 0.08);
     }
 
     /* =========================================
@@ -613,6 +613,8 @@
         background: var(--neon-pink);
         border-color: var(--neon-pink);
         color: #fff;
+        pointer-events: none; /* Menonaktifkan klik */
+        opacity: 0.9;
     }
 
     /* Pinned Section */
@@ -1611,6 +1613,8 @@
                 <i class="bi bi-list-columns me-1"></i> List Game A-Z
             </a>
             <ul class="dropdown-menu dropdown-scroll"> <!-- Tambah class dropdown-scroll -->
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-center fw-bold" href="listgame.html"><i class="bi bi-grid-3x3-gap-fill"></i> Lihat Semua Platform</a></li>
                 <li><a class="dropdown-item" href="listgame.html#ps1"><span class="badge bg-secondary me-2">PS1</span> PlayStation 1 A-Z</a></li>
                 <li><a class="dropdown-item" href="listgame.html#ps2"><span class="badge bg-secondary me-2">PS2</span> PlayStation 2 A-Z</a></li>
                 <li><a class="dropdown-item" href="listgame.html#ps3"><span class="badge bg-secondary me-2">PS3</span> PlayStation 3 A-Z</a></li>
@@ -1626,8 +1630,6 @@
                 <li><a class="dropdown-item" href="listgame.html#java"><span class="badge bg-secondary me-2">Java</span> Java A-Z</a></li>
                 <li><a class="dropdown-item" href="listgame.html#pc"><span class="badge bg-secondary me-2">PC</span> PC A-Z</a></li>
                 <li><a class="dropdown-item" href="listgame.html#apksgi"><span class="badge bg-secondary me-2">18+</span> APKsgi A-Z</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-center fw-bold" href="listgame.html"><i class="bi bi-grid-3x3-gap-fill"></i> Lihat Semua Platform</a></li>
             </ul>
         </li>
 
@@ -2314,7 +2316,7 @@
             }
             
             // Update tampilan tombol
-            const buttons = document.querySelectorAll(`[onclick*="addToMyList('${id}'"][onclick*="${platform}"]`);
+            const buttons = document.querySelectorAll(`.btn-add-list[data-game-id="${id}"][data-game-platform="${platform}"]`);
             buttons.forEach(btn => {
                 btn.classList.add('added');
                 btn.innerHTML = '<i class="bi bi-check"></i>';
@@ -2421,7 +2423,7 @@ function removeFromMyList(gameId, gamePlatform) {
         saveMyList();
         
         // Update tombol kembali ke normal
-        const buttons = document.querySelectorAll(`[onclick*="addToMyList('${gameId}'"][onclick*="${gamePlatform}"]`);
+        const buttons = document.querySelectorAll(`.btn-add-list[data-game-id="${gameId}"][data-game-platform="${gamePlatform}"]`);
         buttons.forEach(btn => {
             btn.classList.remove('added');
             btn.innerHTML = '<i class="bi bi-plus"></i> ADD';
@@ -2587,7 +2589,27 @@ function removeFromMyList(gameId, gamePlatform) {
     });
 
     /* =========================================
-       INIT & EVENTS
+       FUNGSI UPDATE URL (MODIFIKASI)
+    ========================================= */
+    function updateURLForPlatform(platform) {
+        // Mengupdate hash URL tanpa memuat ulang halaman
+        const newHash = platform === 'all' ? '' : `/${platform}`;
+        window.location.hash = newHash;
+    }
+
+    /* =========================================
+       FUNGSI UNTUK MEMBACA PLATFORM DARI URL (HASH)
+    ========================================= */
+    function getPlatformFromURL() {
+        const hash = window.location.hash.substring(1); // hapus #
+        if (hash && hash.startsWith('/')) {
+            return hash.substring(1); // ambil setelah '/'
+        }
+        return 'all'; // default
+    }
+
+    /* =========================================
+       INIT & EVENTS (DIMODIFIKASI)
     ========================================= */
     document.addEventListener('DOMContentLoaded', () => {
         const yearEl = document.getElementById('yearNow');
@@ -2604,6 +2626,36 @@ function removeFromMyList(gameId, gamePlatform) {
         loadAllGames();
         setupEventListeners();
         
+        // Cek URL hash untuk platform
+        const urlPlatform = getPlatformFromURL();
+        if (urlPlatform !== 'all') {
+            currentFilters.platform = urlPlatform;
+            // Update teks dropdown
+            const platformText = document.getElementById('platformText');
+            const selectedItem = document.querySelector(`.dropdown-item[data-platform="${urlPlatform}"]`);
+            if (platformText && selectedItem) {
+                platformText.innerHTML = `<i class="bi bi-hdd-network me-2"></i>${selectedItem.textContent}`;
+            }
+        }
+
+        // Cek hash kategori dari URL
+        if (window.location.hash && window.location.hash.includes('#')) {
+            const hashParts = window.location.hash.split('/');
+            if (hashParts.length === 2 && hashParts[0] === '#') {
+                // Ini adalah platform, sudah ditangani di atas
+            } else if (hashParts.length === 1 && !hashParts[0].startsWith('/')) {
+                // Ini adalah kategori
+                const categoryFromHash = decodeURIComponent(hashParts[0].substring(1));
+                if (categoryFromHash && getActiveTabId() === 'beranda') {
+                    currentFilters.category = categoryFromHash;
+                    const catText = document.getElementById('categoryText');
+                    if (catText) {
+                        catText.innerHTML = `<i class="bi bi-tags me-2"></i>${categoryFromHash}`;
+                    }
+                }
+            }
+        }
+
         // Initial URL params check
         const urlParams = new URLSearchParams(window.location.search);
         const q = urlParams.get('q');
@@ -2619,8 +2671,13 @@ function removeFromMyList(gameId, gamePlatform) {
         tabs.forEach(t => t.addEventListener('shown.bs.tab', (e) => {
             const target = e.target.getAttribute('data-bs-target').substring(1);
             
-            // RESET FILTERS
-            currentFilters = { platform: 'all', category: 'all', query: '' };
+            // RESET FILTERS (kecuali platform jika ada di URL)
+            const urlPlatform = getPlatformFromURL();
+            currentFilters = { 
+                platform: urlPlatform !== 'all' ? urlPlatform : 'all', 
+                category: 'all', 
+                query: '' 
+            };
             resetPages();
             
             // Clear Search Inputs visually
@@ -2629,9 +2686,17 @@ function removeFromMyList(gameId, gamePlatform) {
                  if(i.id.includes('categorySearch')) i.value = '';
             });
             
-            // Reset Dropdown text visually
+            // Reset Dropdown text visually, tapi sesuaikan dengan platform dari URL
             const pText = document.getElementById('platformText');
-            if(pText) pText.innerHTML = '<i class="bi bi-hdd-network me-2"></i>All Platforms';
+            if(pText) {
+                if (urlPlatform !== 'all') {
+                    const selectedItem = document.querySelector(`.dropdown-item[data-platform="${urlPlatform}"]`);
+                    pText.innerHTML = selectedItem ? `<i class="bi bi-hdd-network me-2"></i>${selectedItem.textContent}` : '<i class="bi bi-hdd-network me-2"></i>All Platforms';
+                } else {
+                    pText.innerHTML = '<i class="bi bi-hdd-network me-2"></i>All Platforms';
+                }
+            }
+            
             const pTextIndapk = document.getElementById('platformTextIndapk');
             if(pTextIndapk) pTextIndapk.innerText = 'Platform';
             
@@ -2684,6 +2749,48 @@ function removeFromMyList(gameId, gamePlatform) {
 
         // Panggil fungsi untuk memuat setting saat halaman dimuat
         loadHideAdultSetting();
+
+        // =========================================
+        // HANDLE CATEGORY CLICK AS LINK (HASH)
+        // =========================================
+        // Tangani klik pada link kategori untuk mengubah hash di URL
+        document.addEventListener('click', function(e) {
+            const target = e.target.closest('.category-link');
+            if (target && target.hash) {
+                // Set hash ke URL
+                window.location.hash = target.hash;
+                
+                // Panggil fungsi untuk filter kategori berdasarkan hash
+                const categoryFromHash = target.hash.substring(1); // hapus #
+                if (categoryFromHash) {
+                    // Hanya terapkan jika tab aktif adalah beranda
+                    if (getActiveTabId() === 'beranda') {
+                        currentFilters.category = decodeURIComponent(categoryFromHash);
+                        const catText = document.getElementById('categoryText');
+                        if (catText) {
+                            catText.innerHTML = `<i class="bi bi-tags me-2"></i>${decodeURIComponent(categoryFromHash)}`;
+                        }
+                        resetPages();
+                        renderGames('beranda');
+                    }
+                }
+                e.preventDefault(); // Cegah scroll default
+            }
+        });
+
+        // Cek hash saat halaman dimuat
+        if (window.location.hash) {
+            const categoryFromHash = decodeURIComponent(window.location.hash.substring(1));
+            if (categoryFromHash && getActiveTabId() === 'beranda') {
+                currentFilters.category = categoryFromHash;
+                const catText = document.getElementById('categoryText');
+                if (catText) {
+                    catText.innerHTML = `<i class="bi bi-tags me-2"></i>${categoryFromHash}`;
+                }
+                resetPages();
+                renderGames('beranda');
+            }
+        }
     });
 
     function setupEventListeners() {
@@ -2707,13 +2814,16 @@ function removeFromMyList(gameId, gamePlatform) {
             }
         });
 
-        // Platform Dropdowns
+        // Platform Dropdowns (DIMODIFIKASI)
         document.querySelectorAll('.dropdown-item[data-platform]').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const plat = e.target.dataset.platform;
                 const label = e.target.textContent;
                 currentFilters.platform = plat;
+                
+                // Update URL
+                updateURLForPlatform(plat);
                 
                 // Update UI text based on active tab
                 const activeTab = getActiveTabId();
@@ -2738,6 +2848,20 @@ function removeFromMyList(gameId, gamePlatform) {
                     currentFilters.category = e.target.dataset.category;
                     const label = e.target.dataset.category === 'all' ? 'Category' : e.target.textContent;
                     document.getElementById(textId).innerHTML = `<i class="bi bi-tags me-2"></i>${label}`;
+                    
+                    // Update hash jika kategori bukan 'all' dan tab aktif adalah beranda
+                    if (getActiveTabId() === 'beranda' && e.target.dataset.category !== 'all') {
+                        window.location.hash = encodeURIComponent(e.target.dataset.category);
+                    } else if (e.target.dataset.category === 'all') {
+                        // Hapus hash jika memilih all, tapi pertahankan platform
+                        const urlPlatform = getPlatformFromURL();
+                        if (urlPlatform !== 'all') {
+                            window.location.hash = `/${urlPlatform}`;
+                        } else {
+                            window.location.hash = '';
+                        }
+                    }
+                    
                     resetPages();
                     renderActiveTab();
                 }
@@ -2937,6 +3061,7 @@ function removeFromMyList(gameId, gamePlatform) {
         
         Array.from(categorySet).sort().forEach(c => {
             const li = document.createElement('li');
+            // Membuat link untuk kategori
             li.innerHTML = `<a class="dropdown-item" href="#" data-category="${c}">${c}</a>`;
             list.appendChild(li);
         });
@@ -3054,7 +3179,7 @@ function removeFromMyList(gameId, gamePlatform) {
                                 <div class="card-actions">
                                     <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>${new Date(g.timestamp).toLocaleDateString()}</span>
                                     <div>
-                                        <button class="${addButtonClass}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>';">
+                                        <button class="${addButtonClass}" data-game-id="${id}" data-game-platform="${g.platform}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>'; this.setAttribute('disabled', 'disabled');">
                                             ${addButtonText}
                                         </button>
                                         <button class="btn-download-sm" onclick="event.stopPropagation(); trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g, "\\'")}')">GET</button>
@@ -3096,6 +3221,12 @@ function removeFromMyList(gameId, gamePlatform) {
             const addButtonClass = isInList ? 'btn-add-list added' : 'btn-add-list';
             const addButtonText = isInList ? '<i class="bi bi-check"></i>' : '<i class="bi bi-plus"></i> ADD';
             
+            // Buat link kategori
+            const gameCats = (g.category || g.ori_category || '').split(',').map(c => toTitleCase(c.trim()));
+            const categoryLinks = gameCats.map(cat => 
+                `<a href="#${encodeURIComponent(cat)}" class="category-link">${cat}</a>`
+            ).join(', ');
+            
             html += `
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="game-card platform-${platformClass}" style="animation-delay: ${index * 50}ms">
@@ -3115,10 +3246,13 @@ function removeFromMyList(gameId, gamePlatform) {
                             ${g.region ? `<span class="meta-badge">${g.region}</span>` : ''}
                             ${g.language ? `<span class="meta-badge">${g.language}</span>` : ''}
                         </div>
+                        <div class="game-meta">
+                            <span class="text-muted small"><i class="bi bi-tags me-1"></i>${categoryLinks || 'N/A'}</span>
+                        </div>
                         <div class="card-actions">
                             <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>${new Date(g.timestamp).toLocaleDateString()}</span>
                             <div>
-                            <button class="${addButtonClass}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>';">
+                            <button class="${addButtonClass}" data-game-id="${id}" data-game-platform="${g.platform}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>'; this.setAttribute('disabled', 'disabled');">
                                     ${addButtonText}
                                 </button>
                                 <button class="btn-download-sm" onclick="event.stopPropagation(); trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g, "\\'")}')">GET</button>
@@ -3535,6 +3669,15 @@ function removeFromMyList(gameId, gamePlatform) {
         await loadAllGames(false);
         // If modal open, refresh it
         if(document.getElementById('managePinnedModal').classList.contains('show')) openManagePinnedModal();
+    }
+
+    // Fungsi tambahan untuk menambah slot pinned (perlu diimplementasi sesuai kebutuhan)
+    function addNewPinnedSlot() {
+        alert('Fungsi ini perlu diimplementasikan di server.');
+    }
+
+    function saveAllPinnedGames() {
+        alert('Fungsi ini perlu diimplementasikan di server.');
     }
 
   </script>
