@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A-Z Game List - INDapk</title>
+  <title>A-Z Game List - INDapk (Pagination)</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
@@ -327,7 +327,6 @@
       overflow: hidden;
     }
     
-    /* Shimmer Effect for Cards on Hover */
     .platform-card::after {
       content: "";
       position: absolute;
@@ -469,7 +468,6 @@
       animation: fadeUp 0.4s ease-out backwards;
     }
 
-    /* Shimmer animation for loading */
     @keyframes shimmer {
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
@@ -481,7 +479,6 @@
       border-color: var(--neon-cyan);
     }
 
-    /* Visual shimmer effect on hover for cards */
     .game-item::after {
       content: "";
       position: absolute;
@@ -549,6 +546,56 @@
     }
 
     .highlight { background: rgba(255, 46, 151, 0.3); color: var(--text-primary); padding: 0 2px; border-radius: 2px; }
+
+    /* ===== PAGINATION ===== */
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .page-btn:hover:not(:disabled) {
+      background: var(--neon-cyan);
+      color: #000;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0,240,255,0.3);
+    }
+
+    .page-btn.active-page {
+      background: var(--neon-cyan);
+      color: #000;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0,240,255,0.4);
+    }
+
+    .page-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .page-ellipsis {
+      color: var(--text-secondary);
+      padding: 0 5px;
+    }
 
     /* ===== COMMUNITY SECTION ===== */
     .community-section {
@@ -734,8 +781,9 @@
       <!-- Alphabet Filter -->
       <div class="alphabet-filter" id="alphabetFilter"></div>
 
-      <!-- Games Container -->
+      <!-- Games Container + Pagination -->
       <div id="gamesContainer"></div>
+      <div id="paginationControls" class="pagination-container"></div>
     </div>
 
     <!-- ===== COMMUNITY SECTION ===== -->
@@ -815,6 +863,11 @@
     let currentSearchQuery = '';
     let platformCounts = {};
 
+    // ===== PAGINATION STATE =====
+    const ITEMS_PER_PAGE = 20; 
+    let currentPage = 1;
+    let totalPages = 1;
+
     // ===== HELPER FUNCTIONS =====
     function normalizeText(text) { return String(text || '').trim().toLowerCase(); }
     function escapeHTML(text) {
@@ -825,23 +878,10 @@
 
     function getPlatformColor(platform) {
       const colors = {
-        'ps1': '#949494', 
-        'ps2': '#003791', 
-        'ps3': '#CE181E', 
-        'ps4': '#003087',
-        'ps5': '#FFFFFF',
-        'psp': '#FFD700', 
-        'psvita': '#00A0E9', 
-        'switch': '#E60012', 
-        'wii': '#009AC7',
-        'wiiu': '#009AC7',
-        'gamecube': '#6A5ACD', 
-        '3ds': '#D12229', 
-        'android': '#3DDC84',
-        'ios': '#A2AAAD', 
-        'java': '#F89820', 
-        'pc': '#0078D7', 
-        'apksgi': '#FF2E97'
+        'ps1': '#949494', 'ps2': '#003791', 'ps3': '#CE181E', 'ps4': '#003087',
+        'ps5': '#FFFFFF', 'psp': '#FFD700', 'psvita': '#00A0E9', 'switch': '#E60012',
+        'wii': '#009AC7', 'wiiu': '#009AC7', 'gamecube': '#6A5ACD', '3ds': '#D12229',
+        'android': '#3DDC84', 'ios': '#A2AAAD', 'java': '#F89820', 'pc': '#0078D7', 'apksgi': '#FF2E97'
       };
       return colors[platform] || '#00f0ff';
     }
@@ -864,11 +904,7 @@
 
     function updateThemeIcon(theme) {
       const icon = document.getElementById('themeIcon');
-      if (theme === 'dark') {
-        icon.className = 'bi bi-moon-fill';
-      } else {
-        icon.className = 'bi bi-sun-fill';
-      }
+      icon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
     }
 
     // ===== LOADING UI =====
@@ -890,6 +926,7 @@
           <div class="cyber-spinner" style="width:40px;height:40px;border-width:2px;"></div>
           <p style="color:var(--text-secondary)">${msg}</p>
         </div>`;
+      document.getElementById('paginationControls').innerHTML = ''; // clear pagination
     }
 
     // ===== DATA FETCHING =====
@@ -978,17 +1015,120 @@
           resInfo.style.display = 'flex';
           document.getElementById('searchResultText').innerHTML = `Found ${filteredGames.length} matches for "<b>${escapeHTML(currentSearchQuery)}</b>"`;
         }
-        renderGameList(true);
+        currentPage = 1; // reset to first page
+        renderPaginatedGames(true);
       }, 300);
     }
 
-    // ===== LOAD & RENDER GAMES =====
+    // ===== PAGINATION RENDER =====
+    function renderPagination() {
+      const paginationDiv = document.getElementById('paginationControls');
+      if (!paginationDiv) return;
+
+      if (filteredGames.length === 0) {
+        paginationDiv.innerHTML = '';
+        return;
+      }
+
+      totalPages = Math.ceil(filteredGames.length / ITEMS_PER_PAGE);
+      if (totalPages <= 1) {
+        paginationDiv.innerHTML = '';
+        return;
+      }
+
+      let paginationHTML = '';
+
+      // Prev button
+      paginationHTML += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"><i class="bi bi-chevron-left"></i></button>`;
+
+      // Page numbers with ellipsis
+      const maxVisible = 5;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+      if (startPage > 1) {
+        paginationHTML += `<button class="page-btn" onclick="changePage(1)">1</button>`;
+        if (startPage > 2) paginationHTML += `<span class="page-ellipsis">...</span>`;
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `<button class="page-btn ${i === currentPage ? 'active-page' : ''}" onclick="changePage(${i})">${i}</button>`;
+      }
+
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) paginationHTML += `<span class="page-ellipsis">...</span>`;
+        paginationHTML += `<button class="page-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+      }
+
+      // Next button
+      paginationHTML += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})"><i class="bi bi-chevron-right"></i></button>`;
+
+      paginationDiv.innerHTML = paginationHTML;
+    }
+
+    // Function to change page (must be global)
+    window.changePage = function(page) {
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      renderPaginatedGames(currentSearchQuery ? true : false); // highlight if searching
+      window.scrollTo({ top: document.getElementById('gamesContainer').offsetTop - 100, behavior: 'smooth' });
+    };
+
+    // Render current page
+    function renderPaginatedGames(highlight = false) {
+      const container = document.getElementById('gamesContainer');
+      if (filteredGames.length === 0) {
+        container.innerHTML = `<div class="empty-state"><p>No games found matching criteria.</p></div>`;
+        document.getElementById('paginationControls').innerHTML = '';
+        return;
+      }
+
+      totalPages = Math.ceil(filteredGames.length / ITEMS_PER_PAGE);
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredGames.length);
+      const pageGames = filteredGames.slice(startIndex, endIndex);
+
+      let html = '';
+      const pColor = getPlatformColor(currentPlatform);
+
+      pageGames.forEach((game, idx) => {
+        let nameDisplay = game.nama_game;
+        if (highlight && currentSearchQuery) {
+          const regex = new RegExp(`(${currentSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+          nameDisplay = nameDisplay.replace(regex, '<span class="highlight">$1</span>');
+        }
+        
+        const dlUrl = `download.html?game=${game.download_id}&platform=${currentPlatform}`;
+        const delay = Math.min(idx * 0.03, 0.8);
+
+        html += `
+          <div class="game-item" style="border-left: 3px solid ${pColor}; animation-delay: ${delay}s">
+            <div class="game-info">
+              <a href="${dlUrl}" class="game-title" target="_blank">${nameDisplay}</a>
+              <div class="game-meta">
+                ${game.category ? `<span class="meta-tag"><i class="bi bi-tag-fill"></i> ${escapeHTML(game.category)}</span>` : ''}
+                ${game.region ? `<span class="meta-tag"><i class="bi bi-globe-americas"></i> ${escapeHTML(game.region)}</span>` : ''}
+                ${game.language ? `<span class="meta-tag"><i class="bi bi-translate"></i> ${escapeHTML(game.language)}</span>` : ''}
+              </div>
+            </div>
+            <a href="${dlUrl}" class="download-btn" target="_blank">
+              <i class="bi bi-download"></i> <span class="d-none d-sm-inline">Get</span>
+            </a>
+          </div>`;
+      });
+      container.innerHTML = html;
+      renderPagination();
+    }
+
+    // ===== LOAD & RENDER GAMES (with pagination) =====
     async function loadGamesByPlatform(platform) {
       const cfg = API_CONFIGS.find(p => p.platform === platform);
       if (!cfg) return;
 
       currentPlatform = platform;
       currentSearchQuery = '';
+      currentLetter = 'ALL';
+      currentPage = 1;
       document.getElementById('searchResultsInfo').style.display = 'none';
       document.getElementById('searchInput').value = '';
       
@@ -1009,7 +1149,7 @@
             ...game,
             nama_game: game.nama_game || game.ori_name || 'Unknown Game',
             __sortTitle: (game.nama_game || game.ori_name || '').trim()
-          })).sort((a, b) => a.__sortTitle.localeCompare(b.__sortTitle, 'en')); // Sort EN
+          })).sort((a, b) => a.__sortTitle.localeCompare(b.__sortTitle, 'en'));
 
           document.getElementById('selectedPlatformCount').textContent = `${gamesData.length} Items Available`;
           filteredGames = [...gamesData];
@@ -1023,6 +1163,7 @@
             <h5 class="mt-3">Connection Failed</h5>
             <button onclick="location.reload()" class="btn btn-outline-primary mt-3">Retry</button>
           </div>`;
+        document.getElementById('paginationControls').innerHTML = '';
       }
     }
 
@@ -1038,6 +1179,7 @@
           container.querySelectorAll('.alphabet-btn').forEach(b => b.classList.remove('active'));
           this.classList.add('active');
           currentLetter = this.dataset.letter;
+          currentPage = 1; // reset to first page
           currentSearchQuery ? filterGamesBySearch(currentSearchQuery) : filterGamesByLetter(currentLetter);
         });
       });
@@ -1049,46 +1191,9 @@
         if (letter === 'ALL') filteredGames = [...gamesData];
         else if (letter === '#') filteredGames = gamesData.filter(g => /[0-9]/.test((g.nama_game||'').trim().charAt(0)));
         else filteredGames = gamesData.filter(g => (g.nama_game||'').trim().charAt(0).toUpperCase() === letter);
-        renderGameList();
+        currentPage = 1; // reset to first page
+        renderPaginatedGames();
       }, 200);
-    }
-
-    function renderGameList(highlight = false) {
-      const container = document.getElementById('gamesContainer');
-      if (filteredGames.length === 0) {
-        container.innerHTML = `<div class="empty-state"><p>No games found matching criteria.</p></div>`;
-        return;
-      }
-
-      let html = '';
-      const pColor = getPlatformColor(currentPlatform);
-
-      filteredGames.forEach((game, idx) => {
-        let nameDisplay = game.nama_game;
-        if (highlight && currentSearchQuery) {
-          const regex = new RegExp(`(${currentSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-          nameDisplay = nameDisplay.replace(regex, '<span class="highlight">$1</span>');
-        }
-        
-        const dlUrl = `download.html?game=${game.download_id}&platform=${currentPlatform}`;
-        const delay = Math.min(idx * 0.05, 1.0); // Cap delay
-
-        html += `
-          <div class="game-item" style="border-left: 3px solid ${pColor}; animation-delay: ${delay}s">
-            <div class="game-info">
-              <a href="${dlUrl}" class="game-title" target="_blank">${nameDisplay}</a>
-              <div class="game-meta">
-                ${game.category ? `<span class="meta-tag"><i class="bi bi-tag-fill"></i> ${escapeHTML(game.category)}</span>` : ''}
-                ${game.region ? `<span class="meta-tag"><i class="bi bi-globe-americas"></i> ${escapeHTML(game.region)}</span>` : ''}
-                ${game.language ? `<span class="meta-tag"><i class="bi bi-translate"></i> ${escapeHTML(game.language)}</span>` : ''}
-              </div>
-            </div>
-            <a href="${dlUrl}" class="download-btn" target="_blank">
-              <i class="bi bi-download"></i> <span class="d-none d-sm-inline">Get</span>
-            </a>
-          </div>`;
-      });
-      container.innerHTML = html;
     }
 
     // ===== INIT =====
