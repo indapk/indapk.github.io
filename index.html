@@ -1519,6 +1519,23 @@
         color: #64748b !important;
     }
 
+    .version-text {
+      font-size: 0.7rem;
+      color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .category-more {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--neon-cyan);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
     /* =========================================
        FITUR HIDE ADULT CONTENT - CSS Hanya untuk styling, logika ada di JS
     ========================================= */
@@ -1527,7 +1544,7 @@
 </head>
 <body>
 
-  <!-- LOADING OVERLAY - MODIFIED (VERSI 2) -->
+  <!-- LOADING OVERLAY -->
   <div id="pageLoadingOverlay" class="loading-overlay">
     <div class="loading-container">
       <div class="loading-controller">
@@ -1554,7 +1571,6 @@
       </a>
       
       <div class="d-flex align-items-center gap-2 order-lg-3">
-        <!-- Theme Toggle -->
         <button class="btn btn-glass btn-sm" onclick="toggleTheme()" title="Toggle Theme">
             <i class="bi bi-sun-fill" id="themeIcon"></i>
         </button>
@@ -1566,7 +1582,6 @@
         </div>
         <button id="loginButton" class="btn btn-custom btn-sm" onclick="openLoginModal()">Login</button>
         
-        <!-- Tombol My List Game -->
         <button class="btn btn-glass btn-sm" onclick="openMyListModal()" title="My List Game">
             <i class="bi bi-bookmark-star"></i> <span class="d-none d-md-inline">My List</span>
             <span class="badge bg-danger ms-1" id="myListCountBadge">0</span>
@@ -1581,7 +1596,7 @@
         <ul class="navbar-nav mx-auto gap-2">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-grid"></i> Platform</a>
-            <ul class="dropdown-menu dropdown-scroll"> <!-- Tambah class dropdown-scroll -->
+            <ul class="dropdown-menu dropdown-scroll">
                 <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
                 <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
                 <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
@@ -1607,12 +1622,11 @@
             </ul>
         </li>
 
-        <!-- Navbar bagian dropdown List Game A-Z -->
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownList" role="button" data-bs-toggle="dropdown">
                 <i class="bi bi-list-columns me-1"></i> List Game A-Z
             </a>
-            <ul class="dropdown-menu dropdown-scroll"> <!-- Tambah class dropdown-scroll -->
+            <ul class="dropdown-menu dropdown-scroll">
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-center fw-bold" href="listgame.html"><i class="bi bi-grid-3x3-gap-fill"></i> Lihat Semua Platform</a></li>
                 <li><a class="dropdown-item" href="listgame.html#ps1"><span class="badge bg-secondary me-2">PS1</span> PlayStation 1 A-Z</a></li>
@@ -1636,7 +1650,6 @@
           <li class="nav-item"><a class="nav-link" href="https://indapk.com/requestgame.html"><i class="bi bi-plus-circle"></i> Request</a></li>
           <li class="nav-item"><a class="nav-link" href="https://indapk.com/topup.html"><i class="bi bi-credit-card"></i> Top Up</a></li>
           
-          <!-- Admin Tools -->
           <li class="nav-item dropdown d-none" id="adminMenu">
             <a class="nav-link dropdown-toggle text-warning" href="#" data-bs-toggle="dropdown"><i class="bi bi-shield-lock"></i> Admin</a>
             <ul class="dropdown-menu">
@@ -1739,7 +1752,6 @@
                     <button class="btn btn-glass btn-sm" id="btnRefreshGames" title="Refresh Library"><i class="bi bi-arrow-clockwise"></i></button>
                 </div>
             </div>
-            <!-- Baris baru untuk checkbox -->
             <div class="row mt-3">
                 <div class="col-12">
                     <div class="form-check">
@@ -1752,9 +1764,7 @@
             </div>
         </div>
 
-        <!-- Content Area -->
         <div id="gameListContainer" class="min-vh-50">
-            <!-- Loading State - MODIFIED (VERSI 2) -->
             <div class="simple-loading">
                 <div class="simple-spinner"></div>
                 <div class="simple-text">Memuat Game Library</div>
@@ -1767,13 +1777,11 @@
             </div>
         </div>
         
-        <!-- Pagination -->
         <div id="paginationContainer" class="d-flex justify-content-center mt-5 mb-5"></div>
       </div>
 
-      <!-- INDAPK TAB (Filtered: non-18+ only) -->
+      <!-- INDAPK TAB -->
       <div class="tab-pane fade" id="indapk" role="tabpanel">
-         <!-- Filter for Indapk -->
          <div class="filter-card">
             <div class="row g-3">
                 <div class="col-md-5">
@@ -1789,7 +1797,6 @@
                          </button>
                          <ul class="dropdown-menu" id="platformListIndapk">
                              <li><a class="dropdown-item" href="#" data-platform="all">All</a></li>
-                             <!-- Standard Platforms only -->
                              <li><a class="dropdown-item" href="#" data-platform="ps1">PlayStation 1</a></li>
                              <li><a class="dropdown-item" href="#" data-platform="ps2">PlayStation 2</a></li>
                              <li><a class="dropdown-item" href="#" data-platform="ps3">PlayStation 3</a></li>
@@ -1826,7 +1833,6 @@
             </div>
          </div>
          <div id="indapkListContainer" class="min-vh-50">
-            <!-- Loading State - MODIFIED (VERSI 2) -->
             <div class="simple-loading">
                 <div class="simple-spinner"></div>
                 <div class="simple-text">Memuat Game INDapk</div>
@@ -1841,17 +1847,31 @@
          <div id="paginationIndapkContainer" class="d-flex justify-content-center mt-4"></div>
       </div>
 
-      <!-- APKSGI TAB (Filtered: 18+ only) -->
+      <!-- APKSGI TAB (18+) - MODIFIED: ADDED PLATFORM FILTER -->
       <div class="tab-pane fade" id="apksgi" role="tabpanel">
         <div class="filter-card" style="border-color: rgba(255,0,85,0.3);">
             <div class="row g-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="search-input-group">
                         <i class="bi bi-search text-muted me-2"></i>
                         <input type="text" id="searchInputApksgi" placeholder="Search 18+ content...">
                     </div>
                 </div>
-                <div class="col-md-4">
+                <!-- NEW PLATFORM FILTER DROPDOWN -->
+                <div class="col-md-3">
+                    <div class="dropdown w-100">
+                        <button class="btn btn-glass w-100 dropdown-toggle d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown">
+                            <span id="platformTextApksgi"><i class="bi bi-hdd-stack me-2"></i>All Formats</span>
+                        </button>
+                        <ul class="dropdown-menu w-100" id="platformListApksgi" style="max-height: 300px; overflow-y: auto;">
+                            <li><a class="dropdown-item" href="#" data-format="all">All Formats</a></li>
+                            <li><hr class="dropdown-divider bg-secondary"></li>
+                            <li><a class="dropdown-item" href="#" data-format="APK"><i class="bi bi-android2 me-2"></i>APK (Android)</a></li>
+                            <li><a class="dropdown-item" href="#" data-format="PC"><i class="bi bi-pc-display me-2"></i>PC (Windows)</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="dropdown w-100">
                         <button class="btn btn-glass w-100 dropdown-toggle d-flex justify-content-between align-items-center dropdown-category" type="button" data-bs-toggle="dropdown">
                             <span id="categoryTextApksgi"><i class="bi bi-tags me-2"></i>Category</span>
@@ -1868,7 +1888,6 @@
             </div>
         </div>
         <div id="apksgiListContainer" class="min-vh-50">
-            <!-- Loading State - MODIFIED (VERSI 2) -->
             <div class="simple-loading">
                 <div class="simple-spinner"></div>
                 <div class="simple-text">Memuat Game APKsgi</div>
@@ -1900,9 +1919,9 @@
       </div>
   </footer>
 
-  <!-- MODALS -->
+  <!-- MODALS (Login, Register, etc) - SAMA SEPERTI SEBELUMNYA -->
   <!-- Login Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content text-light">
             <div class="modal-header">
@@ -1941,10 +1960,10 @@
             </div>
         </div>
     </div>
-</div>
+  </div>
 
-<!-- Register Modal -->
-<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+  <!-- Register Modal -->
+  <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content text-light">
             <div class="modal-header">
@@ -1985,7 +2004,7 @@
             </div>
         </div>
     </div>
-</div>
+  </div>
 
   <!-- Admin Pinned Modal -->
   <div class="modal fade" id="managePinnedModal" tabindex="-1">
@@ -1999,7 +2018,7 @@
                   <table class="table table-dark table-hover">
                       <thead><tr><th>Slot</th><th>Platform</th><th>Name</th><th>Action</th></tr></thead>
                       <tbody id="pinnedGamesBody"></tbody>
-                  </table>
+                   </table>
                   <button class="btn btn-success w-100" onclick="addNewPinnedSlot()"><i class="bi bi-plus"></i> Add Slot</button>
                   <div id="managePinMessage" class="mt-3"></div>
               </div>
@@ -2034,7 +2053,7 @@
   </div>
 
   <!-- Modal My List Game -->
-<div class="modal fade" id="myListModal" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="myListModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -2042,7 +2061,6 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-3" id="myListModalBody">
-                <!-- Konten akan diisi oleh JavaScript -->
                 <div class="text-center text-muted py-4">Memuat daftar game...</div>
             </div>
             <div class="modal-footer">
@@ -2050,11 +2068,9 @@
             </div>
         </div>
     </div>
-</div>
-
+  </div>
 
   <!-- SCRIPTS -->
-  <script src="https://quge5.com/88/tag.min.js" data-zone="210839" async data-cfasync="false"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   
   <script>
@@ -2084,33 +2100,24 @@
     const ADMIN_TELEGRAM_ID = "1172835542";
     const GAMES_PER_PAGE = 24;
     const IMAGE_PROXY = "https://images.weserv.nl/?url=";
-    const HOT_GAME_COUNT = 4; // <-- UBAH ANGKA INI UNTUK MENGATUR JUMLAH HOT GAME
-    
-    // =========================================
-    // SETTING COUNT VIEW - UBAH DI SINI
-    // =========================================
-    const SHOW_COUNT_VIEW = false; // default true, ubah ke false untuk menyembunyikan count view
+    const HOT_GAME_COUNT = 4;
+    const SHOW_COUNT_VIEW = false;
     
     // State
     let allGames = [], indapkGames = [], apksgiGames = [];
     let pinnedGames = [];
     let currentUser = null;
-    let currentFilters = { platform: 'all', category: 'all', query: '' };
+    let currentFilters = { platform: 'all', category: 'all', query: '', apksgiFormat: 'all' };
     let currentPages = { beranda: 1, indapk: 1, apksgi: 1 };
     
-    // Split categories
     let categoriesAll = new Set();
     let categoriesIndapk = new Set();
     let categoriesApksgi = new Set();
     
     let gameStatsMap = new Map();
-    
-    /* =========================================
-       FITUR MY LIST (Tambahkan ke My List)
-    ========================================= */
-    let myGameList = []; // Array untuk menyimpan game yang ditambahkan ke list
+    let myGameList = [];
 
-    // Load My List dari localStorage saat inisialisasi
+    // Load My List dari localStorage
     function loadMyList() {
         const stored = localStorage.getItem('indapk_myList');
         if (stored) {
@@ -2125,720 +2132,274 @@
         updateMyListBadge();
     }
 
-    // =========================================
-    // TOAST NOTIFICATION SYSTEM - PREMIUM VERSION
-    // =========================================
-    class ToastNotification {
-        constructor() {
-            this.toastContainer = null;
-            this.init();
-        }
-        
-        init() {
-            // Buat container untuk toast jika belum ada
-            if (!document.getElementById('toastContainer')) {
-                const container = document.createElement('div');
-                container.id = 'toastContainer';
-                container.style.cssText = `
-                    position: fixed;
-                    bottom: 30px;
-                    right: 30px;
-                    z-index: 9999;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                    pointer-events: none;
-                `;
-                document.body.appendChild(container);
-            }
-            this.toastContainer = document.getElementById('toastContainer');
-        }
-        
-        show(options = {}) {
-            const {
-                title = 'Success!',
-                message = 'Game added to your list',
-                gameName = '',
-                platform = '',
-                type = 'success', // success, warning, error
-                duration = 3000,
-                position = 'right',
-                isAdult = false
-            } = options;
-            
-            // Buat element toast
-            const toast = document.createElement('div');
-            toast.className = `toast-notification ${type} ${isAdult ? 'adult' : ''} ${position}`;
-            
-            // Pilih icon berdasarkan platform
-            let iconHtml = '<i class="bi bi-check-circle-fill"></i>';
-            if (platform) {
-                const platformIcon = this.getPlatformIcon(platform);
-                if (platformIcon) iconHtml = platformIcon;
-            }
-            
-            // Format message dengan nama game
-            let displayMessage = message;
-            if (gameName) {
-                displayMessage = `
-                    <span>Berhasil ditambahkan ke</span>
-                    <strong title="${gameName}">My List</strong>
-                `;
-            }
-            
-            toast.innerHTML = `
-                <div class="toast-icon">
-                    ${iconHtml}
-                </div>
-                <div class="toast-content">
-                    <div class="toast-title">
-                        <i class="bi bi-check-circle-fill" style="color: var(--neon-cyan);"></i>
-                        ${title}
-                    </div>
-                    <div class="toast-message">
-                        "${gameName ? `<strong>${this.truncateText(gameName, 30)}</strong>` : ''}
-                        ${gameName ? 'ditambahkan ke My List' : displayMessage}
-                    </div>
-                </div>
-                <button class="toast-close" onclick="this.closest('.toast-notification').remove()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-                <div class="toast-progress" style="animation-duration: ${duration}ms"></div>
-            `;
-            
-            // Tambahkan ke container
-            this.toastContainer.appendChild(toast);
-            
-            // Trigger reflow untuk animasi
-            setTimeout(() => toast.classList.add('show'), 10);
-            
-            // Auto remove setelah duration
-            setTimeout(() => {
-                if (toast && toast.parentNode) {
-                    toast.classList.remove('show');
-                    setTimeout(() => {
-                        if (toast && toast.parentNode) {
-                            toast.remove();
-                        }
-                    }, 300);
-                }
-            }, duration);
-            
-            return toast;
-        }
-        
-        getPlatformIcon(platform) {
-            const icons = {
-                'ps1': '<i class="bi bi-playstation"></i>',
-                'ps2': '<i class="bi bi-playstation"></i>',
-                'ps3': '<i class="bi bi-playstation"></i>',
-                'ps4': '<i class="bi bi-playstation"></i>',
-                'ps5': '<i class="bi bi-playstation"></i>',
-                'psp': '<i class="bi bi-playstation"></i>',
-                'psvita': '<i class="bi bi-playstation"></i>',
-                'switch': '<i class="bi bi-nintendo-switch"></i>',
-                'android': '<i class="bi bi-android2"></i>',
-                'ios': '<i class="bi bi-apple"></i>',
-                'pc': '<i class="bi bi-pc-display"></i>',
-                'apksgi': '<i class="bi bi-fire"></i>',
-                'java': '<i class="bi bi-cup-hot"></i>',
-                'gamecube': '<i class="bi bi-box"></i>',
-                'wii': '<i class="bi bi-controller"></i>',
-                'wiiu': '<i class="bi bi-controller"></i>',
-                '3ds': '<i class="bi bi-controller"></i>'
-            };
-            return icons[platform] || '<i class="bi bi-bookmark-star-fill"></i>';
-        }
-        
-        truncateText(text, maxLength) {
-            if (text.length <= maxLength) return text;
-            return text.substr(0, maxLength) + '...';
-        }
-        
-        success(gameName, platform) {
-            return this.show({
-                title: 'Added to My List!',
-                gameName: gameName,
-                platform: platform,
-                type: 'success',
-                isAdult: platform === 'apksgi'
-            });
-        }
-        
-        warning(message) {
-            return this.show({
-                title: 'Warning',
-                message: message,
-                type: 'warning'
-            });
-        }
-        
-        error(message) {
-            return this.show({
-                title: 'Error',
-                message: message,
-                type: 'error'
-            });
-        }
-        
-        info(message) {
-            return this.show({
-                title: 'Info',
-                message: message,
-                type: 'success'
-            });
-        }
-    }
-
-    // Inisialisasi Toast
-    const toast = new ToastNotification();
-
-    // Override function addToMyList dengan toast yang lebih keren
-    window.addToMyList = function(id, name, platform) {
-        // Escape name untuk mencegah masalah dengan quote
-        const safeName = name.replace(/[\\"']/g, '\\$&');
-        
-        // Cek apakah game sudah ada di list
-        if (!myGameList.some(item => item.id === id && item.platform === platform)) {
-            myGameList.push({
-                id: id,
-                name: name, // Simpan nama asli tanpa escape
-                platform: platform,
-                dateAdded: new Date().toISOString()
-            });
-            saveMyList();
-            
-            // Tampilkan toast keren
-            if (typeof toast !== 'undefined') {
-                toast.success(name, platform);
-            } else {
-                alert(`"${name}" ditambahkan ke My List`);
-            }
-            
-            // Update tampilan tombol
-            const buttons = document.querySelectorAll(`.btn-add-list[data-game-id="${id}"][data-game-platform="${platform}"]`);
-            buttons.forEach(btn => {
-                btn.classList.add('added');
-                btn.innerHTML = '<i class="bi bi-check"></i>';
-                btn.setAttribute('disabled', 'disabled');
-            });
-            
-            // Update badge
-            updateMyListBadge();
-            
-            // Jika modal sedang terbuka, refresh tampilannya
-            const modalEl = document.getElementById('myListModal');
-            if (modalEl && modalEl.classList.contains('show')) {
-                renderMyListModal();
-            }
-            
-        } else {
-            if (typeof toast !== 'undefined') {
-                toast.warning(`"${name}" sudah ada di My List`);
-            } else {
-                alert(`"${name}" sudah ada di My List`);
-            }
-        }
-    };
-
-    // Simpan My List ke localStorage
     function saveMyList() {
         localStorage.setItem('indapk_myList', JSON.stringify(myGameList));
         updateMyListBadge();
     }
 
-    // Update badge count di navbar
     function updateMyListBadge() {
         const badge = document.getElementById('myListCountBadge');
-        if (badge) {
-            badge.textContent = myGameList.length;
-        }
+        if (badge) badge.textContent = myGameList.length;
     }
 
-    // Hapus game dari list
-function removeFromMyList(gameId, gamePlatform) {
-    const gameToRemove = myGameList.find(item => item.id === gameId && item.platform === gamePlatform);
-    
-    if (!gameToRemove) return;
-    
-    // Buat modal hapus yang keren
-    const gameName = gameToRemove.name;
-    const modalId = 'deleteConfirmModal';
-    
-    // Hapus modal yang sudah ada jika ada
-    const existingModal = document.getElementById(modalId);
-    if (existingModal) existingModal.remove();
-    
-    // Buat modal HTML
-    const modalHTML = `
-    <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 24px; overflow: hidden;">
-                <div class="modal-header" style="border-bottom: 1px solid var(--glass-border); background: rgba(239, 68, 68, 0.1);">
-                    <h5 class="modal-title" style="color: #ef4444;">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        Konfirmasi Hapus
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    // Toast Notification (Ringkasan)
+    class ToastNotification {
+        constructor() {
+            this.init();
+        }
+        init() {
+            if (!document.getElementById('toastContainer')) {
+                const container = document.createElement('div');
+                container.id = 'toastContainer';
+                container.style.cssText = `position:fixed;bottom:30px;right:30px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;`;
+                document.body.appendChild(container);
+            }
+            this.toastContainer = document.getElementById('toastContainer');
+        }
+        show(options = {}) {
+            const { title = 'Success!', message = '', gameName = '', type = 'success', duration = 3000, position = 'right' } = options;
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type} ${position}`;
+            toast.innerHTML = `
+                <div class="toast-icon"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message || (gameName ? `"${gameName}" ditambahkan ke My List` : '')}</div>
                 </div>
-                <div class="modal-body text-center p-4">
-                    <div class="mb-4" style="font-size: 4rem; color: #ef4444; animation: pulseBadge 1.5s infinite;">
-                        <i class="bi bi-trash3-fill"></i>
+                <button class="toast-close" onclick="this.closest('.toast-notification').remove()"><i class="bi bi-x-lg"></i></button>
+                <div class="toast-progress" style="animation-duration: ${duration}ms"></div>
+            `;
+            this.toastContainer.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                if (toast && toast.parentNode) {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, duration);
+            return toast;
+        }
+        success(gameName) { return this.show({ title: 'Added to My List!', gameName, type: 'success' }); }
+        warning(message) { return this.show({ title: 'Warning', message, type: 'warning' }); }
+        error(message) { return this.show({ title: 'Error', message, type: 'error' }); }
+    }
+    const toast = new ToastNotification();
+
+    window.addToMyList = function(id, name, platform) {
+        if (!myGameList.some(item => item.id === id && item.platform === platform)) {
+            myGameList.push({ id, name, platform, dateAdded: new Date().toISOString() });
+            saveMyList();
+            toast.success(name);
+            const buttons = document.querySelectorAll(`.btn-add-list[data-game-id="${id}"][data-game-platform="${platform}"]`);
+            buttons.forEach(btn => { btn.classList.add('added'); btn.innerHTML = '<i class="bi bi-check"></i>'; btn.setAttribute('disabled', 'disabled'); });
+            const modalEl = document.getElementById('myListModal');
+            if (modalEl && modalEl.classList.contains('show')) renderMyListModal();
+        } else {
+            toast.warning(`"${name}" sudah ada di My List`);
+        }
+    };
+
+    function removeFromMyList(gameId, gamePlatform) {
+        const gameToRemove = myGameList.find(item => item.id === gameId && item.platform === gamePlatform);
+        if (!gameToRemove) return;
+        const gameName = gameToRemove.name;
+        const modalId = 'deleteConfirmModal';
+        const existingModal = document.getElementById(modalId);
+        if (existingModal) existingModal.remove();
+        const modalHTML = `
+        <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 24px;">
+                    <div class="modal-header" style="border-bottom: 1px solid var(--glass-border); background: rgba(239, 68, 68, 0.1);">
+                        <h5 class="modal-title" style="color: #ef4444;"><i class="bi bi-exclamation-triangle-fill me-2"></i>Konfirmasi Hapus</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    <h5 class="mb-3" style="color: var(--text-main);">Hapus dari My List?</h5>
-                    <p class="mb-2" style="color: var(--text-muted);">Game yang akan dihapus:</p>
-                    <div class="p-3 mb-3" style="background: rgba(239, 68, 68, 0.1); border-radius: 16px; border: 1px solid rgba(239, 68, 68, 0.3);">
-                        <strong style="color: #ef4444; font-size: 1.2rem;">"${gameName}"</strong>
+                    <div class="modal-body text-center p-4">
+                        <div class="mb-4" style="font-size: 4rem; color: #ef4444;"><i class="bi bi-trash3-fill"></i></div>
+                        <h5 class="mb-3" style="color: var(--text-main);">Hapus dari My List?</h5>
+                        <div class="p-3 mb-3" style="background: rgba(239, 68, 68, 0.1); border-radius: 16px;"><strong style="color: #ef4444;">"${gameName}"</strong></div>
                     </div>
-                    <p class="small text-muted">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Game akan dihapus permanen dari daftar Anda
-                    </p>
-                </div>
-                <div class="modal-footer d-flex justify-content-center gap-3" style="border-top: 1px solid var(--glass-border);">
-                    <button type="button" class="btn btn-glass" data-bs-dismiss="modal" style="min-width: 120px;">
-                        <i class="bi bi-x-lg me-2"></i>Batal
-                    </button>
-                    <button type="button" class="btn" id="confirmDeleteBtn" style="background: #ef4444; color: white; min-width: 120px; border: none; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
-                        <i class="bi bi-trash-fill me-2"></i>Hapus
-                    </button>
+                    <div class="modal-footer d-flex justify-content-center gap-3">
+                        <button type="button" class="btn btn-glass" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn" id="confirmDeleteBtn" style="background: #ef4444; color: white;">Hapus</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    `;
-    
-    // Tambahkan modal ke body
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
-    // Tampilkan modal
-    const modalElement = document.getElementById(modalId);
-    const modal = new bootstrap.Modal(modalElement);
-    modal.show();
-    
-    // Handle konfirmasi hapus
-    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-        // Hapus dari array
-        myGameList = myGameList.filter(item => !(item.id === gameId && item.platform === gamePlatform));
-        saveMyList();
-        
-        // Update tombol kembali ke normal
-        const buttons = document.querySelectorAll(`.btn-add-list[data-game-id="${gameId}"][data-game-platform="${gamePlatform}"]`);
-        buttons.forEach(btn => {
-            btn.classList.remove('added');
-            btn.innerHTML = '<i class="bi bi-plus"></i> ADD';
-            btn.removeAttribute('disabled');
+        </div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        const modalElement = document.getElementById(modalId);
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            myGameList = myGameList.filter(item => !(item.id === gameId && item.platform === gamePlatform));
+            saveMyList();
+            const buttons = document.querySelectorAll(`.btn-add-list[data-game-id="${gameId}"][data-game-platform="${gamePlatform}"]`);
+            buttons.forEach(btn => { btn.classList.remove('added'); btn.innerHTML = '<i class="bi bi-plus"></i> ADD'; btn.removeAttribute('disabled'); });
+            modal.hide();
+            toast.show({ title: 'Deleted!', message: `"${gameName}" dihapus dari My List`, type: 'error', duration: 2000 });
+            if (document.getElementById('myListModal').classList.contains('show')) renderMyListModal();
+            setTimeout(() => modalElement.remove(), 500);
         });
-        
-        // Tutup modal
-        modal.hide();
-        
-        // Tampilkan toast sukses
-        if (typeof toast !== 'undefined') {
-            toast.show({
-                title: 'Deleted!',
-                message: `"${gameName}" dihapus dari My List`,
-                gameName: gameName,
-                type: 'error',
-                duration: 2000
-            });
-        }
-        
-        // Jika modal My List sedang terbuka, refresh tampilannya
-        const myListModalEl = document.getElementById('myListModal');
-        if (myListModalEl && myListModalEl.classList.contains('show')) {
-            renderMyListModal();
-        }
-        
-        // Hapus modal setelah ditutup
-        setTimeout(() => {
-            if (modalElement && modalElement.parentNode) {
-                modalElement.remove();
-            }
-        }, 500);
-    });
-    
-    // Bersihkan modal saat ditutup
-    modalElement.addEventListener('hidden.bs.modal', function() {
-        setTimeout(() => {
-            if (modalElement && modalElement.parentNode) {
-                modalElement.remove();
-            }
-        }, 500);
-    });
-}
+        modalElement.addEventListener('hidden.bs.modal', () => setTimeout(() => modalElement.remove(), 500));
+    }
 
-    // Render konten modal My List - DIPERBAIKI
     function renderMyListModal() {
         const container = document.getElementById('myListModalBody');
         if (!container) return;
-
         if (myGameList.length === 0) {
-            container.innerHTML = `
-                <div class="my-list-empty">
-                    <i class="bi bi-inbox"></i>
-                    <p>My List kosong</p>
-                    <small class="text-muted">Tambahkan game favoritmu dengan klik tombol <i class="bi bi-plus"></i> pada card game</small>
-                </div>
-            `;
+            container.innerHTML = `<div class="my-list-empty"><i class="bi bi-inbox"></i><p>My List kosong</p><small>Tambahkan game favoritmu dengan klik tombol ADD pada card game</small></div>`;
             return;
         }
-
         let html = '<div class="my-list-grid">';
-        
-        // Loop melalui setiap item di My List
         myGameList.forEach((item, index) => {
-            // Cari game di allGames berdasarkan ID dan PLATFORM
             const gameData = allGames.find(g => String(g.download_id) === String(item.id) && g.platform === item.platform);
-            
             const isAvailable = !!gameData;
-            
-            // Nama platform yang lebih rapi untuk badge
-            const platformNames = {
-                'ps1': 'PS1', 'ps2': 'PS2', 'ps3': 'PS3', 'ps4': 'PS4', 'ps5': 'PS5',
-                'psp': 'PSP', 'psvita': 'PS Vita', 'switch': 'Switch', '3ds': '3DS',
-                'wii': 'Wii', 'wiiu': 'Wii U', 'gamecube': 'GameCube', 'android': 'Android',
-                'ios': 'iOS', 'java': 'Java', 'pc': 'PC', 'apksgi': '18+'
-            };
-            
+            const platformNames = { 'ps1':'PS1','ps2':'PS2','ps3':'PS3','ps4':'PS4','ps5':'PS5','psp':'PSP','psvita':'PS Vita','switch':'Switch','3ds':'3DS','wii':'Wii','wiiu':'Wii U','gamecube':'GameCube','android':'Android','ios':'iOS','java':'Java','pc':'PC','apksgi':'18+' };
             const badgeName = platformNames[item.platform] || item.platform.toUpperCase();
-            
-            // Format tanggal ditambahkan
-            const dateAdded = item.dateAdded ? new Date(item.dateAdded).toLocaleDateString('id-ID', {
-                day: 'numeric', month: 'short', year: 'numeric'
-            }) : '-';
-
+            const dateAdded = item.dateAdded ? new Date(item.dateAdded).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) : '-';
             html += `
-                <div class="my-list-item" style="animation: cardEntrance 0.4s ease backwards; animation-delay: ${index * 50}ms">
+                <div class="my-list-item" style="animation-delay: ${index * 50}ms">
                     <div class="my-list-header">
-                        <div class="my-list-title">
-                            <h6 title="${item.name}">${item.name}</h6>
-                            <small><i class="bi bi-calendar3 me-1"></i>Ditambahkan: ${dateAdded}</small>
-                        </div>
+                        <div class="my-list-title"><h6>${item.name}</h6><small><i class="bi bi-calendar3 me-1"></i>Ditambahkan: ${dateAdded}</small></div>
                         <div class="my-list-badges">
-                            <span class="platform-badge-sm ${item.platform}">
-                                <i class="bi bi-controller"></i> ${badgeName}
-                            </span>
-                            <span class="status-badge ${isAvailable ? 'available' : 'unavailable'}">
-                                <i class="bi ${isAvailable ? 'bi-check-circle' : 'bi-clock'}"></i>
-                                ${isAvailable ? 'Avaible' : 'Not Avaible'}
-                            </span>
+                            <span class="platform-badge-sm ${item.platform}"><i class="bi bi-controller"></i> ${badgeName}</span>
+                            <span class="status-badge ${isAvailable ? 'available' : 'unavailable'}"><i class="bi ${isAvailable ? 'bi-check-circle' : 'bi-clock'}"></i> ${isAvailable ? 'Tersedia' : 'Tidak Tersedia'}</span>
                         </div>
                     </div>
-                    
                     <div class="my-list-footer">
-                        ${isAvailable 
-                            ? `<button class="btn-sm btn-get-sm" onclick="event.stopPropagation(); trackAndNavigate('${item.id}', '${item.platform}', '${item.name.replace(/'/g, "\\'")}')">
-                                    <i class="bi bi-download"></i> Download
-                               </button>`
-                            : `<button class="btn-sm btn-secondary" disabled style="opacity:0.5; pointer-events:none;">
-                                    <i class="bi bi-x-circle"></i> Unavailable
-                               </button>`
-                        }
-                          <button class="btn-sm btn-remove-sm" onclick="removeFromMyList('${item.id}', '${item.platform}')">
-                              <i class="bi bi-trash"></i> Hapus
-                          </button>
+                        ${isAvailable ? `<button class="btn-sm btn-get-sm" onclick="event.stopPropagation(); trackAndNavigate('${item.id}', '${item.platform}', '${item.name.replace(/'/g, "\\'")}')"><i class="bi bi-download"></i> Download</button>` : `<button class="btn-sm btn-secondary" disabled style="opacity:0.5"><i class="bi bi-x-circle"></i> Unavailable</button>`}
+                        <button class="btn-sm btn-remove-sm" onclick="removeFromMyList('${item.id}', '${item.platform}')"><i class="bi bi-trash"></i> Hapus</button>
                     </div>
-                </div>
-            `;
+                </div>`;
         });
-        
-        html += '</div>';
-        
-        // Tambahkan informasi total game
-        html += `
-            <div class="text-end text-muted small mt-3">
-                Total: ${myGameList.length} game
-            </div>
-        `;
-        
+        html += `</div><div class="text-end text-muted small mt-3">Total: ${myGameList.length} game</div>`;
         container.innerHTML = html;
     }
 
-    // Buka modal My List
     function openMyListModal() {
         renderMyListModal();
-        const modal = new bootstrap.Modal(document.getElementById('myListModal'));
-        modal.show();
+        new bootstrap.Modal(document.getElementById('myListModal')).show();
     }
 
-    // Tambahkan style tambahan untuk platform badge
-    document.addEventListener('DOMContentLoaded', function() {
-        // Tambahkan style untuk badge platform yang lebih lengkap
-        const style = document.createElement('style');
-        style.textContent = `
-            .platform-badge-sm.ps1 { background: var(--col-ps1); }
-            .platform-badge-sm.ps2 { background: var(--col-ps2); }
-            .platform-badge-sm.ps3 { background: var(--col-ps3); }
-            .platform-badge-sm.ps4 { background: var(--col-ps4); }
-            .platform-badge-sm.ps5 { background: var(--col-ps5); }
-            .platform-badge-sm.psp { background: var(--col-psp); }
-            .platform-badge-sm.psvita { background: var(--col-psvita); }
-            .platform-badge-sm.switch { background: var(--col-switch); }
-            .platform-badge-sm.\\33 ds { background: var(--col-3ds); }
-            .platform-badge-sm.wii { background: var(--col-wii); }
-            .platform-badge-sm.wiiu { background: var(--col-wiiu); }
-            .platform-badge-sm.gamecube { background: var(--col-gamecube); }
-            .platform-badge-sm.java { background: var(--col-java); }
-            .platform-badge-sm.ios { background: var(--col-ios); }
-            .platform-badge-sm.android { background: var(--col-android); }
-            .platform-badge-sm.pc { background: var(--col-pc); }
-            .platform-badge-sm.apksgi { background: var(--col-apksgi); }
-        `;
-        document.head.appendChild(style);
-    });
-
     /* =========================================
-       FUNGSI UPDATE URL (MODIFIKASI)
+       FUNGSI UTAMA
     ========================================= */
     function updateURLForPlatform(platform) {
-        // Mengupdate hash URL tanpa memuat ulang halaman
-        const newHash = platform === 'all' ? '' : `/${platform}`;
-        window.location.hash = newHash;
+        window.location.hash = platform === 'all' ? '' : `/${platform}`;
     }
 
-    /* =========================================
-       FUNGSI UNTUK MEMBACA PLATFORM DARI URL (HASH)
-    ========================================= */
     function getPlatformFromURL() {
-        const hash = window.location.hash.substring(1); // hapus #
-        if (hash && hash.startsWith('/')) {
-            return hash.substring(1); // ambil setelah '/'
-        }
-        return 'all'; // default
+        const hash = window.location.hash.substring(1);
+        if (hash && hash.startsWith('/')) return hash.substring(1);
+        return 'all';
     }
 
-    /* =========================================
-       INIT & EVENTS (DIMODIFIKASI)
-    ========================================= */
     document.addEventListener('DOMContentLoaded', () => {
         const yearEl = document.getElementById('yearNow');
         if(yearEl) yearEl.textContent = new Date().getFullYear();
-        
-        // Theme Check
         if(localStorage.getItem('theme') === 'light') {
             document.body.classList.add('light-mode');
             document.getElementById('themeIcon').classList.replace('bi-sun-fill', 'bi-moon-fill');
         }
-
         checkLoginStatus();
-        loadMyList(); // Load My List dari localStorage
+        loadMyList();
         loadAllGames();
         setupEventListeners();
         
-        // Cek URL hash untuk platform
         const urlPlatform = getPlatformFromURL();
         if (urlPlatform !== 'all') {
             currentFilters.platform = urlPlatform;
-            // Update teks dropdown
             const platformText = document.getElementById('platformText');
             const selectedItem = document.querySelector(`.dropdown-item[data-platform="${urlPlatform}"]`);
-            if (platformText && selectedItem) {
-                platformText.innerHTML = `<i class="bi bi-hdd-network me-2"></i>${selectedItem.textContent}`;
-            }
+            if (platformText && selectedItem) platformText.innerHTML = `<i class="bi bi-hdd-network me-2"></i>${selectedItem.textContent}`;
         }
 
-        // Cek hash kategori dari URL
-        if (window.location.hash && window.location.hash.includes('#')) {
-            const hashParts = window.location.hash.split('/');
-            if (hashParts.length === 2 && hashParts[0] === '#') {
-                // Ini adalah platform, sudah ditangani di atas
-            } else if (hashParts.length === 1 && !hashParts[0].startsWith('/')) {
-                // Ini adalah kategori
-                const categoryFromHash = decodeURIComponent(hashParts[0].substring(1));
-                if (categoryFromHash && getActiveTabId() === 'beranda') {
-                    currentFilters.category = categoryFromHash;
-                    const catText = document.getElementById('categoryText');
-                    if (catText) {
-                        catText.innerHTML = `<i class="bi bi-tags me-2"></i>${categoryFromHash}`;
-                    }
-                }
-            }
-        }
+        const hideAdultCheckbox = document.getElementById('hideAdultCheckbox');
+            // Atur default di sini: true = centang, false = tidak centang
+        const defaultChecked = false; // Ubah ke 'false' jika ingin defaultnya tidak tercentang
+        const savedSetting = localStorage.getItem('hideAdultContent');
+        hideAdultCheckbox.checked = savedSetting !== null ? savedSetting === 'true' : defaultChecked;
+        hideAdultCheckbox.addEventListener('change', function() {
+            localStorage.setItem('hideAdultContent', this.checked);
+            if (getActiveTabId() === 'beranda') renderGames('beranda');
+        });
 
-        // Initial URL params check
-        const urlParams = new URLSearchParams(window.location.search);
-        const q = urlParams.get('q');
-        if(q) {
-            currentFilters.query = q.toLowerCase();
-            document.querySelectorAll('input[type="text"]').forEach(input => {
-                if(input.id.includes('searchInput')) input.value = q;
-            });
-        }
-        
-        // Tab switching logic - Bug Fix: Reset Filters when switching tabs
         const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
         tabs.forEach(t => t.addEventListener('shown.bs.tab', (e) => {
             const target = e.target.getAttribute('data-bs-target').substring(1);
-            
-            // RESET FILTERS (kecuali platform jika ada di URL)
             const urlPlatform = getPlatformFromURL();
-            currentFilters = { 
-                platform: urlPlatform !== 'all' ? urlPlatform : 'all', 
-                category: 'all', 
-                query: '' 
-            };
+            currentFilters = { platform: urlPlatform !== 'all' ? urlPlatform : 'all', category: 'all', query: '', apksgiFormat: 'all' };
             resetPages();
-            
-            // Clear Search Inputs visually
-            document.querySelectorAll('input[type="text"]').forEach(i => {
-                 if(i.id.includes('searchInput')) i.value = ''; 
-                 if(i.id.includes('categorySearch')) i.value = '';
-            });
-            
-            // Reset Dropdown text visually, tapi sesuaikan dengan platform dari URL
+            document.querySelectorAll('input[type="text"]').forEach(i => { if(i.id.includes('searchInput')) i.value = ''; if(i.id.includes('categorySearch')) i.value = ''; });
             const pText = document.getElementById('platformText');
-            if(pText) {
-                if (urlPlatform !== 'all') {
-                    const selectedItem = document.querySelector(`.dropdown-item[data-platform="${urlPlatform}"]`);
-                    pText.innerHTML = selectedItem ? `<i class="bi bi-hdd-network me-2"></i>${selectedItem.textContent}` : '<i class="bi bi-hdd-network me-2"></i>All Platforms';
-                } else {
-                    pText.innerHTML = '<i class="bi bi-hdd-network me-2"></i>All Platforms';
-                }
-            }
-            
+            if(pText) pText.innerHTML = urlPlatform !== 'all' ? `<i class="bi bi-hdd-network me-2"></i>${document.querySelector(`.dropdown-item[data-platform="${urlPlatform}"]`).textContent}` : '<i class="bi bi-hdd-network me-2"></i>All Platforms';
             const pTextIndapk = document.getElementById('platformTextIndapk');
             if(pTextIndapk) pTextIndapk.innerText = 'Platform';
-            
             const cText = document.getElementById('categoryText');
             if(cText) cText.innerHTML = '<i class="bi bi-tags me-2"></i>Category';
             const cTextInd = document.getElementById('categoryTextIndapk');
             if(cTextInd) cTextInd.innerHTML = '<i class="bi bi-tags me-2"></i>Category';
             const cTextApk = document.getElementById('categoryTextApksgi');
             if(cTextApk) cTextApk.innerHTML = '<i class="bi bi-tags me-2"></i>Category';
-
-            // Clear URL param
+            // Reset platform filter for apksgi
+            const platformTextApksgi = document.getElementById('platformTextApksgi');
+            if(platformTextApksgi) platformTextApksgi.innerHTML = '<i class="bi bi-hdd-stack me-2"></i>All Formats';
+            currentFilters.apksgiFormat = 'all';
             const url = new URL(window.location);
             url.searchParams.delete('q');
             window.history.pushState({}, '', url);
-
             if(target === 'beranda') renderGames('beranda');
             else if(target === 'indapk') renderGames('indapk');
             else if(target === 'apksgi') renderGames('apksgi');
         }));
-
-        // =========================================
-        // FITUR HIDE ADULT CONTENT
-        // =========================================
-        const hideAdultCheckbox = document.getElementById('hideAdultCheckbox');
-
-        // Fungsi untuk memuat status dari localStorage
-        function loadHideAdultSetting() {
-            // Atur default di sini: true = centang, false = tidak centang
-            const defaultChecked = true; // Ubah ke 'false' jika ingin defaultnya tidak tercentang
-            const savedSetting = localStorage.getItem('hideAdultContent');
-            
-            if (savedSetting !== null) {
-                // Jika ada di localStorage, gunakan nilai itu
-                hideAdultCheckbox.checked = savedSetting === 'true';
-            } else {
-                // Jika belum ada, gunakan default
-                hideAdultCheckbox.checked = defaultChecked;
-            }
-        }
-
-        // Event listener untuk checkbox
-        hideAdultCheckbox.addEventListener('change', function() {
-            // Simpan status ke localStorage
-            localStorage.setItem('hideAdultContent', this.checked);
-            // Render ulang tab yang aktif (beranda) untuk menerapkan filter
-            if (getActiveTabId() === 'beranda') {
-                renderGames('beranda');
-            }
-        });
-
-        // Panggil fungsi untuk memuat setting saat halaman dimuat
-        loadHideAdultSetting();
-
-        // =========================================
-        // HANDLE CATEGORY CLICK AS LINK (HASH)
-        // =========================================
-        // Tangani klik pada link kategori untuk mengubah hash di URL
-        document.addEventListener('click', function(e) {
-            const target = e.target.closest('.category-link');
-            if (target && target.hash) {
-                // Set hash ke URL
-                window.location.hash = target.hash;
-                
-                // Panggil fungsi untuk filter kategori berdasarkan hash
-                const categoryFromHash = target.hash.substring(1); // hapus #
-                if (categoryFromHash) {
-                    // Hanya terapkan jika tab aktif adalah beranda
-                    if (getActiveTabId() === 'beranda') {
-                        currentFilters.category = decodeURIComponent(categoryFromHash);
-                        const catText = document.getElementById('categoryText');
-                        if (catText) {
-                            catText.innerHTML = `<i class="bi bi-tags me-2"></i>${decodeURIComponent(categoryFromHash)}`;
-                        }
-                        resetPages();
-                        renderGames('beranda');
-                    }
-                }
-                e.preventDefault(); // Cegah scroll default
-            }
-        });
-
-        // Cek hash saat halaman dimuat
-        if (window.location.hash) {
-            const categoryFromHash = decodeURIComponent(window.location.hash.substring(1));
-            if (categoryFromHash && getActiveTabId() === 'beranda') {
-                currentFilters.category = categoryFromHash;
-                const catText = document.getElementById('categoryText');
-                if (catText) {
-                    catText.innerHTML = `<i class="bi bi-tags me-2"></i>${categoryFromHash}`;
-                }
-                resetPages();
-                renderGames('beranda');
-            }
-        }
     });
 
     function setupEventListeners() {
-        // Search Inputs
         ['searchInput', 'searchInputIndapk', 'searchInputApksgi'].forEach(id => {
             const el = document.getElementById(id);
-            if(el) {
-                el.addEventListener('input', debounce((e) => {
-                    const val = e.target.value;
-                    currentFilters.query = val.toLowerCase();
-                    
-                    // Update URL
-                    const url = new URL(window.location);
-                    if(val) url.searchParams.set('q', val);
-                    else url.searchParams.delete('q');
-                    window.history.pushState({}, '', url);
-                    
-                    resetPages();
-                    renderActiveTab();
-                }, 300));
-            }
+            if(el) el.addEventListener('input', debounce((e) => {
+                currentFilters.query = e.target.value.toLowerCase();
+                const url = new URL(window.location);
+                if(currentFilters.query) url.searchParams.set('q', currentFilters.query);
+                else url.searchParams.delete('q');
+                window.history.pushState({}, '', url);
+                resetPages();
+                renderActiveTab();
+            }, 300));
         });
 
-        // Platform Dropdowns (DIMODIFIKASI)
         document.querySelectorAll('.dropdown-item[data-platform]').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const plat = e.target.dataset.platform;
                 const label = e.target.textContent;
                 currentFilters.platform = plat;
-                
-                // Update URL
                 updateURLForPlatform(plat);
-                
-                // Update UI text based on active tab
                 const activeTab = getActiveTabId();
-                if (activeTab === 'beranda') {
-                     document.getElementById('platformText').innerHTML = `<i class="bi bi-hdd-network me-2"></i>${label}`;
-                } else if (activeTab === 'indapk') {
-                     document.getElementById('platformTextIndapk').innerText = label;
-                }
-                
+                if (activeTab === 'beranda') document.getElementById('platformText').innerHTML = `<i class="bi bi-hdd-network me-2"></i>${label}`;
+                else if (activeTab === 'indapk') document.getElementById('platformTextIndapk').innerText = label;
                 resetPages();
                 renderActiveTab();
             });
         });
 
-        // Category Dropdowns Listener (Delegated)
+        // Platform filter for APKsgi Tab
+        const platformListApksgi = document.getElementById('platformListApksgi');
+        if(platformListApksgi) {
+            platformListApksgi.addEventListener('click', (e) => {
+                const target = e.target.closest('[data-format]');
+                if(target && target.dataset.format) {
+                    e.preventDefault();
+                    const format = target.dataset.format;
+                    currentFilters.apksgiFormat = format;
+                    const formatText = format === 'all' ? 'All Formats' : (format === 'APK' ? 'APK (Android)' : 'PC (Windows)');
+                    document.getElementById('platformTextApksgi').innerHTML = `<i class="bi bi-hdd-stack me-2"></i>${formatText}`;
+                    resetPages();
+                    renderGames('apksgi');
+                }
+            });
+        }
+
         const setupCategoryListener = (listId, textId) => {
             const list = document.getElementById(listId);
             if(!list) return;
@@ -2848,31 +2409,21 @@ function removeFromMyList(gameId, gamePlatform) {
                     currentFilters.category = e.target.dataset.category;
                     const label = e.target.dataset.category === 'all' ? 'Category' : e.target.textContent;
                     document.getElementById(textId).innerHTML = `<i class="bi bi-tags me-2"></i>${label}`;
-                    
-                    // Update hash jika kategori bukan 'all' dan tab aktif adalah beranda
                     if (getActiveTabId() === 'beranda' && e.target.dataset.category !== 'all') {
                         window.location.hash = encodeURIComponent(e.target.dataset.category);
                     } else if (e.target.dataset.category === 'all') {
-                        // Hapus hash jika memilih all, tapi pertahankan platform
                         const urlPlatform = getPlatformFromURL();
-                        if (urlPlatform !== 'all') {
-                            window.location.hash = `/${urlPlatform}`;
-                        } else {
-                            window.location.hash = '';
-                        }
+                        window.location.hash = urlPlatform !== 'all' ? `/${urlPlatform}` : '';
                     }
-                    
                     resetPages();
                     renderActiveTab();
                 }
             });
         };
-        
         setupCategoryListener('categoryList', 'categoryText');
         setupCategoryListener('categoryListIndapk', 'categoryTextIndapk');
         setupCategoryListener('categoryListApksgi', 'categoryTextApksgi');
 
-        // Refresh Buttons
         document.querySelectorAll('[id^=btnRefreshGames]').forEach(btn => {
             btn.addEventListener('click', () => loadAllGames(false));
         });
@@ -2891,25 +2442,19 @@ function removeFromMyList(gameId, gamePlatform) {
         currentPages = { beranda: 1, indapk: 1, apksgi: 1 };
     }
 
-    /* =========================================
-       DATA LOADING
-    ========================================= */
     async function loadAllGames(useCache = true) {
         document.getElementById('pageLoadingOverlay').classList.remove('fade-out');
-        
-        // Cache Check
         if(useCache) {
             const cached = localStorage.getItem('indapk_games_v2');
             if(cached) {
                 const data = JSON.parse(cached);
-                if(Date.now() - data.ts < 300000) { // 5 min cache
+                if(Date.now() - data.ts < 300000) {
                     processData(data.games);
-                    loadGlobalStats(); // Load stats in background
+                    loadGlobalStats();
                     return;
                 }
             }
         }
-
         const promises = [
             fetchGames(APIS.ps1, 'ps1', 'PlayStation 1'),
             fetchGames(APIS.ps2, 'ps2', 'PlayStation 2'),
@@ -2925,28 +2470,17 @@ function removeFromMyList(gameId, gamePlatform) {
             fetchGames(APIS.n3ds, '3ds', 'Nintendo 3DS'),
             fetchGames(APIS.java, 'java', 'Java'),
             fetchGames(APIS.ios, 'ios', 'iOS'),
-            fetchGames(APIS.apksgi, 'apksgi', 'APKsgi (18+)') 
+            fetchGames(APIS.apksgi, 'apksgi', 'APKsgi (18+)')
         ];
-
         try {
             const results = await Promise.allSettled(promises);
             let combined = [];
-            results.forEach(res => {
-                if(res.status === 'fulfilled') combined = combined.concat(res.value);
-            });
-            
-            // Fetch Pinned Rules
+            results.forEach(res => { if(res.status === 'fulfilled') combined = combined.concat(res.value); });
             await loadPinnedRules();
-            
-            // Store and Process
             localStorage.setItem('indapk_games_v2', JSON.stringify({ ts: Date.now(), games: combined }));
             processData(combined);
             loadGlobalStats();
-            
-        } catch (e) {
-            console.error(e);
-            alert('Failed to load games. Please refresh.');
-        }
+        } catch (e) { console.error(e); alert('Failed to load games. Please refresh.'); }
     }
 
     async function fetchGames(url, platform, name) {
@@ -2960,67 +2494,46 @@ function removeFromMyList(gameId, gamePlatform) {
                     ...g,
                     platform,
                     platform_name: name,
-                    searchStr: (g.nama_game || g.ori_name || '').toLowerCase()
+                    searchStr: (g.nama_game || g.ori_name || '').toLowerCase(),
+                    version_formats: g.version_formats || {} // Ensure version_formats exists
                 }));
             }
-        } catch(e) {}
+        } catch(e) { console.error(e); }
         return [];
     }
 
     function toTitleCase(str) {
-        return str.replace(
-            /\w\S*/g,
-            function(txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            }
-        );
+        return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 
     function processData(games) {
-        // Sort by date descending
         games.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
-        // Reset Category Sets
         categoriesAll = new Set();
         categoriesIndapk = new Set();
         categoriesApksgi = new Set();
-        
         games.forEach(g => {
-            // Proxy Logic for APKsgi
             if(g.platform === 'apksgi' && g.thumbnail_url && !g.thumbnail_url.includes('weserv.nl')) {
                 g.thumbnail_url = IMAGE_PROXY + encodeURIComponent(g.thumbnail_url);
             }
-
-            // Category Normalization
             const cats = (g.category || g.ori_category || '').split(',');
             cats.forEach(c => { 
                 if(c.trim()) {
                     const cleanCat = toTitleCase(c.trim());
-                    // Add to appropriate sets
                     categoriesAll.add(cleanCat);
-                    if(g.platform === 'apksgi') {
-                        categoriesApksgi.add(cleanCat);
-                    } else {
-                        categoriesIndapk.add(cleanCat);
-                    }
+                    if(g.platform === 'apksgi') categoriesApksgi.add(cleanCat);
+                    else categoriesIndapk.add(cleanCat);
                 }
             });
         });
-
         allGames = games;
         indapkGames = games.filter(g => g.platform !== 'apksgi');
         apksgiGames = games.filter(g => g.platform === 'apksgi');
-        
-        // Populate all Dropdowns
         updateCategoryDropdown('categoryList', 'categorySearch', categoriesAll);
         updateCategoryDropdown('categoryListIndapk', 'categorySearchIndapk', categoriesIndapk);
         updateCategoryDropdown('categoryListApksgi', 'categorySearchApksgi', categoriesApksgi);
-        
-        // Update Counts
         document.getElementById('beranda-count').innerText = allGames.length;
         document.getElementById('indapk-count').innerText = indapkGames.length;
         document.getElementById('apksgi-count').innerText = apksgiGames.length;
-        
         renderGames('beranda');
         document.getElementById('pageLoadingOverlay').classList.add('fade-out');
     }
@@ -3036,16 +2549,11 @@ function removeFromMyList(gameId, gamePlatform) {
     
     async function loadGlobalStats() {
         try {
-            const fd = new URLSearchParams();
-            fd.append('action', 'getTopGames');
-            fd.append('limit', 2000);
+            const fd = new URLSearchParams(); fd.append('action', 'getTopGames'); fd.append('limit', 2000);
             const res = await fetch(APIS.pinned, { method: 'POST', body: fd });
             const json = await res.json();
             if(json.status === 'success') {
-                json.data.forEach(item => {
-                    gameStatsMap.set(`${item.game_id}_${item.platform}`, item.total_clicks);
-                });
-                // Re-render only if needed/visible to avoid lag
+                json.data.forEach(item => { gameStatsMap.set(`${item.game_id}_${item.platform}`, item.total_clicks); });
                 const active = getActiveTabId();
                 if(document.querySelector('.view-badge') === null) renderGames(active);
             }
@@ -3055,32 +2563,24 @@ function removeFromMyList(gameId, gamePlatform) {
     function updateCategoryDropdown(listId, searchId, categorySet) {
         const list = document.getElementById(listId);
         if(!list) return;
-        
-        // Keep first two items (search + all)
         while(list.children.length > 2) list.removeChild(list.lastChild);
-        
         Array.from(categorySet).sort().forEach(c => {
             const li = document.createElement('li');
-            // Membuat link untuk kategori
             li.innerHTML = `<a class="dropdown-item" href="#" data-category="${c}">${c}</a>`;
             list.appendChild(li);
         });
-        
-        // Category Search Logic
         const searchInput = document.getElementById(searchId);
         if(searchInput) {
             searchInput.addEventListener('keyup', (e) => {
                 const val = e.target.value.toLowerCase();
                 const items = list.querySelectorAll('li:nth-child(n+3)');
-                items.forEach(li => {
-                    li.style.display = li.textContent.toLowerCase().includes(val) ? '' : 'none';
-                });
+                items.forEach(li => { li.style.display = li.textContent.toLowerCase().includes(val) ? '' : 'none'; });
             });
         }
     }
 
     /* =========================================
-       RENDERING (Dengan Tombol Add to My List dan HOT GAME)
+       RENDERING (DENGAN VERSI)
     ========================================= */
     function renderGames(tabId) {
         const container = document.getElementById(tabId === 'beranda' ? 'gameListContainer' : (tabId === 'indapk' ? 'indapkListContainer' : 'apksgiListContainer'));
@@ -3088,26 +2588,21 @@ function removeFromMyList(gameId, gamePlatform) {
         
         let source = tabId === 'apksgi' ? apksgiGames : (tabId === 'indapk' ? indapkGames : allGames);
         
-        // =========================================
-        // TERAPKAN FILTER HIDE ADULT CONTENT UNTUK TAB BERANDA
-        // =========================================
-        let sourceToRender = source;
         if (tabId === 'beranda') {
             const hideAdultCheckbox = document.getElementById('hideAdultCheckbox');
-            if (hideAdultCheckbox && hideAdultCheckbox.checked) {
-                // Filter untuk menghilangkan semua game dengan platform 'apksgi'
-                sourceToRender = source.filter(g => g.platform !== 'apksgi');
-            }
+            if (hideAdultCheckbox && hideAdultCheckbox.checked) source = source.filter(g => g.platform !== 'apksgi');
         }
         
-        // Filter berdasarkan pencarian, platform, dan kategori
-        let filtered = sourceToRender.filter(g => {
+        let filtered = source.filter(g => {
+            if(tabId === 'apksgi' && currentFilters.apksgiFormat !== 'all') {
+                // Filter based on formats available
+                const formats = g.formats || [];
+                if(currentFilters.apksgiFormat === 'APK' && !formats.includes('APK')) return false;
+                if(currentFilters.apksgiFormat === 'PC' && !formats.includes('PC')) return false;
+            }
             if(currentFilters.platform !== 'all' && g.platform !== currentFilters.platform) return false;
-            
-            // Normalize game categories for comparison
             const gameCats = (g.category || g.ori_category || '').split(',').map(c => toTitleCase(c.trim()));
             if(currentFilters.category !== 'all' && !gameCats.includes(currentFilters.category)) return false;
-            
             if(currentFilters.query && !g.searchStr.includes(currentFilters.query)) return false;
             return true;
         });
@@ -3118,70 +2613,49 @@ function removeFromMyList(gameId, gamePlatform) {
             return;
         }
 
-        // Pagination Logic
         const page = currentPages[tabId];
         const start = (page - 1) * GAMES_PER_PAGE;
         const paged = filtered.slice(start, start + GAMES_PER_PAGE);
         
-        // Generate HTML
         let html = '';
-
-        // ===== PINNED SECTION (Featured Games) hanya untuk tab Library (beranda) =====
         if(tabId === 'beranda' && page === 1 && !currentFilters.query && currentFilters.platform === 'all' && currentFilters.category === 'all') {
             html += renderPinnedSection(pinnedGames);
         }
 
-        // ===== HOT GAME SECTION (Hanya untuk INDapk dan APKsgi, TIDAK untuk Library) =====
         if (tabId !== 'beranda') {
-            // Ambil game dengan view count tertinggi dari sourceToRender (yang sudah terfilter jika perlu)
             const topSource = tabId === 'apksgi' ? apksgiGames : indapkGames;
-            // Urutkan berdasarkan view count descending, ambil sejumlah HOT_GAME_COUNT teratas
             const hotGames = [...topSource]
                 .map(g => ({ ...g, clicks: gameStatsMap.get(`${g.download_id}_${g.platform}`) || 0 }))
                 .sort((a, b) => b.clicks - a.clicks)
                 .slice(0, HOT_GAME_COUNT);
-
             if (hotGames.length > 0) {
-                html += `<div class="hot-game-section">`;
-                html += `<div class="hot-header"><i class="bi bi-fire"></i><h4>HOT GAME</h4></div>`;
-                html += `<div class="row g-4">`;
+                html += `<div class="hot-game-section"><div class="hot-header"><i class="bi bi-fire"></i><h4>HOT GAME</h4></div><div class="row g-4">`;
                 hotGames.forEach((g, idx) => {
                     const name = g.nama_game || g.ori_name;
                     const thumb = g.thumbnail_url || 'https://placehold.co/600x400/1a1a2e/FFF?text=No+Cover';
                     const id = g.download_id;
                     const platformClass = g.platform;
                     const clicks = g.clicks;
-                    
                     const viewBadge = (SHOW_COUNT_VIEW && clicks > 0) ? `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>` : '';
-                    
-                    // Cek apakah game sudah ada di My List
                     const isInList = myGameList.some(item => item.id === id && item.platform === g.platform);
                     const addButtonClass = isInList ? 'btn-add-list added' : 'btn-add-list';
                     const addButtonText = isInList ? '<i class="bi bi-check"></i>' : '<i class="bi bi-plus"></i> ADD';
-                    
                     html += `
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="game-card platform-${platformClass}">
                             <div class="card-img-wrap" onclick="trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g,"")}')">
                                 ${viewBadge}
                                 <img src="${thumb}" loading="lazy" alt="${name}">
-                                <div class="platform-tag ${platformClass}">
-                                    ${getPlatformIcon(g.platform)} ${g.platform_name}
-                                </div>
+                                <div class="platform-tag ${platformClass}">${getPlatformIcon(g.platform)} ${g.platform_name}</div>
                             </div>
                             <div class="game-card-body">
                                 <h3 class="game-title" title="${name}">${name}</h3>
                                 <small class="upload-by-text">Upload By INDapk</small>
-                                <div class="game-meta">
-                                    ${g.region ? `<span class="meta-badge">${g.region}</span>` : ''}
-                                    ${g.language ? `<span class="meta-badge">${g.language}</span>` : ''}
-                                </div>
+                                <div class="game-meta">${g.region ? `<span class="meta-badge">${g.region}</span>` : ''}${g.language ? `<span class="meta-badge">${g.language}</span>` : ''}</div>
                                 <div class="card-actions">
                                     <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>${new Date(g.timestamp).toLocaleDateString()}</span>
                                     <div>
-                                        <button class="${addButtonClass}" data-game-id="${id}" data-game-platform="${g.platform}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>'; this.setAttribute('disabled', 'disabled');">
-                                            ${addButtonText}
-                                        </button>
+                                        <button class="${addButtonClass}" data-game-id="${id}" data-game-platform="${g.platform}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>'; this.setAttribute('disabled', 'disabled');">${addButtonText}</button>
                                         <button class="btn-download-sm" onclick="event.stopPropagation(); trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g, "\\'")}')">GET</button>
                                     </div>
                                 </div>
@@ -3194,38 +2668,46 @@ function removeFromMyList(gameId, gamePlatform) {
             }
         }
 
-        // ===== REGULAR GAMES (selanjutnya) =====
-        html += `<div class="library-section">`;
-        html += `<div class="library-header"> <i class="bi bi-collection-fill"></i> <h4> Game Library </h4></div>`;
-        html += `<div class="row g-4">`;
+        html += `<div class="library-section"><div class="library-header"><i class="bi bi-collection-fill"></i><h4>Game Library</h4></div><div class="row g-4">`;
         paged.forEach((g, index) => {
             const name = g.nama_game || g.ori_name;
             const thumb = g.thumbnail_url || 'https://placehold.co/600x400/1a1a2e/FFF?text=No+Cover';
             const id = g.download_id;
             const platformClass = g.platform;
-            
-            // View Count
             const clicks = gameStatsMap.get(`${id}_${g.platform}`) || 0;
             const viewBadge = (SHOW_COUNT_VIEW && clicks > 0) ? `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>` : '';
-            
-            // New Badge Logic (< 24 hours)
             let newBadge = '';
             const oneDay = 24 * 60 * 60 * 1000;
             const isNew = (new Date().getTime() - new Date(g.timestamp).getTime()) < oneDay;
-            if(isNew) {
-                newBadge = `<div class="new-badge platform-tag ${platformClass}">NEW</div>`;
-            }
-            
-            // Cek apakah game sudah ada di My List
+            if(isNew) newBadge = `<div class="new-badge platform-tag ${platformClass}">NEW</div>`;
             const isInList = myGameList.some(item => item.id === id && item.platform === g.platform);
             const addButtonClass = isInList ? 'btn-add-list added' : 'btn-add-list';
             const addButtonText = isInList ? '<i class="bi bi-check"></i>' : '<i class="bi bi-plus"></i> ADD';
-            
-            // Buat link kategori
             const gameCats = (g.category || g.ori_category || '').split(',').map(c => toTitleCase(c.trim()));
-            const categoryLinks = gameCats.map(cat => 
-                `<a href="#${encodeURIComponent(cat)}" class="category-link">${cat}</a>`
-            ).join(', ');
+            const maxCategory = 3;
+            const shownCats = gameCats.slice(0, maxCategory);
+            const remaining = gameCats.length - maxCategory;
+
+            const categoryLinks = shownCats.map(cat =>
+              `<span class="category-link">${cat}</span>`
+            ).join(' • ');
+
+            const moreText = remaining > 0 
+            ? `<span class="category-more">+${remaining}</span>` 
+            : '';
+            
+            // Version display logic for APKsgi games
+            let versionHtml = '';
+            if (g.platform === 'apksgi' && g.version_formats) {
+                const versions = g.version_formats;
+                if (versions.APK && versions.PC) {
+                    versionHtml = `<div class="version-text"><i class="bi bi-android2 me-1"></i>Apk Versi: ${versions.APK} | <i class="bi bi-pc-display me-1"></i>PC Versi: ${versions.PC}</div>`;
+                } else if (versions.APK) {
+                    versionHtml = `<div class="version-text"><i class="bi bi-android2 me-1"></i>Apk Versi: ${versions.APK}</div>`;
+                } else if (versions.PC) {
+                    versionHtml = `<div class="version-text"><i class="bi bi-pc-display me-1"></i>PC Versi: ${versions.PC}</div>`;
+                }
+            }
             
             html += `
             <div class="col-6 col-md-4 col-lg-3">
@@ -3234,27 +2716,21 @@ function removeFromMyList(gameId, gamePlatform) {
                         ${viewBadge}
                         ${newBadge}
                         <img src="${thumb}" loading="lazy" alt="${name}">
-                        <div class="platform-tag ${platformClass}">
-                            ${getPlatformIcon(g.platform)} ${g.platform_name}
-                        </div>
+                        <div class="platform-tag ${platformClass}">${getPlatformIcon(g.platform)} ${g.platform_name}</div>
                     </div>
                     <div class="game-card-body">
                         <h3 class="game-title" title="${name}">${name}</h3>
-                        <!-- === Teks Upload By INDapk Ditambahkan di Sini === -->
                         <small class="upload-by-text">Upload By INDapk</small>
+                        ${versionHtml}
                         <div class="game-meta">
                             ${g.region ? `<span class="meta-badge">${g.region}</span>` : ''}
                             ${g.language ? `<span class="meta-badge">${g.language}</span>` : ''}
                         </div>
-                        <div class="game-meta">
-                            <span class="text-muted small"><i class="bi bi-tags me-1"></i>${categoryLinks || 'N/A'}</span>
-                        </div>
+                        <div class="game-meta"><span class="text-muted small"><i class="bi bi-tags me-1"></i>${categoryLinks}${moreText}</span></div>
                         <div class="card-actions">
                             <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>${new Date(g.timestamp).toLocaleDateString()}</span>
                             <div>
-                            <button class="${addButtonClass}" data-game-id="${id}" data-game-platform="${g.platform}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>'; this.setAttribute('disabled', 'disabled');">
-                                    ${addButtonText}
-                                </button>
+                                <button class="${addButtonClass}" data-game-id="${id}" data-game-platform="${g.platform}" onclick="event.stopPropagation(); addToMyList('${id}', '${name.replace(/'/g, "\\'")}', '${g.platform}'); this.classList.add('added'); this.innerHTML='<i class=\\'bi bi-check\\'></i>'; this.setAttribute('disabled', 'disabled');">${addButtonText}</button>
                                 <button class="btn-download-sm" onclick="event.stopPropagation(); trackAndNavigate('${id}', '${g.platform}', '${name.replace(/'/g, "\\'")}')">GET</button>
                             </div>
                         </div>
@@ -3264,59 +2740,35 @@ function removeFromMyList(gameId, gamePlatform) {
             </div>`;
         });
         html += `</div>`;
-        
         container.innerHTML = html;
         renderPaginationUI(pagination, filtered.length, page, tabId);
     }
 
-    function trackAndNavigate(id, plat, name) {
-        // Fire and forget tracking
-        const fd = new URLSearchParams();
-        fd.append('action', 'trackGameClick');
-        fd.append('game_id', id);
-        fd.append('platform', plat);
-        fd.append('game_name', name);
-        fetch(APIS.pinned, { method: 'POST', body: fd, mode: 'no-cors' }).catch(()=>{});
-        
-        // Navigate
-        location.href = `download.html?game=${id}&platform=${plat}`;
-    }
-
     function renderPinnedSection(pinned) {
         if(!pinned || !pinned.length) return '';
-        // Map pinned rules to actual game data if available
         let cards = '';
-        
         pinned.sort((a,b) => a.slot - b.slot).forEach((p, index) => {
-            // Try to find the real game
             const game = allGames.find(g => (g.nama_game||g.ori_name||'').toLowerCase() === p.name.toLowerCase() && g.platform === p.platform);
-            
             const thumb = game ? (game.thumbnail_url || 'https://placehold.co/600x400/1a1a2e/FFF?text=No+Cover') : 'https://placehold.co/600x400/1a1a2e/FFF?text=Coming+Soon';
             const name = p.name;
             const click = game ? `onclick="trackAndNavigate('${game.download_id}', '${game.platform}', '${name.replace(/'/g,"")}')"` : '';
             const status = game ? '<span class="badge bg-success">Available</span>' : '<span class="badge bg-secondary">Soon</span>';
             const platformClass = p.platform || 'switch';
-            
-            // View Count for Pinned
             let viewBadge = '';
             if(game) {
                 const clicks = gameStatsMap.get(`${game.download_id}_${game.platform}`) || 0;
                 if(clicks > 0 && SHOW_COUNT_VIEW) viewBadge = `<div class="view-badge"><i class="bi bi-eye-fill"></i> ${clicks}</div>`;
             }
-            
             cards += `
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="game-card pinned-section platform-${platformClass}" style="animation-delay: ${index * 100}ms" ${click}>
                      <div class="card-img-wrap">
                         ${viewBadge}
                         <img src="${thumb}" loading="lazy">
-                        <div class="position-absolute top-0 end-0 m-2 pinned-badge">
-                            <i class="bi bi-pin-angle-fill"></i> #${p.slot}
-                        </div>
+                        <div class="position-absolute top-0 end-0 m-2 pinned-badge"><i class="bi bi-pin-angle-fill"></i> #${p.slot}</div>
                      </div>
                      <div class="game-card-body">
                         <h3 class="game-title text-warning">${name}</h3>
-                        <!-- === Teks Upload By INDapk untuk Pinned Card (Konsistensi) === -->
                         <small class="upload-by-text">Upload By INDapk</small>
                         <div class="mb-2">${status}</div>
                         ${isAdminUser() ? `<button class="btn btn-sm btn-danger py-0" onclick="event.stopPropagation(); deletePinnedSlot(${p.slot})">Remove</button>` : ''}
@@ -3324,30 +2776,19 @@ function removeFromMyList(gameId, gamePlatform) {
                 </div>
             </div>`;
         });
-        
         return `<div class="mb-4"><h5 class="text-main mb-3"><i class="bi bi-star-fill text-warning me-2"></i>Featured Games</h5><div class="row g-4">${cards}</div></div>`;
     }
 
     function renderPaginationUI(container, total, current, tabId) {
         const pages = Math.ceil(total / GAMES_PER_PAGE);
         if(pages <= 1) { container.innerHTML = ''; return; }
-        
         let html = `<ul class="pagination pagination-sm">`;
-        // Prev
         html += `<li class="page-item ${current===1?'disabled':''}"><button class="page-link" onclick="changePage('${tabId}', ${current-1})">&laquo;</button></li>`;
-        
-        // Simple range (current - 2 to current + 2)
         let start = Math.max(1, current - 2);
         let end = Math.min(pages, current + 2);
-        
-        for(let i=start; i<=end; i++) {
-            html += `<li class="page-item ${i===current?'active':''}"><button class="page-link" onclick="changePage('${tabId}', ${i})">${i}</button></li>`;
-        }
-        
-        // Next
+        for(let i=start; i<=end; i++) html += `<li class="page-item ${i===current?'active':''}"><button class="page-link" onclick="changePage('${tabId}', ${i})">${i}</button></li>`;
         html += `<li class="page-item ${current===pages?'disabled':''}"><button class="page-link" onclick="changePage('${tabId}', ${current+1})">&raquo;</button></li>`;
         html += `</ul>`;
-        
         container.innerHTML = html;
     }
 
@@ -3357,9 +2798,16 @@ function removeFromMyList(gameId, gamePlatform) {
         document.querySelector('.control-panel').scrollIntoView({ behavior: 'smooth' });
     }
 
-    /* =========================================
-       UTILS & ADMIN
-    ========================================= */
+    function trackAndNavigate(id, plat, name) {
+        const fd = new URLSearchParams();
+        fd.append('action', 'trackGameClick');
+        fd.append('game_id', id);
+        fd.append('platform', plat);
+        fd.append('game_name', name);
+        fetch(APIS.pinned, { method: 'POST', body: fd, mode: 'no-cors' }).catch(()=>{});
+        location.href = `download.html?game=${id}&platform=${plat}`;
+    }
+
     function getPlatformIcon(p) {
         if(p.includes('ps')) return '<i class="bi bi-playstation"></i>';
         if(p === 'switch') return '<i class="bi bi-nintendo-switch"></i>';
@@ -3381,17 +2829,9 @@ function removeFromMyList(gameId, gamePlatform) {
     }
     
     function escapeHTML(str) {
-        return (str || '').replace(/[&<>'"]/g, 
-            tag => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                "'": '&#39;',
-                '"': '&quot;'
-            }[tag]));
+        return (str || '').replace(/[&<>'"]/g, tag => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[tag]));
     }
     
-    // Theme Toggle
     function toggleTheme() {
         document.body.classList.toggle('light-mode');
         const icon = document.getElementById('themeIcon');
@@ -3404,33 +2844,20 @@ function removeFromMyList(gameId, gamePlatform) {
         }
     }
     
-    // Toggle Login Key Visibility
     function toggleLoginKeyVisibility() {
         const input = document.getElementById('telegramKeyInput');
         const icon = document.getElementById('toggleLoginKeyIcon');
-        if(input.type === 'password') {
-            input.type = 'text';
-            icon.classList.replace('bi-eye', 'bi-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.replace('bi-eye-slash', 'bi-eye');
-        }
+        if(input.type === 'password') { input.type = 'text'; icon.classList.replace('bi-eye', 'bi-eye-slash'); }
+        else { input.type = 'password'; icon.classList.replace('bi-eye-slash', 'bi-eye'); }
     }
 
-    // Toggle Register Key Visibility
     function toggleRegisterKeyVisibility() {
         const input = document.getElementById('regKey');
         const icon = document.getElementById('toggleRegKeyIcon');
-        if(input.type === 'password') {
-            input.type = 'text';
-            icon.classList.replace('bi-eye', 'bi-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.replace('bi-eye-slash', 'bi-eye');
-        }
+        if(input.type === 'password') { input.type = 'text'; icon.classList.replace('bi-eye', 'bi-eye-slash'); }
+        else { input.type = 'password'; icon.classList.replace('bi-eye-slash', 'bi-eye'); }
     }
 
-    // LOGIN SYSTEM
     function checkLoginStatus() {
         const user = localStorage.getItem('indapk_user');
         if(user) {
@@ -3444,45 +2871,30 @@ function removeFromMyList(gameId, gamePlatform) {
         document.getElementById('userHeader').classList.remove('d-none');
         document.getElementById('loggedUserName').innerText = currentUser.username || currentUser.wa_number;
         document.getElementById('loggedUserBalance').innerText = 'Rp ' + (currentUser.saldo || 0).toLocaleString();
-        
-        // Admin Check
-        if(String(currentUser.wa_number) === ADMIN_TELEGRAM_ID) {
-            document.getElementById('adminMenu').classList.remove('d-none');
-        }
+        if(String(currentUser.wa_number) === ADMIN_TELEGRAM_ID) document.getElementById('adminMenu').classList.remove('d-none');
     }
 
     function login(form) {
         const id = document.getElementById('telegramIdInput').value;
         const key = document.getElementById('telegramKeyInput').value;
         const btn = document.getElementById('btnLoginAction');
-        
         if(!id || !key) return alert('Fill all fields');
-        
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Authenticating...';
         btn.disabled = true;
-        
-        const fd = new URLSearchParams(); 
-        fd.append('action', 'getUser'); 
-        fd.append('wa_number', id);
-
+        const fd = new URLSearchParams(); fd.append('action', 'getUser'); fd.append('wa_number', id);
         fetch(APIS.user, { method: 'POST', body: fd })
         .then(res => res.json())
         .then(data => {
             if(data.status === 'success' && String(data.data.key) === key) {
                 currentUser = data.data;
-                currentUser.key = key; // Store key for admin actions
+                currentUser.key = key;
                 localStorage.setItem('indapk_user', JSON.stringify(currentUser));
                 updateUserUI();
                 bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
-            } else {
-                alert('Invalid Credentials. Check Telegram Bot.');
-            }
+            } else alert('Invalid Credentials. Check Telegram Bot.');
         })
         .catch(() => alert('Network Error'))
-        .finally(() => {
-            btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>AUTHENTICATE';
-            btn.disabled = false;
-        });
+        .finally(() => { btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>AUTHENTICATE'; btn.disabled = false; });
     }
 
     function register(form) {
@@ -3490,121 +2902,62 @@ function removeFromMyList(gameId, gamePlatform) {
         const user = document.getElementById('regTelegramId').value;
         const key = document.getElementById('regKey').value;
         const btn = document.getElementById('btnRegisterAction');
-
         if(!name || !user || !key) return alert('Fill all fields');
-
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Registering...';
         btn.disabled = true;
-
         const fd = new URLSearchParams();
         fd.append('action', 'registerUser');
         fd.append('nama_user', name);
         fd.append('wa_number', user);
         fd.append('key', key);
-
         fetch(APIS.user, { method: 'POST', body: fd })
         .then(res => res.json())
         .then(data => {
             if(data.status === 'success') {
                 alert('Registration Successful! Please login.');
                 switchModal('registerModal', 'loginModal');
-            } else {
-                alert('Registration failed: ' + data.message);
-            }
+            } else alert('Registration failed: ' + data.message);
         })
         .catch(e => alert('Network Error'))
-        .finally(() => {
-            btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>REGISTER ACCOUNT';
-            btn.disabled = false;
-        });
+        .finally(() => { btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>REGISTER ACCOUNT'; btn.disabled = false; });
     }
 
-    function logout() {
-        localStorage.removeItem('indapk_user');
-        location.reload();
-    }
-    
+    function logout() { localStorage.removeItem('indapk_user'); location.reload(); }
     function openLoginModal() { new bootstrap.Modal(document.getElementById('loginModal')).show(); }
-    
-    function switchModal(fromId, toId) {
-        bootstrap.Modal.getInstance(document.getElementById(fromId)).hide();
-        new bootstrap.Modal(document.getElementById(toId)).show();
-    }
-
-    /* ADMIN FUNCTIONS (Simplified for Single File) */
+    function switchModal(fromId, toId) { bootstrap.Modal.getInstance(document.getElementById(fromId)).hide(); new bootstrap.Modal(document.getElementById(toId)).show(); }
     function isAdminUser() { return currentUser && String(currentUser.wa_number) === ADMIN_TELEGRAM_ID; }
     
     async function openStatsDashboard() {
         if(!isAdminUser()) return alert('Admin Only');
-        
         try {
-            const fd = new URLSearchParams();
-            fd.append('action', 'getTopGames');
-            fd.append('limit', '50');
-            
-            // Using pinned URL as it handles tracking
+            const fd = new URLSearchParams(); fd.append('action', 'getTopGames'); fd.append('limit', '50');
             const res = await fetch(APIS.pinned, { method: 'POST', body: fd });
             const json = await res.json();
-            
-            if(json.status === 'success') {
-                renderStatsDashboard(json.data);
-            } else {
-                alert('No stats data available');
-            }
-        } catch(e) {
-            console.error(e);
-            alert('Error loading stats');
-        }
+            if(json.status === 'success') renderStatsDashboard(json.data);
+            else alert('No stats data available');
+        } catch(e) { console.error(e); alert('Error loading stats'); }
     }
 
     function renderStatsDashboard(stats) {
-        // Remove existing modal if any
         const existing = document.getElementById('statsModal');
         if(existing) existing.remove();
-
         const html = `
         <div class="modal fade" id="statsModal" tabindex="-1">
             <div class="modal-dialog modal-xl modal-dialog-centered">
                 <div class="modal-content bg-dark border-secondary text-light">
-                    <div class="modal-header">
-                        <h5 class="modal-title"><i class="bi bi-bar-chart"></i> Game Stats</h5>
-                        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
+                    <div class="modal-header"><h5 class="modal-title"><i class="bi bi-bar-chart"></i> Game Stats</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
                     <div class="modal-body">
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Rank</th>
-                                        <th>Game</th>
-                                        <th>Platform</th>
-                                        <th>Clicks</th>
-                                        <th>Last Click</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${stats.map((s, i) => `
-                                        <tr>
-                                            <td>${i+1}</td>
-                                            <td>${escapeHTML(s.game_name || '-')}</td>
-                                            <td><span class="badge bg-secondary">${escapeHTML(s.platform || '-')}</span></td>
-                                            <td><span class="badge bg-warning text-dark">${s.total_clicks || 0}</span></td>
-                                            <td><small>${s.last_click_date || ''} ${s.last_click_time || ''}</small></td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
+                        <div class="table-responsive"><table class="table table-dark table-hover table-sm"><thead><tr><th>Rank</th><th>Game</th><th>Platform</th><th>Clicks</th><th>Last Click</th></tr></thead><tbody>
+                            ${stats.map((s, i) => `<tr><td>${i+1}</td><td>${escapeHTML(s.game_name || '-')}</td><td><span class="badge bg-secondary">${escapeHTML(s.platform || '-')}</span></td><td><span class="badge bg-warning text-dark">${s.total_clicks || 0}</span></td><td><small>${s.last_click_date || ''} ${s.last_click_time || ''}</small></td></tr>`).join('')}
+                        </tbody></table></div>
                     </div>
                 </div>
             </div>
         </div>`;
-        
         document.body.insertAdjacentHTML('beforeend', html);
         new bootstrap.Modal(document.getElementById('statsModal')).show();
     }
     
-    // Manage Thumbnail Logic
     let currentEditGame = null;
     function manageThumbnail(id, plat, url, name) {
         currentEditGame = { id, plat };
@@ -3614,28 +2967,22 @@ function removeFromMyList(gameId, gamePlatform) {
         new bootstrap.Modal(document.getElementById('thumbnailModal')).show();
     }
     
-    function testThumbnail() {
-        const url = document.getElementById('newThumbnailUrl').value;
-        if(url) document.getElementById('thumbnailPreview').src = url;
-    }
+    function testThumbnail() { const url = document.getElementById('newThumbnailUrl').value; if(url) document.getElementById('thumbnailPreview').src = url; }
     
     async function updateThumbnail() {
         if(!isAdminUser()) return;
         const url = document.getElementById('newThumbnailUrl').value;
         if(!url) return alert('Enter URL');
-        
         const btn = document.getElementById('btnUpdateThumbnail');
         btn.disabled = true;
-        
         try {
-            const api = APIS[currentEditGame.plat] || APIS.ps4; // Fallback
+            const api = APIS[currentEditGame.plat] || APIS.ps4;
             const fd = new URLSearchParams();
             fd.append('action', 'updateThumbnail');
             fd.append('download_id', currentEditGame.id);
             fd.append('thumbnail_url', url);
             fd.append('telegram_id', currentUser.wa_number);
             fd.append('key', currentUser.key);
-            
             await fetch(api, { method: 'POST', body: fd });
             alert('Updated! Refresh to see changes.');
             bootstrap.Modal.getInstance(document.getElementById('thumbnailModal')).hide();
@@ -3643,17 +2990,9 @@ function removeFromMyList(gameId, gamePlatform) {
         btn.disabled = false;
     }
 
-    // Pinned Logic
     function openManagePinnedModal() {
         const tbody = document.getElementById('pinnedGamesBody');
-        tbody.innerHTML = pinnedGames.sort((a,b)=>a.slot-b.slot).map(p => `
-            <tr>
-                <td>${p.slot}</td>
-                <td>${p.platform}</td>
-                <td>${p.name}</td>
-                <td><button class="btn btn-sm btn-danger" onclick="deletePinnedSlot(${p.slot})"><i class="bi bi-trash"></i></button></td>
-            </tr>
-        `).join('');
+        tbody.innerHTML = pinnedGames.sort((a,b)=>a.slot-b.slot).map(p => `<tr><td>${p.slot}</td><td>${p.platform}</td><td>${p.name}</td><td><button class="btn btn-sm btn-danger" onclick="deletePinnedSlot(${p.slot})"><i class="bi bi-trash"></i></button></td></tr>`).join('');
         new bootstrap.Modal(document.getElementById('managePinnedModal')).show();
     }
     
@@ -3663,23 +3002,14 @@ function removeFromMyList(gameId, gamePlatform) {
         fd.append('action', 'deletePinnedGame');
         fd.append('slot', slot);
         fd.append('telegram_id', currentUser.wa_number);
-        
         await fetch(APIS.pinned, { method: 'POST', body: fd });
         alert('Deleted. Refreshing...');
         await loadAllGames(false);
-        // If modal open, refresh it
         if(document.getElementById('managePinnedModal').classList.contains('show')) openManagePinnedModal();
     }
 
-    // Fungsi tambahan untuk menambah slot pinned (perlu diimplementasi sesuai kebutuhan)
-    function addNewPinnedSlot() {
-        alert('Fungsi ini perlu diimplementasikan di server.');
-    }
-
-    function saveAllPinnedGames() {
-        alert('Fungsi ini perlu diimplementasikan di server.');
-    }
-
+    function addNewPinnedSlot() { alert('Fungsi ini perlu diimplementasikan di server.'); }
+    function saveAllPinnedGames() { alert('Fungsi ini perlu diimplementasikan di server.'); }
   </script>
 </body>
 </html>
