@@ -77,20 +77,20 @@
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Light Mode Overrides - DIPERBAIKI AGAR LEBIH GELAP */
+    /* Light Mode Overrides - LEBIH SOFT & NYAMAN */
     body.light-mode {
-      --bg-deep: #e4e6eb;        /* Lebih gelap dari sebelumnya */
-      --bg-dark: #ffffff;         /* Putih untuk elemen utama */
-      --bg-card: rgba(255, 255, 255, 0.75); /* White dengan transparansi */
-      --glass-border: rgba(0, 0, 0, 0.12);  /* Border lebih jelas */
-      --text-main: #121212;       /* Hitam pekat untuk kontras */
-      --text-muted: #4b5563;      /* Abu-abu lebih gelap untuk keterbacaan */
-      --input-bg: rgba(0, 0, 0, 0.03);
-      --dropdown-bg: #f8fafc;     /* Abu-abu sangat muda */
-      --shadow-glow: 0 0 20px rgba(0, 0, 0, 0.08);
+      --bg-deep: #dfe6f1;
+      --bg-dark: rgba(255, 255, 255, 0.82);
+      --bg-card: rgba(255, 255, 255, 0.74);
+      --glass-border: rgba(15, 23, 42, 0.10);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --input-bg: rgba(255, 255, 255, 0.78);
+      --dropdown-bg: #f3f6fb;
+      --shadow-glow: 0 14px 30px rgba(15, 23, 42, 0.08);
     }
 
-    /* =========================================
+/* =========================================
        GLOBAL RESET & LAYOUT
     ========================================= */
     body {
@@ -103,7 +103,14 @@
       min-height: 100vh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease, background-image 0.3s ease;
+    }
+
+    body.light-mode {
+      background-image:
+        radial-gradient(circle at 14% 18%, rgba(59, 130, 246, 0.12), transparent 24%),
+        radial-gradient(circle at 82% 22%, rgba(168, 85, 247, 0.10), transparent 22%),
+        linear-gradient(180deg, #eef3f9 0%, #dfe6f1 100%);
     }
 
     /* Subtle Grid Pattern */
@@ -117,6 +124,12 @@
       z-index: -1;
       pointer-events: none;
       mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    }
+
+    body.light-mode::before {
+      background-image: linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+      opacity: 0.55;
     }
 
     ::-webkit-scrollbar { width: 8px; }
@@ -215,6 +228,86 @@
       background: rgba(125, 125, 125, 0.2);
       border-color: var(--neon-cyan);
       color: var(--neon-cyan);
+    }
+
+
+    /* Light mode visual refresh */
+    body.light-mode .navbar,
+    body.light-mode .filter-card,
+    body.light-mode .hot-game-section,
+    body.light-mode .library-section,
+    body.light-mode .game-card,
+    body.light-mode .modal-content,
+    body.light-mode .toast-notification,
+    body.light-mode .my-list-item,
+    body.light-mode .simple-loading,
+    body.light-mode .nav-pills-custom {
+      background: rgba(255, 255, 255, 0.70);
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+    }
+
+    body.light-mode .hero-content {
+      background: linear-gradient(to top, rgba(223, 230, 241, 0.97), rgba(223, 230, 241, 0.42) 56%, transparent 100%);
+    }
+
+    body.light-mode .hero-title {
+      background: linear-gradient(to right, #0f172a, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
+    }
+
+    body.light-mode .lead,
+    body.light-mode .text-light {
+      color: #334155 !important;
+    }
+
+    body.light-mode .nav-link:hover,
+    body.light-mode .nav-link.active {
+      background: rgba(148, 163, 184, 0.18);
+    }
+
+    body.light-mode .search-input-group,
+    body.light-mode .form-control,
+    body.light-mode .input-group-text,
+    body.light-mode .dropdown-menu,
+    body.light-mode .pagination .page-link {
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    body.light-mode .btn-glass {
+      background: rgba(255, 255, 255, 0.65);
+      border-color: rgba(15, 23, 42, 0.12);
+      color: #0f172a;
+    }
+
+    body.light-mode .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.92);
+      color: #0891b2;
+      border-color: rgba(8, 145, 178, 0.28);
+    }
+
+    body.light-mode .meta-badge {
+      background: rgba(148, 163, 184, 0.18);
+      color: #334155;
+    }
+
+    body.light-mode .view-badge {
+      background: rgba(255, 255, 255, 0.76);
+      border-color: rgba(15, 23, 42, 0.10);
+      color: #0f172a;
+    }
+
+    body.light-mode .dropdown-item:hover {
+      background: rgba(14, 165, 233, 0.12);
+      color: #0369a1;
+    }
+
+    body.light-mode .upload-by-text,
+    body.light-mode .pagination .page-link,
+    body.light-mode .toast-message,
+    body.light-mode .my-list-title small {
+      color: #64748b;
     }
 
     /* =========================================
@@ -386,7 +479,6 @@
     .game-card.platform-android { border-color: rgba(61, 220, 132, 0.3); }
     .game-card.platform-pc { border-color: rgba(59, 130, 246, 0.3); }
     .game-card.platform-apksgi { border-color: rgba(236, 72, 153, 0.3); }
-    
     .game-card:hover.platform-ps1 { box-shadow: 0 0 20px var(--col-ps1); }
     .game-card:hover.platform-ps2 { box-shadow: 0 0 20px var(--col-ps2); }
     .game-card:hover.platform-ps3 { box-shadow: 0 0 20px var(--col-ps3); }
@@ -404,7 +496,6 @@
     .game-card:hover.platform-android { box-shadow: 0 0 20px var(--col-android); }
     .game-card:hover.platform-pc { box-shadow: 0 0 20px var(--col-pc); }
     .game-card:hover.platform-apksgi { box-shadow: 0 0 20px var(--col-apksgi); }
-
     .card-img-wrap {
       position: relative;
       padding-top: 56.25%; /* 16:9 Aspect Ratio */
@@ -2294,6 +2385,42 @@
         return 'all';
     }
 
+    function getQueryFromURL() {
+        return (new URLSearchParams(window.location.search).get('q') || '').trim();
+    }
+
+    function syncSearchInputs(query) {
+        ['searchInput', 'searchInputIndapk', 'searchInputApksgi'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = query;
+        });
+    }
+
+    function applyFiltersFromURL() {
+        const urlPlatform = getPlatformFromURL();
+        const rawQuery = getQueryFromURL();
+        currentFilters.platform = urlPlatform !== 'all' ? urlPlatform : 'all';
+        currentFilters.query = rawQuery.toLowerCase();
+        syncSearchInputs(rawQuery);
+
+        const platformItem = document.querySelector(`.dropdown-item[data-platform="${currentFilters.platform}"]`);
+        const platformLabel = platformItem ? platformItem.textContent : 'All Platforms';
+        const platformText = document.getElementById('platformText');
+        if (platformText) {
+            platformText.innerHTML = currentFilters.platform !== 'all'
+                ? `<i class="bi bi-hdd-network me-2"></i>${platformLabel}`
+                : '<i class="bi bi-hdd-network me-2"></i>All Platforms';
+        }
+    }
+
+    function updateQueryInURL(query) {
+        const url = new URL(window.location.href);
+        const cleanQuery = (query || '').trim();
+        if (cleanQuery) url.searchParams.set('q', cleanQuery);
+        else url.searchParams.delete('q');
+        window.history.replaceState({}, '', url);
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         const yearEl = document.getElementById('yearNow');
         if(yearEl) yearEl.textContent = new Date().getFullYear();
@@ -2301,18 +2428,12 @@
             document.body.classList.add('light-mode');
             document.getElementById('themeIcon').classList.replace('bi-sun-fill', 'bi-moon-fill');
         }
+
+        applyFiltersFromURL();
         checkLoginStatus();
         loadMyList();
         loadAllGames();
         setupEventListeners();
-        
-        const urlPlatform = getPlatformFromURL();
-        if (urlPlatform !== 'all') {
-            currentFilters.platform = urlPlatform;
-            const platformText = document.getElementById('platformText');
-            const selectedItem = document.querySelector(`.dropdown-item[data-platform="${urlPlatform}"]`);
-            if (platformText && selectedItem) platformText.innerHTML = `<i class="bi bi-hdd-network me-2"></i>${selectedItem.textContent}`;
-        }
 
         const hideAdultCheckbox = document.getElementById('hideAdultCheckbox');
             // Atur default di sini: true = centang, false = tidak centang
@@ -2327,12 +2448,21 @@
         const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
         tabs.forEach(t => t.addEventListener('shown.bs.tab', (e) => {
             const target = e.target.getAttribute('data-bs-target').substring(1);
+            const rawQuery = getQueryFromURL();
             const urlPlatform = getPlatformFromURL();
-            currentFilters = { platform: urlPlatform !== 'all' ? urlPlatform : 'all', category: 'all', query: '', apksgiFormat: 'all' };
+            currentFilters = { platform: urlPlatform !== 'all' ? urlPlatform : 'all', category: 'all', query: rawQuery.toLowerCase(), apksgiFormat: 'all' };
             resetPages();
-            document.querySelectorAll('input[type="text"]').forEach(i => { if(i.id.includes('searchInput')) i.value = ''; if(i.id.includes('categorySearch')) i.value = ''; });
+            document.querySelectorAll('input[type="text"]').forEach(i => {
+                if(i.id.includes('searchInput')) i.value = rawQuery;
+                if(i.id.includes('categorySearch')) i.value = '';
+            });
             const pText = document.getElementById('platformText');
-            if(pText) pText.innerHTML = urlPlatform !== 'all' ? `<i class="bi bi-hdd-network me-2"></i>${document.querySelector(`.dropdown-item[data-platform="${urlPlatform}"]`).textContent}` : '<i class="bi bi-hdd-network me-2"></i>All Platforms';
+            if(pText) {
+                const selectedItem = document.querySelector(`.dropdown-item[data-platform="${urlPlatform}"]`);
+                pText.innerHTML = urlPlatform !== 'all' && selectedItem
+                    ? `<i class="bi bi-hdd-network me-2"></i>${selectedItem.textContent}`
+                    : '<i class="bi bi-hdd-network me-2"></i>All Platforms';
+            }
             const pTextIndapk = document.getElementById('platformTextIndapk');
             if(pTextIndapk) pTextIndapk.innerText = 'Platform';
             const cText = document.getElementById('categoryText');
@@ -2341,28 +2471,36 @@
             if(cTextInd) cTextInd.innerHTML = '<i class="bi bi-tags me-2"></i>Category';
             const cTextApk = document.getElementById('categoryTextApksgi');
             if(cTextApk) cTextApk.innerHTML = '<i class="bi bi-tags me-2"></i>Category';
-            // Reset platform filter for apksgi
             const platformTextApksgi = document.getElementById('platformTextApksgi');
             if(platformTextApksgi) platformTextApksgi.innerHTML = '<i class="bi bi-hdd-stack me-2"></i>All Formats';
             currentFilters.apksgiFormat = 'all';
-            const url = new URL(window.location);
-            url.searchParams.delete('q');
-            window.history.pushState({}, '', url);
+            syncSearchInputs(rawQuery);
             if(target === 'beranda') renderGames('beranda');
             else if(target === 'indapk') renderGames('indapk');
             else if(target === 'apksgi') renderGames('apksgi');
         }));
+
+        window.addEventListener('popstate', () => {
+            applyFiltersFromURL();
+            resetPages();
+            renderActiveTab();
+        });
+
+        window.addEventListener('hashchange', () => {
+            applyFiltersFromURL();
+            resetPages();
+            renderActiveTab();
+        });
     });
 
     function setupEventListeners() {
         ['searchInput', 'searchInputIndapk', 'searchInputApksgi'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.addEventListener('input', debounce((e) => {
-                currentFilters.query = e.target.value.toLowerCase();
-                const url = new URL(window.location);
-                if(currentFilters.query) url.searchParams.set('q', currentFilters.query);
-                else url.searchParams.delete('q');
-                window.history.pushState({}, '', url);
+                const rawQuery = e.target.value;
+                currentFilters.query = rawQuery.trim().toLowerCase();
+                syncSearchInputs(rawQuery);
+                updateQueryInURL(rawQuery);
                 resetPages();
                 renderActiveTab();
             }, 300));
